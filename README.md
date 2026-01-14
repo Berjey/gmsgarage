@@ -6,15 +6,13 @@ Modern, şık ve profesyonel tasarıma sahip Laravel 10 tabanlı kurumsal web si
 
 ### Başka Bilgisayarda Devam Etmek İçin
 
-**En Hızlı Yol:**
-1. `HIZLI_BASLANGIC.md` dosyasına bakın
-2. GitHub/GitLab kullanarak projeyi klonlayın
-3. Kurulum adımlarını takip edin
+```bash
+# Projeyi klonla
+git clone https://github.com/Berjey/gmsgarage.git
+cd gmsgarage
 
-**Detaylı Rehber:**
-- `BASKA_BILGISAYARDA_DEVAM.md` - Tam kurulum rehberi
-- `GIT_KURULUM.md` - Git kullanımı
-- `PROJE_OZET.md` - Proje özeti ve özellikler
+# Kurulum adımlarını takip edin (aşağıdaki Kurulum bölümüne bakın)
+```
 
 ## 📋 Gereksinimler
 
@@ -76,13 +74,6 @@ Tarayıcıda `http://localhost:8000` adresine gidin.
 - ✅ Filtreleme ve arama
 - ✅ Sahibinden API hazırlığı (Faz 2)
 
-## 📚 Dokümantasyon
-
-- `HIZLI_BASLANGIC.md` - Hızlı başlangıç rehberi
-- `BASKA_BILGISAYARDA_DEVAM.md` - Detaylı kurulum
-- `GIT_KURULUM.md` - Git kullanımı
-- `PROJE_OZET.md` - Proje özeti
-- `KURULUM.md` - Genel kurulum bilgileri
 
 ## 🔧 Geliştirme
 
