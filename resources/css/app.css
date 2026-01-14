@@ -1,0 +1,296 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    * {
+        @apply transition-colors duration-200;
+    }
+    
+    html {
+        scroll-behavior: smooth;
+    }
+    
+    body {
+        @apply font-sans antialiased;
+        @apply bg-gray-50;
+    }
+    
+    /* Smooth fade-in on page load */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+    
+    body {
+        animation: fadeIn 0.6s ease-out;
+    }
+}
+
+@layer components {
+    /* Modern Button Styles */
+    .btn {
+        @apply px-6 py-3 rounded-xl font-semibold transition-all duration-300 inline-flex items-center justify-center;
+        @apply transform hover:scale-105 active:scale-95;
+        @apply shadow-lg hover:shadow-xl;
+    }
+    
+    .btn-primary {
+        @apply bg-gradient-to-r from-primary-600 to-primary-700 text-white;
+        @apply hover:from-primary-700 hover:to-primary-800;
+        @apply border-0;
+    }
+    
+    .btn-secondary {
+        @apply bg-gray-200 text-gray-900 hover:bg-gray-300;
+    }
+    
+    .btn-outline {
+        @apply border-2 border-primary-600 text-primary-600;
+        @apply hover:bg-primary-600 hover:text-white;
+        @apply bg-transparent;
+    }
+    
+    .btn-accent {
+        @apply bg-gradient-to-r from-accent-600 to-accent-700 text-white;
+        @apply hover:from-accent-700 hover:to-accent-800;
+    }
+    
+    /* Modern Card Styles */
+    .card {
+        @apply bg-white rounded-2xl shadow-lg overflow-hidden;
+        @apply transition-all duration-500;
+        @apply hover:shadow-2xl hover:-translate-y-2;
+        @apply border border-gray-100;
+    }
+    
+    .card-vehicle {
+        @apply bg-white rounded-2xl shadow-xl overflow-hidden;
+        @apply transition-all duration-500;
+        @apply hover:shadow-2xl hover:-translate-y-3;
+        @apply border border-gray-100;
+    }
+    
+    .card-vehicle:hover {
+        @apply border-primary-200;
+    }
+    
+    /* Glassmorphism Effect */
+    .glass {
+        @apply bg-white/80 backdrop-blur-lg;
+        @apply border border-white/20;
+        @apply shadow-xl;
+    }
+    
+    /* Modern Container */
+    .container-custom {
+        @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+    }
+    
+    /* Section Padding */
+    .section-padding {
+        @apply py-20 lg:py-28;
+    }
+    
+    /* Modern Headings */
+    .heading-primary {
+        @apply text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900;
+        @apply leading-tight;
+    }
+    
+    .heading-secondary {
+        @apply text-2xl md:text-3xl font-bold text-gray-900;
+    }
+    
+    /* Gradient Text */
+    .gradient-text {
+        @apply bg-gradient-to-r from-primary-600 to-primary-800;
+        @apply bg-clip-text text-transparent;
+    }
+    
+    /* Modern Input */
+    .input-modern {
+        @apply w-full border-2 border-gray-200 rounded-xl px-5 py-4;
+        @apply focus:ring-2 focus:ring-primary-500 focus:border-primary-500;
+        @apply transition-all duration-300;
+        @apply bg-white;
+    }
+    
+    .input-modern:focus {
+        @apply shadow-lg transform scale-[1.02];
+    }
+    
+    /* Animated Background */
+    .animated-bg {
+        background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+        background-size: 400% 400%;
+        animation: gradient 15s ease infinite;
+    }
+    
+    @keyframes gradient {
+        0% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+    
+    /* Fade In Up Animation */
+    .fade-in-up {
+        animation: fadeInUp 0.8s ease-out;
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    /* Slide In Left */
+    .slide-in-left {
+        animation: slideInLeft 0.8s ease-out;
+    }
+    
+    @keyframes slideInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+    
+    /* Slide In Right */
+    .slide-in-right {
+        animation: slideInRight 0.8s ease-out;
+    }
+    
+    @keyframes slideInRight {
+        from {
+            opacity: 0;
+            transform: translateX(50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+    
+    /* Scale In */
+    .scale-in {
+        animation: scaleIn 0.6s ease-out;
+    }
+    
+    @keyframes scaleIn {
+        from {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+    
+    /* Pulse Animation */
+    .pulse-slow {
+        animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    
+    /* Shimmer Effect */
+    .shimmer {
+        background: linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(255, 255, 255, 0.2) 50%,
+            rgba(255, 255, 255, 0) 100%
+        );
+        background-size: 200% 100%;
+        animation: shimmer 2s infinite;
+    }
+    
+    @keyframes shimmer {
+        0% {
+            background-position: -200% 0;
+        }
+        100% {
+            background-position: 200% 0;
+        }
+    }
+    
+    /* Hover Lift Effect */
+    .hover-lift {
+        @apply transition-all duration-500;
+    }
+    
+    .hover-lift:hover {
+        @apply transform -translate-y-2 shadow-2xl;
+    }
+    
+    /* Modern Badge */
+    .badge {
+        @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-bold;
+        @apply bg-gradient-to-r from-primary-500 to-primary-600 text-white;
+        @apply shadow-md;
+    }
+    
+    /* Gradient Border */
+    .gradient-border {
+        position: relative;
+        background: white;
+        border-radius: 1rem;
+    }
+    
+    .gradient-border::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 1rem;
+        padding: 2px;
+        background: linear-gradient(135deg, #dc2626, #991b1b);
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+    }
+}
+
+@layer utilities {
+    /* Scroll Reveal Animation */
+    .reveal {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.8s ease-out;
+    }
+    
+    .reveal.active {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    /* Text Gradient */
+    .text-gradient {
+        @apply bg-gradient-to-r from-primary-600 via-primary-700 to-primary-800;
+        @apply bg-clip-text text-transparent;
+    }
+    
+    /* Backdrop Blur */
+    .backdrop-blur-modern {
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+    }
+}
