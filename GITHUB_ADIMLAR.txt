@@ -1,0 +1,51 @@
+═══════════════════════════════════════════════════════════════
+  GITHUB'A YÜKLEME ADIMLARI
+═══════════════════════════════════════════════════════════════
+
+✅ İLK COMMIT TAMAMLANDI!
+81 dosya commit edildi.
+
+═══════════════════════════════════════════════════════════════
+  ADIM 1: GITHUB'DA REPOSITORY OLUŞTUR
+═══════════════════════════════════════════════════════════════
+
+1. GitHub'a giriş yap: https://github.com
+2. Yeni repository oluştur: https://github.com/new
+3. Repository bilgileri:
+   - Repository name: gmsgarage
+   - Description: GMSGARAGE - Premium Oto Galeri Kurumsal Web Sitesi
+   - Public veya Private seç
+   - ⚠️ "Initialize with README" SEÇME
+   - ⚠️ "Add .gitignore" SEÇME
+4. "Create repository" butonuna tıkla
+
+═══════════════════════════════════════════════════════════════
+  ADIM 2: PROJEYI GITHUB'A YÜKLE
+═══════════════════════════════════════════════════════════════
+
+Repository oluşturduktan sonra şu komutları çalıştır:
+
+git remote add origin https://github.com/KULLANICI_ADI/gmsgarage.git
+git branch -M main
+git push -u origin main
+
+(KULLANICI_ADI'ni GitHub kullanıcı adınla değiştir)
+
+═══════════════════════════════════════════════════════════════
+  GELECEKTE DEĞİŞİKLİKLERİ YÜKLEME
+═══════════════════════════════════════════════════════════════
+
+Windows PowerShell:
+  .\git-push.ps1 "Commit mesajı"
+
+Linux/Mac:
+  ./git-push.sh "Commit mesajı"
+
+Veya manuel:
+  git add .
+  git commit -m "Commit mesajı"
+  git push
+
+═══════════════════════════════════════════════════════════════
+
+Detaylı rehber: GITHUB_YUKLEME.md dosyasına bakın.
