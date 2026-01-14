@@ -94,6 +94,20 @@ npm run dev
 npm run build
 ```
 
+## 🔄 Otomatik GitHub Kaydetme
+
+Dosya kaydettikten sonra GitHub'a otomatik push için:
+
+```powershell
+# Terminal'de çalıştır
+.\OTOMATIK_KAYDET.ps1
+```
+
+**VEYA Cursor'da:**
+- `Ctrl+Shift+P` → `Tasks: Run Task` → `🔄 Otomatik GitHub Kaydet`
+
+Detaylı kullanım için: `CURSOR_OTOMATIK_KAYDET.md`
+
 ## 📝 Notlar
 
 - Bu fazda admin panel yok

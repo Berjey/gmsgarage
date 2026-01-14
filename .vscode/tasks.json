@@ -1,0 +1,43 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "🔄 Otomatik GitHub Kaydet",
+            "type": "shell",
+            "command": "powershell",
+            "args": [
+                "-ExecutionPolicy",
+                "Bypass",
+                "-File",
+                "${workspaceFolder}/OTOMATIK_KAYDET.ps1"
+            ],
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "new",
+                "focus": true
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+        },
+        {
+            "label": "🔄 Otomatik GitHub Kaydet (Özel Mesaj)",
+            "type": "shell",
+            "command": "powershell",
+            "args": [
+                "-ExecutionPolicy",
+                "Bypass",
+                "-File",
+                "${workspaceFolder}/OTOMATIK_KAYDET.ps1",
+                "Değişiklikler: $(Get-Date -Format 'dd.MM.yyyy HH:mm')"
+            ],
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        }
+    ]
+}
