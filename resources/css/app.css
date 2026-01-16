@@ -1,0 +1,776 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    * {
+        @apply transition-colors duration-200;
+    }
+    
+    html {
+        scroll-behavior: smooth;
+    }
+    
+    body {
+        @apply font-sans antialiased;
+        @apply bg-gray-50;
+    }
+    
+    /* Smooth fade-in on page load */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+    
+    body {
+        animation: fadeIn 0.6s ease-out;
+    }
+}
+
+@layer components {
+    /* Modern Button Styles - Standardized */
+    .btn {
+        @apply px-6 py-3 rounded-xl font-semibold transition-all duration-300 ease-in-out inline-flex items-center justify-center;
+        @apply transform hover:scale-[1.02] active:scale-[0.98];
+        @apply shadow-md hover:shadow-lg;
+        @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+        position: relative;
+        overflow: hidden;
+        min-height: 44px;
+    }
+    
+    .btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: left 0.5s;
+    }
+    
+    .btn:hover::before {
+        left: 100%;
+    }
+    
+    .btn-primary {
+        @apply bg-gradient-to-r from-primary-600 via-primary-700 to-primary-800 text-white;
+        @apply hover:from-primary-700 hover:via-primary-800 hover:to-primary-900;
+        @apply border-0;
+        background-size: 200% 100%;
+        transition: background-position 0.3s ease-in-out, transform 0.2s ease-in-out, box-shadow 0.3s ease-in-out;
+    }
+    
+    .btn-primary:hover {
+        background-position: right center;
+        box-shadow: 0 10px 25px -5px rgba(220, 38, 38, 0.4);
+    }
+    
+    .btn-secondary {
+        @apply bg-gray-200 text-gray-900 hover:bg-gray-300;
+    }
+    
+    .btn-outline {
+        @apply border-2 border-primary-600 text-primary-600;
+        @apply hover:bg-primary-600 hover:text-white;
+        @apply bg-transparent;
+    }
+    
+    .btn-accent {
+        @apply bg-gradient-to-r from-accent-600 to-accent-700 text-white;
+        @apply hover:from-accent-700 hover:to-accent-800;
+    }
+    
+    /* Modern Card Styles */
+    .card {
+        @apply bg-white rounded-2xl shadow-lg overflow-hidden;
+        @apply transition-all duration-500;
+        @apply hover:shadow-2xl hover:-translate-y-2;
+        @apply border border-gray-100;
+    }
+    
+    .card-vehicle {
+        @apply bg-white rounded-2xl shadow-xl overflow-hidden;
+        @apply transition-all duration-500;
+        @apply hover:shadow-2xl hover:-translate-y-3;
+        @apply border border-gray-100;
+    }
+    
+    .card-vehicle:hover {
+        @apply border-primary-200;
+    }
+    
+    /* Glassmorphism Effect */
+    .glass {
+        @apply bg-white/80 backdrop-blur-lg;
+        @apply border border-white/20;
+        @apply shadow-xl;
+    }
+    
+    /* Modern Container */
+    .container-custom {
+        @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+    }
+    
+    /* Section Padding */
+    .section-padding {
+        @apply py-20 lg:py-28;
+    }
+    
+    /* Modern Headings */
+    .heading-primary {
+        @apply text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900;
+        @apply leading-tight;
+    }
+    
+    .heading-secondary {
+        @apply text-2xl md:text-3xl font-bold text-gray-900;
+    }
+    
+    /* Gradient Text */
+    .gradient-text {
+        @apply bg-gradient-to-r from-primary-600 to-primary-800;
+        @apply bg-clip-text text-transparent;
+    }
+    
+    /* Modern Input */
+    .input-modern {
+        @apply w-full border-2 border-gray-200 rounded-xl px-5 py-4;
+        @apply focus:ring-2 focus:ring-primary-500 focus:border-primary-500;
+        @apply transition-all duration-300;
+        @apply bg-white;
+    }
+    
+    .input-modern:focus {
+        @apply shadow-lg transform scale-[1.02];
+    }
+    
+    /* Animated Background */
+    .animated-bg {
+        background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+        background-size: 400% 400%;
+        animation: gradient 15s ease infinite;
+    }
+    
+    @keyframes gradient {
+        0% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+    
+    /* Fade In Up Animation */
+    .fade-in-up {
+        animation: fadeInUp 0.8s ease-out;
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    /* Slide In Left */
+    .slide-in-left {
+        animation: slideInLeft 0.8s ease-out;
+    }
+    
+    @keyframes slideInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+    
+    /* Slide In Right */
+    .slide-in-right {
+        animation: slideInRight 0.8s ease-out;
+    }
+    
+    @keyframes slideInRight {
+        from {
+            opacity: 0;
+            transform: translateX(50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+    
+    /* Scale In */
+    .scale-in {
+        animation: scaleIn 0.6s ease-out;
+    }
+    
+    @keyframes scaleIn {
+        from {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+    
+    /* Pulse Animation */
+    .pulse-slow {
+        animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    
+    /* Shimmer Effect */
+    .shimmer {
+        background: linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(255, 255, 255, 0.2) 50%,
+            rgba(255, 255, 255, 0) 100%
+        );
+        background-size: 200% 100%;
+        animation: shimmer 2s infinite;
+    }
+    
+    @keyframes shimmer {
+        0% {
+            background-position: -200% 0;
+        }
+        100% {
+            background-position: 200% 0;
+        }
+    }
+    
+    /* Hover Lift Effect */
+    .hover-lift {
+        @apply transition-all duration-500;
+    }
+    
+    .hover-lift:hover {
+        @apply transform -translate-y-2 shadow-2xl;
+    }
+    
+    /* Modern Badge */
+    .badge {
+        @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-bold;
+        @apply bg-gradient-to-r from-primary-500 to-primary-600 text-white;
+        @apply shadow-md;
+    }
+    
+    /* Gradient Border */
+    .gradient-border {
+        position: relative;
+        background: white;
+        border-radius: 1rem;
+    }
+    
+    .gradient-border::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 1rem;
+        padding: 2px;
+        background: linear-gradient(135deg, #dc2626, #991b1b);
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+    }
+}
+
+@layer utilities {
+    /* Scroll Reveal Animation */
+    .reveal {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.8s ease-out;
+    }
+    
+    .reveal.active {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    /* Text Gradient */
+    .text-gradient {
+        @apply bg-gradient-to-r from-primary-600 via-primary-700 to-primary-800;
+        @apply bg-clip-text text-transparent;
+    }
+    
+    /* Backdrop Blur */
+    .backdrop-blur-modern {
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+    }
+    
+    /* Tab Styles */
+    .hero-tab {
+        @apply flex-1 px-6 py-5 font-bold text-sm uppercase tracking-wider transition-all duration-300 ease-in-out;
+        @apply relative overflow-hidden;
+        position: relative;
+    }
+    
+    .hero-tab::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: linear-gradient(90deg, #dc2626, #991b1b);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.3s ease-in-out;
+    }
+    
+    .hero-tab.active {
+        @apply bg-gradient-to-r from-gray-900 to-gray-800 text-white;
+    }
+    
+    .hero-tab.active::after {
+        transform: scaleX(1);
+    }
+    
+    .hero-tab:not(.active) {
+        @apply bg-white text-gray-600 hover:bg-gray-50;
+    }
+    
+    /* Slogan Animation */
+    @keyframes sloganFadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes sloganFadeOut {
+        from {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        to {
+            opacity: 0;
+            transform: translateY(-10px) scale(0.98);
+        }
+    }
+    
+    @keyframes sloganFadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(15px) scale(0.98);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+    
+    @keyframes sloganRevealLeft {
+        from {
+            clip-path: inset(0 100% 0 0);
+            opacity: 0;
+        }
+        to {
+            clip-path: inset(0 0 0 0);
+            opacity: 1;
+        }
+    }
+    
+    .slogan-text {
+        animation: sloganFadeIn 0.8s ease-out;
+    }
+    
+    .slogan-content {
+        transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+        display: inline-block;
+    }
+    
+    .slogan-content.fade-out {
+        animation: sloganFadeOut 0.25s ease-in forwards;
+    }
+    
+    .slogan-content.fade-in {
+        animation: sloganFadeInUp 0.3s ease-out forwards;
+    }
+    
+    .slogan-content.reveal-left {
+        animation: sloganRevealLeft 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+    
+    .slogan-highlight-red {
+        @apply text-primary-600;
+        background: linear-gradient(120deg, #dc2626 0%, #991b1b 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    
+    /* Form Card - Equal Height for Both Tabs */
+    .hero-form-card {
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        /* Allow dropdowns to overflow */
+        overflow: visible;
+    }
+    
+    /* Wizard Card - Allow dropdowns to overflow */
+    .wizard-card {
+        position: relative;
+        overflow: visible;
+    }
+    
+    .wizard-card.dropdown-open .form-field:not(:has(.hero-custom-dropdown-panel.open)) {
+        transition: opacity 0.2s ease, pointer-events 0.2s ease;
+    }
+    
+    .hero-form-card .tab-content {
+        display: none;
+        position: relative;
+        overflow: visible;
+    }
+    
+    .hero-form-card .tab-content.active {
+        display: block;
+        overflow: visible;
+    }
+    
+    /* Ensure forms have consistent spacing */
+    .hero-form-card form {
+        min-height: 0;
+        position: relative;
+        overflow: visible;
+    }
+    
+    /* Form field wrapper - allow dropdown overflow */
+    .hero-form-card .form-field {
+        position: relative;
+        overflow: visible;
+        z-index: 1;
+    }
+    
+    .hero-form-card .form-field:has(.hero-custom-dropdown-panel.open) {
+        z-index: 10000;
+    }
+    
+    .slogan-highlight {
+        @apply relative inline-block;
+        background: linear-gradient(120deg, #dc2626 0%, #991b1b 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        position: relative;
+    }
+    
+    .slogan-highlight::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, #dc2626, #991b1b);
+        transform: scaleX(0);
+        transform-origin: left;
+        animation: underlineExpand 1s ease-out 0.5s forwards;
+    }
+    
+    @keyframes underlineExpand {
+        to {
+            transform: scaleX(1);
+        }
+    }
+    
+    /* Dropdown Animation */
+    .dropdown-wrapper {
+        position: relative;
+    }
+    
+    .dropdown-options {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        z-index: 50;
+        background: white;
+        border: 2px solid #e5e7eb;
+        border-top: none;
+        border-radius: 0 0 0.75rem 0.75rem;
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+    
+    .dropdown-options.open {
+        max-height: 300px;
+        opacity: 1;
+        overflow-y: auto;
+    }
+    
+    .dropdown-option {
+        @apply px-5 py-3 cursor-pointer transition-colors duration-200;
+        @apply hover:bg-primary-50 hover:text-primary-700;
+    }
+    
+    .dropdown-option.selected {
+        @apply bg-primary-100 text-primary-700 font-semibold;
+    }
+    
+    /* Form Select Modern Style */
+    .form-select-modern {
+        @apply w-full border-2 border-gray-300 rounded-xl px-5 py-4 pr-12 appearance-none;
+        @apply focus:ring-2 focus:ring-primary-600 focus:border-primary-600;
+        @apply text-gray-900 font-semibold transition-all duration-200 bg-white;
+        @apply hover:border-primary-400 cursor-pointer;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        background-size: 1.5em 1.5em;
+    }
+    
+    .form-select-modern:focus {
+        @apply shadow-lg transform scale-[1.01];
+    }
+    
+    .form-select-modern.open {
+        @apply border-primary-600 rounded-b-none;
+    }
+    
+    /* Custom Dropdown for Hero Section - Always Opens Downward */
+    .hero-custom-dropdown {
+        position: relative;
+        width: 100%;
+        z-index: 1;
+    }
+    
+    .hero-custom-dropdown:has(.hero-custom-dropdown-panel.open),
+    .hero-custom-dropdown.dropdown-open {
+        z-index: 10000 !important;
+        position: relative;
+    }
+    
+    .hero-custom-dropdown-trigger {
+        @apply w-full border-2 border-gray-300 rounded-xl px-5 py-4 pr-12;
+        @apply focus:ring-2 focus:ring-primary-600 focus:border-primary-600;
+        @apply text-gray-900 font-semibold transition-all duration-200 bg-white;
+        @apply hover:border-primary-400 cursor-pointer flex items-center justify-between;
+        text-align: left;
+    }
+    
+    .hero-custom-dropdown-trigger.open {
+        @apply border-primary-600 rounded-b-none;
+    }
+    
+    .hero-custom-dropdown-trigger .arrow {
+        transition: transform 0.3s ease;
+        flex-shrink: 0;
+        margin-left: 0.5rem;
+    }
+    
+    .hero-custom-dropdown-trigger.open .arrow {
+        transform: rotate(180deg);
+    }
+    
+    .hero-custom-dropdown-trigger .selected-text {
+        flex: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    
+    .hero-custom-dropdown-trigger .placeholder {
+        @apply text-gray-400;
+    }
+    
+    .hero-custom-dropdown-panel {
+        position: absolute;
+        top: calc(100% + 2px) !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: auto !important;
+        transform: translateY(0) !important;
+        z-index: 10000 !important;
+        background-color: #ffffff !important;
+        background: #ffffff !important;
+        background-image: none !important;
+        display: none;
+        opacity: 0;
+        max-height: 0;
+        overflow: hidden;
+        transition: opacity 0.2s ease, max-height 0.3s ease;
+        border: 2px solid #dc2626;
+        border-top: none;
+        border-radius: 0 0 0.75rem 0.75rem;
+        max-height: 240px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.25s ease-out;
+        /* Custom scrollbar */
+        scrollbar-width: thin;
+        scrollbar-color: #dc2626 #f3f4f6;
+        /* Ensure panel is above everything */
+        isolation: isolate;
+        /* Force solid background */
+        mix-blend-mode: normal !important;
+    }
+    
+    .hero-custom-dropdown-panel::-webkit-scrollbar {
+        width: 8px;
+    }
+    
+    .hero-custom-dropdown-panel::-webkit-scrollbar-track {
+        background: #f3f4f6;
+        border-radius: 4px;
+    }
+    
+    .hero-custom-dropdown-panel::-webkit-scrollbar-thumb {
+        background: #dc2626;
+        border-radius: 4px;
+    }
+    
+    .hero-custom-dropdown-panel::-webkit-scrollbar-thumb:hover {
+        background: #b91c1c;
+    }
+    
+    .hero-custom-dropdown-panel.open {
+        display: block !important;
+        opacity: 1 !important;
+        max-height: 400px !important;
+        background-color: #ffffff !important;
+        background: #ffffff !important;
+        background-image: none !important;
+        pointer-events: auto;
+        overflow-y: auto;
+        /* Ensure panel is fully opaque even if parent has opacity */
+        will-change: opacity;
+        mix-blend-mode: normal !important;
+    }
+    
+    /* Ensure form-field containing open dropdown is fully opaque */
+    .form-field:has(.hero-custom-dropdown-panel.open) {
+        opacity: 1 !important;
+    }
+    
+    /* Prevent interaction with elements below open dropdown (fallback for browsers without :has support) */
+    .hero-form-card.dropdown-open .form-field:not(:has(.hero-custom-dropdown-panel.open)) {
+        transition: opacity 0.2s ease, pointer-events 0.2s ease;
+    }
+    
+    .hero-custom-dropdown-option {
+        @apply px-5 py-3 cursor-pointer transition-colors duration-150;
+        @apply hover:bg-primary-50 hover:text-primary-700;
+        @apply text-gray-900 font-semibold;
+        @apply focus:outline-none focus:bg-primary-50 focus:ring-2 focus:ring-primary-600 focus:ring-inset;
+        background-color: #ffffff !important;
+        border-bottom: 1px solid #f3f4f6;
+        outline: none;
+    }
+    
+    .hero-custom-dropdown-option:last-child {
+        border-bottom: none;
+    }
+    
+    .hero-custom-dropdown-option.selected {
+        @apply bg-primary-100 text-primary-700;
+        background-color: #fef2f2 !important;
+    }
+    
+    .hero-custom-dropdown-option:hover,
+    .hero-custom-dropdown-option:focus {
+        @apply bg-primary-50;
+        background-color: #fef2f2 !important;
+    }
+    
+    /* Hidden native select for form submission */
+    .hero-custom-dropdown-native {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+        height: 0;
+        width: 0;
+    }
+    
+    /* Vehicle Request Modal Styles */
+    #vehicle-request-modal {
+        animation: fadeIn 0.3s ease-out;
+    }
+    
+    #vehicle-request-modal .modal-content {
+        animation: slideUp 0.3s ease-out;
+    }
+    
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+    
+    @keyframes slideUp {
+        from {
+            transform: translateY(20px) scale(0.95);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+        }
+    }
+    
+    /* Modal scrollbar styling */
+    #vehicle-request-modal .modal-content::-webkit-scrollbar {
+        width: 8px;
+    }
+    
+    #vehicle-request-modal .modal-content::-webkit-scrollbar-track {
+        background: #f3f4f6;
+        border-radius: 4px;
+    }
+    
+    #vehicle-request-modal .modal-content::-webkit-scrollbar-thumb {
+        background: #dc2626;
+        border-radius: 4px;
+    }
+    
+    #vehicle-request-modal .modal-content::-webkit-scrollbar-thumb:hover {
+        background: #b91c1c;
+    }
+    
+    /* Scrollbar Hide */
+    .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+    
+    .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+    }
+}
