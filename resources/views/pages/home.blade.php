@@ -76,7 +76,7 @@
 
 @section('content')
     <!-- Hero Section - Modern Design -->
-    <section class="relative bg-white overflow-hidden">
+    <section class="relative bg-white dark:bg-[#1e1e1e] overflow-hidden transition-colors duration-200">
         <!-- Decorative Elements -->
         <div class="absolute inset-0 pointer-events-none overflow-hidden">
             <div class="absolute top-20 right-10 w-96 h-96 opacity-5">
@@ -92,9 +92,9 @@
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                 <!-- Left Side - Modern Search Form -->
                 <div class="order-2 lg:order-1 animate-slide-in-left">
-                    <div class="bg-white rounded-2xl shadow-2xl border-b-4 border-primary-600 overflow-visible transform hover:shadow-3xl transition-shadow duration-300 hero-form-card">
+                    <div class="bg-white dark:bg-[#252525] rounded-2xl shadow-2xl border-b-4 border-primary-600 dark:border-primary-500 overflow-visible transform hover:shadow-3xl transition-shadow duration-300 hero-form-card">
                         <!-- Tabs -->
-                        <div class="flex border-b-2 border-gray-100 relative">
+                        <div class="flex border-b-2 border-gray-100 dark:border-gray-800 relative">
                             <button id="tab-sell" 
                                     onclick="switchTab('sell')"
                                     class="hero-tab active">
@@ -122,11 +122,11 @@
                             <form method="GET" action="{{ route('evaluation.index') }}" id="sell-form" class="p-8 space-y-6">
                                 <!-- Araç Tipi -->
                                 <div class="form-field">
-                                    <label class="block text-xs font-bold text-gray-700 mb-3 uppercase tracking-wider">ARAÇ TİPİ</label>
+                                    <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wider">ARAÇ TİPİ</label>
                                     <div class="hero-custom-dropdown" data-dropdown="vehicle-type-sell">
-                                        <button type="button" class="hero-custom-dropdown-trigger border-2 border-gray-300" data-value="">
-                                            <span class="selected-text placeholder">Araç Tipi Seçin</span>
-                                            <svg class="arrow w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <button type="button" class="hero-custom-dropdown-trigger border-2 border-gray-300 dark:border-gray-700 dark:bg-[#2a2a2a] dark:text-gray-100" data-value="">
+                                            <span class="selected-text placeholder dark:text-gray-400">Araç Tipi Seçin</span>
+                                            <svg class="arrow w-6 h-6 text-gray-400 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                                             </svg>
                                         </button>
@@ -147,11 +147,11 @@
                                 
                                 <!-- Model Yılı -->
                                 <div class="form-field">
-                                    <label class="block text-xs font-bold text-gray-700 mb-3 uppercase tracking-wider">MODEL YILI</label>
+                                    <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wider">MODEL YILI</label>
                                     <div class="hero-custom-dropdown" data-dropdown="year-sell">
-                                        <button type="button" class="hero-custom-dropdown-trigger border-2 border-gray-300" data-value="{{ date('Y') }}">
+                                        <button type="button" class="hero-custom-dropdown-trigger border-2 border-gray-300 dark:border-gray-700 dark:bg-[#2a2a2a] dark:text-gray-100" data-value="{{ date('Y') }}">
                                             <span class="selected-text">{{ date('Y') }}</span>
-                                            <svg class="arrow w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <svg class="arrow w-6 h-6 text-gray-400 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                                             </svg>
                                         </button>
@@ -172,11 +172,11 @@
                                 
                                 <!-- Marka -->
                                 <div class="form-field">
-                                    <label class="block text-xs font-bold text-gray-700 mb-3 uppercase tracking-wider">MARKA</label>
+                                    <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wider">MARKA</label>
                                     <div class="hero-custom-dropdown" data-dropdown="brand-sell">
-                                        <button type="button" class="hero-custom-dropdown-trigger border-2 border-gray-300" data-value="">
-                                            <span class="selected-text placeholder">Marka Seçin</span>
-                                            <svg class="arrow w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <button type="button" class="hero-custom-dropdown-trigger border-2 border-gray-300 dark:border-gray-700 dark:bg-[#2a2a2a] dark:text-gray-100" data-value="">
+                                            <span class="selected-text placeholder dark:text-gray-400">Marka Seçin</span>
+                                            <svg class="arrow w-6 h-6 text-gray-400 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                                             </svg>
                                         </button>
@@ -220,9 +220,9 @@
                             <form method="GET" action="{{ route('vehicles.index') }}" id="buy-form" class="p-8 space-y-6">
                                 <!-- Marka -->
                                 <div class="form-field">
-                                    <label class="block text-xs font-bold text-gray-700 mb-3 uppercase tracking-wider">MARKA</label>
+                                    <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wider">MARKA</label>
                                     <div class="hero-custom-dropdown" data-dropdown="brand-buy">
-                                        <button type="button" class="hero-custom-dropdown-trigger" data-value="">
+                                        <button type="button" class="hero-custom-dropdown-trigger border-2 border-gray-300 dark:border-gray-700 dark:bg-[#2a2a2a] dark:text-gray-100" data-value="">
                                             <span class="selected-text placeholder">Tüm Markalar</span>
                                             <svg class="arrow w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
@@ -245,9 +245,9 @@
                                 
                                 <!-- Model Yılı -->
                                 <div class="form-field">
-                                    <label class="block text-xs font-bold text-gray-700 mb-3 uppercase tracking-wider">MODEL YILI</label>
+                                    <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wider">MODEL YILI</label>
                                     <div class="hero-custom-dropdown" data-dropdown="year-buy">
-                                        <button type="button" class="hero-custom-dropdown-trigger" data-value="">
+                                        <button type="button" class="hero-custom-dropdown-trigger border-2 border-gray-300 dark:border-gray-700 dark:bg-[#2a2a2a] dark:text-gray-100" data-value="">
                                             <span class="selected-text placeholder">Model Yılı Seçin</span>
                                             <svg class="arrow w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
@@ -270,12 +270,12 @@
                                 
                                 <!-- Fiyat Aralığı -->
                                 <div class="form-field">
-                                    <label class="block text-xs font-bold text-gray-700 mb-3 uppercase tracking-wider">BÜTÇE ARALIĞI (₺)</label>
+                                    <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wider">BÜTÇE ARALIĞI (₺)</label>
                                     <div class="grid grid-cols-2 gap-3">
                                         <input type="number" name="min_price" placeholder="Min" 
-                                               class="w-full border-2 border-gray-300 rounded-xl px-4 py-4 focus:ring-2 focus:ring-primary-600 focus:border-primary-600 text-gray-900 font-semibold transition-all duration-200 bg-white hover:border-primary-400">
+                                               class="w-full border-2 border-gray-300 dark:border-gray-700 rounded-xl px-4 py-4 focus:ring-2 focus:ring-primary-600 focus:border-primary-600 text-gray-900 dark:text-gray-100 font-semibold transition-all duration-200 bg-white dark:bg-[#2a2a2a] hover:border-primary-400 dark:hover:border-primary-500">
                                         <input type="number" name="max_price" placeholder="Max" 
-                                               class="w-full border-2 border-gray-300 rounded-xl px-4 py-4 focus:ring-2 focus:ring-primary-600 focus:border-primary-600 text-gray-900 font-semibold transition-all duration-200 bg-white hover:border-primary-400">
+                                               class="w-full border-2 border-gray-300 dark:border-gray-700 rounded-xl px-4 py-4 focus:ring-2 focus:ring-primary-600 focus:border-primary-600 text-gray-900 dark:text-gray-100 font-semibold transition-all duration-200 bg-white dark:bg-[#2a2a2a] hover:border-primary-400 dark:hover:border-primary-500">
                                     </div>
                                 </div>
                                 
@@ -283,7 +283,7 @@
                                 <div class="text-center pt-2 pb-2">
                                     <p class="text-xs text-gray-500 leading-relaxed">
                                         Detaylı seçim için 
-                                        <a href="{{ route('vehicles.index') }}" class="text-primary-600 hover:text-primary-700 font-semibold underline">
+                                        <a href="{{ route('vehicles.index') }}" class="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-semibold underline">
                                             Araçlar sayfasına
                                         </a> 
                                         göz atabilirsiniz.
@@ -304,10 +304,10 @@
                 
                 <!-- Right Side - Dynamic Headline & Image -->
                 <div class="order-1 lg:order-2 animate-slide-in-right">
-                    <h1 id="slogan-title" class="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-6 leading-tight">
+                    <h1 id="slogan-title" class="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 dark:text-white mb-6 leading-tight">
                         <span class="slogan-content">Aracını <span class="slogan-highlight-red">Güvenle</span> Sat</span>
                     </h1>
-                    <p id="slogan-description" class="text-xl md:text-2xl text-gray-600 mb-8 max-w-lg leading-relaxed">
+                    <p id="slogan-description" class="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8 max-w-lg leading-relaxed">
                         <span class="slogan-content">Hızlı teklif alın, güvenli süreçten geçin. Aracınızın gerçek değerini öğrenin ve en iyi fiyatı garantileyin.</span>
                     </p>
                     
@@ -343,7 +343,7 @@
     </section>
 
     <!-- Öne Çıkan Araçlar -->
-    <section class="section-padding bg-gradient-to-b from-gray-50 to-white relative overflow-hidden">
+    <section class="section-padding bg-gradient-to-b from-gray-50 to-white dark:from-[#1e1e1e] dark:to-[#252525] relative overflow-hidden transition-colors duration-200">
         <!-- Decorative Background Elements -->
         <div class="absolute inset-0 opacity-5">
             <div class="absolute top-20 left-10 w-72 h-72 bg-primary-600 rounded-full blur-3xl"></div>
@@ -356,9 +356,9 @@
                     <h2 class="heading-primary mb-2">
                         <span class="text-gradient">Öne Çıkan Araçlar</span>
                     </h2>
-                    <p class="text-gray-600 text-lg">En popüler ve öne çıkan araçlarımızı keşfedin</p>
+                    <p class="text-gray-600 dark:text-gray-300 text-lg">En popüler ve öne çıkan araçlarımızı keşfedin</p>
                 </div>
-                <a href="{{ route('vehicles.index') }}" class="hidden md:flex items-center text-primary-600 font-semibold hover:text-primary-700 group transition-all duration-300">
+                <a href="{{ route('vehicles.index') }}" class="hidden md:flex items-center text-primary-600 dark:text-primary-400 font-semibold hover:text-primary-700 dark:hover:text-primary-300 group transition-all duration-300">
                     <span>Tümünü Gör</span>
                     <svg class="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -389,7 +389,7 @@
     </section>
 
     <!-- Why Choose Us -->
-    <section class="section-padding bg-white relative overflow-hidden">
+    <section class="section-padding bg-white dark:bg-[#1e1e1e] relative overflow-hidden transition-colors duration-200">
         <!-- Decorative Background -->
         <div class="absolute inset-0 opacity-5">
             <div class="absolute top-0 right-0 w-96 h-96 bg-primary-400 rounded-full blur-3xl"></div>
@@ -401,48 +401,48 @@
                 <h2 class="heading-primary mb-4">
                     <span class="text-gradient">Neden GMSGARAGE?</span>
                 </h2>
-                <p class="text-gray-600 text-lg max-w-2xl mx-auto">Size sunduğumuz avantajlar ile fark yaratıyoruz</p>
+                <p class="text-gray-600 dark:text-gray-300 text-lg max-w-2xl mx-auto">Size sunduğumuz avantajlar ile fark yaratıyoruz</p>
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <div class="text-center group reveal hover-lift">
+                <div class="text-center group reveal hover-lift bg-white dark:bg-[#252525] rounded-2xl p-6 shadow-md dark:shadow-xl dark:border dark:border-gray-800 transition-all duration-200">
                     <div class="bg-gradient-to-br from-primary-500 to-primary-600 w-24 h-24 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-xl">
                         <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
                         </svg>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-primary-600 transition-colors duration-300">Garantili Araçlar</h3>
-                    <p class="text-gray-600 leading-relaxed">Tüm araçlarımız garantili ve bakımlıdır. Güvenle alışveriş yapın.</p>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-3 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors duration-300">Garantili Araçlar</h3>
+                    <p class="text-gray-600 dark:text-gray-300 leading-relaxed">Tüm araçlarımız garantili ve bakımlıdır. Güvenle alışveriş yapın.</p>
                 </div>
                 
-                <div class="text-center group reveal hover-lift" style="animation-delay: 0.1s">
+                <div class="text-center group reveal hover-lift bg-white dark:bg-[#252525] rounded-2xl p-6 shadow-md dark:shadow-xl dark:border dark:border-gray-800 transition-all duration-200" style="animation-delay: 0.1s">
                     <div class="bg-gradient-to-br from-primary-500 to-primary-600 w-24 h-24 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-xl">
                         <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-primary-600 transition-colors duration-300">En İyi Fiyat</h3>
-                    <p class="text-gray-600 leading-relaxed">Piyasanın en uygun fiyatları ile hizmetinizdeyiz. Fiyat garantisi veriyoruz.</p>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-3 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors duration-300">En İyi Fiyat</h3>
+                    <p class="text-gray-600 dark:text-gray-300 leading-relaxed">Piyasanın en uygun fiyatları ile hizmetinizdeyiz. Fiyat garantisi veriyoruz.</p>
                 </div>
                 
-                <div class="text-center group reveal hover-lift" style="animation-delay: 0.2s">
+                <div class="text-center group reveal hover-lift bg-white dark:bg-[#252525] rounded-2xl p-6 shadow-md dark:shadow-xl dark:border dark:border-gray-800 transition-all duration-200" style="animation-delay: 0.2s">
                     <div class="bg-gradient-to-br from-primary-500 to-primary-600 w-24 h-24 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-xl">
                         <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-primary-600 transition-colors duration-300">Ekspertiz Hizmeti</h3>
-                    <p class="text-gray-600 leading-relaxed">Tüm araçlarımız ekspertiz raporlu ve detaylı kontrol edilmiştir.</p>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-3 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors duration-300">Ekspertiz Hizmeti</h3>
+                    <p class="text-gray-600 dark:text-gray-300 leading-relaxed">Tüm araçlarımız ekspertiz raporlu ve detaylı kontrol edilmiştir.</p>
                 </div>
                 
-                <div class="text-center group reveal hover-lift" style="animation-delay: 0.3s">
+                <div class="text-center group reveal hover-lift bg-white dark:bg-[#252525] rounded-2xl p-6 shadow-md dark:shadow-xl dark:border dark:border-gray-800 transition-all duration-200" style="animation-delay: 0.3s">
                     <div class="bg-gradient-to-br from-primary-500 to-primary-600 w-24 h-24 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-xl">
                         <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path>
                         </svg>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-primary-600 transition-colors duration-300">7/24 Destek</h3>
-                    <p class="text-gray-600 leading-relaxed">Müşteri hizmetlerimiz her zaman yanınızda. Sorularınız için bize ulaşın.</p>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-3 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors duration-300">7/24 Destek</h3>
+                    <p class="text-gray-600 dark:text-gray-300 leading-relaxed">Müşteri hizmetlerimiz her zaman yanınızda. Sorularınız için bize ulaşın.</p>
                 </div>
             </div>
         </div>
@@ -464,7 +464,7 @@
         
         <div class="container-custom text-center relative z-10">
             <div class="reveal">
-                <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 tracking-tight">
+                <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 tracking-tight text-gray-900 dark:text-white">
                     <span class="bg-gradient-to-r from-white via-white to-white/90 bg-clip-text text-transparent">Hayalinizdeki Aracı</span>
                     <br>
                     <span class="bg-gradient-to-r from-white via-white to-white/90 bg-clip-text text-transparent">Bulun</span>

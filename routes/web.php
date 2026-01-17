@@ -35,9 +35,15 @@ Route::post('/aracimi-bulamiyorum', [PageController::class, 'vehicleRequestSubmi
 Route::get('/araclar', [VehicleController::class, 'index'])->name('vehicles.index');
 Route::get('/araclar/{slug}', [VehicleController::class, 'show'])->name('vehicles.show');
 
+// Satıcı Profili
+Route::get('/satıcı/{slug}', [VehicleController::class, 'sellerProfile'])->name('seller.profile');
+
 // Araç Değerleme
 Route::get('/aracimi-degerle', [VehicleEvaluationController::class, 'index'])->name('evaluation.index');
 Route::post('/aracimi-degerle/gonder', [VehicleEvaluationController::class, 'submit'])->name('evaluation.submit');
 Route::get('/api/vehicle-models', [VehicleEvaluationController::class, 'getVehicleModels'])->name('evaluation.models');
 Route::get('/api/vehicle-options', [VehicleEvaluationController::class, 'getVehicleOptions'])->name('evaluation.options');
 Route::get('/api/vehicle-versions', [VehicleEvaluationController::class, 'getVehicleVersions'])->name('evaluation.versions');
+
+// Landing Page
+Route::get('/landing', [PageController::class, 'landing'])->name('landing');

@@ -1,6 +1,57 @@
 import './bootstrap';
 import '../css/app.css';
 
+// Dark Mode Management
+(function() {
+    // Get theme from localStorage or system preference
+    function getInitialTheme() {
+        const storedTheme = localStorage.getItem('theme');
+        if (storedTheme) {
+            return storedTheme;
+        }
+        // Check system preference
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            return 'dark';
+        }
+        return 'light';
+    }
+
+    // Apply theme
+    function applyTheme(theme) {
+        const html = document.documentElement;
+        if (theme === 'dark') {
+            html.classList.add('dark');
+        } else {
+            html.classList.remove('dark');
+        }
+        localStorage.setItem('theme', theme);
+    }
+
+    // Initialize theme on page load (before DOMContentLoaded to prevent flash)
+    const initialTheme = getInitialTheme();
+    applyTheme(initialTheme);
+
+    // Toggle theme function
+    function toggleTheme() {
+        const currentTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        applyTheme(newTheme);
+    }
+
+    // Make toggleTheme globally available
+    window.toggleTheme = toggleTheme;
+
+    // Listen for system theme changes
+    if (window.matchMedia) {
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+            // Only apply if user hasn't set a preference
+            if (!localStorage.getItem('theme')) {
+                applyTheme(e.matches ? 'dark' : 'light');
+            }
+        });
+    }
+})();
+
 // Scroll Reveal Animation
 document.addEventListener('DOMContentLoaded', function() {
     // Intersection Observer for reveal animations

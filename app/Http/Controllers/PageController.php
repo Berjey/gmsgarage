@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Data\CarBrands;
 use Illuminate\Http\Request;
 
 class PageController extends Controller
@@ -129,5 +128,10 @@ class PageController extends Controller
     public function terms()
     {
         return view('pages.terms');
+    }
+
+    public function landing()
+    {
+        return view('pages.landing');
     }
 }

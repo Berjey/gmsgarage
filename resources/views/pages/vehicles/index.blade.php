@@ -43,6 +43,24 @@
         color: #9ca3af;
     }
     
+    .dark .hero-custom-dropdown-trigger {
+        background: #2a2a2a;
+        border-color: #404040;
+        color: #e5e7eb;
+    }
+    
+    .dark .hero-custom-dropdown-trigger:hover {
+        border-color: #dc2626;
+    }
+    
+    .dark .hero-custom-dropdown-trigger.open {
+        border-color: #dc2626;
+    }
+    
+    .dark .hero-custom-dropdown-trigger .selected-text.placeholder {
+        color: #9ca3af;
+    }
+    
     .hero-custom-dropdown-panel {
         position: absolute;
         top: calc(100% + 4px);
@@ -57,6 +75,11 @@
         z-index: 9999;
         display: none;
         margin-top: 4px;
+    }
+    
+    .dark .hero-custom-dropdown-panel {
+        background: #1f2937;
+        border-color: #dc2626;
     }
     
     .hero-custom-dropdown-panel.open {
@@ -80,6 +103,19 @@
         color: #dc2626;
     }
     
+    .dark .hero-custom-dropdown-option {
+        color: #e5e7eb;
+    }
+    
+    .dark .hero-custom-dropdown-option:hover {
+        background-color: #374151;
+    }
+    
+    .dark .hero-custom-dropdown-option.selected {
+        background-color: #7f1d1d;
+        color: #fecaca;
+    }
+    
     .hero-custom-dropdown-native {
         position: absolute;
         opacity: 0;
@@ -93,6 +129,10 @@
         border-bottom: 1px solid #e5e7eb;
         position: relative;
         z-index: 1;
+    }
+    
+    .dark .filter-accordion-item {
+        border-bottom-color: #374151;
     }
     
     /* Ensure dropdown panel is always on top */
@@ -129,6 +169,11 @@
         cursor: pointer;
         user-select: none;
         transition: color 0.2s;
+        color: #374151;
+    }
+    
+    .dark .filter-accordion-header {
+        color: #e5e7eb;
     }
     
     .filter-accordion-header:hover {
@@ -157,6 +202,18 @@
         height: 1.25rem;
         transition: transform 0.3s ease;
         color: #6b7280;
+    }
+    
+    .dark .filter-accordion-title {
+        color: #e5e7eb;
+    }
+    
+    .dark .filter-accordion-summary {
+        color: #9ca3af;
+    }
+    
+    .dark .filter-accordion-icon {
+        color: #9ca3af;
     }
     
     .filter-accordion-header.active .filter-accordion-icon {
@@ -218,6 +275,7 @@
         font-size: 0.875rem;
         font-weight: 500;
         color: #111827;
+        background: white;
         transition: all 0.2s;
     }
     
@@ -230,6 +288,25 @@
     
     .single-input:hover {
         border-color: #dc2626;
+    }
+    
+    .dark .single-input {
+        background: #2a2a2a;
+        border-color: #404040;
+        color: #e5e7eb;
+    }
+    
+    .dark .single-input:focus {
+        border-color: #dc2626;
+        box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.2);
+    }
+    
+    .dark .single-input:hover {
+        border-color: #dc2626;
+    }
+    
+    .dark .single-input::placeholder {
+        color: #9ca3af;
     }
     
     /* Error Message */
@@ -248,7 +325,7 @@
 
 @section('content')
     <!-- Page Header -->
-    <section class="bg-gradient-to-br from-primary-800 via-primary-700 to-primary-900 text-white py-16 relative overflow-hidden">
+    <section class="bg-gradient-to-br from-primary-800 via-primary-700 to-primary-900 dark:from-primary-900 dark:via-primary-800 dark:to-primary-900 text-white py-16 relative overflow-hidden">
         <div class="absolute inset-0 opacity-10">
             <div class="absolute inset-0" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 40px 40px;"></div>
         </div>
@@ -264,15 +341,15 @@
     </section>
 
     <!-- Filters & Vehicles -->
-    <section class="section-padding bg-gray-50" style="overflow: visible;">
+    <section class="section-padding bg-gray-50 dark:bg-[#1e1e1e] transition-colors duration-200" style="overflow: visible;">
         <div class="container-custom" style="overflow: visible;">
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-8" style="overflow: visible;">
                 <!-- Filters Sidebar -->
                 <aside class="lg:col-span-1" style="overflow: visible;">
-                    <div class="bg-white rounded-xl shadow-lg p-6 sticky top-28 border border-gray-200" style="overflow: visible; position: relative;">
-                        <div class="flex items-center justify-between mb-6 pb-4 border-b border-gray-200">
-                            <h2 class="text-xl font-bold text-gray-900">Filtreler</h2>
-                            <a href="{{ route('vehicles.index') }}" class="text-sm text-primary-600 hover:text-primary-700 font-semibold transition-colors">
+                    <div class="bg-white dark:bg-[#252525] rounded-xl shadow-lg dark:shadow-xl p-6 sticky top-28 border border-gray-200 dark:border-gray-800 transition-colors duration-200" style="overflow: visible; position: relative;">
+                        <div class="flex items-center justify-between mb-6 pb-4 border-b border-gray-200 dark:border-gray-800">
+                            <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100">Filtreler</h2>
+                            <a href="{{ route('vehicles.index') }}" class="text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-semibold transition-colors">
                                 Temizle
                             </a>
                         </div>
@@ -857,7 +934,7 @@
                                 <div class="filter-accordion-content">
                                     <input type="text" name="keyword" value="{{ request('keyword') }}" 
                                            placeholder="Model, paket, özellik arayın…"
-                                           class="single-input"
+                                           class="single-input dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600"
                                            onchange="updateKeywordSummary()">
                                 </div>
                             </div>
@@ -877,14 +954,14 @@
                     @if($vehicles->count() > 0)
                         <div class="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                             <div>
-                                <p class="text-gray-600 text-lg">
-                                    <span class="font-bold text-gray-900 text-2xl">{{ $vehicles->total() }}</span> araç bulundu
+                                <p class="text-gray-600 dark:text-gray-300 text-lg">
+                                    <span class="font-bold text-gray-900 dark:text-gray-100 text-2xl">{{ $vehicles->total() }}</span> araç bulundu
                                 </p>
                             </div>
                             <div class="flex items-center space-x-2">
-                                <span class="text-sm text-gray-600 font-medium">Sırala:</span>
+                                <span class="text-sm text-gray-600 dark:text-gray-300 font-medium">Sırala:</span>
                                 <div class="hero-custom-dropdown" data-dropdown="sort-filter">
-                                    <button type="button" class="hero-custom-dropdown-trigger border-2 border-gray-200" data-value="{{ request('sort', 'newest') }}">
+                                    <button type="button" class="hero-custom-dropdown-trigger border-2 border-gray-200 dark:border-gray-700 dark:bg-[#2a2a2a] dark:text-gray-100" data-value="{{ request('sort', 'newest') }}">
                                         <span class="selected-text">
                                             @php
                                                 $sortOptions = [
@@ -898,7 +975,7 @@
                                             @endphp
                                             {{ $sortOptions[request('sort', 'newest')] ?? 'En Yeni İlan' }}
                                         </span>
-                                        <svg class="arrow w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg class="arrow w-5 h-5 text-gray-400 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                                         </svg>
                                     </button>
@@ -944,14 +1021,14 @@
                             {{ $vehicles->appends(request()->query())->links() }}
                         </div>
                     @else
-                        <div class="bg-white rounded-2xl shadow-xl p-16 text-center border border-gray-100">
-                            <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                                <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="bg-white dark:bg-[#252525] rounded-2xl shadow-xl dark:shadow-2xl dark:border dark:border-gray-800 p-16 text-center transition-colors duration-200">
+                            <div class="w-24 h-24 bg-gray-100 dark:bg-[#2a2a2a] rounded-full flex items-center justify-center mx-auto mb-6">
+                                <svg class="w-12 h-12 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                 </svg>
                             </div>
-                            <h3 class="text-2xl font-bold text-gray-900 mb-3">Araç Bulunamadı</h3>
-                            <p class="text-gray-600 mb-8 text-lg">Seçtiğiniz kriterlere uygun araç bulunmamaktadır.</p>
+                            <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3">Araç Bulunamadı</h3>
+                            <p class="text-gray-600 dark:text-gray-300 mb-8 text-lg">Seçtiğiniz kriterlere uygun araç bulunmamaktadır.</p>
                             <a href="{{ route('vehicles.index') }}" class="btn btn-primary text-lg px-8">
                                 Filtreleri Temizle
                             </a>

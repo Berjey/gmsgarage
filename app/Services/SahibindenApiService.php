@@ -14,27 +14,12 @@ use Illuminate\Support\Facades\Cache;
  */
 class SahibindenApiService
 {
-    /**
-     * API Base URL
-     * API bilgileri geldiğinde buraya eklenecek
-     */
     private $baseUrl;
-    
-    /**
-     * API Key
-     * .env dosyasından alınacak: SAHIBINDEN_API_KEY
-     */
     private $apiKey;
-    
-    /**
-     * API Secret (opsiyonel, bazı API'lerde gerekli olabilir)
-     * .env dosyasından alınacak: SAHIBINDEN_API_SECRET
-     */
     private $apiSecret;
     
     public function __construct()
     {
-        // .env dosyasından API bilgilerini al
         $this->baseUrl = config('services.sahibinden.api_url', '');
         $this->apiKey = config('services.sahibinden.api_key', '');
         $this->apiSecret = config('services.sahibinden.api_secret', '');
@@ -53,7 +38,6 @@ class SahibindenApiService
         }
         
         try {
-            // Test endpoint'i (API dokümantasyonuna göre güncellenecek)
             $response = Http::timeout(10)
                 ->withHeaders([
                     'Authorization' => 'Bearer ' . $this->apiKey,
@@ -86,7 +70,6 @@ class SahibindenApiService
         try {
             $cacheKey = 'sahibinden_vehicles_' . md5(json_encode($filters));
             
-            // Cache'den kontrol et (5 dakika)
             return Cache::remember($cacheKey, 300, function () use ($filters) {
                 $response = Http::timeout(30)
                     ->withHeaders([

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tr" id="html-root">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,7 +11,7 @@
     
     @stack('styles')
 </head>
-<body class="bg-gray-50">
+<body class="bg-gray-50 dark:bg-[#1e1e1e] transition-colors duration-200">
     @include('components.header')
     
     <main>

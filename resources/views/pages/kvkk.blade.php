@@ -4,16 +4,16 @@
 @section('description', 'GMSGARAGE Kişisel Verilerin Korunması Kanunu (KVKK) aydınlatma metni.')
 
 @section('content')
-<section class="section-padding bg-white">
+<section class="section-padding bg-white dark:bg-[#1e1e1e] transition-colors duration-200">
     <div class="container-custom max-w-4xl">
         <div class="mb-8">
-            <h1 class="text-4xl md:text-5xl font-bold mb-4 text-gray-900">KVKK Aydınlatma Metni</h1>
-            <p class="text-gray-600 text-lg">6698 Sayılı Kişisel Verilerin Korunması Kanunu Uyarınca</p>
+            <h1 class="text-4xl md:text-5xl font-bold mb-4 text-gray-900 dark:text-gray-100">KVKK Aydınlatma Metni</h1>
+            <p class="text-gray-600 dark:text-gray-400 text-lg">6698 Sayılı Kişisel Verilerin Korunması Kanunu Uyarınca</p>
         </div>
 
-        <div class="prose prose-lg max-w-none">
-            <div class="bg-gray-50 border-l-4 border-primary-600 p-6 mb-8">
-                <p class="text-gray-700 leading-relaxed">
+        <div class="prose prose-lg max-w-none dark:prose-invert">
+            <div class="bg-gray-50 dark:bg-[#252525] border-l-4 border-primary-600 dark:border-primary-500 p-6 mb-8 transition-colors duration-200">
+                <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
                     <strong>GMSGARAGE</strong> olarak, 6698 sayılı Kişisel Verilerin Korunması Kanunu ("KVKK") uyarınca, 
                     kişisel verilerinizin işlenmesi ve korunması konusunda sizleri bilgilendirmek isteriz.
                 </p>
@@ -21,15 +21,15 @@
 
             <div class="space-y-8">
                 <section>
-                    <h2 class="text-2xl font-bold mb-4 text-gray-900">1. Veri Sorumlusu</h2>
-                    <p class="text-gray-700 leading-relaxed mb-4">
+                    <h2 class="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">1. Veri Sorumlusu</h2>
+                    <p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
                         Kişisel verileriniz, <strong>GMSGARAGE</strong> tarafından veri sorumlusu sıfatıyla işlenmektedir.
                     </p>
-                    <div class="bg-gray-50 p-4 rounded-lg">
-                        <p class="text-gray-700"><strong>İletişim Bilgileri:</strong></p>
-                        <p class="text-gray-600">E-posta: info@gmsgarage.com</p>
-                        <p class="text-gray-600">Telefon: 0555 123 45 67</p>
-                        <p class="text-gray-600">Adres: İstanbul, Türkiye</p>
+                    <div class="bg-gray-50 dark:bg-[#252525] p-4 rounded-lg transition-colors duration-200">
+                        <p class="text-gray-700 dark:text-gray-300"><strong>İletişim Bilgileri:</strong></p>
+                        <p class="text-gray-600 dark:text-gray-400">E-posta: info@gmsgarage.com</p>
+                        <p class="text-gray-600 dark:text-gray-400">Telefon: 0555 123 45 67</p>
+                        <p class="text-gray-600 dark:text-gray-400">Adres: İstanbul, Türkiye</p>
                     </div>
                 </section>
 
@@ -48,11 +48,11 @@
                 </section>
 
                 <section>
-                    <h2 class="text-2xl font-bold mb-4 text-gray-900">3. Kişisel Verilerin İşlenme Amaçları</h2>
-                    <p class="text-gray-700 leading-relaxed mb-4">
+                    <h2 class="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">3. Kişisel Verilerin İşlenme Amaçları</h2>
+                    <p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
                         Kişisel verileriniz aşağıdaki amaçlarla işlenmektedir:
                     </p>
-                    <ul class="list-disc pl-6 space-y-2 text-gray-700">
+                    <ul class="list-disc pl-6 space-y-2 text-gray-700 dark:text-gray-300">
                         <li>Araç değerleme ve satış hizmetlerinin sunulması</li>
                         <li>Müşteri taleplerinin karşılanması ve iletişim kurulması</li>
                         <li>Hukuki yükümlülüklerin yerine getirilmesi</li>
@@ -75,12 +75,12 @@
                 </section>
 
                 <section>
-                    <h2 class="text-2xl font-bold mb-4 text-gray-900">5. Kişisel Verilerin Aktarılması</h2>
-                    <p class="text-gray-700 leading-relaxed mb-4">
+                    <h2 class="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">5. Kişisel Verilerin Aktarılması</h2>
+                    <p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
                         Kişisel verileriniz, yukarıda belirtilen amaçların gerçekleştirilmesi için, 
                         yasal yükümlülüklerimiz kapsamında ve sadece gerekli ölçüde aşağıdaki taraflarla paylaşılabilir:
                     </p>
-                    <ul class="list-disc pl-6 space-y-2 text-gray-700">
+                    <ul class="list-disc pl-6 space-y-2 text-gray-700 dark:text-gray-300">
                         <li>Yasal merciler (mahkemeler, savcılıklar vb.)</li>
                         <li>Hizmet sağlayıcılarımız (hosting, e-posta servisleri vb.)</li>
                         <li>İş ortaklarımız (sadece hizmet sunumu için gerekli olduğunda)</li>
@@ -115,32 +115,32 @@
                 </section>
 
                 <section>
-                    <h2 class="text-2xl font-bold mb-4 text-gray-900">8. Başvuru Hakkı</h2>
-                    <p class="text-gray-700 leading-relaxed mb-4">
+                    <h2 class="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">8. Başvuru Hakkı</h2>
+                    <p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
                         KVKK kapsamındaki haklarınızı kullanmak için, kimliğinizi tespit edici belgelerle birlikte 
                         yazılı olarak başvuruda bulunabilirsiniz. Başvurularınız en geç 30 gün içinde sonuçlandırılacaktır.
                     </p>
-                    <div class="bg-gray-50 p-4 rounded-lg">
-                        <p class="text-gray-700"><strong>Başvuru Adresi:</strong></p>
-                        <p class="text-gray-600">E-posta: info@gmsgarage.com</p>
-                        <p class="text-gray-600">Konu: KVKK Başvurusu</p>
+                    <div class="bg-gray-50 dark:bg-[#252525] p-4 rounded-lg transition-colors duration-200">
+                        <p class="text-gray-700 dark:text-gray-300"><strong>Başvuru Adresi:</strong></p>
+                        <p class="text-gray-600 dark:text-gray-400">E-posta: info@gmsgarage.com</p>
+                        <p class="text-gray-600 dark:text-gray-400">Konu: KVKK Başvurusu</p>
                     </div>
-                    <p class="text-gray-700 leading-relaxed mt-4">
+                    <p class="text-gray-700 dark:text-gray-300 leading-relaxed mt-4">
                         Ayrıca, Kişisel Verileri Koruma Kurulu'na şikayette bulunma hakkınız da bulunmaktadır.
                     </p>
                 </section>
 
                 <section>
-                    <h2 class="text-2xl font-bold mb-4 text-gray-900">9. Değişiklikler</h2>
-                    <p class="text-gray-700 leading-relaxed">
+                    <h2 class="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">9. Değişiklikler</h2>
+                    <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
                         Bu aydınlatma metni, yasal düzenlemelerdeki değişiklikler ve hizmetlerimizdeki güncellemeler 
                         doğrultusunda güncellenebilir. Güncel metin her zaman web sitemizde yayınlanmaktadır.
                     </p>
                 </section>
 
-                <div class="bg-primary-50 border border-primary-200 rounded-lg p-6 mt-8">
-                    <p class="text-primary-800 font-semibold mb-2">Son Güncelleme: {{ date('d.m.Y') }}</p>
-                    <p class="text-primary-700 text-sm">
+                <div class="bg-primary-50 dark:bg-primary-900/20 border border-primary-200 dark:border-primary-800 rounded-lg p-6 mt-8 transition-colors duration-200">
+                    <p class="text-primary-800 dark:text-primary-300 font-semibold mb-2">Son Güncelleme: {{ date('d.m.Y') }}</p>
+                    <p class="text-primary-700 dark:text-primary-400 text-sm">
                         Bu aydınlatma metni, 6698 sayılı Kişisel Verilerin Korunması Kanunu uyarınca hazırlanmıştır.
                     </p>
                 </div>

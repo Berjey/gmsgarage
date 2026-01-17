@@ -21,38 +21,38 @@
     </section>
 
     <!-- Form Section -->
-    <section class="section-padding bg-gray-50">
+    <section class="section-padding bg-gray-50 dark:bg-[#1e1e1e] transition-colors duration-200">
         <div class="container-custom">
             <div class="max-w-3xl mx-auto">
                 <!-- Success Message -->
                 @if(session('success'))
-                    <div class="bg-green-50 border-l-4 border-green-500 p-6 mb-8 rounded-lg">
+                    <div class="bg-green-50 dark:bg-green-900/20 border-l-4 border-green-500 dark:border-green-400 p-6 mb-8 rounded-lg transition-colors duration-200">
                         <div class="flex items-center">
                             <div class="flex-shrink-0">
-                                <svg class="h-6 w-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="h-6 w-6 text-green-500 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                                 </svg>
                             </div>
                             <div class="ml-4">
-                                <h3 class="text-lg font-bold text-green-800">Teşekkürler!</h3>
-                                <p class="text-green-700 mt-1">{{ session('success') }}</p>
+                                <h3 class="text-lg font-bold text-green-800 dark:text-green-300">Teşekkürler!</h3>
+                                <p class="text-green-700 dark:text-green-400 mt-1">{{ session('success') }}</p>
                             </div>
                         </div>
                     </div>
                 @endif
 
                 <!-- Form Card -->
-                <div class="bg-white rounded-2xl shadow-xl p-8">
+                <div class="bg-white dark:bg-[#252525] rounded-2xl shadow-xl dark:shadow-2xl p-8 border border-gray-100 dark:border-gray-800 transition-colors duration-200">
                     <!-- Error Summary Banner -->
-                    <div id="error-summary" class="hidden bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-lg">
+                    <div id="error-summary" class="hidden bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500 dark:border-red-400 p-4 mb-6 rounded-lg transition-colors duration-200">
                         <div class="flex items-center">
                             <div class="flex-shrink-0">
-                                <svg class="h-5 w-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="h-5 w-5 text-red-500 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                 </svg>
                             </div>
                             <div class="ml-3">
-                                <p class="text-sm font-semibold text-red-800">Lütfen zorunlu alanları kontrol edin.</p>
+                                <p class="text-sm font-semibold text-red-800 dark:text-red-300">Lütfen zorunlu alanları kontrol edin.</p>
                             </div>
                         </div>
                     </div>
@@ -62,9 +62,9 @@
 
                         <!-- Araç Tipi -->
                         <div class="form-field">
-                            <label class="block text-xs font-bold text-gray-700 mb-3 uppercase tracking-wider">ARAÇ TİPİ <span class="text-primary-600">*</span></label>
+                            <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wider">ARAÇ TİPİ <span class="text-primary-600 dark:text-primary-400">*</span></label>
                             <div class="hero-custom-dropdown" data-dropdown="vehicle-type-request">
-                                <button type="button" class="hero-custom-dropdown-trigger border-2 border-gray-300" data-value="{{ old('vehicle_type', '') }}">
+                                <button type="button" class="hero-custom-dropdown-trigger border-2 border-gray-300 dark:border-gray-700" data-value="{{ old('vehicle_type', '') }}">
                                     <span class="selected-text {{ old('vehicle_type') ? '' : 'placeholder' }}">
                                         @if(old('vehicle_type') && isset($vehicleTypes[old('vehicle_type')]))
                                             {{ $vehicleTypes[old('vehicle_type')] }}
@@ -97,11 +97,11 @@
 
                         <!-- Marka -->
                         <div class="form-field">
-                            <label class="block text-xs font-bold text-gray-700 mb-3 uppercase tracking-wider">MARKA <span class="text-primary-600">*</span></label>
+                            <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wider">MARKA <span class="text-primary-600 dark:text-primary-400">*</span></label>
                             <input type="text" name="brand" required 
                                    value="{{ old('brand') }}"
                                    placeholder="Örn: Tesla, Rivian, Lucid"
-                                   class="w-full border-2 border-gray-300 rounded-xl px-5 py-4 focus:ring-2 focus:ring-primary-600 focus:border-primary-600 text-gray-900 font-semibold transition-all duration-200 bg-white hover:border-primary-400"
+                                   class="w-full border-2 border-gray-300 dark:border-gray-700 rounded-xl px-5 py-4 focus:ring-2 focus:ring-primary-600 focus:border-primary-600 text-gray-900 dark:text-gray-100 font-semibold transition-all duration-200 bg-white dark:bg-[#2a2a2a] hover:border-primary-400 dark:hover:border-primary-500"
                                    id="brand-input">
                             <p class="text-red-600 text-xs mt-2 hidden" id="brand-error"></p>
                             @error('brand')
@@ -111,11 +111,11 @@
 
                         <!-- Model -->
                         <div class="form-field">
-                            <label class="block text-xs font-bold text-gray-700 mb-3 uppercase tracking-wider">MODEL</label>
+                            <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wider">MODEL</label>
                             <input type="text" name="model" 
                                    value="{{ old('model') }}"
                                    placeholder="Örn: Model 3, R1T, Air"
-                                   class="w-full border-2 border-gray-300 rounded-xl px-5 py-4 focus:ring-2 focus:ring-primary-600 focus:border-primary-600 text-gray-900 font-semibold transition-all duration-200 bg-white hover:border-primary-400">
+                                   class="w-full border-2 border-gray-300 dark:border-gray-700 rounded-xl px-5 py-4 focus:ring-2 focus:ring-primary-600 focus:border-primary-600 text-gray-900 dark:text-gray-100 font-semibold transition-all duration-200 bg-white dark:bg-[#2a2a2a] hover:border-primary-400 dark:hover:border-primary-500">
                             @error('model')
                                 <p class="text-red-600 text-xs mt-2">{{ $message }}</p>
                             @enderror
@@ -123,7 +123,7 @@
 
                         <!-- Model Yılı -->
                         <div class="form-field">
-                            <label class="block text-xs font-bold text-gray-700 mb-3 uppercase tracking-wider">MODEL YILI</label>
+                            <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wider">MODEL YILI</label>
                             <div class="hero-custom-dropdown" data-dropdown="year-request">
                                 <button type="button" class="hero-custom-dropdown-trigger" data-value="{{ old('year', '') }}">
                                     <span class="selected-text {{ old('year') ? '' : 'placeholder' }}">
@@ -167,7 +167,7 @@
 
                         <!-- Yakıt Tipi -->
                         <div class="form-field">
-                            <label class="block text-xs font-bold text-gray-700 mb-3 uppercase tracking-wider">YAKIT TİPİ</label>
+                            <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wider">YAKIT TİPİ</label>
                             <div class="hero-custom-dropdown" data-dropdown="fuel-type-request">
                                 <button type="button" class="hero-custom-dropdown-trigger" data-value="{{ old('fuel_type', '') }}">
                                     <span class="selected-text {{ old('fuel_type') ? '' : 'placeholder' }}">
@@ -201,11 +201,11 @@
 
                         <!-- Şehir -->
                         <div class="form-field">
-                            <label class="block text-xs font-bold text-gray-700 mb-3 uppercase tracking-wider">ŞEHİR</label>
+                            <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wider">ŞEHİR</label>
                             <input type="text" name="city" 
                                    value="{{ old('city') }}"
                                    placeholder="Araç hangi şehirde?"
-                                   class="w-full border-2 border-gray-300 rounded-xl px-5 py-4 focus:ring-2 focus:ring-primary-600 focus:border-primary-600 text-gray-900 font-semibold transition-all duration-200 bg-white hover:border-primary-400">
+                                   class="w-full border-2 border-gray-300 dark:border-gray-700 rounded-xl px-5 py-4 focus:ring-2 focus:ring-primary-600 focus:border-primary-600 text-gray-900 dark:text-gray-100 font-semibold transition-all duration-200 bg-white dark:bg-[#2a2a2a] hover:border-primary-400 dark:hover:border-primary-500">
                             @error('city')
                                 <p class="text-red-600 text-xs mt-2">{{ $message }}</p>
                             @enderror
@@ -228,7 +228,7 @@
 
                         <!-- Tercih Edilen İletişim Yöntemi -->
                         <div class="form-field">
-                            <label class="block text-xs font-bold text-gray-700 mb-3 uppercase tracking-wider">TERCİH EDİLEN İLETİŞİM YÖNTEMİ</label>
+                            <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wider">TERCİH EDİLEN İLETİŞİM YÖNTEMİ</label>
                             <div class="hero-custom-dropdown" data-dropdown="contact-method-request">
                                 <button type="button" class="hero-custom-dropdown-trigger" data-value="{{ old('contact_method', '') }}">
                                     <span class="selected-text {{ old('contact_method') ? '' : 'placeholder' }}">
@@ -285,7 +285,7 @@
 
                 <!-- Back Link -->
                 <div class="text-center mt-8">
-                    <a href="{{ route('home') }}" class="text-primary-600 hover:text-primary-700 font-semibold transition-colors duration-200 inline-flex items-center space-x-2">
+                    <a href="{{ route('home') }}" class="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-semibold transition-colors duration-200 inline-flex items-center space-x-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                         </svg>

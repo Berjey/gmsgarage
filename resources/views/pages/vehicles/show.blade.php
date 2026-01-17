@@ -5,73 +5,133 @@
 
 @section('content')
     <!-- Breadcrumb -->
-    <section class="bg-gray-50 py-4 border-b border-gray-200">
+    <section class="bg-gray-50 dark:bg-[#1e1e1e] py-4 border-b border-gray-200 dark:border-gray-800 transition-colors duration-200">
         <div class="container-custom">
             <nav class="flex items-center space-x-2 text-sm">
-                <a href="{{ route('home') }}" class="text-gray-600 hover:text-primary-600 font-medium transition-colors">Anasayfa</a>
+                <a href="{{ route('vehicles.index') }}" class="text-gray-600 hover:text-primary-600 font-medium transition-colors">Araç Listesi</a>
                 <span class="text-gray-400">/</span>
-                <a href="{{ route('vehicles.index') }}" class="text-gray-600 hover:text-primary-600 font-medium transition-colors">Araçlar</a>
+                <span class="text-gray-600">{{ $vehicle->brand ?? 'Marka' }}</span>
                 <span class="text-gray-400">/</span>
-                <span class="text-gray-900 font-semibold">{{ $vehicle->title }}</span>
+                <span class="text-gray-600">{{ $vehicle->model ?? 'Model' }}</span>
+                <span class="text-gray-400">/</span>
+                <span class="text-gray-900 dark:text-gray-100 font-semibold">İlan No: {{ $vehicle->id ?? 'XXXXX' }}</span>
             </nav>
         </div>
     </section>
 
     <!-- Vehicle Details -->
-    <section class="section-padding bg-white">
+    <section class="section-padding bg-white dark:bg-[#1e1e1e] transition-colors duration-200">
         <div class="container-custom">
-            <!-- Üst: Fotoğraflar ve Sağda Bilgiler -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-12">
-                <!-- Sol: Images Gallery -->
-                <div>
+            <div class="grid grid-cols-1 gap-6 mb-12" id="vehicle-detail-grid">
+                <!-- Images Gallery - 70% -->
+                <div id="gallery-section">
                     @php
-                        // Test için göstermelik fotoğraflar
-                        $demoImages = [
-                            'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800&h=600&fit=crop',
-                            'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&h=600&fit=crop',
-                            'https://images.unsplash.com/photo-1552519507-88aa2dfa9fdb?w=800&h=600&fit=crop',
-                            'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=800&h=600&fit=crop',
-                        ];
-                        $vehicleImages = is_array($vehicle->images) && count($vehicle->images) > 0 
-                            ? $vehicle->images 
-                            : $demoImages;
+                        $vehicleImages = [];
+                        $defaultImage = asset('images/vehicles/default.jpg');
+                        
+                        // Test görselleri sadece development ortamında
+                        if (config('app.env') === 'local' || config('app.debug')) {
+                            $vehicleImages = [
+                                'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800&h=600&fit=crop',
+                                'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=800&h=600&fit=crop',
+                                'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=800&h=600&fit=crop',
+                                'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&h=600&fit=crop',
+                                'https://images.unsplash.com/photo-1502877338535-766e1452684a?w=800&h=600&fit=crop',
+                            ];
+                            $defaultImage = 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800&h=600&fit=crop';
+                        }
+                        
+                        // Vehicle'dan görselleri al ve ekle
+                        if (is_array($vehicle->images) && count($vehicle->images) > 0) {
+                            foreach ($vehicle->images as $img) {
+                                if (!empty($img) && is_string($img)) {
+                                    if (filter_var($img, FILTER_VALIDATE_URL)) {
+                                        $vehicleImages[] = $img;
+                                    } elseif (strpos($img, '/') === 0) {
+                                        $vehicleImages[] = $img;
+                                    } else {
+                                        $vehicleImages[] = asset($img);
+                                    }
+                                }
+                            }
+                        }
+                        
+                        $totalImages = count($vehicleImages);
                     @endphp
                     
-                    @if(count($vehicleImages) > 0)
-                        <!-- Büyük Ana Fotoğraf -->
-                        <div class="mb-4 rounded-2xl overflow-hidden shadow-2xl relative">
+                    @if($totalImages > 0)
+                        <!-- Main Image with Lightbox -->
+                        <div class="mb-4 rounded-2xl overflow-hidden shadow-2xl group relative bg-gray-100 dark:bg-[#252525]">
                             <img src="{{ $vehicleImages[0] }}" 
                                  alt="{{ $vehicle->title }}"
                                  id="main-image"
-                                 class="w-full h-[500px] object-cover transition-all duration-300"
-                                 loading="eager"
-                                 onerror="this.src='https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800&h=600&fit=crop'">
+                                 class="w-full h-[600px] object-cover transition-all duration-300 cursor-zoom-in hover:scale-105"
+                                 onclick="openLightbox()"
+                                 onerror="this.src='{{ $defaultImage }}';">
                             
-                            <!-- Foto Sayacı -->
-                            @if(count($vehicleImages) > 1)
-                                <div class="absolute top-4 right-4 bg-black bg-opacity-70 text-white px-4 py-2 rounded-full text-sm font-semibold">
-                                    <span id="current-image-index">1</span> / <span id="total-images">{{ count($vehicleImages) }}</span>
+                            <!-- Navigation Arrows (on hover) -->
+                            @if($totalImages > 1)
+                                <button onclick="event.stopPropagation(); previousImage();" 
+                                        class="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-full p-3 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                                    </svg>
+                                </button>
+                                <button onclick="event.stopPropagation(); nextImage();" 
+                                        class="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 dark:bg-[#252525]/90 hover:bg-white dark:hover:bg-[#252525] text-gray-900 dark:text-gray-100 rounded-full p-3 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                    </svg>
+                                </button>
+                            @endif
+                            
+                            <!-- Lightbox Icon Overlay (Büyüt) -->
+                            <div class="absolute top-4 right-4 bg-black/70 hover:bg-black/80 text-white rounded-full p-3 cursor-pointer transition-all z-10 opacity-0 group-hover:opacity-100" onclick="event.stopPropagation(); openLightbox();">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path>
+                                </svg>
+                            </div>
+                            
+                            <!-- Image Counter -->
+                            @if($totalImages > 1)
+                                <div class="absolute bottom-4 right-4 bg-black/70 text-white px-4 py-2 rounded-lg text-sm font-semibold">
+                                    <span id="image-counter">1</span> / {{ $totalImages }}
                                 </div>
                             @endif
                         </div>
                         
-                        <!-- Thumbnail Galeri -->
-                        @if(count($vehicleImages) > 1)
-                            <div class="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
-                                @foreach($vehicleImages as $index => $image)
-                                    <img src="{{ $image }}" 
-                                         alt="{{ $vehicle->title }} - Görsel {{ $index + 1 }}"
-                                         onclick="changeMainImage('{{ $image }}', {{ $index }})"
-                                         class="w-24 h-24 object-cover rounded-xl cursor-pointer hover:opacity-75 transition-all duration-300 border-2 {{ $index === 0 ? 'border-primary-600' : 'border-transparent' }} flex-shrink-0 hover:border-primary-600"
-                                         loading="lazy"
-                                         onerror="this.src='https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800&h=600&fit=crop'"
-                                         id="thumb-{{ $index }}">
-                                @endforeach
+                        <!-- Thumbnail Carousel (Yatay Scroll) -->
+                        @if($totalImages > 1)
+                            <div class="relative group">
+                                <div class="flex gap-3 overflow-x-auto pb-2 scrollbar-hide" id="thumbnail-container" style="scroll-behavior: smooth;">
+                                    @foreach($vehicleImages as $index => $image)
+                                        <img src="{{ $image }}" 
+                                             alt="{{ $vehicle->title }} - Görsel {{ $index + 1 }}"
+                                             onclick="changeImage({{ $index }})"
+                                             class="thumbnail-item w-24 h-24 object-cover rounded-lg cursor-pointer transition-all duration-300 border-2 flex-shrink-0 {{ $index === 0 ? 'border-primary-600 dark:border-primary-500 shadow-md scale-105' : 'border-gray-200 dark:border-gray-700 hover:border-primary-400 dark:hover:border-primary-500 hover:scale-105' }}"
+                                             onerror="this.src='{{ $defaultImage }}';"
+                                             id="thumb-{{ $index }}"
+                                             data-index="{{ $index }}">
+                                    @endforeach
+                                </div>
+                                
+                                <!-- Scroll Indicators (if many images) -->
+                                @if($totalImages > 5)
+                                    <button onclick="scrollThumbnails('left')" class="absolute left-0 top-1/2 -translate-y-1/2 bg-white/90 dark:bg-[#252525]/90 hover:bg-white dark:hover:bg-[#252525] text-gray-700 dark:text-gray-200 rounded-full p-2 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity hidden lg:block z-10">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                                        </svg>
+                                    </button>
+                                    <button onclick="scrollThumbnails('right')" class="absolute right-0 top-1/2 -translate-y-1/2 bg-white/90 dark:bg-[#252525]/90 hover:bg-white dark:hover:bg-[#252525] text-gray-700 dark:text-gray-200 rounded-full p-2 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity hidden lg:block z-10">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                        </svg>
+                                    </button>
+                                @endif
                             </div>
                         @endif
                     @else
-                        <!-- Placeholder -->
-                        <div class="w-full h-[500px] bg-gradient-to-br from-gray-200 to-gray-300 rounded-2xl flex items-center justify-center shadow-2xl">
+                        <div class="w-full h-[600px] bg-gradient-to-br from-gray-200 to-gray-300 rounded-2xl flex items-center justify-center shadow-2xl">
                             <svg class="w-32 h-32 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                             </svg>
@@ -79,221 +139,334 @@
                     @endif
                 </div>
                 
-                <!-- Sağ: Başlık, Fiyat, Bilgi Kartları, Butonlar (İlk Ekran Görüntüsü) -->
-                <div>
-                    <!-- Başlık ve Fiyat -->
-                    <div class="mb-6">
-                        @if($vehicle->is_featured)
-                            <span class="inline-block bg-accent-600 text-white px-4 py-1.5 rounded-full text-sm font-bold mb-4">
-                                ⭐ Öne Çıkan Araç
-                            </span>
-                        @endif
+                <!-- Vehicle Info Card - 30% -->
+                <div class="lg:sticky lg:top-6 lg:self-start" id="info-section">
+                    @php
+                        // Alt başlık için title'dan marka ve modeli çıkar, kalan kısmı al
+                        $subtitle = '';
+                        $title = $vehicle->title ?? '';
+                        $brand = $vehicle->brand ?? '';
+                        $model = $vehicle->model ?? '';
                         
-                        <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4 leading-tight">
-                            {{ $vehicle->title }}
+                        // Title'dan marka ve modeli temizle
+                        $title = str_ireplace($brand, '', $title);
+                        $title = str_ireplace($model, '', $title);
+                        $title = str_ireplace($vehicle->year ?? '', '', $title);
+                        $title = trim($title);
+                        
+                        // Eğer kalan kısım varsa alt başlık yap
+                        if (!empty($title) && strlen($title) > 2) {
+                            $subtitle = $title;
+                        }
+                        
+                        // Specs line için verileri hazırla
+                        $specs = [];
+                        if ($vehicle->year) $specs[] = $vehicle->year;
+                        if ($vehicle->transmission) $specs[] = $vehicle->transmission;
+                        if ($vehicle->fuel_type) $specs[] = $vehicle->fuel_type;
+                        if ($vehicle->kilometer) $specs[] = number_format($vehicle->kilometer, 0, ',', '.') . ' KM';
+                        if ($vehicle->engine_size) {
+                            $engineSize = (float) $vehicle->engine_size;
+                            $specs[] = number_format($engineSize, 0, ',', '.') . ' cc';
+                        }
+                        if ($vehicle->horse_power) $specs[] = $vehicle->horse_power . ' hp';
+                        $specsLine = implode(' / ', $specs);
+                    @endphp
+                    
+                    <!-- Red Info Card -->
+                    <div class="bg-primary-600 dark:bg-primary-700 rounded-t-2xl p-6 text-white mb-0 transition-colors duration-200">
+                        <!-- Başlık: Marka Model -->
+                        <h1 class="text-3xl md:text-4xl font-bold mb-2 leading-tight">
+                            {{ $vehicle->brand ?? 'Marka' }} {{ $vehicle->model ?? 'Model' }}
                         </h1>
                         
-                        <div class="flex items-center space-x-4 mb-4">
-                            <div class="text-4xl md:text-5xl font-bold text-primary-600">
-                                {{ $vehicle->formatted_price }}
-                            </div>
-                        </div>
-                        
-                        <!-- İlan Tarihi -->
-                        @if($vehicle->created_at)
-                            <div class="flex items-center gap-2 text-sm text-gray-500 mb-6">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                                </svg>
-                                <span>İlan Tarihi: {{ $vehicle->created_at->format('d.m.Y') }}</span>
+                        <!-- Alt Başlık -->
+                        @if($subtitle)
+                            <div class="text-xl md:text-2xl font-medium mb-4 text-white/90">
+                                {{ $subtitle }}
                             </div>
                         @endif
-                    </div>
-                    
-                    <!-- Quick Info Cards (Orijinal Gradient Tasarım) -->
-                    <div class="grid grid-cols-2 gap-4 mb-8">
-                        <div class="bg-gradient-to-br from-primary-50 to-primary-100 rounded-xl p-4 border border-primary-200">
-                            <div class="text-sm text-gray-600 mb-1 font-medium">Marka</div>
-                            <div class="text-lg font-bold text-gray-900">{{ $vehicle->brand }}</div>
-                        </div>
-                        <div class="bg-gradient-to-br from-primary-50 to-primary-100 rounded-xl p-4 border border-primary-200">
-                            <div class="text-sm text-gray-600 mb-1 font-medium">Model</div>
-                            <div class="text-lg font-bold text-gray-900">{{ $vehicle->model }}</div>
-                        </div>
-                        <div class="bg-gradient-to-br from-accent-50 to-accent-100 rounded-xl p-4 border border-accent-200">
-                            <div class="text-sm text-gray-600 mb-1 font-medium">Yıl</div>
-                            <div class="text-lg font-bold text-gray-900">{{ $vehicle->year }}</div>
-                        </div>
-                        <div class="bg-gradient-to-br from-accent-50 to-accent-100 rounded-xl p-4 border border-accent-200">
-                            <div class="text-sm text-gray-600 mb-1 font-medium">Kilometre</div>
-                            <div class="text-lg font-bold text-gray-900">{{ number_format($vehicle->kilometer ?? 0, 0, ',', '.') }} km</div>
+                        
+                        <!-- Specs Line -->
+                        @if($specsLine)
+                            <div class="text-sm md:text-base mb-6 text-white/90 font-medium">
+                                {{ $specsLine }}
+                            </div>
+                        @endif
+                        
+                        <!-- Fiyat -->
+                        <div class="text-4xl md:text-5xl font-bold">
+                            {{ $vehicle->formatted_price }}
                         </div>
                     </div>
                     
                     <!-- Action Buttons -->
-                    <div class="flex flex-col sm:flex-row gap-4">
-                        <a href="https://wa.me/905551234567?text=Merhaba, {{ urlencode($vehicle->title) }} hakkında bilgi almak istiyorum." 
-                           target="_blank"
-                           class="flex-1 btn bg-green-500 hover:bg-green-600 text-white text-lg shadow-lg">
-                            <svg class="w-6 h-6 inline-block mr-2" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
-                            </svg>
-                            WhatsApp ile İletişim
+                    <div class="flex flex-col gap-3 bg-white dark:bg-[#252525] rounded-b-2xl p-6 border-x border-b border-gray-200 dark:border-gray-800 mb-3 transition-colors duration-200">
+                        <!-- Arabayı Yerinde Gör - Primary CTA -->
+                        <a href="{{ route('contact') }}" 
+                           class="w-full bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white font-bold py-4 px-6 rounded-xl text-center transition-all duration-300 uppercase text-sm shadow-lg hover:shadow-xl hover:shadow-primary-500/30 hover:scale-[1.01] relative overflow-hidden group">
+                            <span class="relative z-10">ARABAYI YERİNDE GÖR</span>
+                            <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
                         </a>
+                        
+                        <!-- Sahibinden.com'da Gör -->
                         @if($vehicle->sahibinden_url)
                             <a href="{{ $vehicle->sahibinden_url }}" 
                                target="_blank"
-                               class="flex-1 btn border-2 border-primary-600 text-primary-600 hover:bg-primary-600 hover:text-white text-lg">
-                                <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-                                </svg>
-                                Sahibinden'de Gör
+                               style="background: linear-gradient(135deg, #FFD400 0%, #FFDB4D 50%, #FFD400 100%);"
+                               class="w-full hover:opacity-90 text-white dark:text-white font-bold py-4 px-6 rounded-xl text-center transition-all duration-300 uppercase text-sm shadow-lg hover:shadow-xl hover:scale-[1.01] relative overflow-hidden group flex items-center justify-center">
+                                <span class="relative z-10 flex items-center">
+                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                                    </svg>
+                                    SAHİBİNDEN.COM'DA GÖR
+                                </span>
+                                <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
                             </a>
                         @endif
+                        
+                        <!-- WhatsApp'ta Paylaş -->
+                        <a href="https://wa.me/?text={{ urlencode($vehicle->title . ' - ' . $vehicle->formatted_price . ' - ' . url()->current()) }}" 
+                           target="_blank"
+                           style="background: linear-gradient(135deg, #25D366 0%, #20BA5A 50%, #25D366 100%); box-shadow: 0 10px 25px -5px rgba(37, 211, 102, 0.3);"
+                           class="w-full hover:opacity-90 text-white font-bold py-4 px-6 rounded-xl text-center transition-all duration-300 uppercase text-sm hover:shadow-2xl hover:scale-[1.01] relative overflow-hidden group flex items-center justify-center">
+                            <span class="relative z-10 flex items-center">
+                                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                                </svg>
+                                WHATSAPP'TA PAYLAŞ
+                            </span>
+                            <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                        </a>
                     </div>
-                </div>
-            </div>
-            
-            <!-- Alt: Teknik Özellikler Kartı (İkinci Ekran Görüntüsü) -->
-            <div class="mb-12">
-                <div class="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-6">Teknik Özellikler</h2>
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                        <!-- Temel Bilgiler -->
-                        <div>
-                            <h3 class="text-lg font-bold text-primary-600 mb-4">Temel Bilgiler</h3>
-                            <div class="space-y-3">
-                                <div class="flex justify-between items-center py-2 border-b border-gray-200">
-                                    <span class="text-gray-600 font-medium">Marka</span>
-                                    <span class="font-bold text-gray-900">{{ $vehicle->brand }}</span>
-                                </div>
-                                <div class="flex justify-between items-center py-2 border-b border-gray-200">
-                                    <span class="text-gray-600 font-medium">Model</span>
-                                    <span class="font-bold text-gray-900">{{ $vehicle->model }}</span>
-                                </div>
-                                <div class="flex justify-between items-center py-2 border-b border-gray-200">
-                                    <span class="text-gray-600 font-medium">Yıl</span>
-                                    <span class="font-bold text-gray-900">{{ $vehicle->year }}</span>
-                                </div>
-                                <div class="flex justify-between items-center py-2 border-b border-gray-200">
-                                    <span class="text-gray-600 font-medium">Kilometre</span>
-                                    <span class="font-bold text-gray-900">{{ number_format($vehicle->kilometer ?? 0, 0, ',', '.') }} km</span>
-                                </div>
-                                @if($vehicle->fuel_type)
-                                    <div class="flex justify-between items-center py-2 border-b border-gray-200">
-                                        <span class="text-gray-600 font-medium">Yakıt Tipi</span>
-                                        <span class="font-bold text-gray-900">{{ $vehicle->fuel_type }}</span>
+                    
+                    <!-- Satıcı Temsilcisi Bilgi Kartı -->
+                    @php
+                        // İleride bu bilgiler vehicle->seller veya vehicle->sales_representative ilişkisinden gelecek
+                        // Şimdilik placeholder veriler
+                        $sellerName = 'Ali Yılmaz'; // $vehicle->seller->name ?? 'Satıcı Temsilcisi'
+                        $sellerPosition = 'Kıdemli Satış Danışmanı'; // $vehicle->seller->position ?? 'Satış Temsilcisi'
+                        $nameParts = explode(' ', $sellerName);
+                        $sellerInitials = strtoupper(substr($sellerName, 0, 1) . (isset($nameParts[1]) ? substr($nameParts[1], 0, 1) : '')); // İlk harfler
+                        $sellerProfileSlug = 'ali-yilmaz'; // $vehicle->seller->slug ?? 'seller'
+                        $sellerIsVerified = true; // $vehicle->seller->is_verified ?? false
+                        $sellerResponseTime = '2 saat'; // $vehicle->seller->avg_response_time ?? 'Hızlı Yanıt'
+                        $sellerTotalListings = 45; // $vehicle->seller->vehicles_count ?? 0
+                    @endphp
+                    
+                    <div class="bg-white dark:bg-[#252525] rounded-2xl border border-gray-200 dark:border-gray-800 shadow-md dark:shadow-xl hover:shadow-lg transition-all duration-300 overflow-hidden">
+                        <!-- Header Section -->
+                        <div class="p-5 pb-4">
+                            <div class="flex items-start gap-3 mb-4">
+                                <!-- Avatar -->
+                                <div class="relative flex-shrink-0">
+                                    <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center shadow-md ring-2 ring-primary-100">
+                                        <span class="text-white font-bold text-xl">{{ $sellerInitials }}</span>
                                     </div>
-                                @endif
-                                @if($vehicle->transmission)
-                                    <div class="flex justify-between items-center py-2 border-b border-gray-200">
-                                        <span class="text-gray-600 font-medium">Vites</span>
-                                        <span class="font-bold text-gray-900">{{ $vehicle->transmission }}</span>
+                                    @if($sellerIsVerified)
+                                        <!-- Verified Badge -->
+                                        <div class="absolute -bottom-1 -right-1 bg-green-500 rounded-full p-1.5 shadow-md ring-2 ring-white">
+                                            <svg class="w-3.5 h-3.5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                            </svg>
+                                        </div>
+                                    @endif
+                                </div>
+                                
+                                <!-- Info -->
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-center gap-2 mb-1 flex-wrap">
+                                        <h3 class="font-bold text-gray-900 dark:text-gray-100 text-base leading-tight">{{ $sellerName }}</h3>
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold bg-primary-50 text-primary-700 border border-primary-200">
+                                            GMSGARAGE
+                                        </span>
                                     </div>
-                                @endif
-                                @if($vehicle->body_type)
-                                    <div class="flex justify-between items-center py-2 border-b border-gray-200">
-                                        <span class="text-gray-600 font-medium">Kasa Tipi</span>
-                                        <span class="font-bold text-gray-900">{{ $vehicle->body_type }}</span>
-                                    </div>
-                                @endif
-                                @if($vehicle->color)
-                                    <div class="flex justify-between items-center py-2 border-b border-gray-200 last:border-0">
-                                        <span class="text-gray-600 font-medium">Renk</span>
-                                        <span class="font-bold text-gray-900">{{ $vehicle->color }}</span>
-                                    </div>
-                                @endif
+                                    <p class="text-xs text-gray-600 dark:text-gray-300 mb-3">{{ $sellerPosition }}</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Seller Info Badges -->
+                            <div class="flex items-center gap-3 flex-wrap">
+                                <div class="flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
+                                    <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <span class="text-xs font-medium text-gray-700">Güvenilir</span>
+                                </div>
+                                <div class="flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
+                                    <svg class="w-4 h-4 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <span class="text-xs font-medium text-gray-700">{{ $sellerResponseTime }}</span>
+                                </div>
+                                <div class="flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
+                                    <svg class="w-4 h-4 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                                    </svg>
+                                    <span class="text-xs font-medium text-gray-700">{{ $sellerTotalListings }} İlan</span>
+                                </div>
                             </div>
                         </div>
                         
-                        <!-- Motor & Performans -->
-                        <div>
-                            <h3 class="text-lg font-bold text-primary-600 mb-4">Motor & Performans</h3>
-                            <div class="space-y-3">
-                                @if($vehicle->engine_size)
-                                    <div class="flex justify-between items-center py-2 border-b border-gray-200">
-                                        <span class="text-gray-600 font-medium">Motor Hacmi</span>
-                                        <span class="font-bold text-gray-900">{{ number_format($vehicle->engine_size, 0, ',', '.') }} cc</span>
-                                    </div>
-                                @endif
-                                @if($vehicle->horse_power)
-                                    <div class="flex justify-between items-center py-2 border-b border-gray-200">
-                                        <span class="text-gray-600 font-medium">Motor Gücü</span>
-                                        <span class="font-bold text-gray-900">{{ number_format($vehicle->horse_power, 0, ',', '.') }} HP</span>
-                                    </div>
-                                @endif
-                                @if($vehicle->traction)
-                                    <div class="flex justify-between items-center py-2 border-b border-gray-200 last:border-0">
-                                        <span class="text-gray-600 font-medium">Çekiş</span>
-                                        <span class="font-bold text-gray-900">{{ $vehicle->traction }}</span>
-                                    </div>
-                                @endif
-                                
-                                <!-- Hasar & Ekspertiz (Eğer varsa) -->
-                                @if($vehicle->heavy_damage !== null || $vehicle->tramer_amount || $vehicle->paint_parts)
-                                    <div class="mt-6 pt-6 border-t border-gray-200">
-                                        <h3 class="text-lg font-bold text-primary-600 mb-4">Hasar & Ekspertiz</h3>
-                                        <div class="space-y-3">
-                                            @if($vehicle->heavy_damage !== null)
-                                                <div class="flex justify-between items-center py-2 border-b border-gray-200">
-                                                    <span class="text-gray-600 font-medium">Ağır Hasar Kayıtlı</span>
-                                                    <span class="font-bold text-gray-900">{{ $vehicle->heavy_damage ? 'Evet' : 'Hayır' }}</span>
-                                                </div>
-                                            @endif
-                                            @if($vehicle->tramer_amount)
-                                                <div class="flex justify-between items-center py-2 border-b border-gray-200">
-                                                    <span class="text-gray-600 font-medium">Tramer Tutarı</span>
-                                                    <span class="font-bold text-gray-900">{{ number_format($vehicle->tramer_amount, 0, ',', '.') }} ₺</span>
-                                                </div>
-                                            @endif
-                                            @if($vehicle->paint_parts)
-                                                <div class="py-2 border-b border-gray-200 last:border-0">
-                                                    <div class="text-gray-600 font-medium mb-1">Boya / Değişen Parça</div>
-                                                    <div class="text-gray-900 text-sm">{{ $vehicle->paint_parts }}</div>
-                                                </div>
-                                            @endif
-                                        </div>
-                                    </div>
-                                @endif
-                            </div>
+                        <!-- Divider -->
+                        <div class="border-t border-gray-200 dark:border-gray-800"></div>
+                        
+                        <!-- Actions -->
+                        <div class="p-5 pt-4 space-y-2.5">
+                            <a href="{{ route('seller.profile', $sellerProfileSlug) }}" class="block w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-4 rounded-lg text-center transition-colors text-sm shadow-sm hover:shadow-md">
+                                Satıcı Profilini Gör
+                            </a>
+                            <a href="{{ route('vehicles.index', ['seller' => $sellerProfileSlug]) }}" class="block w-full text-center text-xs text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-semibold py-2.5 border border-primary-200 dark:border-primary-800 rounded-lg hover:bg-primary-50 dark:hover:bg-primary-900/30 transition-colors">
+                                Tüm İlanlar ({{ $sellerTotalListings }})
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <!-- Açıklama -->
-            @if($vehicle->description)
-                <div class="bg-white rounded-2xl shadow-xl p-8 border border-gray-100 mb-8">
-                    <h2 class="text-3xl font-bold text-gray-900 mb-6">Açıklama</h2>
-                    <div class="text-gray-700 leading-relaxed text-lg whitespace-pre-line">
-                        {{ $vehicle->description }}
+            <!-- Hızlı Bilgi Kartları -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                <!-- Yıl -->
+                <div class="bg-gray-50 dark:bg-[#252525] rounded-xl p-4 border border-gray-200 dark:border-gray-800 flex items-center gap-3 transition-colors duration-200">
+                    <div class="w-10 h-10 rounded-lg bg-primary-100 dark:bg-primary-900/20 flex items-center justify-center flex-shrink-0">
+                        <svg class="w-5 h-5 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Yıl</p>
+                        <p class="text-base font-bold text-gray-900 dark:text-gray-100">{{ $vehicle->year ?? '-' }}</p>
                     </div>
                 </div>
-            @endif
+                
+                <!-- Kilometre -->
+                <div class="bg-gray-50 dark:bg-[#252525] rounded-xl p-4 border border-gray-200 dark:border-gray-800 flex items-center gap-3 transition-colors duration-200">
+                    <div class="w-10 h-10 rounded-lg bg-primary-100 dark:bg-primary-900/20 flex items-center justify-center flex-shrink-0">
+                        <svg class="w-5 h-5 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Kilometre</p>
+                        <p class="text-base font-bold text-gray-900 dark:text-gray-100">{{ number_format($vehicle->kilometer ?? 0, 0, ',', '.') }} km</p>
+                    </div>
+                </div>
+                
+                <!-- Yakıt -->
+                <div class="bg-gray-50 dark:bg-[#252525] rounded-xl p-4 border border-gray-200 dark:border-gray-800 flex items-center gap-3 transition-colors duration-200">
+                    <div class="w-10 h-10 rounded-lg bg-primary-100 dark:bg-primary-900/20 flex items-center justify-center flex-shrink-0">
+                        <svg class="w-5 h-5 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Yakıt</p>
+                        <p class="text-base font-bold text-gray-900 dark:text-gray-100">{{ $vehicle->fuel_type ?? '-' }}</p>
+                    </div>
+                </div>
+                
+                <!-- Vites -->
+                <div class="bg-gray-50 dark:bg-[#252525] rounded-xl p-4 border border-gray-200 dark:border-gray-800 flex items-center gap-3 transition-colors duration-200">
+                    <div class="w-10 h-10 rounded-lg bg-primary-100 dark:bg-primary-900/20 flex items-center justify-center flex-shrink-0">
+                        <svg class="w-5 h-5 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Vites</p>
+                        <p class="text-base font-bold text-gray-900 dark:text-gray-100">{{ $vehicle->transmission ?? '-' }}</p>
+                    </div>
+                </div>
+            </div>
             
-            <!-- Özellikler -->
+            <!-- Araç Özellikleri -->
+            <div class="bg-white dark:bg-[#252525] rounded-2xl shadow-xl dark:shadow-2xl p-8 mb-8 border border-gray-100 dark:border-gray-800 transition-colors duration-200">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Araç Özellikleri</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
+                            <span class="text-gray-600 dark:text-gray-300 font-medium">Marka</span>
+                            <span class="font-bold text-gray-900 dark:text-gray-100 text-right">{{ $vehicle->brand ?? '-' }}</span>
+                        </div>
+                        <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
+                            <span class="text-gray-600 dark:text-gray-300 font-medium">Paket</span>
+                            <span class="font-bold text-gray-900 dark:text-gray-100 text-right">{{ $subtitle ?? '-' }}</span>
+                        </div>
+                        <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
+                            <span class="text-gray-600 dark:text-gray-300 font-medium">Motor Gücü</span>
+                            <span class="font-bold text-gray-900 dark:text-gray-100 text-right">{{ $vehicle->horse_power ?? '-' }} {{ $vehicle->horse_power ? 'HP' : '' }}</span>
+                        </div>
+                        <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
+                            <span class="text-gray-600 dark:text-gray-300 font-medium">Renk</span>
+                            <span class="font-bold text-gray-900 dark:text-gray-100 text-right">{{ $vehicle->color ?? '-' }}</span>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
+                            <span class="text-gray-600 dark:text-gray-300 font-medium">Model</span>
+                            <span class="font-bold text-gray-900 dark:text-gray-100 text-right">{{ $vehicle->model ?? '-' }}</span>
+                        </div>
+                        <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
+                            <span class="text-gray-600 dark:text-gray-300 font-medium">Motor Hacmi</span>
+                            <span class="font-bold text-gray-900 dark:text-gray-100 text-right">
+                                @if($vehicle->engine_size)
+                                    @php
+                                        $engineSize = (float) $vehicle->engine_size;
+                                        if ($engineSize >= 1000) {
+                                            echo number_format($engineSize / 1000, 1, ',', '.') . ' L';
+                                        } else {
+                                            echo number_format($engineSize, 0, ',', '.') . ' cc';
+                                        }
+                                    @endphp
+                                @else
+                                    -
+                                @endif
+                            </span>
+                        </div>
+                        <div class="flex justify-between items-center py-3 border-b border-gray-200">
+                            <span class="text-gray-600 font-medium">Çekiş</span>
+                            <span class="font-bold text-gray-900 text-right">Önden Çekiş</span>
+                        </div>
+                        <div class="flex justify-between items-center py-3 border-b border-gray-200">
+                            <span class="text-gray-600 font-medium">Garanti</span>
+                            <span class="font-bold text-gray-900 text-right">Var</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Donanımlar -->
             @if(is_array($vehicle->features) && count($vehicle->features) > 0)
-                <div class="bg-white rounded-2xl shadow-xl p-8 border border-gray-100 mb-8">
-                    <h2 class="text-3xl font-bold text-gray-900 mb-6">Özellikler</h2>
+                <div class="bg-white rounded-2xl shadow-xl p-8 mb-8 border border-gray-100">
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Donanımlar</h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         @foreach($vehicle->features as $feature)
-                            <div class="flex items-center space-x-3 p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
-                                <svg class="w-6 h-6 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <div class="flex items-center gap-3 py-2">
+                                <svg class="w-5 h-5 text-green-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                                 </svg>
-                                <span class="text-gray-900 font-medium">{{ $feature }}</span>
+                                <span class="text-gray-700 text-sm">{{ $feature }}</span>
                             </div>
                         @endforeach
                     </div>
                 </div>
             @endif
             
+            <!-- Açıklama (En Altta) -->
+            <div class="bg-white dark:bg-[#252525] rounded-2xl shadow-xl dark:shadow-2xl border border-gray-100 dark:border-gray-800 p-8 transition-colors duration-200">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Açıklama</h2>
+                <div class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                    {{ $vehicle->description ?? 'Açıklama bulunmamaktadır.' }}
+                </div>
+            </div>
+            
             <!-- Related Vehicles -->
-            @if($relatedVehicles->count() > 0)
+            @if(isset($relatedVehicles) && $relatedVehicles->count() > 0)
                 <div class="mt-16">
                     <div class="flex items-center justify-between mb-8">
-                        <h2 class="text-3xl font-bold text-gray-900">Benzer Araçlar</h2>
-                        <a href="{{ route('vehicles.index', ['brand' => $vehicle->brand]) }}" class="text-primary-600 font-semibold hover:text-primary-700 flex items-center">
+                        <h2 class="text-3xl font-bold text-gray-900 dark:text-gray-100">Benzer Araçlar</h2>
+                        <a href="{{ route('vehicles.index', ['brand' => $vehicle->brand]) }}" class="text-primary-600 dark:text-primary-400 font-semibold hover:text-primary-700 dark:hover:text-primary-300 flex items-center transition-colors">
                             Tümünü Gör
                             <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -310,39 +483,246 @@
         </div>
     </section>
 
+    <!-- Lightbox -->
+    <div id="lightbox" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.95); z-index: 99999; cursor: pointer; align-items: center; justify-content: center; padding: 0; margin: 0; overflow: hidden;" onclick="closeLightbox()">
+        <!-- Close Button -->
+        <button style="position: absolute; top: 16px; right: 16px; background: rgba(0, 0, 0, 0.6); color: white; border: none; border-radius: 50%; width: 48px; height: 48px; font-size: 32px; cursor: pointer; z-index: 100001; display: flex; align-items: center; justify-content: center; transition: background 0.3s;" onclick="event.stopPropagation(); closeLightbox();" title="Kapat (ESC)">&times;</button>
+        
+        <!-- Previous Button -->
+        <button style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); background: rgba(255, 255, 255, 0.2); color: white; border: none; border-radius: 50%; width: 48px; height: 48px; cursor: pointer; z-index: 100001; display: flex; align-items: center; justify-content: center; transition: background 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'" onclick="event.stopPropagation(); previousLightboxImage();" title="Önceki (←)">
+            <svg style="width: 24px; height: 24px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
+        </button>
+        
+        <!-- Image Container -->
+        <div style="width: 96vw; height: 92vh; max-width: 96vw; max-height: 92vh; display: flex; align-items: center; justify-content: center; padding: 0; margin: 0;">
+            <img id="lightbox-image" style="max-width: 96vw; max-height: 92vh; width: auto; height: auto; object-fit: contain; cursor: default; z-index: 100000; display: block;" src="" alt="{{ $vehicle->title }}" onclick="event.stopPropagation();">
+        </div>
+        
+        <!-- Next Button -->
+        <button style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); background: rgba(255, 255, 255, 0.2); color: white; border: none; border-radius: 50%; width: 48px; height: 48px; cursor: pointer; z-index: 100001; display: flex; align-items: center; justify-content: center; transition: background 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'" onclick="event.stopPropagation(); nextLightboxImage();" title="Sonraki (→)">
+            <svg style="width: 24px; height: 24px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+        </button>
+        
+        <!-- Image Counter -->
+        <div id="lightbox-counter" style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(0, 0, 0, 0.7); color: white; padding: 12px 24px; border-radius: 8px; font-size: 18px; font-weight: 600; z-index: 100001;">
+            <span id="lightbox-counter-current">1</span> / <span id="lightbox-counter-total"></span>
+        </div>
+    </div>
+
     <script>
-        function changeMainImage(src, index) {
-            const mainImage = document.getElementById('main-image');
+        // Global variables
+        var vehicleImages = @json($vehicleImages);
+        var currentImageIndex = 0;
+        var isLightboxOpen = false;
+        
+        // Change main image when thumbnail is clicked
+        function changeImage(index) {
+            if (index < 0 || index >= vehicleImages.length) return;
+            
+            currentImageIndex = index;
+            var mainImage = document.getElementById('main-image');
+            var counter = document.getElementById('image-counter');
+            
             if (mainImage) {
-                mainImage.src = src;
+                mainImage.src = vehicleImages[index];
             }
             
-            // Update active thumbnail
-            document.querySelectorAll('[id^="thumb-"]').forEach(thumb => {
-                thumb.classList.remove('border-primary-600');
-                thumb.classList.add('border-transparent');
-            });
-            
-            const clickedThumb = document.getElementById('thumb-' + index);
-            if (clickedThumb) {
-                clickedThumb.classList.add('border-primary-600');
-                clickedThumb.classList.remove('border-transparent');
+            if (counter) {
+                counter.textContent = (index + 1);
             }
             
-            // Update photo counter
-            const currentIndex = document.getElementById('current-image-index');
-            if (currentIndex) {
-                currentIndex.textContent = index + 1;
+            // Update thumbnail borders
+            var thumbs = document.querySelectorAll('.thumbnail-item');
+            for (var i = 0; i < thumbs.length; i++) {
+                if (i === index) {
+                    thumbs[i].classList.remove('border-gray-200', 'border-primary-400');
+                    thumbs[i].classList.add('border-primary-600', 'shadow-md', 'scale-105');
+                } else {
+                    thumbs[i].classList.remove('border-primary-600', 'shadow-md', 'scale-105');
+                    thumbs[i].classList.add('border-gray-200');
+                }
+            }
+            
+            // Scroll thumbnail into view
+            var activeThumb = document.getElementById('thumb-' + index);
+            if (activeThumb) {
+                activeThumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
             }
         }
         
-        // İlk thumbnail'ı aktif yap
-        document.addEventListener('DOMContentLoaded', function() {
-            const firstThumb = document.getElementById('thumb-0');
-            if (firstThumb) {
-                firstThumb.classList.add('border-primary-600');
-                firstThumb.classList.remove('border-transparent');
+        // Previous image
+        function previousImage() {
+            var newIndex = currentImageIndex > 0 ? currentImageIndex - 1 : vehicleImages.length - 1;
+            changeImage(newIndex);
+        }
+        
+        // Next image
+        function nextImage() {
+            var newIndex = currentImageIndex < vehicleImages.length - 1 ? currentImageIndex + 1 : 0;
+            changeImage(newIndex);
+        }
+        
+        // Open lightbox
+        function openLightbox() {
+            isLightboxOpen = true;
+            var lightbox = document.getElementById('lightbox');
+            var lightboxImage = document.getElementById('lightbox-image');
+            
+            if (lightbox && lightboxImage && vehicleImages[currentImageIndex]) {
+                lightboxImage.src = vehicleImages[currentImageIndex];
+                updateLightboxCounter();
+                lightbox.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            }
+        }
+        
+        // Close lightbox
+        function closeLightbox() {
+            isLightboxOpen = false;
+            var lightbox = document.getElementById('lightbox');
+            if (lightbox) {
+                lightbox.style.display = 'none';
+                document.body.style.overflow = '';
+            }
+        }
+        
+        // Update lightbox counter
+        function updateLightboxCounter() {
+            var current = document.getElementById('lightbox-counter-current');
+            var total = document.getElementById('lightbox-counter-total');
+            if (current) {
+                current.textContent = (currentImageIndex + 1);
+            }
+            if (total) {
+                total.textContent = vehicleImages.length;
+            }
+        }
+        
+        // Previous lightbox image
+        function previousLightboxImage() {
+            currentImageIndex = currentImageIndex > 0 ? currentImageIndex - 1 : vehicleImages.length - 1;
+            var lightboxImage = document.getElementById('lightbox-image');
+            if (lightboxImage && vehicleImages[currentImageIndex]) {
+                lightboxImage.src = vehicleImages[currentImageIndex];
+                updateLightboxCounter();
+            }
+        }
+        
+        // Next lightbox image
+        function nextLightboxImage() {
+            currentImageIndex = currentImageIndex < vehicleImages.length - 1 ? currentImageIndex + 1 : 0;
+            var lightboxImage = document.getElementById('lightbox-image');
+            if (lightboxImage && vehicleImages[currentImageIndex]) {
+                lightboxImage.src = vehicleImages[currentImageIndex];
+                updateLightboxCounter();
+            }
+        }
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (isLightboxOpen) {
+                if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    previousLightboxImage();
+                } else if (e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    nextLightboxImage();
+                } else if (e.key === 'Escape') {
+                    e.preventDefault();
+                    closeLightbox();
+                }
+            } else {
+                if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    previousImage();
+                } else if (e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    nextImage();
+                } else if (e.key === 'Escape') {
+                    // ESC key handled by lightbox
+                }
             }
         });
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            var totalCounter = document.getElementById('lightbox-counter-total');
+            if (totalCounter) {
+                totalCounter.textContent = vehicleImages.length;
+            }
+        });
+        
+        // Thumbnail scroll
+        function scrollThumbnails(direction) {
+            var container = document.getElementById('thumbnail-container');
+            if (container) {
+                var scrollAmount = 300;
+                container.scrollBy({
+                    left: direction === 'left' ? -scrollAmount : scrollAmount,
+                    behavior: 'smooth'
+                });
+            }
+        }
+        
     </script>
+    
+    <style>
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        
+        /* Smooth scroll for anchor links */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Vehicle Detail Grid - 70% / 30% Layout */
+        @media (min-width: 1024px) {
+            #vehicle-detail-grid {
+                grid-template-columns: 70% 30% !important;
+                display: grid !important;
+            }
+            #gallery-section {
+                grid-column: 1 !important;
+            }
+            #info-section {
+                grid-column: 2 !important;
+            }
+        }
+        
+        /* Lightbox responsive styles */
+        @media (max-width: 768px) {
+            #lightbox > div[style*="96vw"] {
+                width: 98vw !important;
+                height: 88vh !important;
+                max-width: 98vw !important;
+                max-height: 88vh !important;
+            }
+            #lightbox img#lightbox-image {
+                max-width: 98vw !important;
+                max-height: 88vh !important;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            #lightbox > div[style*="96vw"] {
+                width: 100vw !important;
+                height: 90vh !important;
+                max-width: 100vw !important;
+                max-height: 90vh !important;
+            }
+            #lightbox img#lightbox-image {
+                max-width: 100vw !important;
+                max-height: 90vh !important;
+            }
+        }
+    </style>
 @endsection

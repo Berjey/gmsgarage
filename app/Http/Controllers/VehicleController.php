@@ -61,31 +61,16 @@ class VehicleController extends Controller
             $query->where('kilometer', '<=', $request->max_km);
         }
 
-        // Motor Gücü (HP) - tek değer (min olarak kullanılır)
         if ($request->has('horse_power') && $request->horse_power) {
             $query->where('horse_power', '>=', $request->horse_power);
         }
 
-        // Motor Hacmi
         if ($request->has('engine_size') && $request->engine_size) {
             $query->where('engine_size', $request->engine_size);
         }
 
-        // Çekiş
-        if ($request->has('traction') && $request->traction) {
-            // Eğer veritabanında traction alanı varsa
-            // $query->where('traction', $request->traction);
-        }
-
-        // Renk
         if ($request->has('color') && $request->color) {
             $query->where('color', $request->color);
-        }
-
-        // Ağır Hasar Kayıtlı
-        if ($request->has('heavy_damage') && $request->heavy_damage) {
-            // Eğer veritabanında heavy_damage alanı varsa
-            // $query->where('heavy_damage', $request->heavy_damage === 'yes');
         }
 
         // İlan Tarihi
@@ -106,12 +91,6 @@ class VehicleController extends Controller
                     $query->where('created_at', '>=', now()->subDays(30));
                     break;
             }
-        }
-
-        // Boya, Değişen Parça
-        if ($request->has('paint_parts') && $request->paint_parts) {
-            // Eğer veritabanında paint_parts alanı varsa
-            // $query->where('paint_parts', $request->paint_parts);
         }
 
         // Kelime ile Filtre
@@ -180,5 +159,43 @@ class VehicleController extends Controller
             ->get();
 
         return view('pages.vehicles.show', compact('vehicle', 'relatedVehicles'));
+    }
+
+    /**
+     * Satıcı profil sayfası
+     */
+    public function sellerProfile($slug)
+    {
+        // İleride bu bilgiler Seller modelinden gelecek
+        // Şimdilik placeholder veriler
+        $sellerData = [
+            'name' => 'Ali Yılmaz',
+            'slug' => 'ali-yilmaz',
+            'position' => 'Kıdemli Satış Danışmanı',
+            'is_verified' => true,
+            'response_time' => '2 saat',
+            'total_listings' => 45,
+            'location' => 'İstanbul',
+            'joined_date' => '2020-01-15',
+        ];
+
+        // Slug kontrolü
+        if ($slug !== $sellerData['slug']) {
+            abort(404);
+        }
+
+        // Aktif ilanlar (en son yayınlananlar)
+        $activeVehicles = Vehicle::where('is_active', true)
+            ->orderBy('created_at', 'desc')
+            ->limit(20)
+            ->get();
+
+        // Kaldırılan ilanlar (aktif olmayan)
+        $inactiveVehicles = Vehicle::where('is_active', false)
+            ->orderBy('updated_at', 'desc')
+            ->limit(20)
+            ->get();
+
+        return view('pages.seller.profile', compact('sellerData', 'activeVehicles', 'inactiveVehicles'));
     }
 }
