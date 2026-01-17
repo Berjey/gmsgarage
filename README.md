@@ -111,4 +111,12 @@ MIT
 
 ---
 
-**Son Güncelleme**: 2025-01-15
+**Son Güncelleme**: 2026-01-17
+
+## 🌙 Dark Mode
+
+- ✅ Tam dark mode desteği (tüm sayfalar)
+- ✅ OS tercihi algılama + manuel toggle
+- ✅ localStorage ile tercih saklama
+- ✅ Cursor benzeri koyu tema (#1e1e1e)
+- ✅ Tüm componentler dark mode'a uyumlu
