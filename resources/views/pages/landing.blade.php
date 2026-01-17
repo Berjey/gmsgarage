@@ -29,6 +29,11 @@
             backdrop-filter: blur(10px);
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
+        .dark .landing-header.scrolled {
+            background: rgba(30, 30, 30, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+        }
         
         /* Hero Animations */
         .hero-fade-in {
@@ -114,28 +119,31 @@
         }
     </style>
 </head>
-<body class="bg-white">
+<body class="bg-white dark:bg-[#1e1e1e] transition-colors duration-200">
     <!-- Sticky Header -->
-    <header id="header" class="landing-header bg-white">
+    <header id="header" class="landing-header bg-white dark:bg-[#1e1e1e]/95 backdrop-blur-modern transition-colors duration-200">
         <nav class="container-custom">
             <div class="flex items-center justify-between h-20">
                 <!-- Logo -->
                 <a href="{{ route('home') }}" class="flex items-center space-x-3 group">
-                    <img src="{{ asset('images/logo.png') }}" alt="GMSGARAGE Logo" class="h-16 w-auto transition-transform duration-300 group-hover:scale-105" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <!-- Light Mode Logo -->
+                    <img src="{{ asset('images/light-mode-logo.png') }}" alt="GMSGARAGE Logo" class="h-16 w-auto transition-transform duration-300 group-hover:scale-105 dark:hidden object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <!-- Dark Mode Logo -->
+                    <img src="{{ asset('images/dark-mode-logo.png') }}" alt="GMSGARAGE Logo" class="h-16 w-auto transition-transform duration-300 group-hover:scale-105 hidden dark:block object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                     <div class="text-3xl font-bold text-primary-600" style="display:none;">GMSGARAGE</div>
                 </a>
                 
                 <!-- Desktop Navigation -->
                 <div class="hidden lg:flex items-center space-x-6">
-                    <a href="#hero" class="text-gray-700 hover:text-primary-600 font-medium transition-colors">Anasayfa</a>
-                    <a href="#features" class="text-gray-700 hover:text-primary-600 font-medium transition-colors">Özellikler</a>
-                    <a href="#gallery" class="text-gray-700 hover:text-primary-600 font-medium transition-colors">Galeri</a>
-                    <a href="#contact" class="text-gray-700 hover:text-primary-600 font-medium transition-colors">İletişim</a>
+                    <a href="#hero" class="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 font-medium transition-colors">Anasayfa</a>
+                    <a href="#features" class="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 font-medium transition-colors">Özellikler</a>
+                    <a href="#gallery" class="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 font-medium transition-colors">Galeri</a>
+                    <a href="#contact" class="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 font-medium transition-colors">İletişim</a>
                     <a href="{{ route('vehicles.index') }}" class="btn btn-primary">Hemen Ara</a>
                 </div>
                 
                 <!-- Mobile Menu Button -->
-                <button id="mobile-menu-btn" class="lg:hidden text-gray-700" onclick="toggleMobileMenu()">
+                <button id="mobile-menu-btn" class="lg:hidden text-gray-700 dark:text-gray-300" onclick="toggleMobileMenu()">
                     <svg id="menu-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                     </svg>
@@ -147,11 +155,11 @@
             
             <!-- Mobile Menu -->
             <div id="mobile-menu" class="hidden lg:hidden pb-4">
-                <div class="flex flex-col space-y-2 pt-4 border-t border-gray-200">
-                    <a href="#hero" class="px-4 py-2 text-gray-700 hover:text-primary-600 font-medium transition-colors">Anasayfa</a>
-                    <a href="#features" class="px-4 py-2 text-gray-700 hover:text-primary-600 font-medium transition-colors">Özellikler</a>
-                    <a href="#gallery" class="px-4 py-2 text-gray-700 hover:text-primary-600 font-medium transition-colors">Galeri</a>
-                    <a href="#contact" class="px-4 py-2 text-gray-700 hover:text-primary-600 font-medium transition-colors">İletişim</a>
+                <div class="flex flex-col space-y-2 pt-4 border-t border-gray-200 dark:border-gray-800">
+                    <a href="#hero" class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 font-medium transition-colors">Anasayfa</a>
+                    <a href="#features" class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 font-medium transition-colors">Özellikler</a>
+                    <a href="#gallery" class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 font-medium transition-colors">Galeri</a>
+                    <a href="#contact" class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 font-medium transition-colors">İletişim</a>
                     <a href="{{ route('vehicles.index') }}" class="btn btn-primary mx-4 mt-2">Hemen Ara</a>
                 </div>
             </div>
@@ -159,16 +167,16 @@
     </header>
 
     <!-- Hero Section -->
-    <section id="hero" class="min-h-screen flex items-center bg-gradient-to-br from-gray-50 to-gray-100 pt-20">
+    <section id="hero" class="min-h-screen flex items-center bg-gradient-to-br from-gray-50 to-gray-100 dark:from-[#1e1e1e] dark:to-[#252525] pt-20 transition-colors duration-200">
         <div class="container-custom py-20">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 <!-- Left Column -->
                 <div class="space-y-8">
-                    <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 leading-tight hero-fade-in">
+                    <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 dark:text-gray-100 leading-tight hero-fade-in">
                         Premium Araçlar<br>
                         <span class="text-gradient bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent">Güvenilir Alışveriş</span>
                     </h1>
-                    <p class="text-xl text-gray-600 leading-relaxed hero-fade-in hero-fade-in-delay-1">
+                    <p class="text-xl text-gray-600 dark:text-gray-300 leading-relaxed hero-fade-in hero-fade-in-delay-1">
                         AI destekli araç değerleme ve garantili alışveriş deneyimi. Premium ikinci el araçlar için güvenilir adresiniz.
                     </p>
                     <div class="flex flex-wrap gap-4 hero-fade-in hero-fade-in-delay-2">
@@ -186,23 +194,23 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
                                 </svg>
                             </div>
-                            <span class="text-gray-700 font-medium">Garantili</span>
+                            <span class="text-gray-700 dark:text-gray-300 font-medium">Garantili</span>
                         </div>
                         <div class="flex items-center gap-2">
-                            <div class="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center">
-                                <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="w-10 h-10 bg-primary-100 dark:bg-primary-900/20 rounded-full flex items-center justify-center">
+                                <svg class="w-5 h-5 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                                 </svg>
                             </div>
-                            <span class="text-gray-700 font-medium">Hızlı İşlem</span>
+                            <span class="text-gray-700 dark:text-gray-300 font-medium">Hızlı İşlem</span>
                         </div>
                         <div class="flex items-center gap-2">
-                            <div class="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center">
-                                <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="w-10 h-10 bg-primary-100 dark:bg-primary-900/20 rounded-full flex items-center justify-center">
+                                <svg class="w-5 h-5 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                 </svg>
                             </div>
-                            <span class="text-gray-700 font-medium">En İyi Fiyat</span>
+                            <span class="text-gray-700 dark:text-gray-300 font-medium">En İyi Fiyat</span>
                         </div>
                     </div>
                 </div>
@@ -221,65 +229,65 @@
     </section>
 
     <!-- Features Section -->
-    <section id="features" class="py-20 bg-white">
+    <section id="features" class="py-20 bg-white dark:bg-[#1e1e1e] transition-colors duration-200">
         <div class="container-custom">
             <div class="text-center mb-16 reveal">
-                <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Neden GMSGARAGE?</h2>
-                <p class="text-xl text-gray-600 max-w-2xl mx-auto">Premium araç alışverişinde güvenilir partneriniz</p>
+                <h2 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-gray-100 mb-4">Neden GMSGARAGE?</h2>
+                <p class="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">Premium araç alışverişinde güvenilir partneriniz</p>
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <div class="card p-8 text-center reveal hover-lift">
-                    <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <svg class="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="card p-8 text-center reveal hover-lift bg-white dark:bg-[#252525] border border-gray-100 dark:border-gray-800 transition-colors duration-200">
+                    <div class="w-16 h-16 bg-primary-100 dark:bg-primary-900/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-8 h-8 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
                         </svg>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-3">Garantili Araçlar</h3>
-                    <p class="text-gray-600">Tüm araçlarımız detaylı kontrol edilmiş ve garantilidir.</p>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-3">Garantili Araçlar</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Tüm araçlarımız detaylı kontrol edilmiş ve garantilidir.</p>
                 </div>
                 
-                <div class="card p-8 text-center reveal hover-lift">
-                    <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <svg class="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="card p-8 text-center reveal hover-lift bg-white dark:bg-[#252525] border border-gray-100 dark:border-gray-800 transition-colors duration-200">
+                    <div class="w-16 h-16 bg-primary-100 dark:bg-primary-900/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-8 h-8 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                         </svg>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-3">Hızlı İşlem</h3>
-                    <p class="text-gray-600">24 saat içinde teklif alın, hızlı ve kolay alışveriş.</p>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-3">Hızlı İşlem</h3>
+                    <p class="text-gray-600 dark:text-gray-400">24 saat içinde teklif alın, hızlı ve kolay alışveriş.</p>
                 </div>
                 
-                <div class="card p-8 text-center reveal hover-lift">
-                    <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <svg class="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="card p-8 text-center reveal hover-lift bg-white dark:bg-[#252525] border border-gray-100 dark:border-gray-800 transition-colors duration-200">
+                    <div class="w-16 h-16 bg-primary-100 dark:bg-primary-900/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-8 h-8 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-3">En İyi Fiyat</h3>
-                    <p class="text-gray-600">Piyasadaki en uygun fiyatları sunuyoruz.</p>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-3">En İyi Fiyat</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Piyasadaki en uygun fiyatları sunuyoruz.</p>
                 </div>
                 
-                <div class="card p-8 text-center reveal hover-lift">
-                    <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <svg class="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="card p-8 text-center reveal hover-lift bg-white dark:bg-[#252525] border border-gray-100 dark:border-gray-800 transition-colors duration-200">
+                    <div class="w-16 h-16 bg-primary-100 dark:bg-primary-900/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-8 h-8 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
                         </svg>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-3">AI Destekli</h3>
-                    <p class="text-gray-600">Yapay zeka ile doğru araç değerleme.</p>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-3">AI Destekli</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Yapay zeka ile doğru araç değerleme.</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Benefits Section -->
-    <section id="benefits" class="py-20 bg-gray-50">
+    <section id="benefits" class="py-20 bg-gray-50 dark:bg-[#252525] transition-colors duration-200">
         <div class="container-custom">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 <!-- Left: Text -->
                 <div class="reveal">
-                    <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Premium Deneyim</h2>
-                    <p class="text-xl text-gray-600 mb-8">GMSGARAGE ile araç alışverişi artık çok daha kolay ve güvenli.</p>
+                    <h2 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-gray-100 mb-6">Premium Deneyim</h2>
+                    <p class="text-xl text-gray-600 dark:text-gray-400 mb-8">GMSGARAGE ile araç alışverişi artık çok daha kolay ve güvenli.</p>
                     <div class="space-y-6">
                         <div class="flex items-start gap-4">
                             <div class="w-6 h-6 bg-primary-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
@@ -288,8 +296,8 @@
                                 </svg>
                             </div>
                             <div>
-                                <h3 class="text-lg font-bold text-gray-900 mb-2">Detaylı Araç Kontrolü</h3>
-                                <p class="text-gray-600">Her araç uzman ekibimiz tarafından detaylı kontrol edilir.</p>
+                                <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-2">Detaylı Araç Kontrolü</h3>
+                                <p class="text-gray-600 dark:text-gray-400">Her araç uzman ekibimiz tarafından detaylı kontrol edilir.</p>
                             </div>
                         </div>
                         <div class="flex items-start gap-4">
@@ -299,8 +307,8 @@
                                 </svg>
                             </div>
                             <div>
-                                <h3 class="text-lg font-bold text-gray-900 mb-2">Şeffaf İşlemler</h3>
-                                <p class="text-gray-600">Tüm işlemler şeffaf ve güvenli bir şekilde yürütülür.</p>
+                                <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-2">Şeffaf İşlemler</h3>
+                                <p class="text-gray-600 dark:text-gray-400">Tüm işlemler şeffaf ve güvenli bir şekilde yürütülür.</p>
                             </div>
                         </div>
                         <div class="flex items-start gap-4">
@@ -310,8 +318,8 @@
                                 </svg>
                             </div>
                             <div>
-                                <h3 class="text-lg font-bold text-gray-900 mb-2">7/24 Destek</h3>
-                                <p class="text-gray-600">Müşteri destek ekibimiz her zaman yanınızda.</p>
+                                <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-2">7/24 Destek</h3>
+                                <p class="text-gray-600 dark:text-gray-400">Müşteri destek ekibimiz her zaman yanınızda.</p>
                             </div>
                         </div>
                     </div>
@@ -328,11 +336,11 @@
     </section>
 
     <!-- Gallery Section -->
-    <section id="gallery" class="py-20 bg-white">
+    <section id="gallery" class="py-20 bg-white dark:bg-[#1e1e1e] transition-colors duration-200">
         <div class="container-custom">
             <div class="text-center mb-16 reveal">
-                <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Araç Galerimiz</h2>
-                <p class="text-xl text-gray-600 max-w-2xl mx-auto">Premium araç koleksiyonumuzdan seçmeler</p>
+                <h2 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-gray-100 mb-4">Araç Galerimiz</h2>
+                <p class="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">Premium araç koleksiyonumuzdan seçmeler</p>
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -358,66 +366,66 @@
     </section>
 
     <!-- Trust Section -->
-    <section id="trust" class="py-20 bg-gray-50">
+    <section id="trust" class="py-20 bg-gray-50 dark:bg-[#252525] transition-colors duration-200">
         <div class="container-custom">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="card p-8 text-center reveal">
-                    <div class="text-5xl font-bold text-primary-600 mb-2">500+</div>
-                    <div class="text-xl font-semibold text-gray-900 mb-2">Araç</div>
-                    <p class="text-gray-600">Geniş araç yelpazesi</p>
+                <div class="card p-8 text-center reveal bg-white dark:bg-[#2a2a2a] border border-gray-100 dark:border-gray-800 transition-colors duration-200">
+                    <div class="text-5xl font-bold text-primary-600 dark:text-primary-400 mb-2">500+</div>
+                    <div class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">Araç</div>
+                    <p class="text-gray-600 dark:text-gray-400">Geniş araç yelpazesi</p>
                 </div>
-                <div class="card p-8 text-center reveal">
-                    <div class="text-5xl font-bold text-primary-600 mb-2">98%</div>
-                    <div class="text-xl font-semibold text-gray-900 mb-2">Memnuniyet</div>
-                    <p class="text-gray-600">Müşteri memnuniyet oranı</p>
+                <div class="card p-8 text-center reveal bg-white dark:bg-[#2a2a2a] border border-gray-100 dark:border-gray-800 transition-colors duration-200">
+                    <div class="text-5xl font-bold text-primary-600 dark:text-primary-400 mb-2">98%</div>
+                    <div class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">Memnuniyet</div>
+                    <p class="text-gray-600 dark:text-gray-400">Müşteri memnuniyet oranı</p>
                 </div>
-                <div class="card p-8 text-center reveal">
-                    <div class="text-5xl font-bold text-primary-600 mb-2">24</div>
-                    <div class="text-xl font-semibold text-gray-900 mb-2">Saat</div>
-                    <p class="text-gray-600">İçinde teklif garantisi</p>
+                <div class="card p-8 text-center reveal bg-white dark:bg-[#2a2a2a] border border-gray-100 dark:border-gray-800 transition-colors duration-200">
+                    <div class="text-5xl font-bold text-primary-600 dark:text-primary-400 mb-2">24</div>
+                    <div class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">Saat</div>
+                    <p class="text-gray-600 dark:text-gray-400">İçinde teklif garantisi</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="py-20 bg-white">
+    <section id="contact" class="py-20 bg-white dark:bg-[#1e1e1e] transition-colors duration-200">
         <div class="container-custom">
             <div class="text-center mb-16 reveal">
-                <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">İletişime Geçin</h2>
-                <p class="text-xl text-gray-600 max-w-2xl mx-auto">Sorularınız için bize ulaşın</p>
+                <h2 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-gray-100 mb-4">İletişime Geçin</h2>
+                <p class="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">Sorularınız için bize ulaşın</p>
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-                <div class="card p-8 text-center reveal">
-                    <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <svg class="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="card p-8 text-center reveal bg-white dark:bg-[#252525] border border-gray-100 dark:border-gray-800 transition-colors duration-200">
+                    <div class="w-16 h-16 bg-primary-100 dark:bg-primary-900/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-8 h-8 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
                         </svg>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-2">Telefon</h3>
-                    <p class="text-primary-600 font-semibold text-lg">444 30 11</p>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">Telefon</h3>
+                    <p class="text-primary-600 dark:text-primary-400 font-semibold text-lg">444 30 11</p>
                 </div>
                 
-                <div class="card p-8 text-center reveal">
-                    <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <svg class="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="card p-8 text-center reveal bg-white dark:bg-[#252525] border border-gray-100 dark:border-gray-800 transition-colors duration-200">
+                    <div class="w-16 h-16 bg-primary-100 dark:bg-primary-900/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-8 h-8 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                         </svg>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-2">E-posta</h3>
-                    <p class="text-primary-600 font-semibold text-lg">info@gmsgarage.com</p>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">E-posta</h3>
+                    <p class="text-primary-600 dark:text-primary-400 font-semibold text-lg">info@gmsgarage.com</p>
                 </div>
                 
-                <div class="card p-8 text-center reveal">
-                    <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <svg class="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="card p-8 text-center reveal bg-white dark:bg-[#252525] border border-gray-100 dark:border-gray-800 transition-colors duration-200">
+                    <div class="w-16 h-16 bg-primary-100 dark:bg-primary-900/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-8 h-8 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                         </svg>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-2">Adres</h3>
-                    <p class="text-gray-600">Çobançeşme Mahallesi<br>Kımız Sokağı No: 46<br>34196 Bahçelievler/İstanbul</p>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">Adres</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Çobançeşme Mahallesi<br>Kımız Sokağı No: 46<br>34196 Bahçelievler/İstanbul</p>
                 </div>
             </div>
         </div>
@@ -445,7 +453,7 @@
     </section>
 
     <!-- Footer -->
-    <footer id="footer" class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
+    <footer id="footer" class="bg-[#1e1e1e] text-white">
         @include('components.footer')
     </footer>
 
