@@ -297,7 +297,7 @@
                     </div>
                     
                     <!-- Şeffaf Bilgilendirme -->
-                    <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-md hover-lift border-2 border-primary-200 dark:border-primary-800/50 group relative overflow-hidden transition-colors duration-200">
+                    <div class="bg-white dark:bg-[#252525] rounded-2xl p-8 shadow-md dark:shadow-xl dark:border dark:border-gray-800 hover-lift border-2 border-primary-200 dark:border-primary-800/50 group relative overflow-hidden transition-colors duration-200">
                         <div class="absolute inset-0 shimmer-effect opacity-0 group-hover:opacity-100 transition-opacity"></div>
                         <div class="w-16 h-16 bg-gradient-to-br from-primary-500 to-primary-700 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 glow-effect relative z-10">
                             <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -312,7 +312,7 @@
                     </div>
                     
                     <!-- Seçkin Araç Portföyü -->
-                    <div class="bg-white rounded-2xl p-8 shadow-md hover-lift border-2 border-primary-200 group relative overflow-hidden">
+                    <div class="bg-white dark:bg-[#252525] rounded-2xl p-8 shadow-md dark:shadow-xl dark:border dark:border-gray-800 hover-lift border-2 border-primary-200 dark:border-primary-800/50 group relative overflow-hidden transition-colors duration-200">
                         <div class="absolute inset-0 shimmer-effect opacity-0 group-hover:opacity-100 transition-opacity"></div>
                         <div class="w-16 h-16 bg-gradient-to-br from-primary-500 to-primary-700 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 glow-effect relative z-10">
                             <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -326,7 +326,7 @@
                     </div>
                     
                     <!-- Müşteri Odaklı Hizmet -->
-                    <div class="bg-white rounded-2xl p-8 shadow-md hover-lift border-2 border-primary-200 group relative overflow-hidden">
+                    <div class="bg-white dark:bg-[#252525] rounded-2xl p-8 shadow-md dark:shadow-xl dark:border dark:border-gray-800 hover-lift border-2 border-primary-200 dark:border-primary-800/50 group relative overflow-hidden transition-colors duration-200">
                         <div class="absolute inset-0 shimmer-effect opacity-0 group-hover:opacity-100 transition-opacity"></div>
                         <div class="w-16 h-16 bg-gradient-to-br from-primary-500 to-primary-700 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 glow-effect relative z-10">
                             <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -389,8 +389,8 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
                             </svg>
                         </div>
-                        <h3 class="text-2xl font-bold text-gray-900 mb-3 group-hover:text-primary-600 transition-colors">Kalite</h3>
-                        <p class="text-gray-600 leading-relaxed">
+                        <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">Kalite</h3>
+                        <p class="text-gray-600 dark:text-gray-300 leading-relaxed">
                             Her araç detaylı kontrol ve ekspertiz sürecinden geçer. Kalite standartlarımızdan ödün vermiyoruz.
                         </p>
                     </div>
@@ -441,14 +441,14 @@
                     <!-- Misyon -->
                     <div class="bg-white dark:bg-[#252525] rounded-2xl p-8 md:p-10 shadow-md dark:shadow-xl dark:border dark:border-gray-800 border border-gray-100 hover-lift group transition-colors duration-200">
                         <div class="flex items-center gap-4 mb-6">
-                            <div class="w-16 h-16 bg-gradient-to-br from-primary-100 to-primary-200 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                                <svg class="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="w-16 h-16 bg-gradient-to-br from-primary-100 to-primary-200 dark:from-primary-900/30 dark:to-primary-800/30 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+                                <svg class="w-8 h-8 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                                 </svg>
                             </div>
-                            <h3 class="text-2xl font-bold text-gray-900 group-hover:text-primary-600 transition-colors">Misyonumuz</h3>
+                            <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">Misyonumuz</h3>
                         </div>
-                        <p class="text-gray-700 leading-relaxed text-lg">
+                        <p class="text-gray-700 dark:text-gray-300 leading-relaxed text-lg">
                             Müşterilerimize her zaman doğru bilgi, adil fiyat ve güvenli bir satın alma deneyimi sunmak.
                         </p>
                     </div>

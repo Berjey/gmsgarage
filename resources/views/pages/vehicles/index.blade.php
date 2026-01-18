@@ -5,6 +5,91 @@
 
 @push('styles')
 <style>
+    /* Vehicle Card Animations */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes scaleIn {
+        from {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+    
+    .animate-fade-in-up {
+        animation: fadeInUp 0.6s ease-out forwards;
+    }
+    
+    .animate-scale-in {
+        animation: scaleIn 0.5s ease-out forwards;
+    }
+    
+    /* Staggered animation delays for cards */
+    .vehicle-card-wrapper {
+        opacity: 0;
+        animation: fadeInUp 0.6s ease-out forwards;
+    }
+    
+    /* Enhanced hover effects */
+    .card-vehicle {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .card-vehicle:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 20px 40px -10px rgba(220, 38, 38, 0.3), 0 10px 20px -5px rgba(0, 0, 0, 0.1);
+    }
+    
+    .dark .card-vehicle:hover {
+        box-shadow: 0 20px 40px -10px rgba(220, 38, 38, 0.4), 0 10px 20px -5px rgba(0, 0, 0, 0.3);
+    }
+    
+    /* Icon animations on hover */
+    .card-vehicle:hover .w-5 {
+        animation: iconPulse 0.6s ease-in-out;
+    }
+    
+    @keyframes iconPulse {
+        0%, 100% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.15);
+        }
+    }
+    
+    /* Button hover animations */
+    .card-vehicle .btn-primary,
+    .card-vehicle a[target="_blank"] {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .card-vehicle:hover .btn-primary {
+        transform: translateY(-2px);
+        box-shadow: 0 15px 30px -5px rgba(220, 38, 38, 0.5);
+    }
+    
+    .card-vehicle:hover a[target="_blank"] {
+        transform: translateY(-2px);
+    }
+    
+    /* Image zoom effect */
+    .card-vehicle .group-hover\:scale-110 {
+        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
     /* Hero Custom Dropdown Styles (Homepage'den) */
     .hero-custom-dropdown {
         position: relative;
@@ -252,6 +337,7 @@
         font-size: 0.875rem;
         font-weight: 500;
         color: #111827;
+        background: white;
         transition: all 0.2s;
     }
     
@@ -264,6 +350,25 @@
     
     .compact-input:hover {
         border-color: #dc2626;
+    }
+    
+    .dark .compact-input {
+        background: #2a2a2a;
+        border-color: #404040;
+        color: #e5e7eb;
+    }
+    
+    .dark .compact-input:focus {
+        border-color: #dc2626;
+        box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.2);
+    }
+    
+    .dark .compact-input:hover {
+        border-color: #dc2626;
+    }
+    
+    .dark .compact-input::placeholder {
+        color: #9ca3af;
     }
     
     /* Single Input */
@@ -952,7 +1057,7 @@
                 <!-- Vehicles Grid -->
                 <div class="lg:col-span-3">
                     @if($vehicles->count() > 0)
-                        <div class="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                        <div class="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-fade-in-up">
                             <div>
                                 <p class="text-gray-600 dark:text-gray-300 text-lg">
                                     <span class="font-bold text-gray-900 dark:text-gray-100 text-2xl">{{ $vehicles->total() }}</span> araç bulundu
@@ -1011,8 +1116,10 @@
                         </div>
                         
                         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                            @foreach($vehicles as $vehicle)
-                                <x-vehicle-card :vehicle="$vehicle" />
+                            @foreach($vehicles as $index => $vehicle)
+                                <div class="vehicle-card-wrapper animate-fade-in-up" style="animation-delay: {{ ($index % 9) * 0.1 }}s;">
+                                    <x-vehicle-card :vehicle="$vehicle" />
+                                </div>
                             @endforeach
                         </div>
                         

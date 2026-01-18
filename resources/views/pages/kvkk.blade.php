@@ -29,16 +29,16 @@
                         <p class="text-gray-700 dark:text-gray-300"><strong>İletişim Bilgileri:</strong></p>
                         <p class="text-gray-600 dark:text-gray-400">E-posta: info@gmsgarage.com</p>
                         <p class="text-gray-600 dark:text-gray-400">Telefon: 0555 123 45 67</p>
-                        <p class="text-gray-600 dark:text-gray-400">Adres: İstanbul, Türkiye</p>
+                        <p class="text-gray-600 dark:text-gray-400">Adres: Görsel Mah. Kağıthane Cad. No: 26 /1A KAĞITHANE/İSTANBUL</p>
                     </div>
                 </section>
 
                 <section>
-                    <h2 class="text-2xl font-bold mb-4 text-gray-900">2. İşlenen Kişisel Veriler</h2>
-                    <p class="text-gray-700 leading-relaxed mb-4">
+                    <h2 class="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">2. İşlenen Kişisel Veriler</h2>
+                    <p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
                         Hizmetlerimiz kapsamında aşağıdaki kişisel verileriniz işlenmektedir:
                     </p>
-                    <ul class="list-disc pl-6 space-y-2 text-gray-700">
+                    <ul class="list-disc pl-6 space-y-2 text-gray-700 dark:text-gray-300">
                         <li><strong>Kimlik Bilgileri:</strong> Ad, soyad</li>
                         <li><strong>İletişim Bilgileri:</strong> Telefon numarası, e-posta adresi, adres bilgisi</li>
                         <li><strong>Araç Bilgileri:</strong> Araç tipi, marka, model, yıl, kilometre, yakıt tipi, vites tipi</li>
@@ -63,11 +63,11 @@
                 </section>
 
                 <section>
-                    <h2 class="text-2xl font-bold mb-4 text-gray-900">4. Kişisel Verilerin İşlenme Hukuki Sebepleri</h2>
-                    <p class="text-gray-700 leading-relaxed mb-4">
+                    <h2 class="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">4. Kişisel Verilerin İşlenme Hukuki Sebepleri</h2>
+                    <p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
                         Kişisel verileriniz aşağıdaki hukuki sebeplere dayanarak işlenmektedir:
                     </p>
-                    <ul class="list-disc pl-6 space-y-2 text-gray-700">
+                    <ul class="list-disc pl-6 space-y-2 text-gray-700 dark:text-gray-300">
                         <li>KVKK Madde 5/2(c): Açık rızanız</li>
                         <li>KVKK Madde 5/2(f): Hukuki yükümlülüğün yerine getirilmesi</li>
                         <li>KVKK Madde 5/2(e): Veri sorumlusunun hukuki yükümlülüğünü yerine getirebilmesi için zorunlu olması</li>
@@ -88,8 +88,8 @@
                 </section>
 
                 <section>
-                    <h2 class="text-2xl font-bold mb-4 text-gray-900">6. Kişisel Verilerin Saklanma Süresi</h2>
-                    <p class="text-gray-700 leading-relaxed">
+                    <h2 class="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">6. Kişisel Verilerin Saklanma Süresi</h2>
+                    <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
                         Kişisel verileriniz, işleme amacının gerektirdiği süre boyunca ve yasal saklama süreleri 
                         kapsamında saklanmaktadır. Bu süre sona erdiğinde, verileriniz yasalara uygun şekilde silinir, 
                         yok edilir veya anonim hale getirilir.
@@ -97,11 +97,11 @@
                 </section>
 
                 <section>
-                    <h2 class="text-2xl font-bold mb-4 text-gray-900">7. KVKK Kapsamındaki Haklarınız</h2>
-                    <p class="text-gray-700 leading-relaxed mb-4">
+                    <h2 class="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">7. KVKK Kapsamındaki Haklarınız</h2>
+                    <p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
                         KVKK'nın 11. maddesi uyarınca aşağıdaki haklara sahipsiniz:
                     </p>
-                    <ul class="list-disc pl-6 space-y-2 text-gray-700">
+                    <ul class="list-disc pl-6 space-y-2 text-gray-700 dark:text-gray-300">
                         <li>Kişisel verilerinizin işlenip işlenmediğini öğrenme</li>
                         <li>İşlenmişse buna ilişkin bilgi talep etme</li>
                         <li>İşlenme amacını ve amacına uygun kullanılıp kullanılmadığını öğrenme</li>

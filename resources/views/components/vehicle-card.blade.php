@@ -1,7 +1,7 @@
 @props(['vehicle'])
 
-<div class="card-vehicle group bg-white dark:bg-[#252525] rounded-2xl shadow-lg dark:shadow-xl dark:border dark:border-gray-800 transition-colors duration-200">
-    <div class="block">
+<div class="card-vehicle group bg-white dark:bg-[#252525] rounded-2xl shadow-lg dark:shadow-xl border-2 border-transparent dark:border-gray-800 transition-all duration-300 flex flex-col h-full hover:border-primary-600 dark:hover:border-primary-500 hover:shadow-2xl hover:-translate-y-1">
+    <div class="block flex flex-col h-full">
         <!-- Görsel -->
         <div class="relative h-56 bg-gray-100 dark:bg-gray-700 overflow-hidden rounded-t-2xl">
             @if(is_array($vehicle->images) && count($vehicle->images) > 0)
@@ -29,7 +29,7 @@
         </div>
         
         <!-- İçerik -->
-        <div class="p-6">
+        <div class="p-6 flex flex-col flex-grow">
             <!-- Başlık -->
             <div class="mb-3">
                 <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-1 line-clamp-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
@@ -80,7 +80,7 @@
             </div>
             
             <!-- Butonlar -->
-            <div class="flex gap-2.5">
+            <div class="flex gap-2.5 mt-auto pt-4">
                 <a href="{{ route('vehicles.show', $vehicle->slug) }}" 
                    class="flex-1 px-4 py-3 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white rounded-xl font-semibold transition-all duration-300 text-sm text-center whitespace-nowrap flex items-center justify-center gap-1.5 shadow-md hover:shadow-lg">
                     <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
@@ -92,7 +92,7 @@
                 @if($vehicle->sahibinden_url)
                     <a href="{{ $vehicle->sahibinden_url }}" 
                        target="_blank"
-                       class="px-4 py-3 border-2 border-primary-600 text-primary-600 dark:text-white hover:bg-primary-600 hover:text-white dark:hover:bg-primary-600 rounded-xl font-semibold transition-all duration-300 text-sm text-center whitespace-nowrap flex items-center justify-center gap-1.5">
+                       class="px-4 py-3 bg-gradient-to-r from-yellow-400/80 via-yellow-500/80 to-yellow-600/80 dark:from-yellow-400/85 dark:via-yellow-500/85 dark:to-yellow-600/85 hover:from-yellow-500 hover:via-yellow-600 hover:to-yellow-700 dark:hover:from-yellow-500 dark:hover:via-yellow-600 dark:hover:to-yellow-700 text-gray-900 dark:text-gray-900 rounded-xl font-semibold transition-all duration-300 text-sm text-center whitespace-nowrap flex items-center justify-center gap-1.5 backdrop-blur-sm border border-yellow-400/30 dark:border-yellow-400/40 shadow-md hover:shadow-lg">
                         <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
                         </svg>

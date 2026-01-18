@@ -52,7 +52,7 @@
                                 </svg>
                             </div>
                             <div class="ml-3">
-                                <p class="text-sm font-semibold text-red-800 dark:text-red-300">Lütfen zorunlu alanları kontrol edin.</p>
+                                <p class="text-sm font-semibold text-red-800 dark:text-red-300">İlgili alanların doldurulması zorunludur.</p>
                             </div>
                         </div>
                     </div>
@@ -153,13 +153,13 @@
 
                         <!-- Kilometre -->
                         <div class="form-field">
-                            <label class="block text-xs font-bold text-gray-700 mb-3 uppercase tracking-wider">KİLOMETRE</label>
+                            <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wider">KİLOMETRE</label>
                             <input type="number" name="kilometre" 
                                    value="{{ old('kilometre') }}"
                                    placeholder="Örn: 85.000"
                                    min="0"
                                    max="9999999"
-                                   class="w-full border-2 border-gray-300 rounded-xl px-5 py-4 focus:ring-2 focus:ring-primary-600 focus:border-primary-600 text-gray-900 font-semibold transition-all duration-200 bg-white hover:border-primary-400">
+                                   class="w-full border-2 border-gray-300 dark:border-gray-700 rounded-xl px-5 py-4 focus:ring-2 focus:ring-primary-600 focus:border-primary-600 text-gray-900 dark:text-gray-100 font-semibold transition-all duration-200 bg-white dark:bg-[#2a2a2a] hover:border-primary-400 dark:hover:border-primary-500">
                             @error('kilometre')
                                 <p class="text-red-600 text-xs mt-2">{{ $message }}</p>
                             @enderror
@@ -213,13 +213,13 @@
 
                         <!-- İletişim -->
                         <div class="form-field">
-                            <label class="block text-xs font-bold text-gray-700 mb-3 uppercase tracking-wider">İLETİŞİM <span class="text-primary-600">*</span></label>
+                            <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wider">İLETİŞİM <span class="text-primary-600 dark:text-primary-400">*</span></label>
                             <input type="text" name="contact" required 
                                    value="{{ old('contact') }}"
                                    placeholder="Telefon veya E-posta adresiniz"
-                                   class="w-full border-2 border-gray-300 rounded-xl px-5 py-4 focus:ring-2 focus:ring-primary-600 focus:border-primary-600 text-gray-900 font-semibold transition-all duration-200 bg-white hover:border-primary-400"
+                                   class="w-full border-2 border-gray-300 dark:border-gray-700 rounded-xl px-5 py-4 focus:ring-2 focus:ring-primary-600 focus:border-primary-600 text-gray-900 dark:text-gray-100 font-semibold transition-all duration-200 bg-white dark:bg-[#2a2a2a] hover:border-primary-400 dark:hover:border-primary-500"
                                    id="contact-input">
-                            <p class="text-xs text-gray-500 mt-2">Size ulaşabilmemiz için telefon veya e-posta adresinizi girin</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Size ulaşabilmemiz için telefon veya e-posta adresinizi girin</p>
                             <p class="text-red-600 text-xs mt-2 hidden" id="contact-error"></p>
                             @error('contact')
                                 <p class="text-red-600 text-xs mt-2">{{ $message }}</p>
@@ -262,10 +262,10 @@
 
                         <!-- Not -->
                         <div class="form-field">
-                            <label class="block text-xs font-bold text-gray-700 mb-3 uppercase tracking-wider">AÇIKLAMA / NOT (Opsiyonel)</label>
+                            <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wider">AÇIKLAMA / NOT (Opsiyonel)</label>
                             <textarea name="note" rows="4" 
                                       placeholder="Eklemek istediğiniz başka bilgiler varsa buraya yazabilirsiniz..."
-                                      class="w-full border-2 border-gray-300 rounded-xl px-5 py-4 focus:ring-2 focus:ring-primary-600 focus:border-primary-600 text-gray-900 font-semibold transition-all duration-200 bg-white hover:border-primary-400 resize-none">{{ old('note') }}</textarea>
+                                      class="w-full border-2 border-gray-300 dark:border-gray-700 rounded-xl px-5 py-4 focus:ring-2 focus:ring-primary-600 focus:border-primary-600 text-gray-900 dark:text-gray-100 font-semibold transition-all duration-200 bg-white dark:bg-[#2a2a2a] hover:border-primary-400 dark:hover:border-primary-500 resize-none">{{ old('note') }}</textarea>
                             @error('note')
                                 <p class="text-red-600 text-xs mt-2">{{ $message }}</p>
                             @enderror
@@ -273,7 +273,7 @@
 
                         <!-- Submit Button -->
                         <div class="pt-4">
-                            <button type="submit" id="submit-btn" class="btn btn-primary w-full py-4 text-lg">
+                            <button type="submit" id="submit-btn" class="btn btn-primary w-full py-4 text-lg disabled:opacity-50 disabled:cursor-not-allowed" disabled>
                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
                                 </svg>
@@ -303,6 +303,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         initHeroCustomDropdowns();
         initFormValidation();
+        initSubmitButtonState();
     });
     
     function initHeroCustomDropdowns() {
@@ -401,6 +402,10 @@
                         if (errorElement) {
                             errorElement.classList.add('hidden');
                             errorElement.textContent = '';
+                        }
+                        // Update submit button state when vehicle type is selected
+                        if (typeof checkRequiredFields === 'function') {
+                            checkRequiredFields();
                         }
                     }
                     
@@ -576,6 +581,86 @@
         }, 5000);
     }
     
+    // Check if required fields are filled and update submit button state
+    function checkRequiredFields() {
+        const form = document.getElementById('vehicle-request-form');
+        if (!form) return;
+        
+        const submitBtn = document.getElementById('submit-btn');
+        const errorSummary = document.getElementById('error-summary');
+        
+        // Get required field values
+        const vehicleTypeSelect = form.querySelector('[name="vehicle_type"]');
+        const vehicleType = vehicleTypeSelect ? vehicleTypeSelect.value : '';
+        const brandInput = document.getElementById('brand-input');
+        const brand = brandInput ? brandInput.value.trim() : '';
+        const contactInput = document.getElementById('contact-input');
+        const contact = contactInput ? contactInput.value.trim() : '';
+        
+        // Check if all required fields are filled
+        const allFieldsFilled = vehicleType && brand && contact;
+        
+        if (submitBtn) {
+            if (allFieldsFilled) {
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('disabled:opacity-50', 'disabled:cursor-not-allowed');
+                if (errorSummary) {
+                    errorSummary.classList.add('hidden');
+                }
+            } else {
+                submitBtn.disabled = true;
+                submitBtn.classList.add('disabled:opacity-50', 'disabled:cursor-not-allowed');
+                if (errorSummary && (!vehicleType || !brand || !contact)) {
+                    errorSummary.classList.remove('hidden');
+                }
+            }
+        }
+    }
+    
+    function initSubmitButtonState() {
+        const form = document.getElementById('vehicle-request-form');
+        if (!form) return;
+        
+        // Check on page load
+        checkRequiredFields();
+        
+        // Listen to changes in required fields
+        const brandInput = document.getElementById('brand-input');
+        const contactInput = document.getElementById('contact-input');
+        const vehicleTypeSelect = form.querySelector('[name="vehicle_type"]');
+        
+        if (brandInput) {
+            brandInput.addEventListener('input', checkRequiredFields);
+            brandInput.addEventListener('blur', checkRequiredFields);
+        }
+        
+        if (contactInput) {
+            contactInput.addEventListener('input', checkRequiredFields);
+            contactInput.addEventListener('blur', checkRequiredFields);
+        }
+        
+        if (vehicleTypeSelect) {
+            vehicleTypeSelect.addEventListener('change', checkRequiredFields);
+        }
+        
+        // Also listen to custom dropdown changes
+        const vehicleTypeDropdown = form.querySelector('[data-dropdown="vehicle-type-request"]');
+        if (vehicleTypeDropdown) {
+            const trigger = vehicleTypeDropdown.querySelector('.hero-custom-dropdown-trigger');
+            if (trigger) {
+                // Use MutationObserver to watch for data-value changes
+                const observer = new MutationObserver(function(mutations) {
+                    mutations.forEach(function(mutation) {
+                        if (mutation.type === 'attributes' && mutation.attributeName === 'data-value') {
+                            checkRequiredFields();
+                        }
+                    });
+                });
+                observer.observe(trigger, { attributes: true, attributeFilter: ['data-value'] });
+            }
+        }
+    }
+    
     function initFormValidation() {
         // Real-time validation
         const brandInput = document.getElementById('brand-input');
@@ -597,6 +682,7 @@
                 if (this.value.trim().length >= 2) {
                     clearError(this, brandError);
                 }
+                checkRequiredFields();
             });
         }
         
@@ -618,6 +704,7 @@
                         clearError(this, contactError);
                     }
                 }
+                checkRequiredFields();
             });
         }
         
@@ -626,11 +713,23 @@
         if (!form) return;
         
         form.addEventListener('submit', function(e) {
+            // Check if submit button is disabled
+            const submitBtn = document.getElementById('submit-btn');
+            if (submitBtn && submitBtn.disabled) {
+                e.preventDefault();
+                e.stopPropagation();
+                const errorSummary = document.getElementById('error-summary');
+                if (errorSummary) {
+                    errorSummary.classList.remove('hidden');
+                    errorSummary.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                return false;
+            }
+            
             e.preventDefault();
             e.stopPropagation();
             
             const errorSummary = document.getElementById('error-summary');
-            const submitBtn = document.getElementById('submit-btn');
             const submitText = document.getElementById('submit-text');
             
             // Clear previous errors
