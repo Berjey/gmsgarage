@@ -63,16 +63,6 @@ Tarayıcıda `http://localhost:8000` adresine gidin.
 - **Migrations**: `database/migrations/`
 - **Services**: `app/Services/` (Faz 2 için hazır)
 
-## 🎨 Özellikler
-
-- ✅ Modern ve şık tasarım (Cesa Yazılım tarzı)
-- ✅ Smooth animasyonlar ve transitions
-- ✅ Responsive design (mobil uyumlu)
-- ✅ SEO-friendly URL yapısı
-- ✅ Araç listeleme ve detay sayfaları
-- ✅ 4 adımlı araç değerleme sistemi
-- ✅ Filtreleme ve arama
-- ✅ Sahibinden API hazırlığı (Faz 2)
 
 
 ## 🔧 Geliştirme
@@ -85,25 +75,50 @@ npm run dev
 npm run build
 ```
 
-## 🔄 Otomatik GitHub Kaydetme
+## 📝 Özellikler
 
-Dosya kaydettikten sonra GitHub'a otomatik push için:
+### Genel Özellikler
+- ✅ Modern ve şık tasarım
+- ✅ Smooth animasyonlar ve transitions
+- ✅ Responsive design (mobil uyumlu)
+- ✅ SEO-friendly URL yapısı
+- ✅ Dark Mode desteği (OS algılama + manuel toggle)
+- ✅ Light Mode (varsayılan)
 
-```powershell
-# Terminal'de çalıştır
-.\OTOMATIK_KAYDET.ps1
-```
+### İçerik Yönetimi
+- ✅ Araç listeleme ve detay sayfaları
+- ✅ Blog sistemi (kategoriler, SEO optimizasyonu)
+- ✅ Sayfa yönetimi (Hakkımızda, İletişim, KVKK, vb.)
+- ✅ Görsel yükleme ve yönetimi
+- ✅ Medya kütüphanesi
 
-**VEYA Cursor'da:**
-- `Ctrl+Shift+P` → `Tasks: Run Task` → `🔄 Otomatik GitHub Kaydet`
+### Admin Paneli
+- ✅ Kapsamlı admin paneli
+- ✅ Araç yönetimi (CRUD)
+- ✅ Blog yönetimi (CRUD)
+- ✅ Sayfa yönetimi
+- ✅ Kullanıcı yönetimi
+- ✅ Site ayarları
+- ✅ Form mesajları yönetimi (İletişim, Araç İsteği, Değerleme)
+- ✅ Gelişmiş dashboard ve istatistikler
 
-Detaylı kullanım için: `CURSOR_OTOMATIK_KAYDET.md`
+### Formlar
+- ✅ 4 adımlı araç değerleme sistemi
+- ✅ İletişim formu
+- ✅ Araç istek formu
+- ✅ Filtreleme ve arama
+
+## 🔐 Admin Panel Giriş
+
+- **URL**: `http://localhost:8000/admin/login`
+- **E-posta**: `admin@gmsgarage.com`
+- **Şifre**: `admin123`
 
 ## 📝 Notlar
 
-- Bu fazda admin panel yok
-- Sahibinden API entegrasyonu altyapı hazır, gerçek entegrasyon Faz 2'de
-- Tüm araç verileri veritabanından geliyor (hardcode değil)
+- Sahibinden API entegrasyonu altyapı hazır (Faz 2 için)
+- Tüm veriler veritabanından geliyor
+- Görseller `storage/app/public` klasöründe saklanıyor
 
 ## 📄 Lisans
 
@@ -111,12 +126,4 @@ MIT
 
 ---
 
-**Son Güncelleme**: 2026-01-17
-
-## 🌙 Dark Mode
-
-- ✅ Tam dark mode desteği (tüm sayfalar)
-- ✅ OS tercihi algılama + manuel toggle
-- ✅ localStorage ile tercih saklama
-- ✅ Cursor benzeri koyu tema (#1e1e1e)
-- ✅ Tüm componentler dark mode'a uyumlu
+**Son Güncelleme**: 2026-01-18

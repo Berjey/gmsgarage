@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ContactMessage;
+use App\Models\VehicleRequest;
 use Illuminate\Http\Request;
 
 class PageController extends Controller
@@ -31,9 +33,14 @@ class PageController extends Controller
             'message.min' => 'Mesaj en az 10 karakter olmalıdır.',
         ]);
 
-        // TODO: Save to database or send email
-        // For now, just log it
-        \Log::info('Contact Form Submitted', $request->all());
+        // Save to database
+        ContactMessage::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'subject' => $request->subject ?? 'İletişim Formu',
+            'message' => $request->message,
+        ]);
 
         return back()->with('success', 'Mesajınız başarıyla gönderildi! En kısa sürede size dönüş yapacağız.');
     }
@@ -108,9 +115,28 @@ class PageController extends Controller
             'contact.required' => 'İletişim bilgisi zorunludur.',
         ]);
 
-        // TODO: Save to database or send email
-        // For now, just log it
-        \Log::info('Vehicle Request Submitted', $request->all());
+        // Parse contact info
+        $contact = $request->contact;
+        $email = null;
+        $phone = null;
+        
+        if (strpos($contact, '@') !== false) {
+            $email = $contact;
+        } else {
+            $phone = $contact;
+        }
+        
+        // Save to database
+        VehicleRequest::create([
+            'name' => $request->name ?? 'İsimsiz',
+            'email' => $email ?? 'noreply@gmsgarage.com',
+            'phone' => $phone ?? $contact,
+            'brand' => $request->brand,
+            'model' => $request->model,
+            'year' => $request->year,
+            'budget' => $request->budget ?? null,
+            'message' => $request->note,
+        ]);
 
         return back()->with('success', 'Talebiniz başarıyla gönderildi! En kısa sürede size dönüş yapacağız.');
     }

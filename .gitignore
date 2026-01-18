@@ -29,3 +29,5 @@ composer-setup.php
 *.log
 .DS_Store
 Thumbs.db
+*.sqlite
+*.sqlite-journal

@@ -26,6 +26,7 @@ class Vehicle extends Model
         'horse_power',
         'description',
         'features',
+        'image',
         'images',
         'is_featured',
         'is_active',

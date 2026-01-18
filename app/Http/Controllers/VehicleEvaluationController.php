@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\EvaluationRequest;
 use Illuminate\Http\Request;
 
 class VehicleEvaluationController extends Controller
@@ -199,8 +200,27 @@ class VehicleEvaluationController extends Controller
             'kvkk_onay.required' => 'KVKK onayı zorunludur.',
         ]);
         
-        // TODO: Save to database or send email
-        \Log::info('Vehicle Evaluation Submitted', $request->all());
+        // Save to database
+        EvaluationRequest::create([
+            'name' => $request->ad . ' ' . $request->soyad,
+            'email' => $request->email,
+            'phone' => $request->telefon,
+            'brand' => $request->marka,
+            'model' => $request->model,
+            'year' => $request->yil,
+            'version' => $request->model_tipi ?? $request->model_tipi_manual,
+            'mileage' => $request->kilometre,
+            'fuel_type' => $request->yakıt_tipi ?? $request->yakıt_tipi_manual,
+            'transmission' => $request->vites_tipi ?? $request->vites_tipi_manual,
+            'condition' => $request->tramer === 'VAR' ? 'Hasarlı' : 'Hasarsız',
+            'message' => json_encode([
+                'tip' => $request->tip,
+                'renk' => $request->renk,
+                'tramer_tutari' => $request->tramer_tutarı,
+                'ekspertiz' => $request->ekspertiz,
+                'sehir' => $request->şehir,
+            ]),
+        ]);
         
         return response()->json([
             'success' => true,

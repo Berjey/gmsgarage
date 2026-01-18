@@ -3,17 +3,18 @@ import '../css/app.css';
 
 // Dark Mode Management
 (function() {
-    // Get theme from localStorage or system preference
+    // Get theme from localStorage or system preference (default: light)
     function getInitialTheme() {
         const storedTheme = localStorage.getItem('theme');
         if (storedTheme) {
             return storedTheme;
         }
-        // Check system preference
+        // Default to light mode, but respect system preference if user hasn't set one
+        // Check system preference only if no stored preference
         if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
             return 'dark';
         }
-        return 'light';
+        return 'light'; // Default to light mode
     }
 
     // Apply theme

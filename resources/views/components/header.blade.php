@@ -20,6 +20,10 @@
                    class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-gray-50 dark:hover:bg-gray-800 font-medium transition-all duration-200 rounded-lg {{ request()->routeIs('vehicles.*') ? 'text-primary-600 dark:text-primary-400 bg-gray-50 dark:bg-gray-800' : '' }}">
                     Araçlar
                 </a>
+                <a href="{{ route('blog.index') }}" 
+                   class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-gray-50 dark:hover:bg-gray-800 font-medium transition-all duration-200 rounded-lg {{ request()->routeIs('blog.*') ? 'text-primary-600 dark:text-primary-400 bg-gray-50 dark:bg-gray-800' : '' }}">
+                    Blog
+                </a>
                 <a href="{{ route('about') }}" 
                    class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-gray-50 dark:hover:bg-gray-800 font-medium transition-all duration-200 rounded-lg {{ request()->routeIs('about') ? 'text-primary-600 dark:text-primary-400 bg-gray-50 dark:bg-gray-800' : '' }}">
                     Hakkımızda
@@ -63,6 +67,10 @@
                 <a href="{{ route('vehicles.index') }}" 
                    class="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 font-medium transition-colors {{ request()->routeIs('vehicles.*') ? 'text-primary-600 dark:text-primary-400' : '' }}">
                     Araçlar
+                </a>
+                <a href="{{ route('blog.index') }}" 
+                   class="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 font-medium transition-colors {{ request()->routeIs('blog.*') ? 'text-primary-600 dark:text-primary-400' : '' }}">
+                    Blog
                 </a>
                 <a href="{{ route('about') }}" 
                    class="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 font-medium transition-colors {{ request()->routeIs('about') ? 'text-primary-600 dark:text-primary-400' : '' }}">
