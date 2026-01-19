@@ -8,12 +8,12 @@
     <section class="bg-gray-50 dark:bg-[#1e1e1e] py-4 border-b border-gray-200 dark:border-gray-800 transition-colors duration-200">
         <div class="container-custom">
             <nav class="flex items-center space-x-2 text-sm">
-                <a href="{{ route('vehicles.index') }}" class="text-gray-600 hover:text-primary-600 font-medium transition-colors">Araç Listesi</a>
-                <span class="text-gray-400">/</span>
-                <span class="text-gray-600">{{ $vehicle->brand ?? 'Marka' }}</span>
-                <span class="text-gray-400">/</span>
-                <span class="text-gray-600">{{ $vehicle->model ?? 'Model' }}</span>
-                <span class="text-gray-400">/</span>
+                <a href="{{ route('vehicles.index') }}" class="text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 font-medium transition-colors">Araç Listesi</a>
+                <span class="text-gray-400 dark:text-gray-600">/</span>
+                <span class="text-gray-600 dark:text-gray-300">{{ $vehicle->brand ?? 'Marka' }}</span>
+                <span class="text-gray-400 dark:text-gray-600">/</span>
+                <span class="text-gray-600 dark:text-gray-300">{{ $vehicle->model ?? 'Model' }}</span>
+                <span class="text-gray-400 dark:text-gray-600">/</span>
                 <span class="text-gray-900 dark:text-gray-100 font-semibold">İlan No: {{ $vehicle->id ?? 'XXXXX' }}</span>
             </nav>
         </div>
@@ -288,22 +288,22 @@
                             <!-- Seller Info Badges -->
                             <div class="flex items-center gap-3 flex-wrap">
                                 <div class="flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
-                                    <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-4 h-4 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                     </svg>
-                                    <span class="text-xs font-medium text-gray-700">Güvenilir</span>
+                                    <span class="text-xs font-medium text-gray-700 dark:text-gray-300">Güvenilir</span>
                                 </div>
                                 <div class="flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
-                                    <svg class="w-4 h-4 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-4 h-4 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                     </svg>
-                                    <span class="text-xs font-medium text-gray-700">{{ $sellerResponseTime }}</span>
+                                    <span class="text-xs font-medium text-gray-700 dark:text-gray-300">{{ $sellerResponseTime }}</span>
                                 </div>
                                 <div class="flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
-                                    <svg class="w-4 h-4 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-4 h-4 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                                     </svg>
-                                    <span class="text-xs font-medium text-gray-700">{{ $sellerTotalListings }} İlan</span>
+                                    <span class="text-xs font-medium text-gray-700 dark:text-gray-300">{{ $sellerTotalListings }} İlan</span>
                                 </div>
                             </div>
                         </div>
@@ -334,7 +334,7 @@
                         </svg>
                     </div>
                     <div>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Yıl</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-300 mb-0.5">Yıl</p>
                         <p class="text-base font-bold text-gray-900 dark:text-gray-100">{{ $vehicle->year ?? '-' }}</p>
                     </div>
                 </div>
@@ -347,7 +347,7 @@
                         </svg>
                     </div>
                     <div>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Kilometre</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-300 mb-0.5">Kilometre</p>
                         <p class="text-base font-bold text-gray-900 dark:text-gray-100">{{ number_format($vehicle->kilometer ?? 0, 0, ',', '.') }} km</p>
                     </div>
                 </div>
@@ -360,7 +360,7 @@
                         </svg>
                     </div>
                     <div>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Yakıt</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-300 mb-0.5">Yakıt</p>
                         <p class="text-base font-bold text-gray-900 dark:text-gray-100">{{ $vehicle->fuel_type ?? '-' }}</p>
                     </div>
                 </div>
@@ -374,7 +374,7 @@
                         </svg>
                     </div>
                     <div>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Vites</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-300 mb-0.5">Vites</p>
                         <p class="text-base font-bold text-gray-900 dark:text-gray-100">{{ $vehicle->transmission ?? '-' }}</p>
                     </div>
                 </div>
@@ -424,13 +424,13 @@
                                 @endif
                             </span>
                         </div>
-                        <div class="flex justify-between items-center py-3 border-b border-gray-200">
-                            <span class="text-gray-600 font-medium">Çekiş</span>
-                            <span class="font-bold text-gray-900 text-right">Önden Çekiş</span>
+                        <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
+                            <span class="text-gray-600 dark:text-gray-300 font-medium">Çekiş</span>
+                            <span class="font-bold text-gray-900 dark:text-gray-100 text-right">Önden Çekiş</span>
                         </div>
-                        <div class="flex justify-between items-center py-3 border-b border-gray-200">
-                            <span class="text-gray-600 font-medium">Garanti</span>
-                            <span class="font-bold text-gray-900 text-right">Var</span>
+                        <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
+                            <span class="text-gray-600 dark:text-gray-300 font-medium">Garanti</span>
+                            <span class="font-bold text-gray-900 dark:text-gray-100 text-right">Var</span>
                         </div>
                     </div>
                 </div>
@@ -438,15 +438,15 @@
             
             <!-- Donanımlar -->
             @if(is_array($vehicle->features) && count($vehicle->features) > 0)
-                <div class="bg-white rounded-2xl shadow-xl p-8 mb-8 border border-gray-100">
+                <div class="bg-white dark:bg-[#252525] rounded-2xl shadow-xl dark:shadow-2xl p-8 mb-8 border border-gray-100 dark:border-gray-800 transition-colors duration-200">
                     <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Donanımlar</h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         @foreach($vehicle->features as $feature)
                             <div class="flex items-center gap-3 py-2">
-                                <svg class="w-5 h-5 text-green-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <svg class="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                                 </svg>
-                                <span class="text-gray-700 text-sm">{{ $feature }}</span>
+                                <span class="text-gray-700 dark:text-gray-300 text-sm">{{ $feature }}</span>
                             </div>
                         @endforeach
                     </div>

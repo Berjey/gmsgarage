@@ -19,8 +19,32 @@
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
     
+    @media (prefers-color-scheme: dark) {
+        .wizard-step {
+            background: #252525;
+        }
+    }
+    
+    .dark .wizard-step {
+        background: #252525;
+    }
+    
     .wizard-step.active {
         display: block;
+    }
+    
+    .wizard-step h2 {
+        color: #111827;
+    }
+    
+    @media (prefers-color-scheme: dark) {
+        .wizard-step h2 {
+            color: #f3f4f6;
+        }
+    }
+    
+    .dark .wizard-step h2 {
+        color: #f3f4f6;
     }
     
     .form-group {
@@ -34,6 +58,16 @@
         color: #374151;
     }
     
+    @media (prefers-color-scheme: dark) {
+        .form-group label {
+            color: #e5e7eb;
+        }
+    }
+    
+    .dark .form-group label {
+        color: #e5e7eb;
+    }
+    
     .form-group select,
     .form-group input[type="text"],
     .form-group input[type="number"],
@@ -44,6 +78,41 @@
         border: 2px solid #e5e7eb;
         border-radius: 8px;
         font-size: 1rem;
+        background: white;
+        color: #111827;
+        font-weight: 600;
+    }
+    
+    @media (prefers-color-scheme: dark) {
+        .form-group select,
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group input[type="email"],
+        .form-group input[type="tel"] {
+            border-color: #4b5563;
+            background: #2a2a2a;
+            color: #e5e7eb;
+        }
+        
+        .form-group select::placeholder,
+        .form-group input::placeholder {
+            color: #9ca3af;
+        }
+    }
+    
+    .dark .form-group select,
+    .dark .form-group input[type="text"],
+    .dark .form-group input[type="number"],
+    .dark .form-group input[type="email"],
+    .dark .form-group input[type="tel"] {
+        border-color: #4b5563;
+        background: #2a2a2a;
+        color: #e5e7eb;
+    }
+    
+    .dark .form-group select::placeholder,
+    .dark .form-group input::placeholder {
+        color: #9ca3af;
     }
     
     .form-group select:focus,
@@ -64,6 +133,16 @@
         margin-top: 2rem;
         padding-top: 2rem;
         border-top: 1px solid #e5e7eb;
+    }
+    
+    @media (prefers-color-scheme: dark) {
+        .wizard-buttons {
+            border-top-color: #4b5563;
+        }
+    }
+    
+    .dark .wizard-buttons {
+        border-top-color: #4b5563;
     }
     
     .btn-wizard {
@@ -87,6 +166,26 @@
     .btn-wizard-secondary {
         background: #f3f4f6;
         color: #374151;
+    }
+    
+    @media (prefers-color-scheme: dark) {
+        .btn-wizard-secondary {
+            background: #374151;
+            color: #e5e7eb;
+        }
+        
+        .btn-wizard-secondary:hover {
+            background: #4b5563;
+        }
+    }
+    
+    .dark .btn-wizard-secondary {
+        background: #374151;
+        color: #e5e7eb;
+    }
+    
+    .dark .btn-wizard-secondary:hover {
+        background: #4b5563;
     }
     
     .btn-wizard-secondary:hover {
@@ -115,6 +214,21 @@
         padding: 0.5rem;
         border: 1px solid #e5e7eb;
         text-align: center;
+        color: #111827;
+    }
+    
+    @media (prefers-color-scheme: dark) {
+        .inspection-table th,
+        .inspection-table td {
+            border-color: #4b5563;
+            color: #e5e7eb;
+        }
+    }
+    
+    .dark .inspection-table th,
+    .dark .inspection-table td {
+        border-color: #4b5563;
+        color: #e5e7eb;
     }
     
     .inspection-table th {
@@ -122,13 +236,43 @@
         font-weight: 600;
     }
     
+    @media (prefers-color-scheme: dark) {
+        .inspection-table th {
+            background: #374151;
+        }
+    }
+    
+    .dark .inspection-table th {
+        background: #374151;
+    }
+    
     .inspection-table tbody tr:hover {
         background: #f9fafb;
+    }
+    
+    @media (prefers-color-scheme: dark) {
+        .inspection-table tbody tr:hover {
+            background: #374151;
+        }
+    }
+    
+    .dark .inspection-table tbody tr:hover {
+        background: #374151;
     }
     
     .inspection-table tbody tr.highlight {
         background: #fef3c7;
         transition: background 0.2s;
+    }
+    
+    @media (prefers-color-scheme: dark) {
+        .inspection-table tbody tr.highlight {
+            background: #78350f;
+        }
+    }
+    
+    .dark .inspection-table tbody tr.highlight {
+        background: #78350f;
     }
     
     
@@ -140,6 +284,29 @@
         cursor: pointer;
         font-size: 0.875rem;
         transition: all 0.2s;
+        color: #374151;
+    }
+    
+    @media (prefers-color-scheme: dark) {
+        .btn-reset-all {
+            background: #374151;
+            border-color: #4b5563;
+            color: #e5e7eb;
+        }
+        
+        .btn-reset-all:hover {
+            background: #4b5563;
+        }
+    }
+    
+    .dark .btn-reset-all {
+        background: #374151;
+        border-color: #4b5563;
+        color: #e5e7eb;
+    }
+    
+    .dark .btn-reset-all:hover {
+        background: #4b5563;
     }
     
     .btn-reset-all:hover {
@@ -157,6 +324,55 @@
         gap: 0.5rem;
         font-weight: normal;
         cursor: pointer;
+        color: #374151;
+    }
+    
+    @media (prefers-color-scheme: dark) {
+        .radio-group label {
+            color: #e5e7eb;
+        }
+    }
+    
+    .dark .radio-group label {
+        color: #e5e7eb;
+    }
+    
+    /* Dropdown trigger dark mode styles */
+    .wizard-step .hero-custom-dropdown-trigger {
+        background: white;
+        border-color: #d1d5db;
+        color: #111827;
+        font-weight: 600;
+    }
+    
+    @media (prefers-color-scheme: dark) {
+        .wizard-step .hero-custom-dropdown-trigger {
+            background: #2a2a2a;
+            border-color: #4b5563;
+            color: #e5e7eb;
+        }
+        
+        .wizard-step .hero-custom-dropdown-trigger .selected-text.placeholder {
+            color: #9ca3af;
+        }
+        
+        .wizard-step .hero-custom-dropdown-trigger .arrow {
+            color: #9ca3af;
+        }
+    }
+    
+    .dark .wizard-step .hero-custom-dropdown-trigger {
+        background: #2a2a2a;
+        border-color: #4b5563;
+        color: #e5e7eb;
+    }
+    
+    .dark .wizard-step .hero-custom-dropdown-trigger .selected-text.placeholder {
+        color: #9ca3af;
+    }
+    
+    .dark .wizard-step .hero-custom-dropdown-trigger .arrow {
+        color: #9ca3af;
     }
     
     .form-group.has-error input,
@@ -172,6 +388,16 @@
         font-weight: 500;
     }
     
+    @media (prefers-color-scheme: dark) {
+        .field-error {
+            color: #fca5a5;
+        }
+    }
+    
+    .dark .field-error {
+        color: #fca5a5;
+    }
+    
     .step-error-summary {
         background: #fee2e2;
         border: 2px solid #dc2626;
@@ -180,6 +406,41 @@
         border-radius: 8px;
         margin-bottom: 1.5rem;
         font-weight: 600;
+    }
+    
+    @media (prefers-color-scheme: dark) {
+        .step-error-summary {
+            background: #7f1d1d;
+            border-color: #dc2626;
+            color: #fca5a5;
+        }
+    }
+    
+    .dark .step-error-summary {
+        background: #7f1d1d;
+        border-color: #dc2626;
+        color: #fca5a5;
+    }
+    
+    /* Checkbox and Radio Button Labels */
+    .form-group label input[type="checkbox"],
+    .form-group label input[type="radio"] {
+        cursor: pointer;
+        margin-right: 0.5rem;
+    }
+    
+    .form-group label span {
+        color: #374151;
+    }
+    
+    @media (prefers-color-scheme: dark) {
+        .form-group label span {
+            color: #e5e7eb;
+        }
+    }
+    
+    .dark .form-group label span {
+        color: #e5e7eb;
     }
 </style>
 @endpush
