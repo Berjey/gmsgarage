@@ -49,4 +49,15 @@ class ContactMessageController extends Controller
         return redirect()->route('admin.contact-messages.index')
             ->with('success', 'Mesaj başarıyla silindi.');
     }
+
+    /**
+     * Delete all contact messages
+     */
+    public function destroyAll()
+    {
+        $count = ContactMessage::count();
+        ContactMessage::truncate();
+        return redirect()->route('admin.contact-messages.index')
+            ->with('success', "Tüm mesajlar başarıyla silindi. ({$count} mesaj silindi)");
+    }
 }

@@ -94,6 +94,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/{id}', [ContactMessageController::class, 'show'])->name('show');
             Route::post('/{id}/read', [ContactMessageController::class, 'markAsRead'])->name('read');
             Route::delete('/{id}', [ContactMessageController::class, 'destroy'])->name('destroy');
+            Route::delete('/all', [ContactMessageController::class, 'destroyAll'])->name('destroy-all');
         });
         
         // Araç İstekleri
