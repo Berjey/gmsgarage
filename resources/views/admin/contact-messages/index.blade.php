@@ -2,9 +2,19 @@
 
 @section('content')
 <div class="bg-white dark:bg-[#252525] rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm">
-    <div class="p-6 border-b border-gray-200 dark:border-gray-800">
-        <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100">İletişim Mesajları</h2>
-        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Gelen iletişim mesajlarını görüntüleyin</p>
+    <div class="p-6 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between">
+        <div>
+            <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100">İletişim Mesajları</h2>
+            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Gelen iletişim mesajlarını görüntüleyin ve yönetin</p>
+        </div>
+        <a href="{{ \App\Models\Setting::get('contact_mail_hostinger_link', 'https://mail.hostinger.com/v2/mailboxes/INBOX') }}" 
+           target="_blank"
+           class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors inline-flex items-center space-x-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+            </svg>
+            <span>Mail Paneline Git</span>
+        </a>
     </div>
 
     <div class="overflow-x-auto">

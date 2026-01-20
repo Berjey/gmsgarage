@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             VehicleSeeder::class,
             BlogPostSeeder::class,
+            ContactSettingsSeeder::class,
         ]);
     }
 }
