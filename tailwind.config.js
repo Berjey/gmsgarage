@@ -9,6 +9,7 @@ export default {
   theme: {
     extend: {
       colors: {
+        // Kurumsal Kimlik - Primary (Kırmızı)
         primary: {
           50: '#fef2f2',
           100: '#fee2e2',
@@ -20,6 +21,14 @@ export default {
           700: '#b91c1c',
           800: '#991b1b',
           900: '#7f1d1d',
+        },
+        // Surface Renkleri
+        surface: {
+          light: '#ffffff',
+        },
+        // Background Renkleri
+        bg: {
+          light: '#f9fafb', // gray-50
         },
         accent: {
           50: '#fff1f2',

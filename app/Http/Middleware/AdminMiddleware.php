@@ -17,11 +17,19 @@ class AdminMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         if (!Auth::check()) {
+            if ($request->expectsJson()) {
+                return response()->json(['message' => 'Unauthenticated.'], 401);
+            }
             return redirect()->route('admin.login')->with('error', 'Lütfen giriş yapın.');
         }
 
-        if (!Auth::user()->isAdmin()) {
-            return redirect()->route('home')->with('error', 'Bu sayfaya erişim yetkiniz yok.');
+        $user = Auth::user();
+        if (!$user || !$user->isAdmin()) {
+            if ($request->expectsJson()) {
+                return response()->json(['message' => 'Bu sayfaya erişim yetkiniz yok.'], 403);
+            }
+            Auth::logout();
+            return redirect()->route('admin.login')->with('error', 'Bu sayfaya erişim yetkiniz yok.');
         }
 
         return $next($request);

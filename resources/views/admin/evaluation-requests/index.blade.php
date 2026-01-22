@@ -1,61 +1,86 @@
 @extends('admin.layouts.app')
 
+@section('title', 'Değerleme İstekleri - Admin Panel')
+@section('page-title', 'Değerleme İstekleri')
+@section('breadcrumb')
+    <a href="{{ route('admin.dashboard') }}" class="hover:text-primary-600">Dashboard</a>
+    <span>/</span>
+    <span>Değerleme İstekleri</span>
+@endsection
+
 @section('content')
-<div class="bg-white dark:bg-[#252525] rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm">
-    <div class="p-6 border-b border-gray-200 dark:border-gray-800">
-        <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100">Değerleme İstekleri</h2>
-        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Gelen değerleme isteklerini görüntüleyin</p>
+<div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+    <div class="p-6 border-b border-gray-200">
+        <h2 class="text-xl font-bold text-gray-900">Değerleme İstekleri</h2>
+        <p class="text-sm text-gray-600 mt-1">Kullanıcıların aracımı değerle formu üzerinden gönderdiği istekler</p>
     </div>
 
     <div class="overflow-x-auto">
         <table class="w-full">
-            <thead class="bg-gray-50 dark:bg-[#2a2a2a]">
+            <thead class="bg-gray-50 border-b border-gray-200">
                 <tr>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">İsim</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">İletişim</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Araç</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Tarih</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Durum</th>
-                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">İşlemler</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Gönderen</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Araç Bilgisi</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">KM / Boya</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">İletişim</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Tarih</th>
+                    <th class="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">İşlemler</th>
                 </tr>
             </thead>
-            <tbody class="bg-white dark:bg-[#252525] divide-y divide-gray-200 dark:divide-gray-800">
+            <tbody class="divide-y divide-gray-200">
                 @forelse($requests as $request)
-                <tr class="hover:bg-gray-50 dark:hover:bg-[#2a2a2a] transition-colors {{ !$request->is_read ? 'bg-blue-50 dark:bg-blue-900/20' : '' }}">
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">{{ $request->name }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
-                        <div>{{ $request->email }}</div>
-                        <div class="text-xs text-gray-500">{{ $request->phone }}</div>
+                <tr class="hover:bg-gray-50 transition-colors cursor-pointer {{ !$request->is_read ? 'bg-blue-50/50' : '' }}" onclick="window.location.href='{{ route('admin.evaluation-requests.show', $request->id) }}'">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">
+                        {{ $request->name }}
                     </td>
-                    <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
-                        {{ $request->brand }} {{ $request->model }} {{ $request->year }}
+                    <td class="px-6 py-4">
+                        <div class="text-sm text-gray-900 font-medium">{{ $request->brand }} {{ $request->model }}</div>
+                        <div class="text-xs text-gray-500">{{ $request->year }} - {{ $request->fuel_type }} - {{ $request->transmission }}</div>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">{{ $request->created_at->format('d.m.Y H:i') }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-2 py-1 text-xs font-semibold rounded-full {{ $request->is_read ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300' }}">
-                            {{ $request->is_read ? 'Okundu' : 'Okunmadı' }}
-                        </span>
+                    <td class="px-6 py-4">
+                        <div class="text-sm text-gray-900">{{ number_format($request->km, 0, ',', '.') }} KM</div>
+                        <div class="text-xs text-gray-500">Hasar: {{ $request->has_damage }}</div>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
-                        <a href="{{ route('admin.evaluation-requests.show', $request->id) }}" class="text-primary-600 hover:text-primary-900 dark:text-primary-400 dark:hover:text-primary-300">Görüntüle</a>
-                        <form action="{{ route('admin.evaluation-requests.destroy', $request->id) }}" method="POST" class="inline" onsubmit="return confirm('Bu isteği silmek istediğinize emin misiniz?');">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">Sil</button>
-                        </form>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                        {{ $request->phone }}<br>
+                        <span class="text-xs text-gray-400">{{ $request->contact_method }}</span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {{ $request->created_at->format('d.m.Y H:i') }}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium" onclick="event.stopPropagation()">
+                        <div class="flex justify-end gap-2">
+                            <a href="{{ route('admin.evaluation-requests.show', $request->id) }}" class="p-2.5 text-blue-600 bg-blue-50 rounded-xl hover:bg-blue-600 hover:text-white transition-all shadow-sm" title="Görüntüle">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zM2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                </svg>
+                            </a>
+                            <form action="{{ route('admin.evaluation-requests.destroy', $request->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Silmek istediğinize emin misiniz?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="p-2.5 text-red-600 bg-red-50 rounded-xl hover:bg-red-600 hover:text-white transition-all shadow-sm" title="Sil">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                    </svg>
+                                </button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="6" class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">Henüz istek yok</td>
+                    <td colspan="6" class="px-6 py-10 text-center text-gray-500 italic">
+                        Henüz değerleme isteği bulunmuyor.
+                    </td>
                 </tr>
                 @endforelse
             </tbody>
         </table>
     </div>
 
+    <!-- Pagination -->
     @if($requests->hasPages())
-    <div class="p-6 border-t border-gray-200 dark:border-gray-800">
+    <div class="px-6 py-4 border-t border-gray-200 bg-gray-50/50">
         {{ $requests->links() }}
     </div>
     @endif

@@ -22,6 +22,14 @@ use Illuminate\Support\Facades\Route;
 
 // Admin Auth Routes (Login/Logout)
 Route::prefix('admin')->name('admin.')->group(function () {
+    // Ana admin route - login sayfasına yönlendir
+    Route::get('/', function () {
+        if (auth()->check() && auth()->user()->is_admin) {
+            return redirect()->route('admin.dashboard');
+        }
+        return redirect()->route('admin.login');
+    });
+    
     // Login sayfası (guest middleware ile)
     Route::middleware('guest')->group(function () {
         Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
@@ -91,8 +99,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
         // İletişim Mesajları
         Route::prefix('contact-messages')->name('contact-messages.')->group(function () {
             Route::get('/', [ContactMessageController::class, 'index'])->name('index');
+            Route::post('/bulk-action', [ContactMessageController::class, 'bulkAction'])->name('bulk-action');
             Route::get('/{id}', [ContactMessageController::class, 'show'])->name('show');
             Route::post('/{id}/read', [ContactMessageController::class, 'markAsRead'])->name('read');
+            Route::post('/{id}/unread', [ContactMessageController::class, 'markAsUnread'])->name('unread');
             Route::delete('/{id}', [ContactMessageController::class, 'destroy'])->name('destroy');
             Route::delete('/all', [ContactMessageController::class, 'destroyAll'])->name('destroy-all');
         });

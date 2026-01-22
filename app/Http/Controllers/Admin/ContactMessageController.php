@@ -11,10 +11,64 @@ class ContactMessageController extends Controller
     /**
      * Display a listing of contact messages
      */
-    public function index()
+    public function index(Request $request)
     {
-        $messages = ContactMessage::orderBy('created_at', 'desc')->paginate(15);
-        return view('admin.contact-messages.index', compact('messages'));
+        $query = ContactMessage::query();
+        
+        // Search
+        if ($request->filled('search')) {
+            $search = $request->get('search');
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('subject', 'like', "%{$search}%")
+                  ->orWhere('message', 'like', "%{$search}%");
+            });
+        }
+        
+        // Status filter
+        $filter = $request->get('filter', 'all');
+        if ($filter === 'read') {
+            $query->where('is_read', true);
+        } elseif ($filter === 'unread') {
+            $query->where('is_read', false);
+        }
+        
+        // Date range filter
+        if ($request->filled('date_from')) {
+            $query->whereDate('created_at', '>=', $request->get('date_from'));
+        }
+        if ($request->filled('date_to')) {
+            $query->whereDate('created_at', '<=', $request->get('date_to'));
+        }
+        
+        // Quick date filters
+        if ($request->filled('date_range')) {
+            $range = $request->get('date_range');
+            if ($range === '7days') {
+                $query->where('created_at', '>=', now()->subDays(7));
+            } elseif ($range === '30days') {
+                $query->where('created_at', '>=', now()->subDays(30));
+            }
+        }
+        
+        // Sort
+        $sort = $request->get('sort', 'newest');
+        if ($sort === 'oldest') {
+            $query->orderBy('created_at', 'asc');
+        } else {
+            $query->orderBy('created_at', 'desc');
+        }
+        
+        $perPage = $request->get('per_page', 25);
+        $messages = $query->paginate($perPage)->withQueryString();
+        
+        // Stats
+        $totalCount = ContactMessage::count();
+        $unreadCount = ContactMessage::where('is_read', false)->count();
+        $readCount = ContactMessage::where('is_read', true)->count();
+        
+        return view('admin.contact-messages.index', compact('messages', 'filter', 'totalCount', 'unreadCount', 'readCount'));
     }
 
     /**
@@ -26,7 +80,16 @@ class ContactMessageController extends Controller
         if (!$message->is_read) {
             $message->markAsRead();
         }
-        return view('admin.contact-messages.show', compact('message'));
+        
+        // Get previous and next messages for navigation
+        $previous = ContactMessage::where('id', '<', $message->id)
+            ->orderBy('id', 'desc')
+            ->first();
+        $next = ContactMessage::where('id', '>', $message->id)
+            ->orderBy('id', 'asc')
+            ->first();
+        
+        return view('admin.contact-messages.show', compact('message', 'previous', 'next'));
     }
 
     /**
@@ -40,13 +103,69 @@ class ContactMessageController extends Controller
     }
 
     /**
-     * Delete a contact message
+     * Mark message as unread
      */
-    public function destroy($id)
+    public function markAsUnread($id)
     {
         $message = ContactMessage::findOrFail($id);
+        $message->update([
+            'is_read' => false,
+            'read_at' => null,
+        ]);
+        return back()->with('success', 'Mesaj okunmamış olarak işaretlendi.');
+    }
+
+    /**
+     * Bulk actions
+     */
+    public function bulkAction(Request $request)
+    {
+        $action = $request->get('action');
+        $ids = $request->get('ids', []);
+        
+        if (empty($ids)) {
+            return back()->with('error', 'Lütfen en az bir mesaj seçin.');
+        }
+        
+        switch ($action) {
+            case 'mark_read':
+                ContactMessage::whereIn('id', $ids)->update([
+                    'is_read' => true,
+                    'read_at' => now(),
+                ]);
+                return back()->with('success', count($ids) . ' mesaj okundu olarak işaretlendi.');
+                
+            case 'mark_unread':
+                ContactMessage::whereIn('id', $ids)->update([
+                    'is_read' => false,
+                    'read_at' => null,
+                ]);
+                return back()->with('success', count($ids) . ' mesaj okunmamış olarak işaretlendi.');
+                
+            case 'delete':
+                ContactMessage::whereIn('id', $ids)->delete();
+                return back()->with('success', count($ids) . ' mesaj silindi.');
+                
+            default:
+                return back()->with('error', 'Geçersiz işlem.');
+        }
+    }
+
+    /**
+     * Delete a contact message
+     */
+    public function destroy(Request $request, $id)
+    {
+        $message = ContactMessage::findOrFail($id);
+        $filter = $request->query('filter', 'all');
         $message->delete();
-        return redirect()->route('admin.contact-messages.index')
+        
+        $redirectUrl = route('admin.contact-messages.index');
+        if ($filter !== 'all') {
+            $redirectUrl .= '?filter=' . $filter;
+        }
+        
+        return redirect($redirectUrl)
             ->with('success', 'Mesaj başarıyla silindi.');
     }
 
