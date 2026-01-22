@@ -19,12 +19,22 @@
     @keyframes slideInRight {
         from {
             opacity: 0;
-            transform: translateX(30px);
+            transform: translateX(50px);
         }
         to {
             opacity: 1;
             transform: translateX(0);
         }
+    }
+    
+    .slogan-animate {
+        opacity: 0;
+        animation: slideInRight 0.8s ease-out forwards;
+    }
+    
+    .slogan-animate-delay {
+        opacity: 0;
+        animation: slideInRight 0.8s ease-out 0.3s forwards;
     }
     
     @keyframes fadeInUp {
@@ -303,11 +313,11 @@
                 </div>
                 
                 <!-- Right Side - Dynamic Headline & Image -->
-                <div class="order-1 lg:order-2 animate-slide-in-right">
-                    <h1 id="slogan-title" class="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 dark:text-white mb-6 leading-tight animate-slide-in-right">
+                <div class="order-1 lg:order-2">
+                    <h1 id="slogan-title" class="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 dark:text-white mb-6 leading-tight slogan-animate">
                         Aracını <span class="text-primary-600 dark:text-primary-500">Güvenle</span> Sat!
                     </h1>
-                    <p id="slogan-description" class="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8 max-w-lg leading-relaxed animate-slide-in-right" style="animation-delay: 0.2s;">
+                    <p id="slogan-description" class="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8 max-w-lg leading-relaxed slogan-animate-delay">
                         Hızlı teklif alın, güvenli süreçten geçin. Aracınızın gerçek değerini öğrenin ve en iyi fiyatı garantileyin.
                     </p>
                     
