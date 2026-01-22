@@ -38,22 +38,6 @@
         }
     }
     
-    @keyframes pulseText {
-        0%, 100% {
-            transform: scale(1);
-            text-shadow: 0 0 10px rgba(220, 38, 38, 0.3);
-        }
-        50% {
-            transform: scale(1.05);
-            text-shadow: 0 0 20px rgba(220, 38, 38, 0.6);
-        }
-    }
-    
-    .animate-pulse-text {
-        display: inline-block;
-        animation: pulseText 2s ease-in-out infinite;
-    }
-    
     .animate-slide-in-left {
         animation: slideInLeft 0.6s ease-out;
     }
@@ -320,10 +304,10 @@
                 
                 <!-- Right Side - Dynamic Headline & Image -->
                 <div class="order-1 lg:order-2 animate-slide-in-right">
-                    <h1 id="slogan-title" class="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 dark:text-white mb-6 leading-tight">
-                        Aracını <span class="text-primary-600 dark:text-primary-500 animate-pulse-text">Güvenle</span> Sat!
+                    <h1 id="slogan-title" class="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 dark:text-white mb-6 leading-tight animate-slide-in-right">
+                        Aracını <span class="text-primary-600 dark:text-primary-500">Güvenle</span> Sat!
                     </h1>
-                    <p id="slogan-description" class="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8 max-w-lg leading-relaxed">
+                    <p id="slogan-description" class="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8 max-w-lg leading-relaxed animate-slide-in-right" style="animation-delay: 0.2s;">
                         Hızlı teklif alın, güvenli süreçten geçin. Aracınızın gerçek değerini öğrenin ve en iyi fiyatı garantileyin.
                     </p>
                     
@@ -553,8 +537,8 @@
             sellForm.classList.add('active');
             buyForm.classList.remove('active');
             
-            // Update Slogan - Keep classes intact
-            sloganTitle.innerHTML = 'Aracını <span class="text-primary-600 dark:text-primary-500 animate-pulse-text">Güvenle</span> Sat!';
+            // Update Slogan - Keep red color
+            sloganTitle.innerHTML = 'Aracını <span class="text-primary-600 dark:text-primary-500">Güvenle</span> Sat!';
             sloganDesc.innerHTML = 'Hızlı teklif alın, güvenli süreçten geçin. Aracınızın gerçek değerini öğrenin ve en iyi fiyatı garantileyin.';
         } else {
             // Activate Buy Tab
@@ -563,8 +547,8 @@
             buyForm.classList.add('active');
             sellForm.classList.remove('active');
             
-            // Update Slogan - Keep classes intact
-            sloganTitle.innerHTML = '<span class="text-primary-600 dark:text-primary-500 animate-pulse-text">Güvenle</span> Araç Al!';
+            // Update Slogan - Keep red color
+            sloganTitle.innerHTML = '<span class="text-primary-600 dark:text-primary-500">Güvenle</span> Araç Al!';
             sloganDesc.innerHTML = 'Binlerce araç arasından size en uygun olanı bulun. Garantili, ekspertizli ve güvenilir araçlar.';
         }
     }
