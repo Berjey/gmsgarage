@@ -531,7 +531,7 @@
 
 @push('scripts')
 <script>
-    // Tab Switch Function with Dynamic Slogan
+    // Tab Switch Function with Dynamic Slogan and Animation
     function switchTab(tab) {
         const sellTab = document.getElementById('tab-sell');
         const buyTab = document.getElementById('tab-buy');
@@ -539,6 +539,13 @@
         const buyForm = document.getElementById('form-buy');
         const sloganTitle = document.getElementById('slogan-title');
         const sloganDesc = document.getElementById('slogan-description');
+        
+        // Remove animation classes to reset
+        sloganTitle.classList.remove('slogan-animate');
+        sloganDesc.classList.remove('slogan-animate-delay');
+        
+        // Force reflow to restart animation
+        void sloganTitle.offsetWidth;
         
         if (tab === 'sell') {
             // Activate Sell Tab
@@ -561,6 +568,12 @@
             sloganTitle.innerHTML = '<span class="text-primary-600 dark:text-primary-500">Güvenle</span> Araç Al!';
             sloganDesc.innerHTML = 'Binlerce araç arasından size en uygun olanı bulun. Garantili, ekspertizli ve güvenilir araçlar.';
         }
+        
+        // Re-add animation classes to trigger animation
+        setTimeout(() => {
+            sloganTitle.classList.add('slogan-animate');
+            sloganDesc.classList.add('slogan-animate-delay');
+        }, 10);
     }
 
     // Custom Dropdown Implementation for Hero Section
