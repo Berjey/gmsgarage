@@ -38,6 +38,22 @@
         }
     }
     
+    @keyframes pulseText {
+        0%, 100% {
+            transform: scale(1);
+            text-shadow: 0 0 10px rgba(220, 38, 38, 0.3);
+        }
+        50% {
+            transform: scale(1.05);
+            text-shadow: 0 0 20px rgba(220, 38, 38, 0.6);
+        }
+    }
+    
+    .animate-pulse-text {
+        display: inline-block;
+        animation: pulseText 2s ease-in-out infinite;
+    }
+    
     .animate-slide-in-left {
         animation: slideInLeft 0.6s ease-out;
     }
@@ -305,7 +321,7 @@
                 <!-- Right Side - Dynamic Headline & Image -->
                 <div class="order-1 lg:order-2 animate-slide-in-right">
                     <h1 id="slogan-title" class="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 dark:text-white mb-6 leading-tight">
-                        <span class="slogan-content">Aracını <span class="slogan-highlight-red">Güvenle</span> Sat</span>
+                        <span class="slogan-content">Aracını <span class="slogan-highlight-red text-primary-600 dark:text-primary-500 animate-pulse-text">Güvenle</span> Sat!</span>
                     </h1>
                     <p id="slogan-description" class="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8 max-w-lg leading-relaxed">
                         <span class="slogan-content">Hızlı teklif alın, güvenli süreçten geçin. Aracınızın gerçek değerini öğrenin ve en iyi fiyatı garantileyin.</span>
@@ -521,6 +537,38 @@
 
 @push('scripts')
 <script>
+    // Tab Switch Function with Dynamic Slogan
+    function switchTab(tab) {
+        const sellTab = document.getElementById('tab-sell');
+        const buyTab = document.getElementById('tab-buy');
+        const sellForm = document.getElementById('form-sell');
+        const buyForm = document.getElementById('form-buy');
+        const sloganTitle = document.getElementById('slogan-title');
+        const sloganDesc = document.getElementById('slogan-description');
+        
+        if (tab === 'sell') {
+            // Activate Sell Tab
+            sellTab.classList.add('active');
+            buyTab.classList.remove('active');
+            sellForm.classList.add('active');
+            buyForm.classList.remove('active');
+            
+            // Update Slogan
+            sloganTitle.innerHTML = '<span class="slogan-content">Aracını <span class="slogan-highlight-red text-primary-600 dark:text-primary-500 animate-pulse-text">Güvenle</span> Sat!</span>';
+            sloganDesc.innerHTML = '<span class="slogan-content">Hızlı teklif alın, güvenli süreçten geçin. Aracınızın gerçek değerini öğrenin ve en iyi fiyatı garantileyin.</span>';
+        } else {
+            // Activate Buy Tab
+            buyTab.classList.add('active');
+            sellTab.classList.remove('active');
+            buyForm.classList.add('active');
+            sellForm.classList.remove('active');
+            
+            // Update Slogan
+            sloganTitle.innerHTML = '<span class="slogan-content"><span class="slogan-highlight-red text-primary-600 dark:text-primary-500 animate-pulse-text">Güvenle</span> Araç Al!</span>';
+            sloganDesc.innerHTML = '<span class="slogan-content">Binlerce araç arasından size en uygun olanı bulun. Garantili, ekspertizli ve güvenilir araçlar.</span>';
+        }
+    }
+
     // Custom Dropdown Implementation for Hero Section
     document.addEventListener('DOMContentLoaded', function() {
         initHeroCustomDropdowns();
