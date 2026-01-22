@@ -156,10 +156,11 @@
                     <thead class="bg-gray-50/50">
                         <tr>
                             <th class="px-6 py-4 text-left">
-                                <input type="checkbox" id="select-all" class="w-5 h-5 rounded border-gray-300 text-primary-600 focus:ring-primary-500/20 transition-all">
+                                <input type="checkbox" id="select-all" class="w-5 h-5 rounded border-gray-300 text-primary-600 focus:ring-primary-500/20 transition-all checked:bg-primary-600 checked:border-primary-600">
                             </th>
                             <th class="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-widest">GÖNDEREN</th>
                             <th class="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-widest">KONU / ÖNİZLEME</th>
+                            <th class="px-6 py-4 text-center text-xs font-bold text-gray-400 uppercase tracking-widest">TARİH</th>
                             <th class="px-6 py-4 text-center text-xs font-bold text-gray-400 uppercase tracking-widest">DURUM</th>
                             <th class="px-6 py-4 text-right text-xs font-bold text-gray-400 uppercase tracking-widest">İŞLEMLER</th>
                         </tr>
@@ -169,7 +170,7 @@
                         <tr class="group hover:bg-gray-50 transition-all cursor-pointer {{ !$message->is_read ? 'bg-primary-50/10' : '' }}"
                             onclick="window.location.href='{{ route('admin.contact-messages.show', $message->id) }}'">
                             <td class="px-6 py-5" onclick="event.stopPropagation()">
-                                <input type="checkbox" name="ids[]" value="{{ $message->id }}" class="message-checkbox w-5 h-5 rounded border-gray-300 text-primary-600 focus:ring-primary-500/20 transition-all">
+                                <input type="checkbox" name="ids[]" value="{{ $message->id }}" class="message-checkbox w-5 h-5 rounded border-gray-300 text-primary-600 focus:ring-primary-500/20 transition-all checked:bg-primary-600 checked:border-primary-600">
                             </td>
                             <td class="px-6 py-5">
                                 <div class="font-bold text-gray-900 group-hover:text-primary-600 transition-colors">{{ $message->name }}</div>
@@ -178,6 +179,10 @@
                             <td class="px-6 py-5">
                                 <div class="font-bold text-gray-800 line-clamp-1 max-w-md">{{ $message->subject ?? 'Konu Yok' }}</div>
                                 <div class="text-sm text-gray-400 font-medium line-clamp-1 max-w-md italic">{{ $message->message }}</div>
+                            </td>
+                            <td class="px-6 py-5 text-center">
+                                <div class="text-sm font-semibold text-gray-700">{{ $message->created_at->format('d.m.Y') }}</div>
+                                <div class="text-xs text-gray-500">{{ $message->created_at->format('H:i') }}</div>
                             </td>
                             <td class="px-6 py-5 text-center" onclick="event.stopPropagation()">
                                 @include('admin.components.message-badge', ['isRead' => $message->is_read])
@@ -203,7 +208,7 @@
                 </table>
 
                 <!-- Bulk Actions -->
-                <div id="bulk-actions-bar" class="hidden fixed bottom-8 left-1/2 -translate-x-1/2 bg-white/90 backdrop-blur px-8 py-4 rounded-2xl shadow-2xl border border-primary-100 items-center gap-6 z-50 animate-bounce-subtle">
+                <div id="bulk-actions-bar" class="hidden fixed bottom-8 right-8 bg-white/90 backdrop-blur px-8 py-4 rounded-2xl shadow-2xl border border-primary-100 items-center gap-6 z-50 animate-bounce-subtle">
                     <span id="selected-count" class="text-sm font-bold text-primary-600 uppercase tracking-widest">0 SEÇİLDİ</span>
                     <div class="h-8 w-px bg-gray-200"></div>
                     <div class="flex items-center gap-2">
