@@ -212,6 +212,102 @@
         transition: all 0.3s ease-in-out;
     }
     
+    /* Custom Dropdown for Hero Section */
+    .hero-custom-dropdown {
+        position: relative;
+        z-index: 10;
+    }
+
+    .hero-custom-dropdown-trigger {
+        @apply w-full px-5 py-4 rounded-xl text-left;
+        @apply bg-white text-gray-900;
+        @apply flex items-center justify-between;
+        @apply font-semibold transition-all duration-200;
+        @apply hover:border-primary-500;
+        cursor: pointer;
+    }
+
+    .hero-custom-dropdown-trigger.open {
+        @apply border-primary-500 ring-2 ring-primary-500/20;
+    }
+
+    .hero-custom-dropdown-trigger .selected-text.placeholder {
+        @apply text-gray-400 font-normal;
+    }
+
+    .hero-custom-dropdown-trigger .arrow {
+        transition: transform 0.3s ease;
+    }
+
+    .hero-custom-dropdown-trigger.open .arrow {
+        transform: rotate(180deg);
+    }
+
+    .hero-custom-dropdown-panel {
+        display: none;
+        position: absolute;
+        top: calc(100% + 0.5rem);
+        left: 0;
+        right: 0;
+        @apply bg-white rounded-xl shadow-2xl border-2 border-gray-100;
+        @apply max-h-72 overflow-y-auto;
+        z-index: 100;
+        animation: dropdownFadeIn 0.2s ease-out;
+    }
+
+    @keyframes dropdownFadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .hero-custom-dropdown-panel.open {
+        display: block;
+    }
+
+    .hero-custom-dropdown-option {
+        @apply px-5 py-4 cursor-pointer;
+        @apply text-gray-700 font-medium;
+        @apply hover:bg-primary-50 hover:text-primary-700;
+        @apply transition-all duration-150;
+        border-bottom: 1px solid #f3f4f6;
+    }
+
+    .hero-custom-dropdown-option:last-child {
+        border-bottom: none;
+    }
+
+    .hero-custom-dropdown-option.selected {
+        @apply bg-primary-100 text-primary-700 font-bold;
+    }
+
+    .hero-custom-dropdown-native {
+        display: none;
+    }
+
+    /* Dark Mode Dropdown */
+    .dark .hero-custom-dropdown-trigger {
+        @apply bg-[#2a2a2a] text-gray-100 border-gray-700;
+    }
+
+    .dark .hero-custom-dropdown-panel {
+        @apply bg-[#2a2a2a] border-gray-700;
+    }
+
+    .dark .hero-custom-dropdown-option {
+        @apply text-gray-300 hover:bg-primary-900/20 hover:text-primary-400;
+        border-bottom-color: #374151;
+    }
+
+    .dark .hero-custom-dropdown-option.selected {
+        @apply bg-primary-900/30 text-primary-400;
+    }
+    
     /* Dark Mode Utility Overrides (Website Only) */
     .dark .text-gradient {
         @apply from-primary-400 via-primary-500 to-primary-600;

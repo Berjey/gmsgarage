@@ -146,13 +146,14 @@
 
     <!-- User Info -->
     <div class="p-4 border-t border-gray-200">
+        @auth
         <div class="flex items-center space-x-3 mb-3">
             <div class="w-10 h-10 bg-primary-600 rounded-full flex items-center justify-center text-white font-semibold">
-                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                {{ strtoupper(substr(Auth::user()->name ?? 'A', 0, 1)) }}
             </div>
             <div class="flex-1">
-                <p class="text-sm font-semibold text-gray-900">{{ Auth::user()->name }}</p>
-                <p class="text-xs text-gray-500">{{ Auth::user()->email }}</p>
+                <p class="text-sm font-semibold text-gray-900">{{ Auth::user()->name ?? 'Admin' }}</p>
+                <p class="text-xs text-gray-500">{{ Auth::user()->email ?? '' }}</p>
             </div>
         </div>
         <form action="{{ route('admin.logout') }}" method="POST">
@@ -164,5 +165,6 @@
                 <span>Çıkış Yap</span>
             </button>
         </form>
+        @endauth
     </div>
 </aside>
