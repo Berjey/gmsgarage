@@ -27,14 +27,28 @@
         }
     }
     
+    @keyframes sloganSlide {
+        from {
+            opacity: 0;
+            transform: translateX(50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+    
     .slogan-animate {
-        opacity: 0;
-        animation: slideInRight 0.8s ease-out forwards;
+        animation: sloganSlide 0.8s ease-out forwards;
     }
     
     .slogan-animate-delay {
+        animation: sloganSlide 0.8s ease-out 0.3s forwards;
+    }
+    
+    .trigger-animation {
+        animation: none !important;
         opacity: 0;
-        animation: slideInRight 0.8s ease-out 0.3s forwards;
     }
     
     @keyframes fadeInUp {
@@ -540,12 +554,11 @@
         const sloganTitle = document.getElementById('slogan-title');
         const sloganDesc = document.getElementById('slogan-description');
         
-        // Remove animation classes to reset
-        sloganTitle.classList.remove('slogan-animate');
-        sloganDesc.classList.remove('slogan-animate-delay');
-        
-        // Force reflow to restart animation
-        void sloganTitle.offsetWidth;
+        // Stop current animation
+        sloganTitle.style.animation = 'none';
+        sloganDesc.style.animation = 'none';
+        sloganTitle.style.opacity = '0';
+        sloganDesc.style.opacity = '0';
         
         if (tab === 'sell') {
             // Activate Sell Tab
@@ -569,11 +582,19 @@
             sloganDesc.innerHTML = 'Binlerce araç arasından size en uygun olanı bulun. Garantili, ekspertizli ve güvenilir araçlar.';
         }
         
-        // Re-add animation classes to trigger animation
+        // Restart animation after a small delay
         setTimeout(() => {
+            sloganTitle.style.animation = '';
+            sloganDesc.style.animation = '';
+            sloganTitle.classList.remove('slogan-animate');
+            sloganDesc.classList.remove('slogan-animate-delay');
+            
+            // Force reflow
+            void sloganTitle.offsetWidth;
+            
             sloganTitle.classList.add('slogan-animate');
             sloganDesc.classList.add('slogan-animate-delay');
-        }, 10);
+        }, 50);
     }
 
     // Custom Dropdown Implementation for Hero Section
