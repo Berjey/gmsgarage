@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\EvaluationRequest;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class EvaluationRequestController extends Controller
 {
@@ -48,5 +49,20 @@ class EvaluationRequestController extends Controller
         $request->delete();
         return redirect()->route('admin.evaluation-requests.index')
             ->with('success', 'İstek başarıyla silindi.');
+    }
+
+    /**
+     * Download evaluation request as PDF
+     */
+    public function downloadPdf($id)
+    {
+        $request = EvaluationRequest::findOrFail($id);
+
+        $pdf = Pdf::loadView('admin.evaluation-requests.pdf', compact('request'));
+        $pdf->setPaper('A4', 'portrait');
+
+        $filename = 'degerleme-raporu-' . $request->id . '-' . date('Ymd') . '.pdf';
+
+        return $pdf->download($filename);
     }
 }

@@ -10,10 +10,51 @@
     <span>Detay</span>
 @endsection
 
+@php
+    $messageData = json_decode($request->message, true) ?? [];
+    $ekspertiz = $messageData['ekspertiz'] ?? [];
+    $tramer = $messageData['tramer'] ?? 'YOK';
+    $tramerTutari = $messageData['tramer_tutari'] ?? null;
+    $sehir = $messageData['sehir'] ?? '';
+    $renk = $messageData['renk'] ?? '';
+    $govdeTipi = $messageData['govde_tipi'] ?? '';
+    $not = $messageData['not'] ?? '';
+
+    $partNames = [
+        'sag_arka_camurluk' => 'Sağ Arka Çamurluk',
+        'arka_kaput' => 'Arka Kaput',
+        'sol_arka_camurluk' => 'Sol Arka Çamurluk',
+        'sag_arka_kapi' => 'Sağ Arka Kapı',
+        'sag_on_kapi' => 'Sağ Ön Kapı',
+        'tavan' => 'Tavan',
+        'sol_arka_kapi' => 'Sol Arka Kapı',
+        'sol_on_kapi' => 'Sol Ön Kapı',
+        'sag_on_camurluk' => 'Sağ Ön Çamurluk',
+        'motor_kaputu' => 'Motor Kaputu',
+        'sol_on_camurluk' => 'Sol Ön Çamurluk',
+        'on_tampon' => 'Ön Tampon',
+        'arka_tampon' => 'Arka Tampon',
+    ];
+
+    $hasBoyali = collect($ekspertiz)->contains('BOYALI');
+    $hasDegismis = collect($ekspertiz)->contains('DEGISMIS');
+@endphp
+
+@push('styles')
+<style>
+    .car-part { transition: fill 0.2s ease; }
+    @media print {
+        .no-print { display: none !important; }
+        .print-break { page-break-before: always; }
+    }
+</style>
+@endpush
+
 @section('content')
-<div class="space-y-6">
-    <div class="flex items-center justify-between">
-        <a href="{{ route('admin.evaluation-requests.index') }}" 
+<div class="space-y-6" id="report-content">
+    <!-- Header Actions -->
+    <div class="flex items-center justify-between no-print">
+        <a href="{{ route('admin.evaluation-requests.index') }}"
            class="inline-flex items-center px-3 py-2 bg-white hover:bg-gray-50 text-gray-700 rounded-lg font-medium transition-colors border border-gray-300">
             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
@@ -21,84 +62,149 @@
             Geri Dön
         </a>
         <div class="flex items-center gap-2">
+            <a href="{{ route('admin.evaluation-requests.pdf', $request->id) }}" class="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg font-medium transition-colors flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                PDF Indir
+            </a>
+            <button onclick="window.print()" class="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg font-medium transition-colors flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
+                </svg>
+                Yazdir
+            </button>
             @if(!$request->is_read)
             <form action="{{ route('admin.evaluation-requests.read', $request->id) }}" method="POST">
                 @csrf
-                <button type="submit" class="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg font-medium transition-colors">Okundu Olarak İşaretle</button>
+                <button type="submit" class="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg font-medium transition-colors">Okundu İşaretle</button>
             </form>
             @endif
             <form action="{{ route('admin.evaluation-requests.destroy', $request->id) }}" method="POST" onsubmit="return confirm('Silmek istediğinize emin misiniz?')">
                 @csrf
                 @method('DELETE')
-                <button type="submit" class="px-4 py-2 border border-red-300 text-red-600 hover:bg-red-50 rounded-lg font-medium transition-colors">İsteği Sil</button>
+                <button type="submit" class="px-4 py-2 border border-red-300 text-red-600 hover:bg-red-50 rounded-lg font-medium transition-colors">Sil</button>
             </form>
+        </div>
+    </div>
+
+    <!-- Report Header -->
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900">Araç Değerleme Raporu</h1>
+                <p class="text-gray-500 mt-1">Talep No: #{{ $request->id }} | {{ $request->created_at->format('d.m.Y H:i') }}</p>
+            </div>
+            <div class="text-right">
+                @if($request->is_read)
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                        Okundu
+                    </span>
+                @else
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
+                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path></svg>
+                        Yeni
+                    </span>
+                @endif
+            </div>
         </div>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <!-- Araç Bilgileri -->
-        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-6">
-            <h2 class="text-xl font-bold text-gray-900 border-b pb-2">Değerlendirilecek Araç Bilgileri</h2>
-            
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+            <h2 class="text-lg font-bold text-gray-900 border-b pb-3 mb-4">Araç Bilgileri</h2>
+
             <div class="grid grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase">Marka / Model</label>
-                    <p class="text-sm font-bold text-gray-900">{{ $request->brand }} {{ $request->model }}</p>
+                    <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Marka</label>
+                    <p class="text-sm font-semibold text-gray-900">{{ $request->brand }}</p>
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase">Yıl</label>
+                    <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Model</label>
+                    <p class="text-sm font-semibold text-gray-900">{{ $request->model }}</p>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Yıl</label>
                     <p class="text-sm text-gray-900">{{ $request->year }}</p>
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase">Kilometre</label>
-                    <p class="text-sm text-gray-900 font-bold text-primary-600">{{ number_format($request->km, 0, ',', '.') }} KM</p>
+                    <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Versiyon</label>
+                    <p class="text-sm text-gray-900">{{ $request->version ?? '-' }}</p>
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase">Yakıt / Vites</label>
-                    <p class="text-sm text-gray-900">{{ $request->fuel_type }} / {{ $request->transmission }}</p>
+                    <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Kilometre</label>
+                    <p class="text-sm font-bold text-primary-600">{{ number_format($request->mileage, 0, ',', '.') }} KM</p>
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase">Boya / Hasar</label>
-                    <p class="text-sm text-gray-900">{{ $request->has_damage }}</p>
+                    <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Gövde Tipi</label>
+                    <p class="text-sm text-gray-900">{{ $govdeTipi ?: '-' }}</p>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Yakıt Tipi</label>
+                    <p class="text-sm text-gray-900">{{ $request->fuel_type ?? '-' }}</p>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Vites Tipi</label>
+                    <p class="text-sm text-gray-900">{{ $request->transmission ?? '-' }}</p>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Renk</label>
+                    <p class="text-sm text-gray-900">{{ $renk ?: '-' }}</p>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Tramer Durumu</label>
+                    <p class="text-sm font-semibold {{ $tramer === 'YOK' ? 'text-green-600' : ($tramer === 'AGIR_HASAR' ? 'text-red-600' : 'text-yellow-600') }}">
+                        {{ $request->condition }}
+                        @if($tramerTutari)
+                            <span class="text-gray-500 font-normal">({{ number_format($tramerTutari, 0, ',', '.') }} TL)</span>
+                        @endif
+                    </p>
                 </div>
             </div>
         </div>
 
         <!-- İletişim Bilgileri -->
-        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-6">
-            <h2 class="text-xl font-bold text-gray-900 border-b pb-2">Kullanıcı İletişim Bilgileri</h2>
-            
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+            <h2 class="text-lg font-bold text-gray-900 border-b pb-3 mb-4">İletişim Bilgileri</h2>
+
             <div class="space-y-4">
                 <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase">Ad Soyad</label>
+                    <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Ad Soyad</label>
                     <p class="text-lg font-bold text-gray-900">{{ $request->name }}</p>
                 </div>
-                <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase">Telefon</label>
-                    <p class="text-sm text-gray-900 font-bold">{{ $request->phone }}</p>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Telefon</label>
+                        <p class="text-sm font-semibold text-gray-900">{{ $request->phone }}</p>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-500 uppercase mb-1">E-posta</label>
+                        <p class="text-sm text-gray-900">{{ $request->email ?? '-' }}</p>
+                    </div>
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase">E-posta</label>
-                    <p class="text-sm text-gray-900">{{ $request->email ?? 'Belirtilmemiş' }}</p>
+                    <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Şehir</label>
+                    <p class="text-sm text-gray-900">{{ $sehir ?: '-' }}</p>
                 </div>
+                @if($not)
                 <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase">Tercih Edilen Yöntem</label>
-                    <p class="text-sm text-gray-900">{{ $request->contact_method }}</p>
+                    <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Not</label>
+                    <p class="text-sm text-gray-700 bg-gray-50 p-3 rounded-lg">{{ $not }}</p>
                 </div>
-                <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase">Talep Tarihi</label>
-                    <p class="text-sm text-gray-900">{{ $request->created_at->format('d.m.Y H:i') }}</p>
-                </div>
+                @endif
             </div>
 
-            <div class="pt-6 border-t flex gap-2">
-                <a href="tel:{{ preg_replace('/[^0-9+]/', '', $request->phone) }}" class="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-green-600 hover:bg-green-700 text-white rounded-xl font-bold transition-all shadow-lg shadow-green-500/20">
+            <!-- İletişim Butonları -->
+            <div class="pt-4 mt-4 border-t flex gap-2 no-print">
+                <a href="tel:{{ preg_replace('/[^0-9+]/', '', $request->phone) }}" class="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-green-600 hover:bg-green-700 text-white rounded-xl font-bold transition-all">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
                     </svg>
                     Ara
                 </a>
-                <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $request->phone) }}" target="_blank" class="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-green-500 hover:bg-green-600 text-white rounded-xl font-bold transition-all shadow-lg shadow-green-400/20">
+                <a href="https://wa.me/90{{ preg_replace('/[^0-9]/', '', $request->phone) }}" target="_blank" class="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-green-500 hover:bg-green-600 text-white rounded-xl font-bold transition-all">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
                     </svg>
@@ -107,5 +213,101 @@
             </div>
         </div>
     </div>
+
+    <!-- Ekspertiz Raporu -->
+    @if(!empty($ekspertiz))
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+        <h2 class="text-lg font-bold text-gray-900 border-b pb-3 mb-4">Ekspertiz Raporu</h2>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Tablo -->
+            <div>
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="border-b">
+                            <th class="text-left py-2 font-semibold text-gray-700">Parça</th>
+                            <th class="text-center py-2 font-semibold text-gray-700">Durum</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($partNames as $key => $name)
+                            @php
+                                $status = $ekspertiz[$key] ?? 'ORIJINAL';
+                                $statusText = match($status) {
+                                    'BOYALI' => 'Boyalı',
+                                    'DEGISMIS' => 'Değişmiş',
+                                    default => 'Orijinal'
+                                };
+                                $statusClass = match($status) {
+                                    'BOYALI' => 'bg-yellow-100 text-yellow-800',
+                                    'DEGISMIS' => 'bg-red-100 text-red-800',
+                                    default => 'bg-green-100 text-green-800'
+                                };
+                            @endphp
+                            <tr class="border-b border-gray-100">
+                                <td class="py-2 text-gray-900">{{ $name }}</td>
+                                <td class="py-2 text-center">
+                                    <span class="inline-flex px-2 py-1 rounded text-xs font-medium {{ $statusClass }}">
+                                        {{ $statusText }}
+                                    </span>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Araç Görseli -->
+            <div class="flex flex-col items-center">
+                <div class="w-full max-w-xs">
+                    <svg width="100%" height="350" viewBox="0 0 227 303" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <g transform="translate(-1002.000000, -232.000000)">
+                                <g transform="translate(1003.000000, 233.000000)">
+                                    <path d="M94.6557611,63.8442042 C92.939813,65.0732963 91.7141357,66.9764066 91.5098562,69.1967019 L91.0195853,74.5491997 C90.7744499,77.3245689 92.8581012,79.7431049 95.7180147,79.9809937 C98.5779282,80.2188824 101.070139,78.1968277 101.315274,75.4214586 L102.05068,67.3332398 C105.482577,68.6416281 109.118752,69.3156463 112.83664,69.3156463 L127.340487,69.3156463 C130.322968,69.3156463 132.815179,67.0160547 132.978602,64.1217411 C133.632297,50.6017284 134,36.4869936 134,21.8171851 C134,21.6982407 134,21.6189444 134,21.5 C134,6.71124703 133.632297,-7.52243211 132.978602,-21.1217411 C132.856035,-24.0160547 130.363824,-26.3156463 127.340487,-26.3156463 L112.877496,-26.3156463 C109.159608,-26.3156463 105.523432,-25.6416281 102.091536,-24.3332398 L101.35613,-32.4214586 C101.110994,-35.1968277 98.5779282,-37.2188824 95.7588706,-36.9809937 C92.8989571,-36.7431049 90.8153058,-34.2849207 91.0604412,-31.5491997 L91.5507121,-26.1967019 C91.7549917,-23.9764066 92.939813,-22.0732963 94.696617,-20.8442042 L94.696617,63.8442042 L94.6557611,63.8442042 Z" stroke="#D3D2D2" fill="#F0F0F0" transform="translate(112.500000, 21.500000) rotate(-90.000000) translate(-112.500000, -21.500000)"></path>
+                                    <path d="M98,60.0833333 C101.017241,61.3211806 104.195402,62 107.454023,62 L120.166667,62 C122.781609,62 124.954023,59.8038194 125.074713,57.0086806 C125.637931,43.9913194 126,30.4149306 126,16.3194444 C126,16.2395833 126,16.1197917 126,16 C126,1.78472222 125.678161,-11.9114583 125.074713,-25.0086806 C124.954023,-27.8038194 122.781609,-30 120.166667,-30 L107.454023,-30 C104.195402,-30 101.017241,-29.3611111 98,-28.0833333 L98,60.0833333 Z" fill="{{ ($ekspertiz['on_tampon'] ?? 'ORIJINAL') === 'BOYALI' ? '#fbbf24' : (($ekspertiz['on_tampon'] ?? 'ORIJINAL') === 'DEGISMIS' ? '#dc2626' : '#FFFFFF') }}" stroke="#D3D2D2" class="car-part" transform="translate(112.000000, 16.000000) rotate(-90.000000) translate(-112.000000, -16.000000)"></path>
+                                    <path d="M209.370189,124.39232 C207.52386,121.065414 204.674093,118.460007 201.182124,116.936845 C199.014696,115.974848 196.646579,115.49385 194.278462,115.49385 L151.010162,115.49385 C150.970024,115.293434 150.929887,115.173184 150.889749,115.093018 C150.408098,113.529773 148.762458,108.359041 144.668426,106.555297 C143.183336,105.873883 142.059484,105.994132 141.818658,106.034216 C141.658108,106.034216 140.694806,106.154465 140.213156,106.555297 C138.48724,107.958209 142.139759,112.968609 144.146637,115.49385 L89.0778914,115.49385 C87.3519759,115.49385 85.5859228,115.293434 83.9001449,114.852519 C82.2143669,114.411604 80.4483139,114.211188 78.7223983,114.211188 L37.501114,114.211188 C35.1329973,114.211188 32.8050183,114.652103 30.5974519,115.49385 C22.7304882,118.540173 15.0240748,123.310073 13.4587095,131.607295 C11.8532067,139.9446 11.5722437,148.72282 11.5722437,156.979958 C11.5722437,163.914351 11.7729316,171.16941 12.7763708,178.264136 L9.36467738,178.264136 C8.88302654,178.264136 8.04013757,178.264136 8,180.94971 C8,183.595201 9.04357682,183.635284 10.6892172,183.635284 L13.6995349,183.635284 C15.7866886,191.170925 23.0917263,195.62016 30.5573143,198.50615 C32.7648807,199.347897 35.0928598,199.788812 37.4609764,199.788812 L78.6822608,199.788812 C80.4483139,199.788812 82.1742294,199.588396 83.8600073,199.147481 C85.5457852,198.706566 87.3118383,198.50615 89.0377538,198.50615 L144.1065,198.50615 C142.099621,201.031391 138.447103,206.041791 140.173018,207.444703 C140.654669,207.845535 141.617971,207.965784 141.778521,207.965784 C142.019346,208.005868 143.143198,208.126117 144.628288,207.444703 C148.682183,205.640959 150.327823,200.470227 150.849612,198.906982 C150.889749,198.826816 150.929887,198.666483 150.970024,198.50615 L194.238325,198.50615 C196.606441,198.50615 198.974558,198.025152 201.141987,197.063155 C204.593818,195.539993 207.483723,192.934586 209.330051,189.60768 C212.862157,183.154286 217.999766,171.369826 217.999766,156.979958 C218.039904,142.630174 212.902295,130.845714 209.370189,124.39232 Z" stroke="#D3D2D2" fill="#F0F0F0" fill-rule="nonzero" transform="translate(113.000000, 157.000000) rotate(-90.000000) translate(-113.000000, -157.000000)"></path>
+                                    <g transform="translate(162.000000, 52.000000)" stroke="#D3D2D2">
+                                        <path d="M129.900636,106.906489 C125.403559,103.580153 120.22389,101.375954 114.682849,100.454198 L79.5494364,94.5629771 L62.1634161,84.6641221 C47.6282213,76.3683206 31.1657078,72 14.4221271,72 L-2.16084382,72 C-6.81853055,72.1603053 -12.3194192,72.6412214 -18.3824424,73.9236641 C-18.8642721,74.0438931 -19.3461018,74.1240458 -19.8279314,74.2442748 C-28.7016277,76.2480916 -37.1336468,79.8549618 -44.8830739,84.7041985 C-46.9710024,85.9866412 -49.0187785,87.3091603 -51.106707,88.5916031 C-51.5483842,88.8320611 -52.0703663,88.9522901 -52.552196,88.9522901 L-61.7872645,88.9522901 C-64.3971752,88.9522901 -66.9267809,89.7538168 -69.0548619,91.1965649 C-69.6973015,91.6374046 -69.9382163,92.398855 -69.7374539,93.120229 C-68.4525748,98.0896947 -71.704925,102.898855 -71.5041627,107.868321 C-71.4238577,110.753817 -72.7890418,113.479008 -71.3034003,115.923664 C-70.6609608,116.604962 -69.9783688,117.326336 -69.3359292,118.007634 C-67.8502878,119.570611 -66.6055611,121.293893 -65.6419018,123.217557 C-65.0797672,124.259542 -64.2767178,125.501908 -63.0319911,126.624046 C-60.1811656,129.188931 -56.9689679,129.549618 -55.9250036,129.629771 L-53.5560078,130.110687 C-52.3915861,130.351145 -51.3074694,129.389313 -51.3877743,128.227099 C-51.4279268,127.706107 -51.4680792,127.185115 -51.4680792,126.624046 C-51.4680792,116.604962 -43.276975,108.469466 -33.1987045,108.549618 C-23.1605866,108.629771 -15.0899397,117.246183 -15.2103972,127.265267 C-15.2505496,129.269084 -15.3308546,131.112595 -15.6119219,132.916031 C-15.7725318,133.998092 -14.9293299,135 -13.8050606,135 L74.6106823,135 C75.6546466,135 76.4978485,134.118321 76.4175436,133.076336 C76.2569337,130.992366 76.2167812,128.98855 76.2167812,126.664122 C76.2167812,116.725191 84.2472756,108.669847 94.1649361,108.589695 C104.564426,108.509542 112.755531,117.326336 112.434311,127.666031 C112.394158,129.509542 112.193396,131.232824 112.032786,132.916031 C111.912329,134.038168 112.835836,134.959924 113.960105,134.879771 L129.900636,133.998092 C131.667345,133.917939 132.912071,132.314885 132.631004,130.591603 L132.309784,128.708015 L134.598475,120.171756 C134.879543,119.169847 135,118.208015 135,117.206107 C135,109.551527 129.900636,106.906489 129.900636,106.906489 Z" fill="#F0F0F0" transform="translate(31.500000, 103.500000) rotate(-90.000000) translate(-31.500000, -103.500000)"></path>
+                                        <path d="M13.0500284,141.698113 L13.0875754,141.773585 C14.8898297,144.792453 17.1801946,147.471698 19.8835762,149.698113 C21.2728139,150.830189 22.4743168,152.113208 23.4505379,153.471698 C24.426759,154.792453 24.9524165,155.886792 25.515621,157.018868 C26.0037316,157.962264 26.4918421,158.981132 27.2803284,160.226415 C28.0688147,161.433962 28.9323949,162.603774 29.8710691,163.698113 C31.072572,165.09434 32.6119976,165.924528 34.0763292,165.962264 C36.0287715,166 38.732153,166 42.1489269,166 C46.5794688,166 51.0851047,165.962264 53,165.962264 L53,146.113208 C53,140.45283 52.4743425,134.792453 51.4230274,129.245283 L48.9449277,116 L38.2815894,116 C29.7208812,116 21.19772,118.113208 13.6132329,122.075472 L9.93363022,124 C8.13137587,124.943396 6.81723206,126.490566 6.14138668,128.415094 C5.87855792,129.169811 5.99119881,130 6.40421544,130.716981 L13.0500284,141.698113 Z" fill="{{ ($ekspertiz['sag_arka_kapi'] ?? 'ORIJINAL') === 'BOYALI' ? '#fbbf24' : (($ekspertiz['sag_arka_kapi'] ?? 'ORIJINAL') === 'DEGISMIS' ? '#dc2626' : '#FFFFFF') }}" class="car-part" transform="translate(29.500000, 141.000000) rotate(-90.000000) translate(-29.500000, -141.000000)"></path>
+                                        <path d="M6.98512508,98.1209373 L6.98512508,118 L52.6260859,118 C53.3028053,118 53.9043336,117.508692 54.0171202,116.82842 L54.2426933,115.505669 C55.671323,106.435374 55.0697947,97.0249433 52.5132994,88.2191988 C51.6110069,85.1579743 49.6184444,82.5502646 46.9115669,80.8873772 C34.3170679,73.2532124 19.9555794,68.8692366 5.33092222,68.1133787 L3,68 L5.40611326,80.8495843 C6.45878781,86.5185185 6.98512508,92.3386243 6.98512508,98.1209373 Z" fill="{{ ($ekspertiz['sag_on_kapi'] ?? 'ORIJINAL') === 'BOYALI' ? '#fbbf24' : (($ekspertiz['sag_on_kapi'] ?? 'ORIJINAL') === 'DEGISMIS' ? '#dc2626' : '#FFFFFF') }}" class="car-part" transform="translate(29.000000, 93.000000) rotate(-90.000000) translate(-29.000000, -93.000000)"></path>
+                                        <path d="M13.9131056,168.010844 C13.9131056,168.010844 19.0519095,166.400737 26.9577617,167.205791 L31.4640974,166.964275 C31.4640974,166.964275 39.2118326,160.765362 41.5835882,161.006878 C43.9553439,161.288647 48.066387,167.970592 48.066387,167.970592 L57,184.071663 C56.8814122,183.8704 44.2320487,181.253976 38.3817181,185.238991 C33.3219727,188.700721 29.4085759,194.175086 28.7365784,199.971471 L28.064581,203.996739 C28.064581,203.996739 20.2377873,204.318761 17.7079146,198.562628 C15.1780419,192.806494 12.2133473,190.753608 12.2133473,190.753608 C12.2133473,190.753608 11.4227621,181.978524 12.8853448,179.804879 C14.3083982,177.671487 13.9131056,168.010844 13.9131056,168.010844 Z" fill="{{ ($ekspertiz['sag_arka_camurluk'] ?? 'ORIJINAL') === 'BOYALI' ? '#fbbf24' : (($ekspertiz['sag_arka_camurluk'] ?? 'ORIJINAL') === 'DEGISMIS' ? '#dc2626' : '#FFFFFF') }}" class="car-part" transform="translate(34.500000, 182.500000) rotate(-90.000000) translate(-34.500000, -182.500000)"></path>
+                                        <path d="M14.5326799,52 L57.1956592,45.0528587 C57.1956592,45.0528587 69.2385483,41.6170442 70.4922245,38.3700108 C71.7459006,35.1229773 72.3917338,32.9708738 71.7459006,30.592233 C71.1000675,28.2135922 69.4664894,22.5124056 69.4664894,22.5124056 C69.4664894,22.5124056 72.1258025,17.7551241 68.972617,17.7551241 C65.8194316,17.7551241 56.1727324,17 56.1727324,17 C56.1727324,17 58.0345528,41.9848751 35.6936697,42.3173455 C15.1854438,42.6225429 15.7176067,20.2847896 15.7176067,20.2847896 L11,20.2847896 C11,20.2847896 15.5968126,38.1434736 11,52 L14.5326799,52 Z" fill="{{ ($ekspertiz['sag_on_camurluk'] ?? 'ORIJINAL') === 'BOYALI' ? '#fbbf24' : (($ekspertiz['sag_on_camurluk'] ?? 'ORIJINAL') === 'DEGISMIS' ? '#dc2626' : '#FFFFFF') }}" class="car-part" transform="translate(41.500000, 34.500000) scale(-1, 1) rotate(-90.000000) translate(-41.500000, -34.500000)"></path>
+                                    </g>
+                                    <g transform="translate(31.525480, 155.500000) scale(-1, 1) translate(-31.525480, -155.500000) translate(0.025480, 52.000000)" stroke="#D3D2D2">
+                                        <path d="M129.900636,106.906489 C125.403559,103.580153 120.22389,101.375954 114.682849,100.454198 L79.5494364,94.5629771 L62.1634161,84.6641221 C47.6282213,76.3683206 31.1657078,72 14.4221271,72 L-2.16084382,72 C-6.81853055,72.1603053 -12.3194192,72.6412214 -18.3824424,73.9236641 C-18.8642721,74.0438931 -19.3461018,74.1240458 -19.8279314,74.2442748 C-28.7016277,76.2480916 -37.1336468,79.8549618 -44.8830739,84.7041985 C-46.9710024,85.9866412 -49.0187785,87.3091603 -51.106707,88.5916031 C-51.5483842,88.8320611 -52.0703663,88.9522901 -52.552196,88.9522901 L-61.7872645,88.9522901 C-64.3971752,88.9522901 -66.9267809,89.7538168 -69.0548619,91.1965649 C-69.6973015,91.6374046 -69.9382163,92.398855 -69.7374539,93.120229 C-68.4525748,98.0896947 -71.704925,102.898855 -71.5041627,107.868321 C-71.4238577,110.753817 -72.7890418,113.479008 -71.3034003,115.923664 C-70.6609608,116.604962 -69.9783688,117.326336 -69.3359292,118.007634 C-67.8502878,119.570611 -66.6055611,121.293893 -65.6419018,123.217557 C-65.0797672,124.259542 -64.2767178,125.501908 -63.0319911,126.624046 C-60.1811656,129.188931 -56.9689679,129.549618 -55.9250036,129.629771 L-53.5560078,130.110687 C-52.3915861,130.351145 -51.3074694,129.389313 -51.3877743,128.227099 C-51.4279268,127.706107 -51.4680792,127.185115 -51.4680792,126.624046 C-51.4680792,116.604962 -43.276975,108.469466 -33.1987045,108.549618 C-23.1605866,108.629771 -15.0899397,117.246183 -15.2103972,127.265267 C-15.2505496,129.269084 -15.3308546,131.112595 -15.6119219,132.916031 C-15.7725318,133.998092 -14.9293299,135 -13.8050606,135 L74.6106823,135 C75.6546466,135 76.4978485,134.118321 76.4175436,133.076336 C76.2569337,130.992366 76.2167812,128.98855 76.2167812,126.664122 C76.2167812,116.725191 84.2472756,108.669847 94.1649361,108.589695 C104.564426,108.509542 112.755531,117.326336 112.434311,127.666031 C112.394158,129.509542 112.193396,131.232824 112.032786,132.916031 C111.912329,134.038168 112.835836,134.959924 113.960105,134.879771 L129.900636,133.998092 C131.667345,133.917939 132.912071,132.314885 132.631004,130.591603 L132.309784,128.708015 L134.598475,120.171756 C134.879543,119.169847 135,118.208015 135,117.206107 C135,109.551527 129.900636,106.906489 129.900636,106.906489 Z" fill="#F0F0F0" transform="translate(31.500000, 103.500000) rotate(-90.000000) translate(-31.500000, -103.500000)"></path>
+                                        <path d="M13.0500284,141.698113 L13.0875754,141.773585 C14.8898297,144.792453 17.1801946,147.471698 19.8835762,149.698113 C21.2728139,150.830189 22.4743168,152.113208 23.4505379,153.471698 C24.426759,154.792453 24.9524165,155.886792 25.515621,157.018868 C26.0037316,157.962264 26.4918421,158.981132 27.2803284,160.226415 C28.0688147,161.433962 28.9323949,162.603774 29.8710691,163.698113 C31.072572,165.09434 32.6119976,165.924528 34.0763292,165.962264 C36.0287715,166 38.732153,166 42.1489269,166 C46.5794688,166 51.0851047,165.962264 53,165.962264 L53,146.113208 C53,140.45283 52.4743425,134.792453 51.4230274,129.245283 L48.9449277,116 L38.2815894,116 C29.7208812,116 21.19772,118.113208 13.6132329,122.075472 L9.93363022,124 C8.13137587,124.943396 6.81723206,126.490566 6.14138668,128.415094 C5.87855792,129.169811 5.99119881,130 6.40421544,130.716981 L13.0500284,141.698113 Z" fill="{{ ($ekspertiz['sol_arka_kapi'] ?? 'ORIJINAL') === 'BOYALI' ? '#fbbf24' : (($ekspertiz['sol_arka_kapi'] ?? 'ORIJINAL') === 'DEGISMIS' ? '#dc2626' : '#FFFFFF') }}" class="car-part" transform="translate(29.500000, 141.000000) rotate(-90.000000) translate(-29.500000, -141.000000)"></path>
+                                        <path d="M6.98512508,98.1209373 L6.98512508,118 L52.6260859,118 C53.3028053,118 53.9043336,117.508692 54.0171202,116.82842 L54.2426933,115.505669 C55.671323,106.435374 55.0697947,97.0249433 52.5132994,88.2191988 C51.6110069,85.1579743 49.6184444,82.5502646 46.9115669,80.8873772 C34.3170679,73.2532124 19.9555794,68.8692366 5.33092222,68.1133787 L3,68 L5.40611326,80.8495843 C6.45878781,86.5185185 6.98512508,92.3386243 6.98512508,98.1209373 Z" fill="{{ ($ekspertiz['sol_on_kapi'] ?? 'ORIJINAL') === 'BOYALI' ? '#fbbf24' : (($ekspertiz['sol_on_kapi'] ?? 'ORIJINAL') === 'DEGISMIS' ? '#dc2626' : '#FFFFFF') }}" class="car-part" transform="translate(29.000000, 93.000000) rotate(-90.000000) translate(-29.000000, -93.000000)"></path>
+                                        <path d="M13.9131056,168.010844 C13.9131056,168.010844 19.0519095,166.400737 26.9577617,167.205791 L31.4640974,166.964275 C31.4640974,166.964275 39.2118326,160.765362 41.5835882,161.006878 C43.9553439,161.288647 48.066387,167.970592 48.066387,167.970592 L57,184.071663 C56.8814122,183.8704 44.2320487,181.253976 38.3817181,185.238991 C33.3219727,188.700721 29.4085759,194.175086 28.7365784,199.971471 L28.064581,203.996739 C28.064581,203.996739 20.2377873,204.318761 17.7079146,198.562628 C15.1780419,192.806494 12.2133473,190.753608 12.2133473,190.753608 C12.2133473,190.753608 11.4227621,181.978524 12.8853448,179.804879 C14.3083982,177.671487 13.9131056,168.010844 13.9131056,168.010844 Z" fill="{{ ($ekspertiz['sol_arka_camurluk'] ?? 'ORIJINAL') === 'BOYALI' ? '#fbbf24' : (($ekspertiz['sol_arka_camurluk'] ?? 'ORIJINAL') === 'DEGISMIS' ? '#dc2626' : '#FFFFFF') }}" class="car-part" transform="translate(34.500000, 182.500000) rotate(-90.000000) translate(-34.500000, -182.500000)"></path>
+                                        <path d="M14.5326799,52 L57.1956592,45.0528587 C57.1956592,45.0528587 69.2385483,41.6170442 70.4922245,38.3700108 C71.7459006,35.1229773 72.3917338,32.9708738 71.7459006,30.592233 C71.1000675,28.2135922 69.4664894,22.5124056 69.4664894,22.5124056 C69.4664894,22.5124056 72.1258025,17.7551241 68.972617,17.7551241 C65.8194316,17.7551241 56.1727324,17 56.1727324,17 C56.1727324,17 58.0345528,41.9848751 35.6936697,42.3173455 C15.1854438,42.6225429 15.7176067,20.2847896 15.7176067,20.2847896 L11,20.2847896 C11,20.2847896 15.5968126,38.1434736 11,52 L14.5326799,52 Z" fill="{{ ($ekspertiz['sol_on_camurluk'] ?? 'ORIJINAL') === 'BOYALI' ? '#fbbf24' : (($ekspertiz['sol_on_camurluk'] ?? 'ORIJINAL') === 'DEGISMIS' ? '#dc2626' : '#FFFFFF') }}" class="car-part" transform="translate(41.500000, 34.500000) scale(-1, 1) rotate(-90.000000) translate(-41.500000, -34.500000)"></path>
+                                    </g>
+                                    <path d="M83,55 C83,55 94.8944481,86.4 83,122 L125.907825,122 C125.907825,122 142.312584,115.72 140.915585,88.88 C139.518586,62.04 125.907825,55 125.907825,55 L83,55 Z" fill="{{ ($ekspertiz['motor_kaputu'] ?? 'ORIJINAL') === 'BOYALI' ? '#fbbf24' : (($ekspertiz['motor_kaputu'] ?? 'ORIJINAL') === 'DEGISMIS' ? '#dc2626' : '#FFFFFF') }}" stroke="#D3D2D2" class="car-part" transform="translate(112.000000, 88.500000) rotate(-90.000000) translate(-112.000000, -88.500000)"></path>
+                                    <path d="M126,205.023942 L106.684058,205.023942 C106.684058,205.023942 98,204.012393 98,215.139427 C98,226.26646 98,266.161932 98,266.161932 C98,266.161932 99.3797101,273 104.857971,273 C110.336232,273 126,273 126,273 C126,273 119.101449,243.665094 126,205.023942 Z" fill="{{ ($ekspertiz['arka_kaput'] ?? 'ORIJINAL') === 'BOYALI' ? '#fbbf24' : (($ekspertiz['arka_kaput'] ?? 'ORIJINAL') === 'DEGISMIS' ? '#dc2626' : '#FFFFFF') }}" stroke="#D3D2D2" class="car-part" transform="translate(112.000000, 239.000000) rotate(-90.000000) translate(-112.000000, -239.000000)"></path>
+                                    <path d="M87.1085905,151 C87.1085905,151 78.5117927,172.53629 86.188933,200 L136.890047,200 C136.890047,200 143.887441,175.104839 136.890047,151 L87.1085905,151 Z" fill="{{ ($ekspertiz['tavan'] ?? 'ORIJINAL') === 'BOYALI' ? '#fbbf24' : (($ekspertiz['tavan'] ?? 'ORIJINAL') === 'DEGISMIS' ? '#dc2626' : '#FFFFFF') }}" stroke="#D3D2D2" class="car-part" transform="translate(111.500000, 175.500000) rotate(-90.000000) translate(-111.500000, -175.500000)"></path>
+                                    <path d="M126,241.916667 C122.982759,240.678819 119.804598,240 116.545977,240 L103.833333,240 C101.218391,240 99.045977,242.196181 98.9252874,244.991319 C98.362069,258.008681 98,271.585069 98,285.680556 C98,285.760417 98,285.880208 98,286 C98,300.215278 98.3218391,313.911458 98.9252874,327.008681 C99.045977,329.803819 101.218391,332 103.833333,332 L116.545977,332 C119.804598,332 122.982759,331.361111 126,330.083333 L126,241.916667 Z" fill="{{ ($ekspertiz['arka_tampon'] ?? 'ORIJINAL') === 'BOYALI' ? '#fbbf24' : (($ekspertiz['arka_tampon'] ?? 'ORIJINAL') === 'DEGISMIS' ? '#dc2626' : '#FFFFFF') }}" stroke="#D3D2D2" class="car-part" transform="translate(112.000000, 286.000000) rotate(-90.000000) translate(-112.000000, -286.000000)"></path>
+                                    <!-- Dekoratif parçalar -->
+                                    <path d="M90.9813007,21.7212413 C90.9813007,21.7212413 91.0226055,16.000759 88.7921464,13.000506 C86.5616874,10.000253 78.3420328,7 78.3420328,7 C78.3420328,7 75.9463545,24.2814572 83.8355708,28.9218485 C91.724787,33.5622398 90.9813007,21.7212413 90.9813007,21.7212413 Z" fill="#D3D2D2" transform="translate(84.500000, 18.500000) rotate(-90.000000) translate(-84.500000, -18.500000)"></path>
+                                    <path d="M149.981301,15.2787587 C149.981301,15.2787587 150.022605,20.999241 147.792146,23.999494 C145.561687,26.999747 137.342033,30 137.342033,30 C137.342033,30 134.946355,12.7185428 142.835571,8.0781515 C150.724787,3.43776021 149.981301,15.2787587 149.981301,15.2787587 Z" fill="#D3D2D2" transform="translate(143.500000, 18.500000) rotate(-90.000000) translate(-143.500000, -18.500000)"></path>
+                                </g>
+                            </g>
+                        </g>
+                    </svg>
+                </div>
+
+                <!-- Legend -->
+                <div class="flex gap-6 mt-4 text-sm">
+                    <span class="flex items-center gap-2">
+                        <span class="w-4 h-4 rounded bg-yellow-400"></span>
+                        Boyalı
+                    </span>
+                    <span class="flex items-center gap-2">
+                        <span class="w-4 h-4 rounded bg-red-600"></span>
+                        Değişmiş
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
 </div>
 @endsection

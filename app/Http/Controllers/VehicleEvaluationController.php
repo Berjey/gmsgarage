@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\EvaluationRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
 
 class VehicleEvaluationController extends Controller
 {
@@ -156,76 +158,242 @@ class VehicleEvaluationController extends Controller
     }
     
     /**
+     * Proxy for arabam.com price offer API - Get brands
+     */
+    public function getArabamBrands()
+    {
+        // Cache for 24 hours
+        $brands = Cache::remember('arabam_brands', 60 * 60 * 24, function () {
+            try {
+                $response = Http::timeout(10)
+                    ->withHeaders([
+                        'Accept' => 'application/json',
+                        'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
+                    ])
+                    ->get('https://www.arabam.com/PriceOffer/step-definition', [
+                        'CurrentStep' => 'null'
+                    ]);
+
+                if ($response->successful()) {
+                    $data = $response->json();
+                    if (isset($data['Data']['Items'])) {
+                        return $data['Data'];
+                    }
+                }
+                return null;
+            } catch (\Exception $e) {
+                \Log::error('Arabam API error: ' . $e->getMessage());
+                return null;
+            }
+        });
+
+        if ($brands) {
+            return response()->json([
+                'success' => true,
+                'data' => $brands
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Markalar yüklenemedi'
+        ]);
+    }
+
+    /**
+     * Proxy for arabam.com price offer API - Get next step data
+     */
+    public function getArabamStepData(Request $request)
+    {
+        $step = $request->get('step');
+        $brandId = $request->get('brandId');
+        $modelId = $request->get('modelId');
+        $yearId = $request->get('yearId');
+        $modelYear = $request->get('modelYear');
+        $modelGroupId = $request->get('modelGroupId');
+        $bodyTypeId = $request->get('bodyTypeId');
+        $fuelTypeId = $request->get('fuelTypeId');
+        $transmissionTypeId = $request->get('transmissionTypeId');
+        $versionId = $request->get('versionId');
+
+        $cacheKey = 'arabam_step_' . md5(json_encode($request->all()));
+
+        // Cache for 1 hour
+        $data = Cache::remember($cacheKey, 60 * 60, function () use ($step, $brandId, $modelId, $yearId, $modelYear, $modelGroupId, $bodyTypeId, $fuelTypeId, $transmissionTypeId, $versionId) {
+            try {
+                $params = ['CurrentStep' => $step];
+
+                if ($brandId) $params['BrandId'] = $brandId;
+                if ($modelId) $params['ModelId'] = $modelId;
+                if ($yearId) $params['YearId'] = $yearId;
+                if ($modelYear) $params['ModelYear'] = $modelYear;
+                if ($modelGroupId) $params['ModelGroupId'] = $modelGroupId;
+                if ($bodyTypeId) $params['BodyTypeId'] = $bodyTypeId;
+                if ($fuelTypeId) $params['FuelTypeId'] = $fuelTypeId;
+                if ($transmissionTypeId) $params['TransmissionTypeId'] = $transmissionTypeId;
+                if ($versionId) $params['VersionId'] = $versionId;
+
+                $response = Http::timeout(10)
+                    ->withHeaders([
+                        'Accept' => 'application/json',
+                        'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
+                    ])
+                    ->get('https://www.arabam.com/PriceOffer/step-definition', $params);
+
+                if ($response->successful()) {
+                    $data = $response->json();
+                    if (isset($data['Data'])) {
+                        return $data['Data'];
+                    }
+                }
+                return null;
+            } catch (\Exception $e) {
+                \Log::error('Arabam API error: ' . $e->getMessage());
+                return null;
+            }
+        });
+
+        if ($data) {
+            return response()->json([
+                'success' => true,
+                'data' => $data
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Veri yüklenemedi'
+        ]);
+    }
+
+    /**
      * Submit evaluation form
      */
     public function submit(Request $request)
     {
-        $request->validate([
-            'tip' => 'required|in:AUTO,SUV,TICARI,MOTOSIKLET',
-            'yil' => 'required|integer|min:1990|max:' . (date('Y') + 1),
-            'marka' => 'required|string|max:255',
-            'model' => 'required|string|max:255',
-            'gövde_tipi' => 'nullable|string|max:255',
-            'gövde_tipi_manual' => 'nullable|string|max:255',
-            'yakıt_tipi_manual' => 'nullable|string|max:255',
-            'vites_tipi_manual' => 'nullable|string|max:255',
-            'model_tipi_manual' => 'nullable|string|max:255',
-            'yakıt_tipi' => 'nullable|in:BENZIN,DIZEL,HIBRIT,ELEKTRIK',
-            'vites_tipi' => 'nullable|in:MANUEL,OTOMATIK,YARI_OTOMATIK',
-            'model_tipi' => 'nullable|string|max:255',
-            'donanım_paketi' => 'nullable|string|max:255',
-            'kilometre' => 'required|integer|min:0|max:9999999',
-            'renk' => 'nullable|string|max:255',
-            'tramer' => 'required|in:YOK,VAR',
-            'tramer_tutarı' => 'nullable|required_if:tramer,VAR|numeric|min:0',
-            'ekspertiz' => 'nullable|array',
-            'ad' => 'required|string|max:255',
-            'soyad' => 'required|string|max:255',
-            'telefon' => 'required|string|max:20',
-            'email' => 'required|email|max:255',
-            'şehir' => 'required|string|max:255',
-            'kvkk_onay' => 'required|accepted',
-            'kampanya_izin' => 'nullable|boolean',
-        ], [
-            'model.required' => 'Model alanı zorunludur.',
-            'kilometre.required' => 'Kilometre alanı zorunludur.',
-            'tramer.required' => 'Tramer bilgisi zorunludur.',
-            'tramer_tutarı.required_if' => 'Tramer tutarı zorunludur.',
-            'ad.required' => 'Ad alanı zorunludur.',
-            'soyad.required' => 'Soyad alanı zorunludur.',
-            'telefon.required' => 'Telefon alanı zorunludur.',
-            'email.required' => 'E-posta alanı zorunludur.',
-            'email.email' => 'Geçerli bir e-posta adresi girin.',
-            'şehir.required' => 'Şehir alanı zorunludur.',
-            'kvkk_onay.required' => 'KVKK onayı zorunludur.',
-        ]);
-        
-        // Save to database
-        EvaluationRequest::create([
-            'name' => $request->ad . ' ' . $request->soyad,
-            'email' => $request->email,
-            'phone' => $request->telefon,
-            'brand' => $request->marka,
-            'model' => $request->model,
-            'year' => $request->yil,
-            'version' => $request->model_tipi ?? $request->model_tipi_manual,
-            'mileage' => $request->kilometre,
-            'fuel_type' => $request->yakıt_tipi ?? $request->yakıt_tipi_manual,
-            'transmission' => $request->vites_tipi ?? $request->vites_tipi_manual,
-            'condition' => $request->tramer === 'VAR' ? 'Hasarlı' : 'Hasarsız',
-            'message' => json_encode([
-                'tip' => $request->tip,
-                'renk' => $request->renk,
-                'tramer_tutari' => $request->tramer_tutarı,
-                'ekspertiz' => $request->ekspertiz,
-                'sehir' => $request->şehir,
-            ]),
-        ]);
-        
-        return response()->json([
-            'success' => true,
-            'message' => 'Talebiniz başarıyla gönderildi. En kısa sürede dönüş yapacağız.'
-        ]);
+        try {
+            // Log incoming request data
+            \Log::info('Evaluation form submission started', [
+                'all_data' => $request->all(),
+                'method' => $request->method(),
+                'ajax' => $request->ajax(),
+            ]);
+
+            $request->validate([
+                'marka' => 'required|string|max:255',
+                'yil' => 'required',
+                'model' => 'required|string|max:255',
+                'govde_tipi' => 'nullable|string|max:255',
+                'yakit_tipi' => 'nullable|string|max:255',
+                'vites_tipi' => 'nullable|string|max:255',
+                'versiyon' => 'nullable|string|max:255',
+                'kilometre' => 'required|string|max:50',
+                'renk' => 'nullable|string|max:255',
+                'tramer' => 'required|in:YOK,VAR,BILMIYORUM,AGIR_HASAR',
+                'tramer_tutari' => 'nullable|string|max:50',
+                'ekspertiz' => 'nullable|string',
+                'ad' => 'required|string|max:255',
+                'soyad' => 'required|string|max:255',
+                'telefon' => 'required|string|max:20',
+                'email' => 'required|email|max:255',
+                'sehir' => 'required|string|max:255',
+                'not' => 'nullable|string|max:1000',
+                'kvkk_onay' => 'required|accepted',
+            ], [
+                'marka.required' => 'Marka alanı zorunludur.',
+                'model.required' => 'Model alanı zorunludur.',
+                'kilometre.required' => 'Kilometre alanı zorunludur.',
+                'tramer.required' => 'Tramer bilgisi zorunludur.',
+                'ad.required' => 'Ad alanı zorunludur.',
+                'soyad.required' => 'Soyad alanı zorunludur.',
+                'telefon.required' => 'Telefon alanı zorunludur.',
+                'email.required' => 'E-posta alanı zorunludur.',
+                'email.email' => 'Geçerli bir e-posta adresi girin.',
+                'sehir.required' => 'Şehir alanı zorunludur.',
+                'kvkk_onay.required' => 'KVKK onayı zorunludur.',
+            ]);
+
+            \Log::info('Validation passed');
+
+            // Parse kilometre (remove dots)
+            $kilometre = (int) str_replace('.', '', $request->kilometre);
+
+            // Parse tramer tutari (remove dots)
+            $tramerTutari = $request->tramer_tutari ? (int) str_replace('.', '', $request->tramer_tutari) : null;
+
+            // Parse ekspertiz JSON
+            $ekspertiz = $request->ekspertiz ? json_decode($request->ekspertiz, true) : [];
+
+            // Determine condition based on tramer
+            $condition = match($request->tramer) {
+                'VAR' => 'Tramer Kayıtlı',
+                'AGIR_HASAR' => 'Ağır Hasar Kayıtlı',
+                'BILMIYORUM' => 'Bilinmiyor',
+                default => 'Hasarsız',
+            };
+
+            \Log::info('Data parsed', [
+                'kilometre' => $kilometre,
+                'tramerTutari' => $tramerTutari,
+                'ekspertiz' => $ekspertiz,
+                'condition' => $condition,
+            ]);
+
+            // Save to database
+            $evaluationRequest = EvaluationRequest::create([
+                'name' => $request->ad . ' ' . $request->soyad,
+                'email' => $request->email,
+                'phone' => $request->telefon,
+                'brand' => $request->marka,
+                'model' => $request->model,
+                'year' => $request->yil,
+                'version' => $request->versiyon,
+                'mileage' => $kilometre,
+                'fuel_type' => $request->yakit_tipi,
+                'transmission' => $request->vites_tipi,
+                'condition' => $condition,
+                'message' => json_encode([
+                    'govde_tipi' => $request->govde_tipi,
+                    'renk' => $request->renk,
+                    'tramer' => $request->tramer,
+                    'tramer_tutari' => $tramerTutari,
+                    'ekspertiz' => $ekspertiz,
+                    'sehir' => $request->sehir,
+                    'not' => $request->not,
+                ], JSON_UNESCAPED_UNICODE),
+            ]);
+
+            \Log::info('Evaluation request saved', ['id' => $evaluationRequest->id]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Talebiniz başarıyla gönderildi. En kısa sürede sizinle iletişime geçeceğiz.'
+            ]);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            \Log::error('Validation failed', [
+                'errors' => $e->errors(),
+                'input' => $request->all()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Doğrulama hatası: ' . implode(', ', collect($e->errors())->flatten()->toArray())
+            ], 422);
+
+        } catch (\Exception $e) {
+            \Log::error('Evaluation form submission error', [
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Bir hata oluştu: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
 }

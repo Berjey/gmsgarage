@@ -5,1435 +5,1439 @@
 
 @push('styles')
 <style>
-    .wizard-container {
-        max-width: 1200px;
+    .eval-container {
+        max-width: 900px;
         margin: 0 auto;
         padding: 2rem 1rem;
     }
-    
-    .wizard-step {
-        display: none;
+
+    .eval-card {
         background: white;
         border-radius: 12px;
         padding: 2rem;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
-    
-    @media (prefers-color-scheme: dark) {
-        .wizard-step {
-            background: #252525;
-        }
-    }
-    
-    .dark .wizard-step {
+
+    .dark .eval-card {
         background: #252525;
     }
-    
-    .wizard-step.active {
+
+    .form-label {
         display: block;
+        font-size: 12px;
+        font-weight: 500;
+        color: #6b7280;
+        margin-bottom: 6px;
     }
-    
-    .wizard-step h2 {
-        color: #111827;
-    }
-    
-    @media (prefers-color-scheme: dark) {
-        .wizard-step h2 {
-            color: #f3f4f6;
-        }
-    }
-    
-    .dark .wizard-step h2 {
-        color: #f3f4f6;
-    }
-    
-    .form-group {
-        margin-bottom: 1.5rem;
-    }
-    
-    .form-group label {
-        display: block;
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-        color: #374151;
-    }
-    
-    @media (prefers-color-scheme: dark) {
-        .form-group label {
-            color: #e5e7eb;
-        }
-    }
-    
-    .dark .form-group label {
-        color: #e5e7eb;
-    }
-    
-    .form-group select,
-    .form-group input[type="text"],
-    .form-group input[type="number"],
-    .form-group input[type="email"],
-    .form-group input[type="tel"] {
-        width: 100%;
-        padding: 0.75rem;
-        border: 2px solid #e5e7eb;
-        border-radius: 8px;
-        font-size: 1rem;
-        background: white;
-        color: #111827;
-        font-weight: 600;
-    }
-    
-    @media (prefers-color-scheme: dark) {
-        .form-group select,
-        .form-group input[type="text"],
-        .form-group input[type="number"],
-        .form-group input[type="email"],
-        .form-group input[type="tel"] {
-            border-color: #4b5563;
-            background: #2a2a2a;
-            color: #e5e7eb;
-        }
-        
-        .form-group select::placeholder,
-        .form-group input::placeholder {
-            color: #9ca3af;
-        }
-    }
-    
-    .dark .form-group select,
-    .dark .form-group input[type="text"],
-    .dark .form-group input[type="number"],
-    .dark .form-group input[type="email"],
-    .dark .form-group input[type="tel"] {
-        border-color: #4b5563;
-        background: #2a2a2a;
-        color: #e5e7eb;
-    }
-    
-    .dark .form-group select::placeholder,
-    .dark .form-group input::placeholder {
+
+    .dark .form-label {
         color: #9ca3af;
     }
-    
-    .form-group select:focus,
-    .form-group input:focus {
+
+    .form-select, .form-input {
+        width: 100%;
+        padding: 10px 14px;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        font-size: 14px;
+        background: white;
+        color: #111827;
+        transition: border-color 0.2s;
+    }
+
+    .form-select:focus, .form-input:focus {
         outline: none;
         border-color: #dc2626;
     }
-    
-    .form-row {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 1.5rem;
-    }
-    
-    .wizard-buttons {
+
+    .wizard-step { display: none; }
+    .wizard-step.active { display: block; }
+
+    .step-dots {
         display: flex;
-        justify-content: space-between;
-        margin-top: 2rem;
-        padding-top: 2rem;
-        border-top: 1px solid #e5e7eb;
+        justify-content: center;
+        gap: 8px;
+        margin-bottom: 1.5rem;
     }
-    
-    @media (prefers-color-scheme: dark) {
-        .wizard-buttons {
-            border-top-color: #4b5563;
-        }
+    .step-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #d1d5db;
     }
-    
-    .dark .wizard-buttons {
-        border-top-color: #4b5563;
-    }
-    
-    .btn-wizard {
-        padding: 0.75rem 2rem;
-        border-radius: 8px;
-        font-weight: 600;
-        cursor: pointer;
-        border: none;
-        transition: all 0.2s;
-    }
-    
-    .btn-wizard-primary {
-        background: #dc2626;
-        color: white;
-    }
-    
-    .btn-wizard-primary:hover {
-        background: #b91c1c;
-    }
-    
-    .btn-wizard-secondary {
+    .step-dot.active { background: #dc2626; }
+    .dark .step-dot { background: #4b5563; }
+    .dark .step-dot.active { background: #dc2626; }
+
+    .btn-back {
+        width: 100%;
+        padding: 12px 24px;
         background: #f3f4f6;
         color: #374151;
+        font-weight: 600;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
     }
-    
-    @media (prefers-color-scheme: dark) {
-        .btn-wizard-secondary {
-            background: #374151;
-            color: #e5e7eb;
+    .btn-back:hover { background: #e5e7eb; }
+    .dark .btn-back { background: #374151; color: #e5e7eb; }
+
+    .buttons-row { display: flex; gap: 1rem; }
+    .buttons-row > * { flex: 1; }
+
+    /* Ekspertiz Layout */
+    .ekspertiz-layout {
+        display: grid;
+        grid-template-columns: 1fr 350px;
+        gap: 2rem;
+        margin-bottom: 1.5rem;
+        align-items: start;
+    }
+    @media (max-width: 640px) {
+        .ekspertiz-layout {
+            grid-template-columns: 1fr;
         }
-        
-        .btn-wizard-secondary:hover {
-            background: #4b5563;
+        .ekspertiz-car-wrapper {
+            order: -1;
         }
     }
-    
-    .dark .btn-wizard-secondary {
-        background: #374151;
-        color: #e5e7eb;
-    }
-    
-    .dark .btn-wizard-secondary:hover {
-        background: #4b5563;
-    }
-    
-    .btn-wizard-secondary:hover {
-        background: #e5e7eb;
-    }
-    
-    .btn-wizard:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-    }
-    
-    .inspection-table-container {
+
+    .ekspertiz-table-wrapper {
         overflow-x: auto;
-        margin-bottom: 2rem;
     }
-    
-    .inspection-table {
+
+    .damage-table {
         width: 100%;
         border-collapse: collapse;
-        margin-top: 1rem;
-        font-size: 0.875rem;
+        font-size: 13px;
     }
-    
-    .inspection-table th,
-    .inspection-table td {
-        padding: 0.5rem;
+    .damage-table th, .damage-table td {
+        padding: 8px 6px;
         border: 1px solid #e5e7eb;
         text-align: center;
-        color: #111827;
     }
-    
-    @media (prefers-color-scheme: dark) {
-        .inspection-table th,
-        .inspection-table td {
-            border-color: #4b5563;
-            color: #e5e7eb;
-        }
-    }
-    
-    .dark .inspection-table th,
-    .dark .inspection-table td {
-        border-color: #4b5563;
-        color: #e5e7eb;
-    }
-    
-    .inspection-table th {
+    .damage-table th {
         background: #f9fafb;
         font-weight: 600;
+        font-size: 11px;
+        color: #6b7280;
     }
-    
-    @media (prefers-color-scheme: dark) {
-        .inspection-table th {
-            background: #374151;
-        }
-    }
-    
-    .dark .inspection-table th {
-        background: #374151;
-    }
-    
-    .inspection-table tbody tr:hover {
-        background: #f9fafb;
-    }
-    
-    @media (prefers-color-scheme: dark) {
-        .inspection-table tbody tr:hover {
-            background: #374151;
-        }
-    }
-    
-    .dark .inspection-table tbody tr:hover {
-        background: #374151;
-    }
-    
-    .inspection-table tbody tr.highlight {
-        background: #fef3c7;
-        transition: background 0.2s;
-    }
-    
-    @media (prefers-color-scheme: dark) {
-        .inspection-table tbody tr.highlight {
-            background: #78350f;
-        }
-    }
-    
-    .dark .inspection-table tbody tr.highlight {
-        background: #78350f;
-    }
-    
-    
-    .btn-reset-all {
-        padding: 0.5rem 1rem;
-        background: #f3f4f6;
-        border: 1px solid #e5e7eb;
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 0.875rem;
-        transition: all 0.2s;
+    .damage-table td:first-child {
+        text-align: left;
+        font-weight: 500;
+        padding-left: 10px;
         color: #374151;
     }
-    
-    @media (prefers-color-scheme: dark) {
-        .btn-reset-all {
-            background: #374151;
-            border-color: #4b5563;
-            color: #e5e7eb;
-        }
-        
-        .btn-reset-all:hover {
-            background: #4b5563;
-        }
+    .damage-table tbody tr {
+        transition: background 0.15s ease;
+        cursor: pointer;
     }
-    
-    .dark .btn-reset-all {
-        background: #374151;
-        border-color: #4b5563;
-        color: #e5e7eb;
+    .damage-table tbody tr:hover {
+        background: #f3f4f6;
     }
-    
-    .dark .btn-reset-all:hover {
-        background: #4b5563;
+    .dark .damage-table th, .dark .damage-table td { border-color: #4b5563; }
+    .dark .damage-table th { background: #374151; color: #9ca3af; }
+    .dark .damage-table td { color: #e5e7eb; }
+    .dark .damage-table td:first-child { color: #e5e7eb; }
+    .dark .damage-table tbody tr:hover { background: #374151; }
+
+    .ekspertiz-checkbox {
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+        accent-color: #3b82f6;
     }
-    
-    .btn-reset-all:hover {
-        background: #e5e7eb;
-    }
-    
-    .radio-group {
+
+    /* Car Diagram */
+    .ekspertiz-car-wrapper {
         display: flex;
-        gap: 1rem;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        padding-top: 1rem;
     }
-    
-    .radio-group label {
+    .car-diagram {
+        width: 100%;
+        max-width: 320px;
+    }
+    .car-diagram svg {
+        width: 100%;
+        height: auto;
+    }
+    .car-part {
+        transition: fill 0.2s ease;
+        cursor: pointer;
+    }
+    .car-part:hover {
+        opacity: 0.8;
+    }
+
+    /* Tooltip */
+    .car-tooltip {
+        position: absolute;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        padding: 12px;
+        z-index: 1000;
+        min-width: 140px;
+        display: none;
+    }
+    .dark .car-tooltip {
+        background: #2a2a2a;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    }
+    .car-tooltip.active {
+        display: block;
+    }
+    .car-tooltip-title {
+        font-weight: 600;
+        font-size: 13px;
+        color: #111827;
+        margin-bottom: 10px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+    .dark .car-tooltip-title {
+        color: #f3f4f6;
+        border-color: #4b5563;
+    }
+    .car-tooltip-option {
         display: flex;
         align-items: center;
-        gap: 0.5rem;
-        font-weight: normal;
+        gap: 8px;
+        padding: 6px 0;
         cursor: pointer;
+        font-size: 13px;
         color: #374151;
+        transition: color 0.15s;
     }
-    
-    @media (prefers-color-scheme: dark) {
-        .radio-group label {
-            color: #e5e7eb;
-        }
+    .dark .car-tooltip-option {
+        color: #d1d5db;
     }
-    
-    .dark .radio-group label {
-        color: #e5e7eb;
-    }
-    
-    /* Dropdown trigger dark mode styles */
-    .wizard-step .hero-custom-dropdown-trigger {
-        background: white;
-        border-color: #d1d5db;
+    .car-tooltip-option:hover {
         color: #111827;
-        font-weight: 600;
     }
-    
-    @media (prefers-color-scheme: dark) {
-        .wizard-step .hero-custom-dropdown-trigger {
-            background: #2a2a2a;
-            border-color: #4b5563;
-            color: #e5e7eb;
-        }
-        
-        .wizard-step .hero-custom-dropdown-trigger .selected-text.placeholder {
-            color: #9ca3af;
-        }
-        
-        .wizard-step .hero-custom-dropdown-trigger .arrow {
-            color: #9ca3af;
+    .dark .car-tooltip-option:hover {
+        color: #fff;
+    }
+    .car-tooltip-dot {
+        width: 16px;
+        height: 16px;
+        border-radius: 3px;
+        border: 2px solid #d1d5db;
+        flex-shrink: 0;
+    }
+    .car-tooltip-dot.dot-orijinal {
+        background: #fff;
+        border-color: #d1d5db;
+    }
+    .car-tooltip-dot.dot-boyali {
+        background: #fbbf24;
+        border-color: #fbbf24;
+    }
+    .car-tooltip-dot.dot-degismis {
+        background: #dc2626;
+        border-color: #dc2626;
+    }
+    .car-tooltip-option.selected .car-tooltip-dot {
+        box-shadow: 0 0 0 2px #3b82f6;
+    }
+    .car-legend {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1rem;
+        font-size: 12px;
+        color: #6b7280;
+    }
+    .dark .car-legend { color: #9ca3af; }
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+    .legend-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+    }
+    .legend-boyali { background: #fbbf24; }
+    .legend-degismis { background: #dc2626; }
+
+    /* Tramer Row */
+    .tramer-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #e5e7eb;
+    }
+    .dark .tramer-row { border-color: #4b5563; }
+    @media (max-width: 480px) {
+        .tramer-row {
+            grid-template-columns: 1fr;
         }
     }
-    
-    .dark .wizard-step .hero-custom-dropdown-trigger {
+
+    .tutar-input-wrapper {
+        position: relative;
+    }
+    .tutar-input-wrapper .form-input {
+        padding-right: 40px;
+    }
+    .tutar-suffix {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #9ca3af;
+        font-size: 14px;
+    }
+
+    .form-select:disabled, .form-input:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        background: #f3f4f6;
+    }
+
+    .dark .form-select, .dark .form-input {
         background: #2a2a2a;
         border-color: #4b5563;
         color: #e5e7eb;
     }
-    
-    .dark .wizard-step .hero-custom-dropdown-trigger .selected-text.placeholder {
-        color: #9ca3af;
+
+    .dark .form-select:disabled, .dark .form-input:disabled {
+        background: #1f2937;
     }
-    
-    .dark .wizard-step .hero-custom-dropdown-trigger .arrow {
-        color: #9ca3af;
-    }
-    
-    .form-group.has-error input,
-    .form-group.has-error select,
-    .form-group.has-error .hero-custom-dropdown-trigger {
-        border-color: #dc2626 !important;
-    }
-    
-    .field-error {
-        color: #dc2626;
-        font-size: 0.875rem;
-        margin-top: 0.25rem;
-        font-weight: 500;
-    }
-    
-    @media (prefers-color-scheme: dark) {
-        .field-error {
-            color: #fca5a5;
-        }
-    }
-    
-    .dark .field-error {
-        color: #fca5a5;
-    }
-    
-    .step-error-summary {
-        background: #fee2e2;
-        border: 2px solid #dc2626;
-        color: #991b1b;
-        padding: 1rem;
-        border-radius: 8px;
-        margin-bottom: 1.5rem;
+
+    .btn-submit {
+        width: 100%;
+        padding: 12px 24px;
+        background: #dc2626;
+        color: white;
         font-weight: 600;
-    }
-    
-    @media (prefers-color-scheme: dark) {
-        .step-error-summary {
-            background: #7f1d1d;
-            border-color: #dc2626;
-            color: #fca5a5;
-        }
-    }
-    
-    .dark .step-error-summary {
-        background: #7f1d1d;
-        border-color: #dc2626;
-        color: #fca5a5;
-    }
-    
-    /* Checkbox and Radio Button Labels */
-    .form-group label input[type="checkbox"],
-    .form-group label input[type="radio"] {
+        border: none;
+        border-radius: 8px;
         cursor: pointer;
-        margin-right: 0.5rem;
+        transition: background 0.2s;
     }
-    
-    .form-group label span {
-        color: #374151;
+
+    .btn-submit:hover {
+        background: #b91c1c;
     }
-    
-    @media (prefers-color-scheme: dark) {
-        .form-group label span {
-            color: #e5e7eb;
-        }
-    }
-    
-    .dark .form-group label span {
-        color: #e5e7eb;
+
+    .btn-submit:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
     }
 </style>
 @endpush
 
 @section('content')
-<section class="bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 text-white py-12">
+<section class="bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 text-white py-8">
     <div class="container-custom">
-        <h1 class="text-3xl md:text-4xl font-bold mb-2">Aracınızı Değerleyin</h1>
-        <p class="text-lg text-primary-100">Birkaç basit adımda aracınızın değerini öğrenin</p>
+        <h1 class="text-2xl md:text-3xl font-bold mb-1">Aracınızı Değerleyin</h1>
+        <p class="text-primary-100">Araç bilgilerinizi girin</p>
     </div>
 </section>
 
-<div class="wizard-container">
-    <form id="evaluation-form" method="POST" action="{{ route('evaluation.submit') }}">
-        @csrf
-        
-        <!-- Step 1: Temel Bilgiler -->
-        <div class="wizard-step active" id="step-1">
-            <h2 class="text-2xl font-bold mb-6">Araç Temel Bilgiler</h2>
-            
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Araç Tipi *</label>
-                    <div class="hero-custom-dropdown" data-dropdown="vehicle-type-wizard">
-                        <button type="button" class="hero-custom-dropdown-trigger border-2 border-gray-300" data-value="{{ $selectedTip ?? '' }}">
-                            <span class="selected-text {{ $selectedTip ? '' : 'placeholder' }}">
-                                @if($selectedTip && isset($vehicleTypes[$selectedTip]))
-                                    {{ $vehicleTypes[$selectedTip] }}
-                                @else
-                                    Seçiniz
-                                @endif
-                            </span>
-                            <svg class="arrow w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </button>
-                        <div class="hero-custom-dropdown-panel">
-                            <div class="hero-custom-dropdown-option" data-value="">Seçiniz</div>
-                            @foreach($vehicleTypes as $key => $label)
-                                <div class="hero-custom-dropdown-option {{ ($selectedTip ?? '') === $key ? 'selected' : '' }}" data-value="{{ $key }}">{{ $label }}</div>
-                            @endforeach
-                        </div>
-                        <select name="tip" required class="hero-custom-dropdown-native">
-                            <option value="">Seçiniz</option>
-                            @foreach($vehicleTypes as $key => $label)
-                                <option value="{{ $key }}" {{ ($selectedTip ?? '') === $key ? 'selected' : '' }}>{{ $label }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label>Model Yılı *</label>
-                    <div class="hero-custom-dropdown" data-dropdown="year-wizard">
-                        <button type="button" class="hero-custom-dropdown-trigger border-2 border-gray-300" data-value="{{ $selectedYil ?? '' }}">
-                            <span class="selected-text {{ $selectedYil ? '' : 'placeholder' }}">{{ $selectedYil ?? 'Yıl seçin' }}</span>
-                            <svg class="arrow w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </button>
-                        <div class="hero-custom-dropdown-panel">
-                            <div class="hero-custom-dropdown-option" data-value="">Yıl seçin</div>
-                            @for($year = date('Y') + 1; $year >= 1990; $year--)
-                                <div class="hero-custom-dropdown-option {{ ($selectedYil ?? '') == $year ? 'selected' : '' }}" data-value="{{ $year }}">{{ $year }}</div>
-                            @endfor
-                        </div>
-                        <select name="yil" required class="hero-custom-dropdown-native">
-                            <option value="">Yıl seçin</option>
-                            @for($year = date('Y') + 1; $year >= 1990; $year--)
-                                <option value="{{ $year }}" {{ ($selectedYil ?? '') == $year ? 'selected' : '' }}>{{ $year }}</option>
-                            @endfor
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label>Marka *</label>
-                    <div class="hero-custom-dropdown" data-dropdown="brand-wizard">
-                        <button type="button" class="hero-custom-dropdown-trigger border-2 border-gray-300" data-value="{{ $selectedMarka ?? '' }}">
-                            <span class="selected-text {{ $selectedMarka ? '' : 'placeholder' }}">{{ $selectedMarka ?? 'Seçiniz' }}</span>
-                            <svg class="arrow w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </button>
-                        <div class="hero-custom-dropdown-panel">
-                            <div class="hero-custom-dropdown-option" data-value="">Seçiniz</div>
-                            @foreach(\App\Data\CarBrands::all() as $brand)
-                                <div class="hero-custom-dropdown-option {{ ($selectedMarka ?? '') === $brand ? 'selected' : '' }}" data-value="{{ $brand }}">{{ $brand }}</div>
-                            @endforeach
-                        </div>
-                        <select name="marka" required class="hero-custom-dropdown-native">
-                            <option value="">Seçiniz</option>
-                            @foreach(\App\Data\CarBrands::all() as $brand)
-                                <option value="{{ $brand }}" {{ ($selectedMarka ?? '') === $brand ? 'selected' : '' }}>{{ $brand }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label>Model *</label>
-                    <input type="text" name="model" required placeholder="Model giriniz">
-                </div>
-                
-                <div class="form-group">
-                    <label>Gövde Tipi *</label>
-                    <div class="hero-custom-dropdown" data-dropdown="body-type-wizard">
-                        <button type="button" class="hero-custom-dropdown-trigger border-2 border-gray-300" data-value="">
-                            <span class="selected-text placeholder">Seçiniz</span>
-                            <svg class="arrow w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </button>
-                        <div class="hero-custom-dropdown-panel">
-                            <div class="hero-custom-dropdown-option" data-value="">Seçiniz</div>
-                            <div class="hero-custom-dropdown-option" data-value="SEDAN">Sedan</div>
-                            <div class="hero-custom-dropdown-option" data-value="HATCHBACK">Hatchback</div>
-                            <div class="hero-custom-dropdown-option" data-value="STATION_WAGON">Station Wagon</div>
-                            <div class="hero-custom-dropdown-option" data-value="COUPE">Coupe</div>
-                            <div class="hero-custom-dropdown-option" data-value="CABRIO">Cabrio</div>
-                            <div class="hero-custom-dropdown-option" data-value="SUV">SUV</div>
-                            <div class="hero-custom-dropdown-option" data-value="PICKUP">Pickup</div>
-                            <div class="hero-custom-dropdown-option" data-value="MPV">MPV</div>
-                        </div>
-                        <select name="gövde_tipi" required class="hero-custom-dropdown-native">
-                            <option value="">Seçiniz</option>
-                            <option value="SEDAN">Sedan</option>
-                            <option value="HATCHBACK">Hatchback</option>
-                            <option value="STATION_WAGON">Station Wagon</option>
-                            <option value="COUPE">Coupe</option>
-                            <option value="CABRIO">Cabrio</option>
-                            <option value="SUV">SUV</option>
-                            <option value="PICKUP">Pickup</option>
-                            <option value="MPV">MPV</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label>Yakıt Tipi *</label>
-                    <div class="hero-custom-dropdown" data-dropdown="fuel-type-wizard">
-                        <button type="button" class="hero-custom-dropdown-trigger border-2 border-gray-300" data-value="">
-                            <span class="selected-text placeholder">Seçiniz</span>
-                            <svg class="arrow w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </button>
-                        <div class="hero-custom-dropdown-panel">
-                            <div class="hero-custom-dropdown-option" data-value="">Seçiniz</div>
-                            @foreach($fuelTypes as $key => $label)
-                                <div class="hero-custom-dropdown-option" data-value="{{ $key }}">{{ $label }}</div>
-                            @endforeach
-                        </div>
-                        <select name="yakıt_tipi" required class="hero-custom-dropdown-native">
-                            <option value="">Seçiniz</option>
-                            @foreach($fuelTypes as $key => $label)
-                                <option value="{{ $key }}">{{ $label }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label>Vites Tipi *</label>
-                    <div class="hero-custom-dropdown" data-dropdown="transmission-wizard">
-                        <button type="button" class="hero-custom-dropdown-trigger border-2 border-gray-300" data-value="">
-                            <span class="selected-text placeholder">Seçiniz</span>
-                            <svg class="arrow w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </button>
-                        <div class="hero-custom-dropdown-panel">
-                            <div class="hero-custom-dropdown-option" data-value="">Seçiniz</div>
-                            @foreach($transmissionTypes as $key => $label)
-                                <div class="hero-custom-dropdown-option" data-value="{{ $key }}">{{ $label }}</div>
-                            @endforeach
-                        </div>
-                        <select name="vites_tipi" required class="hero-custom-dropdown-native">
-                            <option value="">Seçiniz</option>
-                            @foreach($transmissionTypes as $key => $label)
-                                <option value="{{ $key }}">{{ $label }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label>Model Tipi</label>
-                    <input type="text" name="model_tipi" placeholder="Örn: TFSI, TDI">
-                </div>
-            </div>
-            
-            <div class="wizard-buttons">
-                <div></div>
-                <button type="button" class="btn-wizard btn-wizard-primary" onclick="nextStep()">DEVAM</button>
-            </div>
+<div class="eval-container">
+    <div class="eval-card">
+        <!-- Step Dots -->
+        <div class="step-dots">
+            <div class="step-dot active" id="dot-1" onclick="goToStep(1)" style="cursor: pointer;"></div>
+            <div class="step-dot" id="dot-2" onclick="goToStep(2)" style="cursor: pointer;"></div>
+            <div class="step-dot" id="dot-3" style="cursor: pointer;"></div>
         </div>
-        
-        <!-- Step 2: Detaylar -->
-        <div class="wizard-step" id="step-2">
-            <h2 class="text-2xl font-bold mb-6">Detaylar</h2>
-            
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Donanım Paketi</label>
-                    <input type="text" name="donanım_paketi" placeholder="Örn: Comfort, Premium">
+
+        <form id="evaluation-form" method="POST" action="{{ route('evaluation.submit') }}">
+            @csrf
+
+            <!-- STEP 1: Araç Bilgileri -->
+            <div class="wizard-step active" id="step-1">
+
+            <!-- Row 1: Marka | Yıl -->
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label class="form-label">Marka *</label>
+                    <select name="marka" id="marka-select" class="form-select" required>
+                        <option value="">{{ $selectedMarka ?? 'Marka Seçin' }}</option>
+                    </select>
+                    <input type="hidden" name="marka_id" id="marka-id" value="{{ request('marka_id') }}">
                 </div>
-                
-                <div class="form-group">
-                    <label>Kilometre *</label>
-                    <input type="number" name="kilometre" required min="1" placeholder="Kilometre giriniz">
-                </div>
-                
-                <div class="form-group">
-                    <label>Araç Rengi *</label>
-                    <div class="hero-custom-dropdown" data-dropdown="color-wizard">
-                        <button type="button" class="hero-custom-dropdown-trigger border-2 border-gray-300" data-value="">
-                            <span class="selected-text placeholder">Seçiniz</span>
-                            <svg class="arrow w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </button>
-                        <div class="hero-custom-dropdown-panel">
-                            <div class="hero-custom-dropdown-option" data-value="">Seçiniz</div>
-                            <div class="hero-custom-dropdown-option" data-value="Siyah">Siyah</div>
-                            <div class="hero-custom-dropdown-option" data-value="Beyaz">Beyaz</div>
-                            <div class="hero-custom-dropdown-option" data-value="Gri">Gri</div>
-                            <div class="hero-custom-dropdown-option" data-value="Kırmızı">Kırmızı</div>
-                            <div class="hero-custom-dropdown-option" data-value="Mavi">Mavi</div>
-                            <div class="hero-custom-dropdown-option" data-value="Lacivert">Lacivert</div>
-                            <div class="hero-custom-dropdown-option" data-value="Yeşil">Yeşil</div>
-                            <div class="hero-custom-dropdown-option" data-value="Sarı">Sarı</div>
-                            <div class="hero-custom-dropdown-option" data-value="Turuncu">Turuncu</div>
-                            <div class="hero-custom-dropdown-option" data-value="Kahverengi">Kahverengi</div>
-                            <div class="hero-custom-dropdown-option" data-value="Bej">Bej</div>
-                            <div class="hero-custom-dropdown-option" data-value="Bordo">Bordo</div>
-                            <div class="hero-custom-dropdown-option" data-value="DİĞER">DİĞER</div>
-                        </div>
-                        <select name="renk" required class="hero-custom-dropdown-native">
-                            <option value="">Seçiniz</option>
-                            <option value="Siyah">Siyah</option>
-                            <option value="Beyaz">Beyaz</option>
-                            <option value="Gri">Gri</option>
-                            <option value="Kırmızı">Kırmızı</option>
-                            <option value="Mavi">Mavi</option>
-                            <option value="Lacivert">Lacivert</option>
-                            <option value="Yeşil">Yeşil</option>
-                            <option value="Sarı">Sarı</option>
-                            <option value="Turuncu">Turuncu</option>
-                            <option value="Kahverengi">Kahverengi</option>
-                            <option value="Bej">Bej</option>
-                            <option value="Bordo">Bordo</option>
-                            <option value="DİĞER">DİĞER</option>
-                        </select>
-                    </div>
+                <div>
+                    <label class="form-label">Yıl *</label>
+                    <select name="yil" id="yil-select" class="form-select" disabled required>
+                        <option value="">Yıl Seçin</option>
+                    </select>
                 </div>
             </div>
-            
-            <div class="form-group">
-                <label>Tramer Hasar Kaydı *</label>
-                <div class="radio-group">
-                    <label>
-                        <input type="radio" name="tramer" value="YOK" checked required>
-                        <span>Yok</span>
-                    </label>
-                    <label>
-                        <input type="radio" name="tramer" value="VAR" required>
-                        <span>Var</span>
-                    </label>
+
+            <!-- Row 2: Model | Gövde Tipi -->
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label class="form-label">Model *</label>
+                    <select name="model" id="model-select" class="form-select" disabled required>
+                        <option value="">Model Seçin</option>
+                    </select>
+                    <input type="hidden" name="model_id" id="model-id" value="">
                 </div>
-                <div id="tramer-amount" style="display: none; margin-top: 1rem;">
-                    <input type="number" name="tramer_tutarı" placeholder="Tutar (TL)" min="0">
+                <div>
+                    <label class="form-label">Gövde Tipi</label>
+                    <select name="govde_tipi" id="govde-select" class="form-select" disabled>
+                        <option value="">Gövde Tipi Seçin</option>
+                    </select>
+                    <input type="hidden" name="govde_tipi_id" id="govde-id" value="">
                 </div>
             </div>
-            
-            <div class="wizard-buttons">
-                <button type="button" class="btn-wizard btn-wizard-secondary" onclick="prevStep()">GERİ DÖN</button>
-                <button type="button" class="btn-wizard btn-wizard-primary" onclick="nextStep()">DEVAM</button>
+
+            <!-- Row 3: Yakıt Tipi | Vites Tipi -->
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label class="form-label">Yakıt Tipi</label>
+                    <select name="yakit_tipi" id="yakit-select" class="form-select" disabled>
+                        <option value="">Yakıt Tipi Seçin</option>
+                    </select>
+                    <input type="hidden" name="yakit_tipi_id" id="yakit-id" value="">
+                </div>
+                <div>
+                    <label class="form-label">Vites Tipi</label>
+                    <select name="vites_tipi" id="vites-select" class="form-select" disabled>
+                        <option value="">Vites Tipi Seçin</option>
+                    </select>
+                    <input type="hidden" name="vites_tipi_id" id="vites-id" value="">
+                </div>
             </div>
-        </div>
-        
-        <!-- Step 3: Ekspertiz -->
-        <div class="wizard-step" id="step-3">
-            <h2 class="text-2xl font-bold mb-6">Ekspertiz Tanımları</h2>
-            
-            <div class="inspection-table-container">
-                <table class="inspection-table">
-                    <thead>
-                        <tr>
-                            <th>Parça</th>
-                            <th>Orijinal</th>
-                            <th>Lokal Boyalı</th>
-                            <th>Boyalı</th>
-                            <th>Onarım</th>
-                            <th>Değişen</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @php
-                            $parts = [
-                                'Sol Ön Çamurluk' => 'sol_on_camurluk',
-                                'Sol Ön Kapı' => 'sol_on_kapi',
-                                'Sol Arka Çamurluk' => 'sol_arka_camurluk',
-                                'Sol Arka Kapı' => 'sol_arka_kapi',
-                                'Sağ Ön Çamurluk' => 'sag_on_camurluk',
-                                'Sağ Ön Kapı' => 'sag_on_kapi',
-                                'Sağ Arka Çamurluk' => 'sag_arka_camurluk',
-                                'Sağ Arka Kapı' => 'sag_arka_kapi',
-                                'Ön Tampon' => 'on_tampon',
-                                'Kaput' => 'kaput',
-                                'Tavan' => 'tavan',
-                                'Bagaj Havuzu' => 'bagaj_havuzu',
-                                'Bagaj' => 'bagaj',
-                                'Arka Tampon' => 'arka_tampon',
-                                'Ön Panel' => 'on_panel',
-                                'Sağ Şasi' => 'sag_sasi',
-                                'Sol Şasi' => 'sol_sasi'
-                            ];
-                            $statuses = ['ORIJINAL', 'LOKAL_BOYALI', 'BOYALI', 'ONARIM', 'DEGISEN'];
-                        @endphp
-                        @foreach($parts as $partName => $partKey)
-                            <tr data-part="{{ $partKey }}">
-                                <td style="text-align: left; font-weight: 600;">{{ $partName }}</td>
-                                @foreach($statuses as $status)
-                                    <td>
-                                        <input type="radio" 
-                                               name="ekspertiz[{{ $partKey }}]" 
-                                               value="{{ $status }}" 
-                                               data-part="{{ $partKey }}"
-                                               data-status="{{ $status }}"
-                                               {{ $status === 'ORIJINAL' ? 'checked' : '' }}>
-                                    </td>
+
+            <!-- Row 4: Versiyon (full width) -->
+            <div class="mb-4">
+                <label class="form-label">Versiyon</label>
+                <select name="versiyon" id="versiyon-select" class="form-select" disabled>
+                    <option value="">Versiyon Seçin</option>
+                </select>
+                <input type="hidden" name="versiyon_id" id="versiyon-id" value="">
+            </div>
+
+            <!-- Row 5: Kilometre | Renk -->
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <div>
+                    <label class="form-label">Kilometre *</label>
+                    <input type="text" name="kilometre" id="kilometre-input" class="form-input" placeholder="Kilometre giriniz" disabled required>
+                </div>
+                <div>
+                    <label class="form-label">Renk</label>
+                    <select name="renk" id="renk-select" class="form-select" disabled>
+                        <option value="">Renk Seçin</option>
+                    </select>
+                    <input type="hidden" name="renk_id" id="renk-id" value="">
+                </div>
+            </div>
+
+            <!-- Step 1 Button -->
+            <button type="button" class="btn-submit" onclick="goToStep2()">
+                Devam Et
+            </button>
+            </div><!-- End Step 1 -->
+
+            <!-- STEP 2: Hasar Bilgileri -->
+            <div class="wizard-step" id="step-2">
+                <div class="ekspertiz-layout">
+                    <!-- Sol: Tablo -->
+                    <div class="ekspertiz-table-wrapper">
+                        <table class="damage-table">
+                            <thead>
+                                <tr>
+                                    <th style="min-width: 130px;"></th>
+                                    <th>Orijinal</th>
+                                    <th>Boyalı</th>
+                                    <th>Değişmiş</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @php
+                                    $parts = [
+                                        'Sağ arka çamurluk' => 'sag_arka_camurluk',
+                                        'Arka kaput' => 'arka_kaput',
+                                        'Sol arka çamurluk' => 'sol_arka_camurluk',
+                                        'Sağ arka kapı' => 'sag_arka_kapi',
+                                        'Sağ ön kapı' => 'sag_on_kapi',
+                                        'Tavan' => 'tavan',
+                                        'Sol arka kapı' => 'sol_arka_kapi',
+                                        'Sol ön kapı' => 'sol_on_kapi',
+                                        'Sağ ön çamurluk' => 'sag_on_camurluk',
+                                        'Motor kaputu' => 'motor_kaputu',
+                                        'Sol ön çamurluk' => 'sol_on_camurluk',
+                                        'Ön tampon' => 'on_tampon',
+                                        'Arka tampon' => 'arka_tampon',
+                                    ];
+                                @endphp
+                                @foreach($parts as $partName => $partKey)
+                                    <tr>
+                                        <td>{{ $partName }}</td>
+                                        <td><input type="checkbox" name="ekspertiz[{{ $partKey }}]" value="ORIJINAL" checked class="ekspertiz-checkbox" data-part="{{ $partKey }}"></td>
+                                        <td><input type="checkbox" name="ekspertiz[{{ $partKey }}]" value="BOYALI" class="ekspertiz-checkbox" data-part="{{ $partKey }}"></td>
+                                        <td><input type="checkbox" name="ekspertiz[{{ $partKey }}]" value="DEGISMIS" class="ekspertiz-checkbox" data-part="{{ $partKey }}"></td>
+                                    </tr>
                                 @endforeach
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-                
-                <div style="margin-top: 1rem;">
-                    <button type="button" class="btn-reset-all" onclick="resetAllToOriginal()">
-                        Hepsi Orijinal Yap
-                    </button>
-                </div>
-            </div>
-            
-            <div class="wizard-buttons">
-                <button type="button" class="btn-wizard btn-wizard-secondary" onclick="prevStep()">GERİ DÖN</button>
-                <button type="button" class="btn-wizard btn-wizard-primary" onclick="nextStep()">DEVAM</button>
-            </div>
-        </div>
-        
-        <!-- Step 4: Kişisel Bilgiler -->
-        <div class="wizard-step" id="step-4">
-            <h2 class="text-2xl font-bold mb-6">Kişisel Bilgiler</h2>
-            
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Adınız *</label>
-                    <input type="text" name="ad" required>
-                </div>
-                
-                <div class="form-group">
-                    <label>Soyadınız *</label>
-                    <input type="text" name="soyad" required>
-                </div>
-                
-                <div class="form-group">
-                    <label>Mobil Telefon *</label>
-                    <input type="tel" name="telefon" required placeholder="5XX XXX XX XX">
-                </div>
-                
-                <div class="form-group">
-                    <label>E-Posta *</label>
-                    <input type="email" name="email" required>
-                </div>
-                
-                <div class="form-group">
-                    <label>Bulunduğunuz Şehir *</label>
-                    <div class="hero-custom-dropdown" data-dropdown="city-wizard">
-                        <button type="button" class="hero-custom-dropdown-trigger border-2 border-gray-300" data-value="">
-                            <span class="selected-text placeholder">Seçiniz</span>
-                            <svg class="arrow w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </button>
-                        <div class="hero-custom-dropdown-panel">
-                            <div class="hero-custom-dropdown-option" data-value="">Seçiniz</div>
-                            @php
-                                $cities = ['İstanbul', 'Ankara', 'İzmir', 'Bursa', 'Antalya', 'Adana', 'Konya', 'Gaziantep', 'Kayseri', 'Mersin', 'Diyarbakır', 'Eskişehir', 'Urfa', 'Malatya', 'Manisa', 'Samsun', 'Kahramanmaraş', 'Van', 'Denizli', 'Batman'];
-                            @endphp
-                            @foreach($cities as $city)
-                                <div class="hero-custom-dropdown-option" data-value="{{ $city }}">{{ $city }}</div>
-                            @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Sağ: Araç Görseli -->
+                    <div class="ekspertiz-car-wrapper" style="position: relative;">
+                        <!-- Tooltip -->
+                        <div class="car-tooltip" id="car-tooltip">
+                            <div class="car-tooltip-title" id="tooltip-title">Parça Adı</div>
+                            <div class="car-tooltip-option" data-value="ORIJINAL">
+                                <span class="car-tooltip-dot dot-orijinal"></span>
+                                <span>Orijinal</span>
+                            </div>
+                            <div class="car-tooltip-option" data-value="BOYALI">
+                                <span class="car-tooltip-dot dot-boyali"></span>
+                                <span>Boyalı</span>
+                            </div>
+                            <div class="car-tooltip-option" data-value="DEGISMIS">
+                                <span class="car-tooltip-dot dot-degismis"></span>
+                                <span>Değişmiş</span>
+                            </div>
                         </div>
-                        <select name="şehir" required class="hero-custom-dropdown-native">
-                            <option value="">Seçiniz</option>
-                            @foreach($cities as $city)
-                                <option value="{{ $city }}">{{ $city }}</option>
-                            @endforeach
-                        </select>
+                        <div class="car-diagram" id="car-diagram">
+                            <svg width="100%" height="350" viewBox="0 0 227 303" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g id="Nakit-Sat" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g id="DD-Nakitsat-03.1" transform="translate(-1002.000000, -232.000000)"><g transform="translate(1003.000000, 233.000000)"><path d="M94.6557611,63.8442042 C92.939813,65.0732963 91.7141357,66.9764066 91.5098562,69.1967019 L91.0195853,74.5491997 C90.7744499,77.3245689 92.8581012,79.7431049 95.7180147,79.9809937 C98.5779282,80.2188824 101.070139,78.1968277 101.315274,75.4214586 L102.05068,67.3332398 C105.482577,68.6416281 109.118752,69.3156463 112.83664,69.3156463 L127.340487,69.3156463 C130.322968,69.3156463 132.815179,67.0160547 132.978602,64.1217411 C133.632297,50.6017284 134,36.4869936 134,21.8171851 C134,21.6982407 134,21.6189444 134,21.5 C134,6.71124703 133.632297,-7.52243211 132.978602,-21.1217411 C132.856035,-24.0160547 130.363824,-26.3156463 127.340487,-26.3156463 L112.877496,-26.3156463 C109.159608,-26.3156463 105.523432,-25.6416281 102.091536,-24.3332398 L101.35613,-32.4214586 C101.110994,-35.1968277 98.5779282,-37.2188824 95.7588706,-36.9809937 C92.8989571,-36.7431049 90.8153058,-34.2849207 91.0604412,-31.5491997 L91.5507121,-26.1967019 C91.7549917,-23.9764066 92.939813,-22.0732963 94.696617,-20.8442042 L94.696617,63.8442042 L94.6557611,63.8442042 Z" stroke="#D3D2D2" fill="#F0F0F0" transform="translate(112.500000, 21.500000) rotate(-90.000000) translate(-112.500000, -21.500000) "></path> <path d="M98,60.0833333 C101.017241,61.3211806 104.195402,62 107.454023,62 L120.166667,62 C122.781609,62 124.954023,59.8038194 125.074713,57.0086806 C125.637931,43.9913194 126,30.4149306 126,16.3194444 C126,16.2395833 126,16.1197917 126,16 C126,1.78472222 125.678161,-11.9114583 125.074713,-25.0086806 C124.954023,-27.8038194 122.781609,-30 120.166667,-30 L107.454023,-30 C104.195402,-30 101.017241,-29.3611111 98,-28.0833333 L98,60.0833333 Z" id="svg-on_tampon" fill="#FFFFFF" fill-rule="nonzero" title="Ön tampon" transform="translate(112.000000, 16.000000) rotate(-90.000000) translate(-112.000000, -16.000000) " class="car-part"><title>Ön tampon</title></path> <path d="M209.370189,124.39232 C207.52386,121.065414 204.674093,118.460007 201.182124,116.936845 C199.014696,115.974848 196.646579,115.49385 194.278462,115.49385 L151.010162,115.49385 C150.970024,115.293434 150.929887,115.173184 150.889749,115.093018 C150.408098,113.529773 148.762458,108.359041 144.668426,106.555297 C143.183336,105.873883 142.059484,105.994132 141.818658,106.034216 C141.658108,106.034216 140.694806,106.154465 140.213156,106.555297 C138.48724,107.958209 142.139759,112.968609 144.146637,115.49385 L89.0778914,115.49385 C87.3519759,115.49385 85.5859228,115.293434 83.9001449,114.852519 C82.2143669,114.411604 80.4483139,114.211188 78.7223983,114.211188 L37.501114,114.211188 C35.1329973,114.211188 32.8050183,114.652103 30.5974519,115.49385 C22.7304882,118.540173 15.0240748,123.310073 13.4587095,131.607295 C11.8532067,139.9446 11.5722437,148.72282 11.5722437,156.979958 C11.5722437,163.914351 11.7729316,171.16941 12.7763708,178.264136 L9.36467738,178.264136 C8.88302654,178.264136 8.04013757,178.264136 8,180.94971 C8,183.595201 9.04357682,183.635284 10.6892172,183.635284 L13.6995349,183.635284 C15.7866886,191.170925 23.0917263,195.62016 30.5573143,198.50615 C32.7648807,199.347897 35.0928598,199.788812 37.4609764,199.788812 L78.6822608,199.788812 C80.4483139,199.788812 82.1742294,199.588396 83.8600073,199.147481 C85.5457852,198.706566 87.3118383,198.50615 89.0377538,198.50615 L144.1065,198.50615 C142.099621,201.031391 138.447103,206.041791 140.173018,207.444703 C140.654669,207.845535 141.617971,207.965784 141.778521,207.965784 C142.019346,208.005868 143.143198,208.126117 144.628288,207.444703 C148.682183,205.640959 150.327823,200.470227 150.849612,198.906982 C150.889749,198.826816 150.929887,198.666483 150.970024,198.50615 L194.238325,198.50615 C196.606441,198.50615 198.974558,198.025152 201.141987,197.063155 C204.593818,195.539993 207.483723,192.934586 209.330051,189.60768 C212.862157,183.154286 217.999766,171.369826 217.999766,156.979958 C218.039904,142.630174 212.902295,130.845714 209.370189,124.39232 Z" id="Shape" stroke="#D3D2D2" fill="#F0F0F0" fill-rule="nonzero" transform="translate(113.000000, 157.000000) rotate(-90.000000) translate(-113.000000, -157.000000) "></path> <path d="M40.1953541,165.054383 L121.473933,165.054383 C121.995722,165.054383 122.116134,165.77588 121.594346,165.936213 L100.441847,172.068942 C98.6757936,172.590024 96.8294654,172.830523 94.9831372,172.830523 L59.5015253,172.830523 C56.6918954,172.830523 53.9224031,172.229275 51.3937362,171.066862 L39.9946663,165.89613 C39.553153,165.695714 39.7137033,165.054383 40.1953541,165.054383 Z" id="Path" stroke="#D3D2D2" fill="#D3D2D2" fill-rule="nonzero" transform="translate(80.833235, 168.942453) rotate(-90.000000) translate(-80.833235, -168.942453) "></path> <path d="M185.83574,172.858799 L104.55716,172.858799 C104.07551,172.858799 103.914959,172.217468 104.356473,171.976969 L115.755542,166.806236 C118.284209,165.643823 121.053702,165.042575 123.863332,165.042575 L159.344943,165.042575 C161.191272,165.042575 163.0376,165.323158 164.803653,165.804156 L185.956152,171.936885 C186.437803,172.097218 186.357528,172.858799 185.83574,172.858799 Z" id="Path" stroke="#D3D2D2" fill="#D3D2D2" fill-rule="nonzero" transform="translate(145.186807, 168.950687) rotate(-90.000000) translate(-145.186807, -168.950687) "></path> <path d="M106.499636,243.096992 C105.014546,234.559271 104.171657,225.01947 104.171657,214.998671 C104.171657,204.977872 105.014546,195.438071 106.499636,186.90035 C106.740462,185.537522 108.185414,184.816024 109.429679,185.377189 L120.668199,190.78842 C121.47095,191.189252 121.952601,192.031 121.832188,192.91283 C120.949162,199.286058 120.427373,206.861782 120.427373,214.958588 C120.427373,223.055394 120.949162,230.631118 121.832188,237.004346 C121.952601,237.886176 121.47095,238.768007 120.668199,239.128756 L109.429679,244.539987 C108.185414,245.221401 106.740462,244.459821 106.499636,243.096992 Z" id="Path" stroke="#D3D2D2" fill="#D3D2D2" fill-rule="nonzero" transform="translate(113.011099, 214.989729) rotate(-90.000000) translate(-113.011099, -214.989729) "></path> <g id="Group-4" transform="translate(162.000000, 52.000000)" stroke="#D3D2D2"><path d="M129.900636,106.906489 C125.403559,103.580153 120.22389,101.375954 114.682849,100.454198 L79.5494364,94.5629771 L62.1634161,84.6641221 C47.6282213,76.3683206 31.1657078,72 14.4221271,72 L-2.16084382,72 C-6.81853055,72.1603053 -12.3194192,72.6412214 -18.3824424,73.9236641 C-18.8642721,74.0438931 -19.3461018,74.1240458 -19.8279314,74.2442748 C-28.7016277,76.2480916 -37.1336468,79.8549618 -44.8830739,84.7041985 C-46.9710024,85.9866412 -49.0187785,87.3091603 -51.106707,88.5916031 C-51.5483842,88.8320611 -52.0703663,88.9522901 -52.552196,88.9522901 L-61.7872645,88.9522901 C-64.3971752,88.9522901 -66.9267809,89.7538168 -69.0548619,91.1965649 C-69.6973015,91.6374046 -69.9382163,92.398855 -69.7374539,93.120229 C-68.4525748,98.0896947 -71.704925,102.898855 -71.5041627,107.868321 C-71.4238577,110.753817 -72.7890418,113.479008 -71.3034003,115.923664 C-70.6609608,116.604962 -69.9783688,117.326336 -69.3359292,118.007634 C-67.8502878,119.570611 -66.6055611,121.293893 -65.6419018,123.217557 C-65.0797672,124.259542 -64.2767178,125.501908 -63.0319911,126.624046 C-60.1811656,129.188931 -56.9689679,129.549618 -55.9250036,129.629771 L-53.5560078,130.110687 C-52.3915861,130.351145 -51.3074694,129.389313 -51.3877743,128.227099 C-51.4279268,127.706107 -51.4680792,127.185115 -51.4680792,126.624046 C-51.4680792,116.604962 -43.276975,108.469466 -33.1987045,108.549618 C-23.1605866,108.629771 -15.0899397,117.246183 -15.2103972,127.265267 C-15.2505496,129.269084 -15.3308546,131.112595 -15.6119219,132.916031 C-15.7725318,133.998092 -14.9293299,135 -13.8050606,135 L74.6106823,135 C75.6546466,135 76.4978485,134.118321 76.4175436,133.076336 C76.2569337,130.992366 76.2167812,128.98855 76.2167812,126.664122 C76.2167812,116.725191 84.2472756,108.669847 94.1649361,108.589695 C104.564426,108.509542 112.755531,117.326336 112.434311,127.666031 C112.394158,129.509542 112.193396,131.232824 112.032786,132.916031 C111.912329,134.038168 112.835836,134.959924 113.960105,134.879771 L129.900636,133.998092 C131.667345,133.917939 132.912071,132.314885 132.631004,130.591603 L132.309784,128.708015 L134.598475,120.171756 C134.879543,119.169847 135,118.208015 135,117.206107 C135,109.551527 129.900636,106.906489 129.900636,106.906489 Z" id="Shape" fill="#F0F0F0" transform="translate(31.500000, 103.500000) rotate(-90.000000) translate(-31.500000, -103.500000) "></path> <path d="M13.0500284,141.698113 L13.0875754,141.773585 C14.8898297,144.792453 17.1801946,147.471698 19.8835762,149.698113 C21.2728139,150.830189 22.4743168,152.113208 23.4505379,153.471698 C24.426759,154.792453 24.9524165,155.886792 25.515621,157.018868 C26.0037316,157.962264 26.4918421,158.981132 27.2803284,160.226415 C28.0688147,161.433962 28.9323949,162.603774 29.8710691,163.698113 C31.072572,165.09434 32.6119976,165.924528 34.0763292,165.962264 C36.0287715,166 38.732153,166 42.1489269,166 C46.5794688,166 51.0851047,165.962264 53,165.962264 L53,146.113208 C53,140.45283 52.4743425,134.792453 51.4230274,129.245283 L48.9449277,116 L38.2815894,116 C29.7208812,116 21.19772,118.113208 13.6132329,122.075472 L9.93363022,124 C8.13137587,124.943396 6.81723206,126.490566 6.14138668,128.415094 C5.87855792,129.169811 5.99119881,130 6.40421544,130.716981 L13.0500284,141.698113 Z" id="svg-sag_arka_kapi" fill="#FFFFFF" fill-rule="nonzero" title="Sağ arka kapı" transform="translate(29.500000, 141.000000) rotate(-90.000000) translate(-29.500000, -141.000000) " class="car-part"><title>Sağ arka kapı</title></path> <path d="M6.98512508,98.1209373 L6.98512508,118 L52.6260859,118 C53.3028053,118 53.9043336,117.508692 54.0171202,116.82842 L54.2426933,115.505669 C55.671323,106.435374 55.0697947,97.0249433 52.5132994,88.2191988 C51.6110069,85.1579743 49.6184444,82.5502646 46.9115669,80.8873772 C34.3170679,73.2532124 19.9555794,68.8692366 5.33092222,68.1133787 L3,68 L5.40611326,80.8495843 C6.45878781,86.5185185 6.98512508,92.3386243 6.98512508,98.1209373 Z" id="svg-sag_on_kapi" fill="#FFFFFF" fill-rule="nonzero" title="Sağ ön kapı" transform="translate(29.000000, 93.000000) rotate(-90.000000) translate(-29.000000, -93.000000) " class="car-part"><title>Sağ ön kapı</title></path> <path d="M-5.55787695,144.094347 C-4.80693763,142.622649 -3.64298169,141.415102 -2.21619699,140.584913 L0.261902751,139.150951 C6.75752784,135.377366 14.0791862,133.33963 21.5885793,133.188687 L29.62363,133.037743 C30.8251329,133.000008 31.876448,133.905668 32.0266358,135.075479 L33.9415311,147.679253 C34.054172,148.320762 33.5660614,148.8868 32.890216,148.8868 L0.787560273,148.8868 C-1.35261678,148.8868 -3.38015293,148.132083 -5.03221943,146.773592 C-5.78315874,146.132083 -6.00844054,145.000008 -5.55787695,144.094347 Z" id="Path" fill="#D3D2D2" fill-rule="nonzero" transform="translate(14.084337, 140.961703) rotate(-90.000000) translate(-14.084337, -140.961703) "></path> <path d="M-4.12304309,84.2625682 L1.47868934,85.0184261 C14.185975,86.7191064 26.3293278,91.3298396 36.9688599,98.4726967 L37.269624,98.6616612 C37.194433,98.6616612 37.119242,98.6616612 37.0816464,98.6616612 L31.2919364,98.6616612 C29.524947,98.6616612 28.0963172,100.097791 28.0963172,101.874057 L28.0963172,101.91185 C28.0963172,103.499152 29.3745649,104.78411 30.9535767,104.78411 L36.7432868,104.78411 C37.119242,104.78411 37.4951972,104.708524 37.8335568,104.557353 C38.0215344,104.481767 38.2471075,104.557353 38.3222986,104.746317 C38.3974896,104.935282 38.3222986,105.162039 38.134321,105.237625 C37.6831748,105.426589 37.2320285,105.502175 36.7432868,105.502175 L30.9535767,105.502175 C28.9986097,105.502175 27.3820024,103.914874 27.3820024,101.91185 L27.3820024,101.874057 L0.426014786,100.400134 C-0.927423921,100.324549 -2.05528951,99.3797262 -2.39364919,98.0569749 L-5.43888628,85.774284 C-5.70205492,84.9428404 -4.98774004,84.1491896 -4.12304309,84.2625682 Z" id="Path" fill="#D3D2D2" fill-rule="nonzero" transform="translate(16.428437, 94.876946) rotate(-90.000000) translate(-16.428437, -94.876946) "></path> <path d="M13.9131056,168.010844 C13.9131056,168.010844 19.0519095,166.400737 26.9577617,167.205791 L31.4640974,166.964275 C31.4640974,166.964275 39.2118326,160.765362 41.5835882,161.006878 C43.9553439,161.288647 48.066387,167.970592 48.066387,167.970592 L57,184.071663 C56.8814122,183.8704 44.2320487,181.253976 38.3817181,185.238991 C33.3219727,188.700721 29.4085759,194.175086 28.7365784,199.971471 L28.064581,203.996739 C28.064581,203.996739 20.2377873,204.318761 17.7079146,198.562628 C15.1780419,192.806494 12.2133473,190.753608 12.2133473,190.753608 C12.2133473,190.753608 11.4227621,181.978524 12.8853448,179.804879 C14.3083982,177.671487 13.9131056,168.010844 13.9131056,168.010844 Z" id="svg-sag_arka_camurluk" fill="#FFFFFF" fill-rule="nonzero" title="Sağ arka çamurluk" transform="translate(34.500000, 182.500000) rotate(-90.000000) translate(-34.500000, -182.500000) " class="car-part"><title>Sağ arka çamurluk</title></path> <path d="M14.5326799,52 L57.1956592,45.0528587 C57.1956592,45.0528587 69.2385483,41.6170442 70.4922245,38.3700108 C71.7459006,35.1229773 72.3917338,32.9708738 71.7459006,30.592233 C71.1000675,28.2135922 69.4664894,22.5124056 69.4664894,22.5124056 C69.4664894,22.5124056 72.1258025,17.7551241 68.972617,17.7551241 C65.8194316,17.7551241 56.1727324,17 56.1727324,17 C56.1727324,17 58.0345528,41.9848751 35.6936697,42.3173455 C15.1854438,42.6225429 15.7176067,20.2847896 15.7176067,20.2847896 L11,20.2847896 C11,20.2847896 15.5968126,38.1434736 11,52 L14.5326799,52 Z" id="svg-sag_on_camurluk" fill="#FFFFFF" fill-rule="nonzero" title="Sağ ön çamurluk" transform="translate(41.500000, 34.500000) scale(-1, 1) rotate(-90.000000) translate(-41.500000, -34.500000) " class="car-part"><title>Sağ ön çamurluk</title></path></g> <g id="Group-4-Copy" transform="translate(31.525480, 155.500000) scale(-1, 1) translate(-31.525480, -155.500000) translate(0.025480, 52.000000)" stroke="#D3D2D2"><path d="M129.900636,106.906489 C125.403559,103.580153 120.22389,101.375954 114.682849,100.454198 L79.5494364,94.5629771 L62.1634161,84.6641221 C47.6282213,76.3683206 31.1657078,72 14.4221271,72 L-2.16084382,72 C-6.81853055,72.1603053 -12.3194192,72.6412214 -18.3824424,73.9236641 C-18.8642721,74.0438931 -19.3461018,74.1240458 -19.8279314,74.2442748 C-28.7016277,76.2480916 -37.1336468,79.8549618 -44.8830739,84.7041985 C-46.9710024,85.9866412 -49.0187785,87.3091603 -51.106707,88.5916031 C-51.5483842,88.8320611 -52.0703663,88.9522901 -52.552196,88.9522901 L-61.7872645,88.9522901 C-64.3971752,88.9522901 -66.9267809,89.7538168 -69.0548619,91.1965649 C-69.6973015,91.6374046 -69.9382163,92.398855 -69.7374539,93.120229 C-68.4525748,98.0896947 -71.704925,102.898855 -71.5041627,107.868321 C-71.4238577,110.753817 -72.7890418,113.479008 -71.3034003,115.923664 C-70.6609608,116.604962 -69.9783688,117.326336 -69.3359292,118.007634 C-67.8502878,119.570611 -66.6055611,121.293893 -65.6419018,123.217557 C-65.0797672,124.259542 -64.2767178,125.501908 -63.0319911,126.624046 C-60.1811656,129.188931 -56.9689679,129.549618 -55.9250036,129.629771 L-53.5560078,130.110687 C-52.3915861,130.351145 -51.3074694,129.389313 -51.3877743,128.227099 C-51.4279268,127.706107 -51.4680792,127.185115 -51.4680792,126.624046 C-51.4680792,116.604962 -43.276975,108.469466 -33.1987045,108.549618 C-23.1605866,108.629771 -15.0899397,117.246183 -15.2103972,127.265267 C-15.2505496,129.269084 -15.3308546,131.112595 -15.6119219,132.916031 C-15.7725318,133.998092 -14.9293299,135 -13.8050606,135 L74.6106823,135 C75.6546466,135 76.4978485,134.118321 76.4175436,133.076336 C76.2569337,130.992366 76.2167812,128.98855 76.2167812,126.664122 C76.2167812,116.725191 84.2472756,108.669847 94.1649361,108.589695 C104.564426,108.509542 112.755531,117.326336 112.434311,127.666031 C112.394158,129.509542 112.193396,131.232824 112.032786,132.916031 C111.912329,134.038168 112.835836,134.959924 113.960105,134.879771 L129.900636,133.998092 C131.667345,133.917939 132.912071,132.314885 132.631004,130.591603 L132.309784,128.708015 L134.598475,120.171756 C134.879543,119.169847 135,118.208015 135,117.206107 C135,109.551527 129.900636,106.906489 129.900636,106.906489 Z" id="Shape" fill="#F0F0F0" transform="translate(31.500000, 103.500000) rotate(-90.000000) translate(-31.500000, -103.500000) "></path> <path d="M13.0500284,141.698113 L13.0875754,141.773585 C14.8898297,144.792453 17.1801946,147.471698 19.8835762,149.698113 C21.2728139,150.830189 22.4743168,152.113208 23.4505379,153.471698 C24.426759,154.792453 24.9524165,155.886792 25.515621,157.018868 C26.0037316,157.962264 26.4918421,158.981132 27.2803284,160.226415 C28.0688147,161.433962 28.9323949,162.603774 29.8710691,163.698113 C31.072572,165.09434 32.6119976,165.924528 34.0763292,165.962264 C36.0287715,166 38.732153,166 42.1489269,166 C46.5794688,166 51.0851047,165.962264 53,165.962264 L53,146.113208 C53,140.45283 52.4743425,134.792453 51.4230274,129.245283 L48.9449277,116 L38.2815894,116 C29.7208812,116 21.19772,118.113208 13.6132329,122.075472 L9.93363022,124 C8.13137587,124.943396 6.81723206,126.490566 6.14138668,128.415094 C5.87855792,129.169811 5.99119881,130 6.40421544,130.716981 L13.0500284,141.698113 Z" id="svg-sol_arka_kapi" fill="#FFFFFF" fill-rule="nonzero" title="Sol arka kapı" transform="translate(29.500000, 141.000000) rotate(-90.000000) translate(-29.500000, -141.000000) " class="car-part"><title>Sol arka kapı</title></path> <path d="M6.98512508,98.1209373 L6.98512508,118 L52.6260859,118 C53.3028053,118 53.9043336,117.508692 54.0171202,116.82842 L54.2426933,115.505669 C55.671323,106.435374 55.0697947,97.0249433 52.5132994,88.2191988 C51.6110069,85.1579743 49.6184444,82.5502646 46.9115669,80.8873772 C34.3170679,73.2532124 19.9555794,68.8692366 5.33092222,68.1133787 L3,68 L5.40611326,80.8495843 C6.45878781,86.5185185 6.98512508,92.3386243 6.98512508,98.1209373 Z" id="svg-sol_on_kapi" fill="#FFFFFF" fill-rule="nonzero" title="Sol ön kapı" transform="translate(29.000000, 93.000000) rotate(-90.000000) translate(-29.000000, -93.000000) " class="car-part"><title>Sol ön kapı</title></path> <path d="M-5.55787695,144.094347 C-4.80693763,142.622649 -3.64298169,141.415102 -2.21619699,140.584913 L0.261902751,139.150951 C6.75752784,135.377366 14.0791862,133.33963 21.5885793,133.188687 L29.62363,133.037743 C30.8251329,133.000008 31.876448,133.905668 32.0266358,135.075479 L33.9415311,147.679253 C34.054172,148.320762 33.5660614,148.8868 32.890216,148.8868 L0.787560273,148.8868 C-1.35261678,148.8868 -3.38015293,148.132083 -5.03221943,146.773592 C-5.78315874,146.132083 -6.00844054,145.000008 -5.55787695,144.094347 Z" id="Path" fill="#D3D2D2" fill-rule="nonzero" transform="translate(14.084337, 140.961703) rotate(-90.000000) translate(-14.084337, -140.961703) "></path> <path d="M-4.12304309,84.2625682 L1.47868934,85.0184261 C14.185975,86.7191064 26.3293278,91.3298396 36.9688599,98.4726967 L37.269624,98.6616612 C37.194433,98.6616612 37.119242,98.6616612 37.0816464,98.6616612 L31.2919364,98.6616612 C29.524947,98.6616612 28.0963172,100.097791 28.0963172,101.874057 L28.0963172,101.91185 C28.0963172,103.499152 29.3745649,104.78411 30.9535767,104.78411 L36.7432868,104.78411 C37.119242,104.78411 37.4951972,104.708524 37.8335568,104.557353 C38.0215344,104.481767 38.2471075,104.557353 38.3222986,104.746317 C38.3974896,104.935282 38.3222986,105.162039 38.134321,105.237625 C37.6831748,105.426589 37.2320285,105.502175 36.7432868,105.502175 L30.9535767,105.502175 C28.9986097,105.502175 27.3820024,103.914874 27.3820024,101.91185 L27.3820024,101.874057 L0.426014786,100.400134 C-0.927423921,100.324549 -2.05528951,99.3797262 -2.39364919,98.0569749 L-5.43888628,85.774284 C-5.70205492,84.9428404 -4.98774004,84.1491896 -4.12304309,84.2625682 Z" id="Path" fill="#D3D2D2" fill-rule="nonzero" transform="translate(16.428437, 94.876946) rotate(-90.000000) translate(-16.428437, -94.876946) "></path> <path d="M13.9131056,168.010844 C13.9131056,168.010844 19.0519095,166.400737 26.9577617,167.205791 L31.4640974,166.964275 C31.4640974,166.964275 39.2118326,160.765362 41.5835882,161.006878 C43.9553439,161.288647 48.066387,167.970592 48.066387,167.970592 L57,184.071663 C56.8814122,183.8704 44.2320487,181.253976 38.3817181,185.238991 C33.3219727,188.700721 29.4085759,194.175086 28.7365784,199.971471 L28.064581,203.996739 C28.064581,203.996739 20.2377873,204.318761 17.7079146,198.562628 C15.1780419,192.806494 12.2133473,190.753608 12.2133473,190.753608 C12.2133473,190.753608 11.4227621,181.978524 12.8853448,179.804879 C14.3083982,177.671487 13.9131056,168.010844 13.9131056,168.010844 Z" id="svg-sol_arka_camurluk" fill="#FFFFFF" fill-rule="nonzero" title="Sol arka çamurluk" transform="translate(34.500000, 182.500000) rotate(-90.000000) translate(-34.500000, -182.500000) " class="car-part"><title>Sol arka çamurluk</title></path> <path d="M14.5326799,52 L57.1956592,45.0528587 C57.1956592,45.0528587 69.2385483,41.6170442 70.4922245,38.3700108 C71.7459006,35.1229773 72.3917338,32.9708738 71.7459006,30.592233 C71.1000675,28.2135922 69.4664894,22.5124056 69.4664894,22.5124056 C69.4664894,22.5124056 72.1258025,17.7551241 68.972617,17.7551241 C65.8194316,17.7551241 56.1727324,17 56.1727324,17 C56.1727324,17 58.0345528,41.9848751 35.6936697,42.3173455 C15.1854438,42.6225429 15.7176067,20.2847896 15.7176067,20.2847896 L11,20.2847896 C11,20.2847896 15.5968126,38.1434736 11,52 L14.5326799,52 Z" id="svg-sol_on_camurluk" fill="#FFFFFF" fill-rule="nonzero" title="Sol ön çamurluk" transform="translate(41.500000, 34.500000) scale(-1, 1) rotate(-90.000000) translate(-41.500000, -34.500000) " class="car-part"><title>Sol ön çamurluk</title></path></g> <path d="M125.268608,160.858908 C124.706682,162.863068 122.619528,164.02548 120.61265,163.464316 L99.2594625,157.451836 C97.3328592,156.890671 96.1688696,154.966678 96.6103829,153.002601 C98.0553354,146.388874 98.8580868,138.732983 98.8580868,130.556011 C98.8580868,122.379039 98.0553354,114.723149 96.6103829,108.109421 C96.2090072,106.145345 97.3328592,104.221351 99.2594625,103.660186 L120.61265,97.6477069 C122.619528,97.0865422 124.706682,98.2489549 125.268608,100.253115 C127.957825,109.512333 129.442915,119.733548 129.442915,130.556011 C129.442915,141.378474 127.957825,151.639773 125.268608,160.858908 Z" id="Path" stroke="#D3D2D2" fill="#D3D2D2" fill-rule="nonzero" transform="translate(112.979958, 130.556011) rotate(-90.000000) translate(-112.979958, -130.556011) "></path> <g><path d="M83,55 C83,55 94.8944481,86.4 83,122 L125.907825,122 C125.907825,122 142.312584,115.72 140.915585,88.88 C139.518586,62.04 125.907825,55 125.907825,55 L83,55 Z" id="svg-motor_kaputu" stroke="#D3D2D2" fill="#FFFFFF" fill-rule="nonzero" title="Motor kaputu" transform="translate(112.000000, 88.500000) rotate(-90.000000) translate(-112.000000, -88.500000) " class="car-part"><title>Motor kaputu</title></path></g> <g><path d="M126,205.023942 L106.684058,205.023942 C106.684058,205.023942 98,204.012393 98,215.139427 C98,226.26646 98,266.161932 98,266.161932 C98,266.161932 99.3797101,273 104.857971,273 C110.336232,273 126,273 126,273 C126,273 119.101449,243.665094 126,205.023942 Z" id="svg-arka_kaput" stroke="#D3D2D2" fill="#FFFFFF" fill-rule="nonzero" title="Arka kaput" transform="translate(112.000000, 239.000000) rotate(-90.000000) translate(-112.000000, -239.000000) " class="car-part"><title>Arka kaput</title></path></g> <g><path d="M87.1085905,151 C87.1085905,151 78.5117927,172.53629 86.188933,200 L136.890047,200 C136.890047,200 143.887441,175.104839 136.890047,151 L87.1085905,151 Z" id="svg-tavan" stroke="#D3D2D2" fill="#FFFFFF" fill-rule="nonzero" title="Tavan" transform="translate(111.500000, 175.500000) rotate(-90.000000) translate(-111.500000, -175.500000) " class="car-part"><title>Tavan</title></path></g> <path d="M90.9813007,21.7212413 C90.9813007,21.7212413 91.0226055,16.000759 88.7921464,13.000506 C86.5616874,10.000253 78.3420328,7 78.3420328,7 C78.3420328,7 75.9463545,24.2814572 83.8355708,28.9218485 C91.724787,33.5622398 90.9813007,21.7212413 90.9813007,21.7212413 Z" id="Shape" fill="#D3D2D2" fill-rule="nonzero" transform="translate(84.500000, 18.500000) rotate(-90.000000) translate(-84.500000, -18.500000) "></path> <path d="M149.981301,15.2787587 C149.981301,15.2787587 150.022605,20.999241 147.792146,23.999494 C145.561687,26.999747 137.342033,30 137.342033,30 C137.342033,30 134.946355,12.7185428 142.835571,8.0781515 C150.724787,3.43776021 149.981301,15.2787587 149.981301,15.2787587 Z" id="Shape" fill="#D3D2D2" fill-rule="nonzero" transform="translate(143.500000, 18.500000) rotate(-90.000000) translate(-143.500000, -18.500000) "></path> <path d="M127.5,239.49005 C124.170077,238.176617 120.641944,237.5 117.034527,237.5 L102.961637,237.5 C100.067775,237.5 97.6496164,239.808458 97.4910486,242.71393 C96.8567775,256.28607 96.5,270.455224 96.5,285.181592 C96.5,285.300995 96.5,285.380597 96.5,285.5 C96.5,300.345771 96.8567775,314.634328 97.4910486,328.28607 C97.6099744,331.191542 100.028133,333.5 102.961637,333.5 L117.034527,333.5 C120.641944,333.5 124.170077,332.823383 127.5,331.50995 L127.5,239.49005 Z" id="Shape" stroke="#D3D2D2" fill="#D8D8D8" title="Arka tampon" transform="translate(112.000000, 285.500000) rotate(-90.000000) translate(-112.000000, -285.500000) "></path> <path d="M126,241.916667 C122.982759,240.678819 119.804598,240 116.545977,240 L103.833333,240 C101.218391,240 99.045977,242.196181 98.9252874,244.991319 C98.362069,258.008681 98,271.585069 98,285.680556 C98,285.760417 98,285.880208 98,286 C98,300.215278 98.3218391,313.911458 98.9252874,327.008681 C99.045977,329.803819 101.218391,332 103.833333,332 L116.545977,332 C119.804598,332 122.982759,331.361111 126,330.083333 L126,241.916667 Z" id="svg-arka_tampon" fill="#FFFFFF" fill-rule="nonzero" title="Arka tampon" transform="translate(112.000000, 286.000000) rotate(-90.000000) translate(-112.000000, -286.000000) " class="car-part"><title>Arka tampon</title></path> <path d="M90.4887892,298 L87.5112108,298 C86.1479821,298 85,296.735391 85,295.144432 L85,263.855568 C85,262.264609 86.1479821,261 87.5112108,261 L90.4887892,261 C91.8520179,261 93,262.264609 93,263.855568 L93,295.144432 C93,296.735391 91.8520179,298 90.4887892,298 Z" id="Shape" fill="#D3D2D2" fill-rule="nonzero" transform="translate(89.000000, 279.500000) rotate(-90.000000) translate(-89.000000, -279.500000) "></path> <path d="M138.488789,298 L135.511211,298 C134.147982,298 133,296.735391 133,295.144432 L133,263.855568 C133,262.264609 134.147982,261 135.511211,261 L138.488789,261 C139.852018,261 141,262.264609 141,263.855568 L141,295.144432 C141,296.735391 139.852018,298 138.488789,298 Z" id="Shape" fill="#D3D2D2" fill-rule="nonzero" transform="translate(137.000000, 279.500000) rotate(-90.000000) translate(-137.000000, -279.500000) "></path></g></g></g></svg>
+                        </div>
+                        <div class="car-legend">
+                            <span class="legend-item"><span class="legend-dot legend-boyali"></span> Boyalı</span>
+                            <span class="legend-item"><span class="legend-dot legend-degismis"></span> Değişmiş</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-            
-            <div class="form-group">
-                <label>
-                    <input type="checkbox" name="kvkk_onay" value="1" required>
-                    <span>6698 Sayılı Kanun düzenlenmesi uyarınca kişisel verilerimin nasıl korunacağına ve işleneceğine dair aydınlatma metni ile GMSGARAGE tarafından aydınlatıldım. *</span>
-                </label>
-            </div>
-            
-            <div class="form-group">
-                <label>
-                    <input type="checkbox" name="kampanya_izin" value="1">
-                    <span>Paylaşmış olduğum iletişim bilgilerime tercih ettiğim kanallardan özel kampanyalar için ileti göndermesini kabul ediyorum.</span>
-                </label>
-            </div>
-            
-            <div class="wizard-buttons">
-                <button type="button" class="btn-wizard btn-wizard-secondary" onclick="prevStep()">GERİ DÖN</button>
-                <button type="submit" class="btn-wizard btn-wizard-primary">GÖNDER</button>
-            </div>
-        </div>
-    </form>
+
+                <!-- Tramer Section -->
+                <div class="tramer-row">
+                    <div class="tramer-select-wrapper">
+                        <label class="form-label">Tramer *</label>
+                        <select name="tramer" id="tramer-select" class="form-select" required>
+                            <option value="YOK">Yok</option>
+                            <option value="VAR">Var</option>
+                            <option value="BILMIYORUM">Bilmiyorum</option>
+                            <option value="AGIR_HASAR">Ağır Hasar Kayıtlı</option>
+                        </select>
+                    </div>
+                    <div class="tramer-tutar-wrapper">
+                        <label class="form-label">Toplam Tramer Tutarı</label>
+                        <div class="tutar-input-wrapper">
+                            <input type="text" name="tramer_tutari" id="tramer-tutari" class="form-input" placeholder="0" disabled>
+                            <span class="tutar-suffix">TL</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2 Button -->
+                <button type="button" class="btn-submit" style="margin-top: 1.5rem;" onclick="goToStep(3)">Devam Et</button>
+            </div><!-- End Step 2 -->
+
+            <!-- STEP 3: İletişim Bilgileri -->
+            <div class="wizard-step" id="step-3">
+                <h3 class="text-lg font-semibold mb-4 text-gray-900 dark:text-gray-100">İletişim Bilgileri</h3>
+
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="form-label">Ad *</label>
+                        <input type="text" name="ad" id="ad-input" class="form-input" placeholder="Adınız" required>
+                    </div>
+                    <div>
+                        <label class="form-label">Soyad *</label>
+                        <input type="text" name="soyad" id="soyad-input" class="form-input" placeholder="Soyadınız" required>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="form-label">Telefon *</label>
+                        <input type="tel" name="telefon" id="telefon-input" class="form-input" placeholder="05XX XXX XX XX" required>
+                    </div>
+                    <div>
+                        <label class="form-label">E-posta *</label>
+                        <input type="email" name="email" id="email-input" class="form-input" placeholder="ornek@email.com" required>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">Şehir *</label>
+                    <select name="sehir" id="sehir-select" class="form-select" required>
+                        <option value="">Şehir Seçin</option>
+                        @php
+                            $cities = ['Adana', 'Adıyaman', 'Afyonkarahisar', 'Ağrı', 'Amasya', 'Ankara', 'Antalya', 'Artvin', 'Aydın', 'Balıkesir', 'Bilecik', 'Bingöl', 'Bitlis', 'Bolu', 'Burdur', 'Bursa', 'Çanakkale', 'Çankırı', 'Çorum', 'Denizli', 'Diyarbakır', 'Edirne', 'Elazığ', 'Erzincan', 'Erzurum', 'Eskişehir', 'Gaziantep', 'Giresun', 'Gümüşhane', 'Hakkari', 'Hatay', 'Isparta', 'Mersin', 'İstanbul', 'İzmir', 'Kars', 'Kastamonu', 'Kayseri', 'Kırklareli', 'Kırşehir', 'Kocaeli', 'Konya', 'Kütahya', 'Malatya', 'Manisa', 'Kahramanmaraş', 'Mardin', 'Muğla', 'Muş', 'Nevşehir', 'Niğde', 'Ordu', 'Rize', 'Sakarya', 'Samsun', 'Siirt', 'Sinop', 'Sivas', 'Tekirdağ', 'Tokat', 'Trabzon', 'Tunceli', 'Şanlıurfa', 'Uşak', 'Van', 'Yozgat', 'Zonguldak', 'Aksaray', 'Bayburt', 'Karaman', 'Kırıkkale', 'Batman', 'Şırnak', 'Bartın', 'Ardahan', 'Iğdır', 'Yalova', 'Karabük', 'Kilis', 'Osmaniye', 'Düzce'];
+                            sort($cities);
+                        @endphp
+                        @foreach($cities as $city)
+                            <option value="{{ $city }}">{{ $city }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">Not (Opsiyonel)</label>
+                    <textarea name="not" id="not-input" class="form-input" rows="3" placeholder="Eklemek istediğiniz notlar..."></textarea>
+                </div>
+
+                <div class="mb-6">
+                    <label class="flex items-start gap-3 cursor-pointer">
+                        <input type="checkbox" name="kvkk_onay" id="kvkk-checkbox" class="mt-1" required>
+                        <span class="text-sm text-gray-600 dark:text-gray-400">
+                            <a href="{{ route('kvkk') }}" target="_blank" class="text-primary-600 hover:underline">KVKK Aydınlatma Metni</a>'ni okudum ve kabul ediyorum. *
+                        </span>
+                    </label>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn-submit" id="submit-btn">
+                    <span id="submit-text">Değerleme Talebi Gönder</span>
+                    <span id="submit-loading" class="hidden">Gönderiliyor...</span>
+                </button>
+            </div><!-- End Step 3 -->
+        </form>
+    </div>
 </div>
-@endsection
 
 @push('scripts')
 <script>
-    let currentStep = 1;
-    const totalSteps = 4;
-    
-    function showStep(step) {
-        document.querySelectorAll('.wizard-step').forEach((s, index) => {
-            if (index + 1 === step) {
-                s.classList.add('active');
-            } else {
-                s.classList.remove('active');
-            }
-        });
-        currentStep = step;
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        
-        // Reinitialize dropdowns for active step
+document.addEventListener('DOMContentLoaded', function() {
+    // Elements
+    const markaSelect = document.getElementById('marka-select');
+    const markaId = document.getElementById('marka-id');
+    const yilSelect = document.getElementById('yil-select');
+    const modelSelect = document.getElementById('model-select');
+    const modelId = document.getElementById('model-id');
+    const govdeSelect = document.getElementById('govde-select');
+    const govdeId = document.getElementById('govde-id');
+    const yakitSelect = document.getElementById('yakit-select');
+    const yakitId = document.getElementById('yakit-id');
+    const vitesSelect = document.getElementById('vites-select');
+    const vitesId = document.getElementById('vites-id');
+    const versiyonSelect = document.getElementById('versiyon-select');
+    const versiyonId = document.getElementById('versiyon-id');
+    const kilometreInput = document.getElementById('kilometre-input');
+    const renkSelect = document.getElementById('renk-select');
+    const renkId = document.getElementById('renk-id');
+
+    // State
+    let selectedBrandId = '{{ request("marka_id") }}' || null;
+    let selectedYear = null;
+    let selectedModelId = null;
+    let selectedGovdeId = null;
+    let selectedYakitId = null;
+    let selectedVitesId = null;
+    let selectedVersiyonId = null;
+
+    // Load brands on page load
+    loadBrands();
+
+    // If brand is pre-selected from URL, load years
+    if (selectedBrandId) {
         setTimeout(() => {
-            initWizardDropdowns();
-            
-            // Reinitialize inspection if step 3
-            if (step === 3) {
-                initInspectionState();
-                initInspectionListeners();
-            }
-            
-            // Reinitialize tramer toggle if step 2
-            if (step === 2) {
-                initTramerToggle();
-            }
-        }, 100);
+            loadYears(selectedBrandId);
+            yilSelect.disabled = false;
+        }, 500);
     }
-    
-    function nextStep() {
-        // Validate current step before proceeding
-        if (!validateCurrentStep()) {
-            return false;
+
+    // Event listeners
+    markaSelect.addEventListener('change', function() {
+        selectedBrandId = this.options[this.selectedIndex].dataset.id || null;
+        markaId.value = selectedBrandId || '';
+
+        // Reset all subsequent fields
+        resetFrom('yil');
+
+        if (selectedBrandId) {
+            loadYears(selectedBrandId);
+            yilSelect.disabled = false;
         }
-        
-        if (currentStep < totalSteps) {
-            showStep(currentStep + 1);
+    });
+
+    yilSelect.addEventListener('change', function() {
+        selectedYear = this.value;
+
+        // Reset all subsequent fields
+        resetFrom('model');
+
+        if (selectedYear && selectedBrandId) {
+            loadModels(selectedBrandId, selectedYear);
+            modelSelect.disabled = false;
+        }
+    });
+
+    modelSelect.addEventListener('change', function() {
+        selectedModelId = this.options[this.selectedIndex].dataset.id || null;
+        modelId.value = selectedModelId || '';
+
+        // Reset all subsequent fields
+        resetFrom('govde');
+
+        if (selectedModelId) {
+            loadGovdeTipleri(selectedBrandId, selectedYear, selectedModelId);
+            govdeSelect.disabled = false;
+        }
+    });
+
+    govdeSelect.addEventListener('change', function() {
+        selectedGovdeId = this.options[this.selectedIndex].dataset.id || null;
+        govdeId.value = selectedGovdeId || '';
+
+        // Reset all subsequent fields
+        resetFrom('yakit');
+
+        if (selectedGovdeId) {
+            loadYakitTipleri(selectedBrandId, selectedYear, selectedModelId, selectedGovdeId);
+            yakitSelect.disabled = false;
+        }
+    });
+
+    yakitSelect.addEventListener('change', function() {
+        selectedYakitId = this.options[this.selectedIndex].dataset.id || null;
+        yakitId.value = selectedYakitId || '';
+
+        // Reset all subsequent fields
+        resetFrom('vites');
+
+        if (selectedYakitId) {
+            loadVitesTipleri(selectedBrandId, selectedYear, selectedModelId, selectedGovdeId, selectedYakitId);
+            vitesSelect.disabled = false;
+        }
+    });
+
+    vitesSelect.addEventListener('change', function() {
+        selectedVitesId = this.options[this.selectedIndex].dataset.id || null;
+        vitesId.value = selectedVitesId || '';
+
+        // Reset all subsequent fields
+        resetFrom('versiyon');
+
+        if (selectedVitesId) {
+            loadVersiyonlar(selectedBrandId, selectedYear, selectedModelId, selectedGovdeId, selectedYakitId, selectedVitesId);
+            versiyonSelect.disabled = false;
+        }
+    });
+
+    versiyonSelect.addEventListener('change', function() {
+        selectedVersiyonId = this.options[this.selectedIndex].dataset.id || null;
+        versiyonId.value = selectedVersiyonId || '';
+
+        // Reset kilometre and renk
+        kilometreInput.value = '';
+        renkSelect.innerHTML = '<option value="">Renk Seçin</option>';
+        renkId.value = '';
+
+        if (selectedVersiyonId) {
+            loadRenkler(selectedBrandId, selectedYear, selectedModelId, selectedGovdeId, selectedYakitId, selectedVitesId, selectedVersiyonId);
+            kilometreInput.disabled = false;
+            renkSelect.disabled = false;
+        } else {
+            kilometreInput.disabled = true;
+            renkSelect.disabled = true;
+        }
+    });
+
+    renkSelect.addEventListener('change', function() {
+        renkId.value = this.options[this.selectedIndex].dataset.id || '';
+    });
+
+    // Format kilometre input
+    kilometreInput.addEventListener('input', function() {
+        let value = this.value.replace(/\D/g, '');
+        this.value = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    });
+
+    // Reset functions
+    function resetFrom(field) {
+        const fields = ['yil', 'model', 'govde', 'yakit', 'vites', 'versiyon', 'km', 'renk'];
+        const index = fields.indexOf(field);
+
+        if (index >= 0) {
+            fields.slice(index).forEach(f => {
+                switch(f) {
+                    case 'yil':
+                        yilSelect.innerHTML = '<option value="">Yıl Seçin</option>';
+                        yilSelect.disabled = true;
+                        selectedYear = null;
+                        break;
+                    case 'model':
+                        modelSelect.innerHTML = '<option value="">Model Seçin</option>';
+                        modelSelect.disabled = true;
+                        modelId.value = '';
+                        selectedModelId = null;
+                        break;
+                    case 'govde':
+                        govdeSelect.innerHTML = '<option value="">Gövde Tipi Seçin</option>';
+                        govdeSelect.disabled = true;
+                        govdeId.value = '';
+                        selectedGovdeId = null;
+                        break;
+                    case 'yakit':
+                        yakitSelect.innerHTML = '<option value="">Yakıt Tipi Seçin</option>';
+                        yakitSelect.disabled = true;
+                        yakitId.value = '';
+                        selectedYakitId = null;
+                        break;
+                    case 'vites':
+                        vitesSelect.innerHTML = '<option value="">Vites Tipi Seçin</option>';
+                        vitesSelect.disabled = true;
+                        vitesId.value = '';
+                        selectedVitesId = null;
+                        break;
+                    case 'versiyon':
+                        versiyonSelect.innerHTML = '<option value="">Versiyon Seçin</option>';
+                        versiyonSelect.disabled = true;
+                        versiyonId.value = '';
+                        selectedVersiyonId = null;
+                        break;
+                    case 'km':
+                        kilometreInput.value = '';
+                        kilometreInput.disabled = true;
+                        break;
+                    case 'renk':
+                        renkSelect.innerHTML = '<option value="">Renk Seçin</option>';
+                        renkSelect.disabled = true;
+                        renkId.value = '';
+                        break;
+                }
+            });
         }
     }
-    
-    function validateCurrentStep() {
-        const activeStep = document.querySelector('.wizard-step.active');
-        if (!activeStep) return false;
-        
-        let isValid = true;
-        
-        // Remove previous error messages
-        activeStep.querySelectorAll('.field-error').forEach(err => err.remove());
-        activeStep.querySelectorAll('.form-group').forEach(group => {
-            group.classList.remove('has-error');
-        });
-        
-        // Step 1 Validation
-        if (currentStep === 1) {
-            const tip = activeStep.querySelector('[name="tip"]');
-            const yil = activeStep.querySelector('[name="yil"]');
-            const marka = activeStep.querySelector('[name="marka"]');
-            const model = activeStep.querySelector('[name="model"]');
-            const gövde = activeStep.querySelector('[name="gövde_tipi"]');
-            const yakıt = activeStep.querySelector('[name="yakıt_tipi"]');
-            const vites = activeStep.querySelector('[name="vites_tipi"]');
-            
-            if (!tip || !tip.value || tip.value.trim() === '') {
-                isValid = false;
-                const tipGroup = tip ? tip.closest('.form-group') : null;
-                if (tipGroup) showFieldError(tipGroup, 'Araç Tipi seçiniz');
+
+    // API functions
+    async function loadBrands() {
+        try {
+            const response = await fetch('/api/arabam/brands');
+            const result = await response.json();
+
+            if (result.success && result.data && result.data.Items) {
+                markaSelect.innerHTML = '<option value="">Marka Seçin</option>';
+                result.data.Items.forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item.Name;
+                    option.textContent = item.Name;
+                    option.dataset.id = item.Id;
+                    if (item.Id == selectedBrandId) {
+                        option.selected = true;
+                    }
+                    markaSelect.appendChild(option);
+                });
             }
-            if (!yil || !yil.value || yil.value.trim() === '') {
-                isValid = false;
-                const yilGroup = yil ? yil.closest('.form-group') : null;
-                if (yilGroup) showFieldError(yilGroup, 'Model Yılı seçiniz');
-            }
-            if (!marka || !marka.value || marka.value.trim() === '') {
-                isValid = false;
-                const markaGroup = marka ? marka.closest('.form-group') : null;
-                if (markaGroup) showFieldError(markaGroup, 'Marka seçiniz');
-            }
-            if (!model || !model.value || model.value.trim() === '') {
-                isValid = false;
-                const modelGroup = model ? model.closest('.form-group') : null;
-                if (modelGroup) showFieldError(modelGroup, 'Model giriniz');
-            }
-            if (!gövde || !gövde.value || gövde.value.trim() === '') {
-                isValid = false;
-                const gövdeGroup = gövde ? gövde.closest('.form-group') : null;
-                if (gövdeGroup) showFieldError(gövdeGroup, 'Gövde Tipi seçiniz');
-            }
-            if (!yakıt || !yakıt.value || yakıt.value.trim() === '') {
-                isValid = false;
-                const yakıtGroup = yakıt ? yakıt.closest('.form-group') : null;
-                if (yakıtGroup) showFieldError(yakıtGroup, 'Yakıt Tipi seçiniz');
-            }
-            if (!vites || !vites.value || vites.value.trim() === '') {
-                isValid = false;
-                const vitesGroup = vites ? vites.closest('.form-group') : null;
-                if (vitesGroup) showFieldError(vitesGroup, 'Vites Tipi seçiniz');
-            }
+        } catch (error) {
+            console.error('Error loading brands:', error);
         }
-        
-        // Step 2 Validation
-        if (currentStep === 2) {
-            const kilometre = activeStep.querySelector('[name="kilometre"]');
-            const renk = activeStep.querySelector('[name="renk"]');
-            const tramer = activeStep.querySelector('[name="tramer"]:checked');
-            const tramerTutar = activeStep.querySelector('[name="tramer_tutarı"]');
-            
-            if (!kilometre || !kilometre.value || kilometre.value.trim() === '' || parseInt(kilometre.value) < 1) {
-                isValid = false;
-                const kmGroup = kilometre ? kilometre.closest('.form-group') : null;
-                if (kmGroup) showFieldError(kmGroup, 'Kilometre giriniz (minimum 1 km)');
-            }
-            if (!renk || !renk.value || renk.value.trim() === '') {
-                isValid = false;
-                const renkGroup = renk ? renk.closest('.form-group') : null;
-                if (renkGroup) showFieldError(renkGroup, 'Araç Rengi seçiniz');
-            }
-            if (!tramer) {
-                isValid = false;
-                const tramerInput = activeStep.querySelector('[name="tramer"]');
-                const tramerGroup = tramerInput ? tramerInput.closest('.form-group') : null;
-                if (tramerGroup) showFieldError(tramerGroup, 'Tramer Hasar Kaydı seçiniz');
-            } else if (tramer.value === 'VAR') {
-                if (!tramerTutar || !tramerTutar.value || tramerTutar.value.trim() === '' || parseFloat(tramerTutar.value) < 0) {
-                    isValid = false;
-                    const tutarGroup = tramerTutar ? tramerTutar.closest('.form-group') : null;
-                    if (tutarGroup) showFieldError(tutarGroup, 'Tramer tutarı giriniz');
+    }
+
+    async function loadYears(brandId) {
+        try {
+            const response = await fetch(`/api/arabam/step?step=10&brandId=${brandId}`);
+            const result = await response.json();
+
+            if (result.success && result.data && result.data.Items) {
+                yilSelect.innerHTML = '<option value="">Yıl Seçin</option>';
+                result.data.Items.forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item.Name;
+                    option.textContent = item.Name;
+                    option.dataset.id = item.Id;
+                    yilSelect.appendChild(option);
+                });
+
+                // Auto-select if only one item
+                if (result.data.Items.length === 1) {
+                    yilSelect.selectedIndex = 1;
+                    selectedYear = result.data.Items[0].Name;
+                    yilSelect.dispatchEvent(new Event('change'));
                 }
             }
+        } catch (error) {
+            console.error('Error loading years:', error);
         }
-        
-        // Step 3 Validation (Ekspertiz - optional, no validation needed)
-        
-        // Step 4 Validation
-        if (currentStep === 4) {
-            const ad = activeStep.querySelector('[name="ad"]');
-            const soyad = activeStep.querySelector('[name="soyad"]');
-            const telefon = activeStep.querySelector('[name="telefon"]');
-            const email = activeStep.querySelector('[name="email"]');
-            const şehir = activeStep.querySelector('[name="şehir"]');
-            const kvkk = activeStep.querySelector('[name="kvkk_onay"]');
-            
-            if (!ad || !ad.value || ad.value.trim() === '') {
-                isValid = false;
-                const adGroup = ad ? ad.closest('.form-group') : null;
-                if (adGroup) showFieldError(adGroup, 'Adınızı giriniz');
+    }
+
+    async function loadModels(brandId, year) {
+        try {
+            const response = await fetch(`/api/arabam/step?step=20&brandId=${brandId}&modelYear=${year}`);
+            const result = await response.json();
+
+            if (result.success && result.data && result.data.Items) {
+                modelSelect.innerHTML = '<option value="">Model Seçin</option>';
+                result.data.Items.forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item.Name;
+                    option.textContent = item.Name;
+                    option.dataset.id = item.Id;
+                    modelSelect.appendChild(option);
+                });
+
+                // Auto-select if only one item
+                if (result.data.Items.length === 1) {
+                    modelSelect.selectedIndex = 1;
+                    selectedModelId = result.data.Items[0].Id;
+                    modelId.value = selectedModelId;
+                    modelSelect.dispatchEvent(new Event('change'));
+                }
             }
-            if (!soyad || !soyad.value || soyad.value.trim() === '') {
-                isValid = false;
-                const soyadGroup = soyad ? soyad.closest('.form-group') : null;
-                if (soyadGroup) showFieldError(soyadGroup, 'Soyadınızı giriniz');
-            }
-            if (!telefon || !telefon.value || telefon.value.trim() === '') {
-                isValid = false;
-                const telefonGroup = telefon ? telefon.closest('.form-group') : null;
-                if (telefonGroup) showFieldError(telefonGroup, 'Mobil telefon giriniz');
-            }
-            if (!email || !email.value || email.value.trim() === '' || !email.value.includes('@')) {
-                isValid = false;
-                const emailGroup = email ? email.closest('.form-group') : null;
-                if (emailGroup) showFieldError(emailGroup, 'Geçerli bir e-posta adresi giriniz');
-            }
-            if (!şehir || !şehir.value || şehir.value.trim() === '') {
-                isValid = false;
-                const şehirGroup = şehir ? şehir.closest('.form-group') : null;
-                if (şehirGroup) showFieldError(şehirGroup, 'Şehir seçiniz');
-            }
-            if (!kvkk || !kvkk.checked) {
-                isValid = false;
-                const kvkkInput = activeStep.querySelector('[name="kvkk_onay"]');
-                const kvkkGroup = kvkkInput ? kvkkInput.closest('.form-group') : null;
-                if (kvkkGroup) showFieldError(kvkkGroup, 'KVKK aydınlatma metnini onaylamanız gerekmektedir');
-            }
+        } catch (error) {
+            console.error('Error loading models:', error);
         }
-        
-        if (!isValid) {
-            // Show general error message
-            let errorSummary = activeStep.querySelector('.step-error-summary');
-            if (!errorSummary) {
-                errorSummary = document.createElement('div');
-                errorSummary.className = 'step-error-summary';
-                errorSummary.style.cssText = 'background: #fee2e2; border: 2px solid #dc2626; color: #991b1b; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; font-weight: 600;';
-                activeStep.insertBefore(errorSummary, activeStep.querySelector('h2').nextSibling);
+    }
+
+    async function loadGovdeTipleri(brandId, year, modelIdParam) {
+        try {
+            const response = await fetch(`/api/arabam/step?step=30&brandId=${brandId}&modelYear=${year}&modelGroupId=${modelIdParam}`);
+            const result = await response.json();
+
+            if (result.success && result.data && result.data.Items) {
+                govdeSelect.innerHTML = '<option value="">Gövde Tipi Seçin</option>';
+                result.data.Items.forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item.Name;
+                    option.textContent = item.Name;
+                    option.dataset.id = item.Id;
+                    govdeSelect.appendChild(option);
+                });
+
+                // Auto-select if only one item
+                if (result.data.Items.length === 1) {
+                    govdeSelect.selectedIndex = 1;
+                    selectedGovdeId = result.data.Items[0].Id;
+                    govdeId.value = selectedGovdeId;
+                    govdeSelect.dispatchEvent(new Event('change'));
+                }
             }
-            errorSummary.innerHTML = '<div style="display: flex; align-items: center; gap: 0.5rem;"><svg style="width: 20px; height: 20px;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg><span>Lütfen zorunlu alanları doldurun</span></div>';
-            
-            // Scroll to first error
-            const firstError = activeStep.querySelector('.has-error');
-            if (firstError) {
-                firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } catch (error) {
+            console.error('Error loading body types:', error);
+        }
+    }
+
+    async function loadYakitTipleri(brandId, year, modelIdParam, bodyTypeId) {
+        try {
+            const response = await fetch(`/api/arabam/step?step=40&brandId=${brandId}&modelYear=${year}&modelGroupId=${modelIdParam}&bodyTypeId=${bodyTypeId}`);
+            const result = await response.json();
+
+            if (result.success && result.data && result.data.Items) {
+                yakitSelect.innerHTML = '<option value="">Yakıt Tipi Seçin</option>';
+                result.data.Items.forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item.Name;
+                    option.textContent = item.Name;
+                    option.dataset.id = item.Id;
+                    yakitSelect.appendChild(option);
+                });
+
+                // Auto-select if only one item
+                if (result.data.Items.length === 1) {
+                    yakitSelect.selectedIndex = 1;
+                    selectedYakitId = result.data.Items[0].Id;
+                    yakitId.value = selectedYakitId;
+                    yakitSelect.dispatchEvent(new Event('change'));
+                }
+            }
+        } catch (error) {
+            console.error('Error loading fuel types:', error);
+        }
+    }
+
+    async function loadVitesTipleri(brandId, year, modelIdParam, bodyTypeId, fuelTypeId) {
+        try {
+            const response = await fetch(`/api/arabam/step?step=50&brandId=${brandId}&modelYear=${year}&modelGroupId=${modelIdParam}&bodyTypeId=${bodyTypeId}&fuelTypeId=${fuelTypeId}`);
+            const result = await response.json();
+
+            if (result.success && result.data && result.data.Items) {
+                vitesSelect.innerHTML = '<option value="">Vites Tipi Seçin</option>';
+                result.data.Items.forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item.Name;
+                    option.textContent = item.Name;
+                    option.dataset.id = item.Id;
+                    vitesSelect.appendChild(option);
+                });
+
+                // Auto-select if only one item
+                if (result.data.Items.length === 1) {
+                    vitesSelect.selectedIndex = 1;
+                    selectedVitesId = result.data.Items[0].Id;
+                    vitesId.value = selectedVitesId;
+                    vitesSelect.dispatchEvent(new Event('change'));
+                }
+            }
+        } catch (error) {
+            console.error('Error loading transmission types:', error);
+        }
+    }
+
+    async function loadVersiyonlar(brandId, year, modelIdParam, bodyTypeId, fuelTypeId, transmissionId) {
+        try {
+            const response = await fetch(`/api/arabam/step?step=60&brandId=${brandId}&modelYear=${year}&modelGroupId=${modelIdParam}&bodyTypeId=${bodyTypeId}&fuelTypeId=${fuelTypeId}&transmissionTypeId=${transmissionId}`);
+            const result = await response.json();
+
+            if (result.success && result.data && result.data.Items) {
+                versiyonSelect.innerHTML = '<option value="">Versiyon Seçin</option>';
+                result.data.Items.forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item.Name;
+                    option.textContent = item.Name;
+                    option.dataset.id = item.Id;
+                    versiyonSelect.appendChild(option);
+                });
+
+                // Auto-select if only one item
+                if (result.data.Items.length === 1) {
+                    versiyonSelect.selectedIndex = 1;
+                    selectedVersiyonId = result.data.Items[0].Id;
+                    versiyonId.value = selectedVersiyonId;
+                    versiyonSelect.dispatchEvent(new Event('change'));
+                }
+            }
+        } catch (error) {
+            console.error('Error loading versions:', error);
+        }
+    }
+
+    async function loadRenkler(brandId, year, modelIdParam, bodyTypeId, fuelTypeId, transmissionId, versionId) {
+        try {
+            const response = await fetch(`/api/arabam/step?step=70&brandId=${brandId}&modelYear=${year}&modelGroupId=${modelIdParam}&bodyTypeId=${bodyTypeId}&fuelTypeId=${fuelTypeId}&transmissionTypeId=${transmissionId}&modelId=${versionId}`);
+            const result = await response.json();
+
+            if (result.success && result.data && result.data.Items) {
+                renkSelect.innerHTML = '<option value="">Renk Seçin</option>';
+                result.data.Items.forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item.Name;
+                    option.textContent = item.Name;
+                    option.dataset.id = item.Id;
+                    renkSelect.appendChild(option);
+                });
+
+                // Auto-select if only one item
+                if (result.data.Items.length === 1) {
+                    renkSelect.selectedIndex = 1;
+                    renkId.value = result.data.Items[0].Id;
+                }
+            }
+        } catch (error) {
+            console.error('Error loading colors:', error);
+        }
+    }
+
+    // Tramer select toggle
+    const tramerSelect = document.getElementById('tramer-select');
+    const tramerTutari = document.getElementById('tramer-tutari');
+
+    tramerSelect.addEventListener('change', function() {
+        if (this.value === 'VAR' || this.value === 'AGIR_HASAR') {
+            tramerTutari.disabled = false;
+        } else {
+            tramerTutari.disabled = true;
+            tramerTutari.value = '';
+        }
+    });
+
+    // Part key to SVG ID mapping
+    const partToSvgMap = {
+        'sag_arka_camurluk': 'svg-sag_arka_camurluk',
+        'arka_kaput': 'svg-arka_kaput',
+        'sol_arka_camurluk': 'svg-sol_arka_camurluk',
+        'sag_arka_kapi': 'svg-sag_arka_kapi',
+        'sag_on_kapi': 'svg-sag_on_kapi',
+        'tavan': 'svg-tavan',
+        'sol_arka_kapi': 'svg-sol_arka_kapi',
+        'sol_on_kapi': 'svg-sol_on_kapi',
+        'sag_on_camurluk': 'svg-sag_on_camurluk',
+        'motor_kaputu': 'svg-motor_kaputu',
+        'sol_on_camurluk': 'svg-sol_on_camurluk',
+        'on_tampon': 'svg-on_tampon',
+        'arka_tampon': 'svg-arka_tampon'
+    };
+
+    // Update SVG part color based on selection
+    function updateSvgPartColor(partKey) {
+        const svgId = partToSvgMap[partKey];
+        if (!svgId) return;
+
+        const svgPart = document.getElementById(svgId);
+        if (!svgPart) return;
+
+        // Find which checkbox is checked for this part
+        const checkedBox = document.querySelector(`.ekspertiz-checkbox[data-part="${partKey}"]:checked`);
+
+        if (checkedBox) {
+            const value = checkedBox.value;
+            if (value === 'BOYALI') {
+                svgPart.style.fill = '#fbbf24'; // Yellow
+            } else if (value === 'DEGISMIS') {
+                svgPart.style.fill = '#dc2626'; // Red
+            } else {
+                svgPart.style.fill = '#FFFFFF'; // Original white
             }
         } else {
-            // Remove error summary if exists
-            const errorSummary = activeStep.querySelector('.step-error-summary');
-            if (errorSummary) {
-                errorSummary.remove();
-            }
-        }
-        
-        return isValid;
-    }
-    
-    function showFieldError(fieldGroup, message) {
-        if (!fieldGroup) return;
-        
-        fieldGroup.classList.add('has-error');
-        
-        // Remove existing error
-        const existingError = fieldGroup.querySelector('.field-error');
-        if (existingError) {
-            existingError.remove();
-        }
-        
-        // Add error message
-        const errorDiv = document.createElement('div');
-        errorDiv.className = 'field-error';
-        errorDiv.style.cssText = 'color: #dc2626; font-size: 0.875rem; margin-top: 0.25rem; font-weight: 500;';
-        errorDiv.textContent = message;
-        fieldGroup.appendChild(errorDiv);
-        
-        // Add red border to input/select
-        const input = fieldGroup.querySelector('input, select');
-        if (input) {
-            input.style.borderColor = '#dc2626';
-        }
-        
-        // Add red border to dropdown trigger if exists
-        const trigger = fieldGroup.querySelector('.hero-custom-dropdown-trigger');
-        if (trigger) {
-            trigger.classList.add('border-red-500');
-            trigger.classList.remove('border-gray-300');
+            svgPart.style.fill = '#FFFFFF';
         }
     }
-    
-    function prevStep() {
-        if (currentStep > 1) {
-            showStep(currentStep - 1);
-        }
-    }
-    
-    // Initialize custom dropdowns (same as Hero)
-    function initWizardDropdowns() {
-        const activeStep = document.querySelector('.wizard-step.active');
-        if (!activeStep) return;
-        
-        const dropdowns = activeStep.querySelectorAll('.hero-custom-dropdown');
-        
-        dropdowns.forEach(dropdown => {
-            if (dropdown.dataset.initialized === 'true') return;
-            dropdown.dataset.initialized = 'true';
-            
-            const trigger = dropdown.querySelector('.hero-custom-dropdown-trigger');
-            const panel = dropdown.querySelector('.hero-custom-dropdown-panel');
-            const options = panel ? panel.querySelectorAll('.hero-custom-dropdown-option') : [];
-            const nativeSelect = dropdown.querySelector('.hero-custom-dropdown-native');
-            const selectedText = trigger ? trigger.querySelector('.selected-text') : null;
-            
-            if (!trigger || !panel || !nativeSelect || !selectedText) return;
-            
-            // Toggle dropdown
-            trigger.addEventListener('click', function(e) {
-                e.stopPropagation();
-                e.preventDefault();
-                
-                // Close other dropdowns
-                activeStep.querySelectorAll('.hero-custom-dropdown-panel.open').forEach(openPanel => {
-                    if (openPanel !== panel) {
-                        openPanel.classList.remove('open');
-                        const otherDropdown = openPanel.closest('.hero-custom-dropdown');
-                        if (otherDropdown) {
-                            otherDropdown.querySelector('.hero-custom-dropdown-trigger').classList.remove('open');
-                            otherDropdown.classList.remove('dropdown-open');
-                        }
-                    }
+
+    // Checkbox behavior - only one can be selected per row (like radio)
+    document.querySelectorAll('.ekspertiz-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const part = this.dataset.part;
+
+            if (this.checked) {
+                // Uncheck others in same row
+                document.querySelectorAll(`.ekspertiz-checkbox[data-part="${part}"]`).forEach(cb => {
+                    if (cb !== this) cb.checked = false;
                 });
-                
-                // Toggle current
-                const isOpen = panel.classList.contains('open');
-                if (!isOpen) {
-                    panel.classList.add('open');
-                    trigger.classList.add('open');
-                    dropdown.classList.add('dropdown-open');
-                } else {
-                    panel.classList.remove('open');
-                    trigger.classList.remove('open');
-                    dropdown.classList.remove('dropdown-open');
-                }
-            });
-            
-            // Option click
-            options.forEach(option => {
-                option.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    const value = this.getAttribute('data-value');
-                    const text = this.textContent.trim();
-                    
-                    selectedText.textContent = text;
-                    selectedText.classList.remove('placeholder');
-                    trigger.setAttribute('data-value', value);
-                    nativeSelect.value = value;
-                    nativeSelect.dispatchEvent(new Event('change', { bubbles: true }));
-                    
-                    options.forEach(opt => opt.classList.remove('selected'));
-                    this.classList.add('selected');
-                    
-                    panel.classList.remove('open');
-                    trigger.classList.remove('open');
-                    dropdown.classList.remove('dropdown-open');
-                    
-                    // Clear error when value is selected
-                    const fieldGroup = dropdown.closest('.form-group');
-                    if (fieldGroup) {
-                        fieldGroup.classList.remove('has-error');
-                        const errorMsg = fieldGroup.querySelector('.field-error');
-                        if (errorMsg) errorMsg.remove();
-                        trigger.classList.remove('border-red-500');
-                        trigger.classList.add('border-gray-300');
-                    }
-                });
-            });
-            
-            // Initialize selected value
-            if (nativeSelect.value) {
-                const selectedOption = Array.from(options).find(opt => opt.getAttribute('data-value') === nativeSelect.value);
-                if (selectedOption) {
-                    selectedText.textContent = selectedOption.textContent.trim();
-                    selectedText.classList.remove('placeholder');
-                    trigger.setAttribute('data-value', nativeSelect.value);
-                    selectedOption.classList.add('selected');
-                }
             }
+
+            // Update SVG color
+            updateSvgPartColor(part);
         });
-    }
-    
-    // Close dropdowns on outside click
-    document.addEventListener('click', function(e) {
-        if (!e.target.closest('.hero-custom-dropdown')) {
-            document.querySelectorAll('.hero-custom-dropdown-panel.open').forEach(panel => {
-                panel.classList.remove('open');
-                const dropdown = panel.closest('.hero-custom-dropdown');
-                if (dropdown) {
-                    dropdown.querySelector('.hero-custom-dropdown-trigger').classList.remove('open');
-                    dropdown.classList.remove('dropdown-open');
-                }
-            });
-        }
     });
-    
-    // Close on Escape
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            document.querySelectorAll('.hero-custom-dropdown-panel.open').forEach(panel => {
-                panel.classList.remove('open');
-                const dropdown = panel.closest('.hero-custom-dropdown');
-                if (dropdown) {
-                    dropdown.querySelector('.hero-custom-dropdown-trigger').classList.remove('open');
-                    dropdown.classList.remove('dropdown-open');
-                }
+
+    // SVG Part names mapping
+    const svgPartNames = {
+        'sag_arka_camurluk': 'Sağ arka çamurluk',
+        'arka_kaput': 'Arka kaput',
+        'sol_arka_camurluk': 'Sol arka çamurluk',
+        'sag_arka_kapi': 'Sağ arka kapı',
+        'sag_on_kapi': 'Sağ ön kapı',
+        'tavan': 'Tavan',
+        'sol_arka_kapi': 'Sol arka kapı',
+        'sol_on_kapi': 'Sol ön kapı',
+        'sag_on_camurluk': 'Sağ ön çamurluk',
+        'motor_kaputu': 'Motor kaputu',
+        'sol_on_camurluk': 'Sol ön çamurluk',
+        'on_tampon': 'Ön tampon',
+        'arka_tampon': 'Arka tampon'
+    };
+
+    // Tooltip functionality
+    const tooltip = document.getElementById('car-tooltip');
+    const tooltipTitle = document.getElementById('tooltip-title');
+    let currentTooltipPart = null;
+
+    // Click on SVG parts to show tooltip
+    document.querySelectorAll('.car-part').forEach(part => {
+        part.addEventListener('click', function(e) {
+            e.stopPropagation();
+
+            const svgId = this.id;
+            const partKey = svgId.replace('svg-', '');
+            const partName = svgPartNames[partKey] || partKey;
+
+            currentTooltipPart = partKey;
+            tooltipTitle.textContent = partName;
+
+            // Update selected state in tooltip
+            const checkedBox = document.querySelector(`.ekspertiz-checkbox[data-part="${partKey}"]:checked`);
+            const currentValue = checkedBox ? checkedBox.value : 'ORIJINAL';
+
+            tooltip.querySelectorAll('.car-tooltip-option').forEach(opt => {
+                opt.classList.toggle('selected', opt.dataset.value === currentValue);
             });
-        }
-    });
-    
-    // Inspection State Management
-    let inspectionState = {};
-    
-    // Initialize inspection state from form
-    function initInspectionState() {
-        const step3 = document.getElementById('step-3');
-        if (!step3) return;
-        
-        const radios = step3.querySelectorAll('input[type="radio"][name^="ekspertiz"]');
-        radios.forEach(radio => {
-            if (radio.checked) {
-                const part = radio.getAttribute('data-part');
-                const status = radio.getAttribute('data-status');
-                if (part && status) {
-                    inspectionState[part] = status;
-                }
-            }
+
+            // Position tooltip near the click
+            const wrapper = document.querySelector('.ekspertiz-car-wrapper');
+            const rect = wrapper.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            tooltip.style.left = Math.min(x, rect.width - 160) + 'px';
+            tooltip.style.top = Math.min(y, rect.height - 120) + 'px';
+            tooltip.classList.add('active');
         });
-        
-        // Update visual on init
-        updateVehicleVisual();
-    }
-    
-    // Handle radio change
-    function handleInspectionChange(part, status) {
-        inspectionState[part] = status;
-        
-        // Highlight table row
-        const row = document.querySelector(`tr[data-part="${part}"]`);
-        if (row) {
-            row.classList.add('highlight');
+    });
+
+    // Click on tooltip option
+    tooltip.querySelectorAll('.car-tooltip-option').forEach(option => {
+        option.addEventListener('click', function(e) {
+            e.stopPropagation();
+
+            const value = this.dataset.value;
+            if (!currentTooltipPart) return;
+
+            // Update checkboxes in table
+            document.querySelectorAll(`.ekspertiz-checkbox[data-part="${currentTooltipPart}"]`).forEach(cb => {
+                cb.checked = cb.value === value;
+            });
+
+            // Update SVG color
+            updateSvgPartColor(currentTooltipPart);
+
+            // Update tooltip selected state
+            tooltip.querySelectorAll('.car-tooltip-option').forEach(opt => {
+                opt.classList.toggle('selected', opt.dataset.value === value);
+            });
+
+            // Hide tooltip after selection
             setTimeout(() => {
-                row.classList.remove('highlight');
-            }, 500);
+                tooltip.classList.remove('active');
+                currentTooltipPart = null;
+            }, 150);
+        });
+    });
+
+    // Close tooltip when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!tooltip.contains(e.target) && !e.target.classList.contains('car-part')) {
+            tooltip.classList.remove('active');
+            currentTooltipPart = null;
         }
-    }
-    
-    // Reset all to original
-    function resetAllToOriginal() {
-        const step3 = document.getElementById('step-3');
-        if (!step3) return;
-        
-        const radios = step3.querySelectorAll('input[type="radio"][name^="ekspertiz"]');
-        radios.forEach(radio => {
-            if (radio.value === 'ORIJINAL') {
-                radio.checked = true;
-                const part = radio.getAttribute('data-part');
-                if (part) {
-                    inspectionState[part] = 'ORIJINAL';
-                }
+    });
+
+    // Hover effect on table rows
+    document.querySelectorAll('.damage-table tbody tr').forEach(row => {
+        const checkbox = row.querySelector('.ekspertiz-checkbox');
+        if (!checkbox) return;
+
+        const partKey = checkbox.dataset.part;
+        const svgId = partToSvgMap[partKey];
+        if (!svgId) return;
+
+        const svgPart = document.getElementById(svgId);
+        if (!svgPart) return;
+
+        let originalFill = '';
+
+        row.addEventListener('mouseenter', function() {
+            originalFill = svgPart.style.fill || '#FFFFFF';
+            svgPart.style.fill = '#9ca3af'; // Gray on hover
+        });
+
+        row.addEventListener('mouseleave', function() {
+            // Restore color based on checkbox state
+            updateSvgPartColor(partKey);
+        });
+    });
+
+    // Format tramer tutarı with dots
+    tramerTutari.addEventListener('input', function() {
+        let value = this.value.replace(/\D/g, '');
+        this.value = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    });
+
+    // Format phone number
+    const telefonInput = document.getElementById('telefon-input');
+    if (telefonInput) {
+        telefonInput.addEventListener('input', function() {
+            let value = this.value.replace(/\D/g, '');
+            if (value.length > 11) value = value.slice(0, 11);
+
+            // Format as 05XX XXX XX XX
+            if (value.length > 0) {
+                let formatted = value.slice(0, 4);
+                if (value.length > 4) formatted += ' ' + value.slice(4, 7);
+                if (value.length > 7) formatted += ' ' + value.slice(7, 9);
+                if (value.length > 9) formatted += ' ' + value.slice(9, 11);
+                this.value = formatted;
             }
         });
-        
-        updateVehicleVisual();
     }
-    
-    // Initialize inspection listeners
-    function initInspectionListeners() {
-        const step3 = document.getElementById('step-3');
-        if (!step3) return;
-        
-        const radios = step3.querySelectorAll('input[type="radio"][name^="ekspertiz"]');
-        radios.forEach(radio => {
-            radio.addEventListener('change', function() {
-                const part = this.getAttribute('data-part');
-                const status = this.getAttribute('data-status');
-                if (part && status) {
-                    handleInspectionChange(part, status);
+
+    // Form submission
+    const form = document.getElementById('evaluation-form');
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const submitBtn = document.getElementById('submit-btn');
+        const submitText = document.getElementById('submit-text');
+        const submitLoading = document.getElementById('submit-loading');
+
+        // Validate step 3
+        const adInput = document.getElementById('ad-input');
+        const soyadInput = document.getElementById('soyad-input');
+        const telefonInput = document.getElementById('telefon-input');
+        const emailInput = document.getElementById('email-input');
+        const sehirSelect = document.getElementById('sehir-select');
+        const kvkkCheckbox = document.getElementById('kvkk-checkbox');
+
+        if (!adInput.value.trim()) {
+            alert('Lütfen adınızı girin');
+            adInput.focus();
+            return;
+        }
+        if (!soyadInput.value.trim()) {
+            alert('Lütfen soyadınızı girin');
+            soyadInput.focus();
+            return;
+        }
+        if (!telefonInput.value.trim() || telefonInput.value.replace(/\D/g, '').length < 10) {
+            alert('Lütfen geçerli bir telefon numarası girin');
+            telefonInput.focus();
+            return;
+        }
+        if (!emailInput.value.trim() || !emailInput.value.includes('@')) {
+            alert('Lütfen geçerli bir e-posta adresi girin');
+            emailInput.focus();
+            return;
+        }
+        if (!sehirSelect.value) {
+            alert('Lütfen şehir seçin');
+            sehirSelect.focus();
+            return;
+        }
+        if (!kvkkCheckbox.checked) {
+            alert('KVKK Aydınlatma Metni\'ni kabul etmelisiniz');
+            return;
+        }
+
+        // Show loading
+        submitBtn.disabled = true;
+        submitText.classList.add('hidden');
+        submitLoading.classList.remove('hidden');
+
+        try {
+            const formData = new FormData(form);
+
+            // Add ekspertiz data as JSON
+            const ekspertizData = {};
+            document.querySelectorAll('.ekspertiz-checkbox:checked').forEach(cb => {
+                ekspertizData[cb.dataset.part] = cb.value;
+            });
+            formData.set('ekspertiz', JSON.stringify(ekspertizData));
+
+            // DEBUG: Log all form data
+            console.log('=== FORM SUBMISSION DEBUG ===');
+            console.log('Form action:', form.action);
+            for (let [key, value] of formData.entries()) {
+                console.log(`${key}:`, value);
+            }
+            console.log('Ekspertiz data:', ekspertizData);
+            console.log('=============================');
+
+            const response = await fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
                 }
             });
-        });
-    }
-    
-    
-    // Tramer toggle handler
-    function initTramerToggle() {
-        const step2 = document.getElementById('step-2');
-        if (!step2) return;
-        
-        const radios = step2.querySelectorAll('input[name="tramer"]');
-        radios.forEach(radio => {
-            // Remove existing listeners to prevent duplicates
-            const newRadio = radio.cloneNode(true);
-            radio.parentNode.replaceChild(newRadio, radio);
-            
-            newRadio.addEventListener('change', function() {
-                const amountDiv = document.getElementById('tramer-amount');
-                if (!amountDiv) return;
-                
-                if (this.value === 'VAR') {
-                    amountDiv.style.display = 'block';
-                    const input = amountDiv.querySelector('input');
-                    if (input) input.required = true;
-                } else {
-                    amountDiv.style.display = 'none';
-                    const input = amountDiv.querySelector('input');
-                    if (input) {
-                        input.required = false;
-                        input.value = '';
-                    }
-                }
-            });
-        });
-    }
-    
-    // Initialize on load
-    document.addEventListener('DOMContentLoaded', function() {
-        initWizardDropdowns();
-        
-        // Initialize inspection
-        initInspectionState();
-        initInspectionListeners();
-        
-        // Initialize tramer toggle
-        initTramerToggle();
-        
-        // Form submit validation
-        const form = document.getElementById('evaluation-form');
-        if (form) {
-            const submitHandler = function(e) {
-                e.preventDefault();
-                
-                // Validate all steps before submit
-                function validateAllSteps() {
-                    // Validate Step 1
-                    currentStep = 1;
-                    showStep(1);
-                    const step1Valid = validateCurrentStep();
-                    
-                    if (!step1Valid) {
-                        showStep(4);
-                        return false;
-                    }
-                    
-                    // Validate Step 2
-                    currentStep = 2;
-                    showStep(2);
-                    const step2Valid = validateCurrentStep();
-                    
-                    if (!step2Valid) {
-                        showStep(4);
-                        return false;
-                    }
-                    
-                    // Validate Step 4 (Step 3 is optional)
-                    currentStep = 4;
-                    showStep(4);
-                    const step4Valid = validateCurrentStep();
-                    
-                    if (!step4Valid) {
-                        return false;
-                    }
-                    
-                    // All validations passed
-                    return true;
-                }
-                
-                // Use setTimeout to ensure DOM is ready after step changes
-                setTimeout(() => {
-                    if (validateAllSteps()) {
-                        // Remove event listener to prevent loop, then submit
-                        form.removeEventListener('submit', submitHandler);
-                        form.submit();
-                    }
-                }, 100);
-            };
-            
-            form.addEventListener('submit', submitHandler);
+
+            console.log('Response status:', response.status);
+            console.log('Response ok:', response.ok);
+
+            const responseText = await response.text();
+            console.log('Response text:', responseText);
+
+            let result;
+            try {
+                result = JSON.parse(responseText);
+            } catch (parseError) {
+                console.error('JSON parse error:', parseError);
+                console.error('Response was not valid JSON:', responseText);
+                alert('Sunucu yanıtı geçersiz. Lütfen tekrar deneyin.');
+                submitBtn.disabled = false;
+                submitText.classList.remove('hidden');
+                submitLoading.classList.add('hidden');
+                return;
+            }
+
+            console.log('Parsed result:', result);
+
+            if (result.success) {
+                // Show success message
+                form.innerHTML = `
+                    <div class="text-center py-8">
+                        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Talebiniz Alındı!</h3>
+                        <p class="text-gray-600 dark:text-gray-400 mb-6">${result.message}</p>
+                        <a href="{{ route('home') }}" class="inline-block px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors">
+                            Anasayfaya Dön
+                        </a>
+                    </div>
+                `;
+            } else {
+                console.error('Server returned error:', result);
+                alert(result.message || 'Bir hata oluştu. Lütfen tekrar deneyin.');
+                submitBtn.disabled = false;
+                submitText.classList.remove('hidden');
+                submitLoading.classList.add('hidden');
+            }
+        } catch (error) {
+            console.error('Submit error:', error);
+            console.error('Error stack:', error.stack);
+            alert('Bir hata oluştu. Lütfen tekrar deneyin.');
+            submitBtn.disabled = false;
+            submitText.classList.remove('hidden');
+            submitLoading.classList.add('hidden');
         }
     });
-    
-    // Clear errors on input/select change
-    document.addEventListener('input', function(e) {
-        if (e.target.matches('input, select')) {
-            const fieldGroup = e.target.closest('.form-group');
-            if (fieldGroup && fieldGroup.classList.contains('has-error')) {
-                fieldGroup.classList.remove('has-error');
-                const errorMsg = fieldGroup.querySelector('.field-error');
-                if (errorMsg) errorMsg.remove();
-                e.target.style.borderColor = '';
+});
+
+// Step navigation functions
+let currentStep = 1;
+
+function goToStep(step) {
+    // Validate before moving forward
+    if (step > currentStep) {
+        if (currentStep === 1 && step >= 2) {
+            const markaSelect = document.getElementById('marka-select');
+            const yilSelect = document.getElementById('yil-select');
+            const modelSelect = document.getElementById('model-select');
+            const kilometreInput = document.getElementById('kilometre-input');
+
+            if (!markaSelect.value) {
+                alert('Lütfen marka seçin');
+                markaSelect.focus();
+                return;
+            }
+            if (!yilSelect.value) {
+                alert('Lütfen yıl seçin');
+                yilSelect.focus();
+                return;
+            }
+            if (!modelSelect.value) {
+                alert('Lütfen model seçin');
+                modelSelect.focus();
+                return;
+            }
+            if (!kilometreInput.value) {
+                alert('Lütfen kilometre girin');
+                kilometreInput.focus();
+                return;
             }
         }
+    }
+
+    // Hide all steps
+    document.querySelectorAll('.wizard-step').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.step-dot').forEach(d => d.classList.remove('active'));
+
+    // Show target step
+    document.getElementById('step-' + step).classList.add('active');
+    document.getElementById('dot-' + step).classList.add('active');
+
+    currentStep = step;
+
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function goToStep2() {
+    goToStep(2);
+}
+
+function goToStep1() {
+    goToStep(1);
+}
+
+function resetAllToOriginal() {
+    // Uncheck all
+    document.querySelectorAll('.ekspertiz-checkbox').forEach(cb => {
+        cb.checked = false;
     });
-    
-    document.addEventListener('change', function(e) {
-        if (e.target.matches('input, select')) {
-            const fieldGroup = e.target.closest('.form-group');
-            if (fieldGroup && fieldGroup.classList.contains('has-error')) {
-                fieldGroup.classList.remove('has-error');
-                const errorMsg = fieldGroup.querySelector('.field-error');
-                if (errorMsg) errorMsg.remove();
-                e.target.style.borderColor = '';
-                
-                // Also clear dropdown trigger error
-                const trigger = fieldGroup.querySelector('.hero-custom-dropdown-trigger');
-                if (trigger) {
-                    trigger.classList.remove('border-red-500');
-                    trigger.classList.add('border-gray-300');
-                }
-            }
-        }
+    // Check all ORIJINAL
+    document.querySelectorAll('.ekspertiz-checkbox[value="ORIJINAL"]').forEach(cb => {
+        cb.checked = true;
     });
+    // Reset all SVG parts to white
+    document.querySelectorAll('.car-part').forEach(part => {
+        part.style.fill = '#FFFFFF';
+    });
+}
 </script>
 @endpush
+@endsection

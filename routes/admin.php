@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\VehicleRequestController;
 use App\Http\Controllers\Admin\EvaluationRequestController;
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\ContactSettingsController;
+use App\Http\Controllers\Admin\SitemapController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -119,6 +120,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::prefix('evaluation-requests')->name('evaluation-requests.')->group(function () {
             Route::get('/', [EvaluationRequestController::class, 'index'])->name('index');
             Route::get('/{id}', [EvaluationRequestController::class, 'show'])->name('show');
+            Route::get('/{id}/pdf', [EvaluationRequestController::class, 'downloadPdf'])->name('pdf');
             Route::post('/{id}/read', [EvaluationRequestController::class, 'markAsRead'])->name('read');
             Route::delete('/{id}', [EvaluationRequestController::class, 'destroy'])->name('destroy');
         });
@@ -128,6 +130,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/', [MediaController::class, 'index'])->name('index');
             Route::post('/upload', [MediaController::class, 'upload'])->name('upload');
             Route::delete('/delete', [MediaController::class, 'destroy'])->name('destroy');
+        });
+
+        // Sitemap Yönetimi
+        Route::prefix('sitemap')->name('sitemap.')->group(function () {
+            Route::get('/', [SitemapController::class, 'index'])->name('index');
+            Route::post('/generate', [SitemapController::class, 'generate'])->name('generate');
+            Route::get('/preview', [SitemapController::class, 'preview'])->name('preview');
         });
     });
 });

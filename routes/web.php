@@ -5,6 +5,7 @@ use App\Http\Controllers\VehicleController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\VehicleEvaluationController;
 use App\Http\Controllers\BlogController;
+use App\Http\Controllers\SitemapController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -45,6 +46,8 @@ Route::post('/aracimi-degerle/gonder', [VehicleEvaluationController::class, 'sub
 Route::get('/api/vehicle-models', [VehicleEvaluationController::class, 'getVehicleModels'])->name('evaluation.models');
 Route::get('/api/vehicle-options', [VehicleEvaluationController::class, 'getVehicleOptions'])->name('evaluation.options');
 Route::get('/api/vehicle-versions', [VehicleEvaluationController::class, 'getVehicleVersions'])->name('evaluation.versions');
+Route::get('/api/arabam/brands', [VehicleEvaluationController::class, 'getArabamBrands'])->name('api.arabam.brands');
+Route::get('/api/arabam/step', [VehicleEvaluationController::class, 'getArabamStepData'])->name('api.arabam.step');
 
 // Landing Page
 Route::get('/landing', [PageController::class, 'landing'])->name('landing');
@@ -53,3 +56,6 @@ Route::get('/landing', [PageController::class, 'landing'])->name('landing');
 Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
 Route::get('/blog/kategori/{category}', [BlogController::class, 'category'])->name('blog.category');
 Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
+
+// Sitemap
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');

@@ -91,9 +91,563 @@
     .form-field {
         transition: all 0.3s ease;
     }
-    
+
     .form-field:focus-within {
         transform: translateY(-2px);
+    }
+
+    /* Brand Dropdown Styles */
+    .hero-brand-panel {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+    .hero-brand-panel .brand-list {
+        display: flex;
+        flex-direction: column;
+        padding: 4px;
+    }
+
+    .hero-brand-panel .hero-custom-dropdown-option {
+        display: flex;
+        align-items: center;
+        padding: 12px 16px;
+        border-radius: 8px;
+        transition: all 0.2s;
+        cursor: pointer;
+    }
+
+    .hero-brand-panel .hero-custom-dropdown-option:first-child {
+        background: #f3f4f6;
+        margin-bottom: 4px;
+    }
+
+    .hero-brand-panel .hero-custom-dropdown-option .brand-logo {
+        width: 36px;
+        height: 36px;
+        object-fit: contain;
+        margin-right: 12px;
+        flex-shrink: 0;
+    }
+
+    .hero-brand-panel .hero-custom-dropdown-option .brand-name {
+        font-weight: 600;
+        font-size: 15px;
+        color: #1f2937;
+    }
+
+    .hero-brand-panel .hero-custom-dropdown-option:hover {
+        background-color: #fef2f2;
+    }
+
+    .hero-brand-panel .hero-custom-dropdown-option.selected {
+        background-color: #fee2e2;
+        border: 1px solid #fca5a5;
+    }
+
+    .dark .hero-brand-panel .hero-custom-dropdown-option:first-child {
+        background: #374151;
+    }
+
+    .dark .hero-brand-panel .hero-custom-dropdown-option .brand-name {
+        color: #f3f4f6;
+    }
+
+    .dark .hero-brand-panel .hero-custom-dropdown-option:hover {
+        background-color: #374151;
+    }
+
+    .dark .hero-brand-panel .hero-custom-dropdown-option.selected {
+        background-color: #7f1d1d;
+        border-color: #b91c1c;
+    }
+
+    /* Year Dropdown Styles */
+    .hero-year-panel {
+        max-height: 350px;
+        overflow-y: auto;
+    }
+
+    .hero-year-panel .year-list {
+        display: flex;
+        flex-direction: column;
+        padding: 4px;
+    }
+
+    .hero-year-panel .hero-custom-dropdown-option {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 14px 16px;
+        border-radius: 8px;
+        transition: all 0.2s;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 16px;
+        color: #1f2937;
+    }
+
+    .hero-year-panel .hero-custom-dropdown-option:first-child {
+        background: #f3f4f6;
+        margin-bottom: 4px;
+        font-weight: 500;
+        font-size: 14px;
+    }
+
+    .hero-year-panel .hero-custom-dropdown-option:hover {
+        background-color: #fef2f2;
+    }
+
+    .hero-year-panel .hero-custom-dropdown-option.selected {
+        background-color: #fee2e2;
+        border: 1px solid #fca5a5;
+    }
+
+    .dark .hero-year-panel .hero-custom-dropdown-option {
+        color: #f3f4f6;
+    }
+
+    .dark .hero-year-panel .hero-custom-dropdown-option:first-child {
+        background: #374151;
+    }
+
+    .dark .hero-year-panel .hero-custom-dropdown-option:hover {
+        background-color: #374151;
+    }
+
+    .dark .hero-year-panel .hero-custom-dropdown-option.selected {
+        background-color: #7f1d1d;
+        border-color: #b91c1c;
+    }
+
+    /* Model Dropdown Styles */
+    .hero-model-panel {
+        max-height: 350px;
+        overflow-y: auto;
+    }
+
+    .hero-model-panel .model-list {
+        display: flex;
+        flex-direction: column;
+        padding: 4px;
+    }
+
+    .hero-model-panel .hero-custom-dropdown-option {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 14px 16px;
+        border-radius: 8px;
+        transition: all 0.2s;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 16px;
+        color: #1f2937;
+    }
+
+    .hero-model-panel .hero-custom-dropdown-option:first-child {
+        background: #f3f4f6;
+        margin-bottom: 4px;
+        font-weight: 500;
+        font-size: 14px;
+    }
+
+    .hero-model-panel .hero-custom-dropdown-option:hover {
+        background-color: #fef2f2;
+    }
+
+    .hero-model-panel .hero-custom-dropdown-option.selected {
+        background-color: #fee2e2;
+        border: 1px solid #fca5a5;
+    }
+
+    .dark .hero-model-panel .hero-custom-dropdown-option {
+        color: #f3f4f6;
+    }
+
+    .dark .hero-model-panel .hero-custom-dropdown-option:first-child {
+        background: #374151;
+    }
+
+    .dark .hero-model-panel .hero-custom-dropdown-option:hover {
+        background-color: #374151;
+    }
+
+    .dark .hero-model-panel .hero-custom-dropdown-option.selected {
+        background-color: #7f1d1d;
+        border-color: #b91c1c;
+    }
+
+    /* Body Type Dropdown Styles */
+    .hero-bodytype-panel {
+        max-height: 350px;
+        overflow-y: auto;
+    }
+
+    .hero-bodytype-panel .bodytype-list {
+        display: flex;
+        flex-direction: column;
+        padding: 4px;
+    }
+
+    .hero-bodytype-panel .hero-custom-dropdown-option {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 14px 16px;
+        border-radius: 8px;
+        transition: all 0.2s;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 16px;
+        color: #1f2937;
+    }
+
+    .hero-bodytype-panel .hero-custom-dropdown-option:first-child {
+        background: #f3f4f6;
+        margin-bottom: 4px;
+        font-weight: 500;
+        font-size: 14px;
+    }
+
+    .hero-bodytype-panel .hero-custom-dropdown-option:hover {
+        background-color: #fef2f2;
+    }
+
+    .hero-bodytype-panel .hero-custom-dropdown-option.selected {
+        background-color: #fee2e2;
+        border: 1px solid #fca5a5;
+    }
+
+    .dark .hero-bodytype-panel .hero-custom-dropdown-option {
+        color: #f3f4f6;
+    }
+
+    .dark .hero-bodytype-panel .hero-custom-dropdown-option:first-child {
+        background: #374151;
+    }
+
+    .dark .hero-bodytype-panel .hero-custom-dropdown-option:hover {
+        background-color: #374151;
+    }
+
+    .dark .hero-bodytype-panel .hero-custom-dropdown-option.selected {
+        background-color: #7f1d1d;
+        border-color: #b91c1c;
+    }
+
+    /* Fuel Type Dropdown Styles */
+    .hero-fueltype-panel {
+        max-height: 350px;
+        overflow-y: auto;
+    }
+
+    .hero-fueltype-panel .fueltype-list {
+        display: flex;
+        flex-direction: column;
+        padding: 4px;
+    }
+
+    .hero-fueltype-panel .hero-custom-dropdown-option {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 14px 16px;
+        border-radius: 8px;
+        transition: all 0.2s;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 16px;
+        color: #1f2937;
+    }
+
+    .hero-fueltype-panel .hero-custom-dropdown-option:first-child {
+        background: #f3f4f6;
+        margin-bottom: 4px;
+        font-weight: 500;
+        font-size: 14px;
+    }
+
+    .hero-fueltype-panel .hero-custom-dropdown-option:hover {
+        background-color: #fef2f2;
+    }
+
+    .hero-fueltype-panel .hero-custom-dropdown-option.selected {
+        background-color: #fee2e2;
+        border: 1px solid #fca5a5;
+    }
+
+    .dark .hero-fueltype-panel .hero-custom-dropdown-option {
+        color: #f3f4f6;
+    }
+
+    .dark .hero-fueltype-panel .hero-custom-dropdown-option:first-child {
+        background: #374151;
+    }
+
+    .dark .hero-fueltype-panel .hero-custom-dropdown-option:hover {
+        background-color: #374151;
+    }
+
+    .dark .hero-fueltype-panel .hero-custom-dropdown-option.selected {
+        background-color: #7f1d1d;
+        border-color: #b91c1c;
+    }
+
+    /* Transmission Type Dropdown Styles */
+    .hero-transmission-panel {
+        max-height: 350px;
+        overflow-y: auto;
+    }
+
+    .hero-transmission-panel .transmission-list {
+        display: flex;
+        flex-direction: column;
+        padding: 4px;
+    }
+
+    .hero-transmission-panel .hero-custom-dropdown-option {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 14px 16px;
+        border-radius: 8px;
+        transition: all 0.2s;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 16px;
+        color: #1f2937;
+    }
+
+    .hero-transmission-panel .hero-custom-dropdown-option:first-child {
+        background: #f3f4f6;
+        margin-bottom: 4px;
+        font-weight: 500;
+        font-size: 14px;
+    }
+
+    .hero-transmission-panel .hero-custom-dropdown-option:hover {
+        background-color: #fef2f2;
+    }
+
+    .hero-transmission-panel .hero-custom-dropdown-option.selected {
+        background-color: #fee2e2;
+        border: 1px solid #fca5a5;
+    }
+
+    .dark .hero-transmission-panel .hero-custom-dropdown-option {
+        color: #f3f4f6;
+    }
+
+    .dark .hero-transmission-panel .hero-custom-dropdown-option:first-child {
+        background: #374151;
+    }
+
+    .dark .hero-transmission-panel .hero-custom-dropdown-option:hover {
+        background-color: #374151;
+    }
+
+    .dark .hero-transmission-panel .hero-custom-dropdown-option.selected {
+        background-color: #7f1d1d;
+        border-color: #b91c1c;
+    }
+
+    /* Version Dropdown Styles */
+    .hero-version-panel {
+        max-height: 350px;
+        overflow-y: auto;
+    }
+
+    .hero-version-panel .version-list {
+        display: flex;
+        flex-direction: column;
+        padding: 4px;
+    }
+
+    .hero-version-panel .hero-custom-dropdown-option {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 14px 16px;
+        border-radius: 8px;
+        transition: all 0.2s;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 14px;
+        color: #1f2937;
+    }
+
+    .hero-version-panel .hero-custom-dropdown-option .version-props {
+        font-size: 11px;
+        font-weight: 400;
+        color: #6b7280;
+        margin-top: 4px;
+    }
+
+    .hero-version-panel .hero-custom-dropdown-option:first-child {
+        background: #f3f4f6;
+        margin-bottom: 4px;
+        font-weight: 500;
+        font-size: 14px;
+        align-items: center;
+    }
+
+    .hero-version-panel .hero-custom-dropdown-option:hover {
+        background-color: #fef2f2;
+    }
+
+    .hero-version-panel .hero-custom-dropdown-option.selected {
+        background-color: #fee2e2;
+        border: 1px solid #fca5a5;
+    }
+
+    .dark .hero-version-panel .hero-custom-dropdown-option {
+        color: #f3f4f6;
+    }
+
+    .dark .hero-version-panel .hero-custom-dropdown-option .version-props {
+        color: #9ca3af;
+    }
+
+    .dark .hero-version-panel .hero-custom-dropdown-option:first-child {
+        background: #374151;
+    }
+
+    .dark .hero-version-panel .hero-custom-dropdown-option:hover {
+        background-color: #374151;
+    }
+
+    .dark .hero-version-panel .hero-custom-dropdown-option.selected {
+        background-color: #7f1d1d;
+        border-color: #b91c1c;
+    }
+
+    /* Color Dropdown Styles */
+    .hero-color-panel {
+        max-height: 350px;
+        overflow-y: auto;
+    }
+
+    .hero-color-panel .color-list {
+        display: flex;
+        flex-direction: column;
+        padding: 4px;
+    }
+
+    .hero-color-panel .hero-custom-dropdown-option {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 14px 16px;
+        border-radius: 8px;
+        transition: all 0.2s;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 16px;
+        color: #1f2937;
+    }
+
+    .hero-color-panel .hero-custom-dropdown-option:first-child {
+        background: #f3f4f6;
+        margin-bottom: 4px;
+        font-weight: 500;
+        font-size: 14px;
+    }
+
+    .hero-color-panel .hero-custom-dropdown-option:hover {
+        background-color: #fef2f2;
+    }
+
+    .hero-color-panel .hero-custom-dropdown-option.selected {
+        background-color: #fee2e2;
+        border: 1px solid #fca5a5;
+    }
+
+    .dark .hero-color-panel .hero-custom-dropdown-option {
+        color: #f3f4f6;
+    }
+
+    .dark .hero-color-panel .hero-custom-dropdown-option:first-child {
+        background: #374151;
+    }
+
+    .dark .hero-color-panel .hero-custom-dropdown-option:hover {
+        background-color: #374151;
+    }
+
+    .dark .hero-color-panel .hero-custom-dropdown-option.selected {
+        background-color: #7f1d1d;
+        border-color: #b91c1c;
+    }
+
+    /* Form field animation */
+    .form-field.slide-in {
+        animation: slideDown 0.3s ease-out;
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Dropdown trigger compact styles */
+    .hero-custom-dropdown-trigger {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 14px;
+        border-radius: 8px;
+        background: white;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .hero-custom-dropdown-trigger:hover {
+        border-color: #3b82f6;
+    }
+
+    .hero-custom-dropdown-trigger .selected-text {
+        flex: 1;
+        text-align: left;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .hero-custom-dropdown-trigger .selected-text.placeholder {
+        color: #9ca3af;
+    }
+
+    .dark .hero-custom-dropdown-trigger {
+        background: #2a2a2a;
+    }
+
+    .dark .hero-custom-dropdown-trigger .selected-text.placeholder {
+        color: #6b7280;
+    }
+
+    /* Disabled dropdown styles */
+    .hero-custom-dropdown.disabled {
+        opacity: 0.5;
+        pointer-events: none;
+    }
+
+    .hero-custom-dropdown.disabled .hero-custom-dropdown-trigger {
+        cursor: not-allowed;
+        background-color: #f3f4f6;
+    }
+
+    .dark .hero-custom-dropdown.disabled .hero-custom-dropdown-trigger {
+        background-color: #1f2937;
     }
 </style>
 @endpush
@@ -143,99 +697,45 @@
                         
                         <!-- Araç Sat Form -->
                         <div id="form-sell" class="tab-content active">
-                            <form method="GET" action="{{ route('evaluation.index') }}" id="sell-form" class="p-8 space-y-6">
-                                <!-- Araç Tipi -->
-                                <div class="form-field">
-                                    <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wider">ARAÇ TİPİ</label>
-                                    <div class="hero-custom-dropdown" data-dropdown="vehicle-type-sell">
-                                        <button type="button" class="hero-custom-dropdown-trigger border-2 border-gray-300 dark:border-gray-700 dark:bg-[#2a2a2a] dark:text-gray-100" data-value="">
-                                            <span class="selected-text placeholder dark:text-gray-400">Araç Tipi Seçin</span>
-                                            <svg class="arrow w-6 h-6 text-gray-400 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                            </svg>
-                                        </button>
-                                        <div class="hero-custom-dropdown-panel">
-                                            <div class="hero-custom-dropdown-option" data-value="">Araç Tipi Seçin</div>
-                                            @foreach($vehicleTypes ?? [] as $key => $label)
-                                                <div class="hero-custom-dropdown-option" data-value="{{ $key }}">{{ $label }}</div>
-                                            @endforeach
-                                        </div>
-                                        <select name="tip" required class="hero-custom-dropdown-native">
-                                            <option value="">Araç Tipi Seçin</option>
-                                            @foreach($vehicleTypes ?? [] as $key => $label)
-                                                <option value="{{ $key }}">{{ $label }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                
-                                <!-- Model Yılı -->
-                                <div class="form-field">
-                                    <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wider">MODEL YILI</label>
-                                    <div class="hero-custom-dropdown" data-dropdown="year-sell">
-                                        <button type="button" class="hero-custom-dropdown-trigger border-2 border-gray-300 dark:border-gray-700 dark:bg-[#2a2a2a] dark:text-gray-100" data-value="{{ date('Y') }}">
-                                            <span class="selected-text">{{ date('Y') }}</span>
-                                            <svg class="arrow w-6 h-6 text-gray-400 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                            </svg>
-                                        </button>
-                                        <div class="hero-custom-dropdown-panel">
-                                            <div class="hero-custom-dropdown-option" data-value="">Yıl Seçin</div>
-                                            @foreach($years ?? [] as $year)
-                                                <div class="hero-custom-dropdown-option {{ $year == date('Y') ? 'selected' : '' }}" data-value="{{ $year }}">{{ $year }}</div>
-                                            @endforeach
-                                        </div>
-                                        <select name="yil" required class="hero-custom-dropdown-native">
-                                            <option value="">Yıl Seçin</option>
-                                            @foreach($years ?? [] as $year)
-                                                <option value="{{ $year }}" {{ $year == date('Y') ? 'selected' : '' }}>{{ $year }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                
+                            <form method="GET" action="{{ route('evaluation.index') }}" id="sell-form" class="p-6 space-y-4">
                                 <!-- Marka -->
                                 <div class="form-field">
-                                    <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wider">MARKA</label>
-                                    <div class="hero-custom-dropdown" data-dropdown="brand-sell">
-                                        <button type="button" class="hero-custom-dropdown-trigger border-2 border-gray-300 dark:border-gray-700 dark:bg-[#2a2a2a] dark:text-gray-100" data-value="">
-                                            <span class="selected-text placeholder dark:text-gray-400">Marka Seçin</span>
-                                            <svg class="arrow w-6 h-6 text-gray-400 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">Marka</label>
+                                    <div class="hero-custom-dropdown hero-brand-dropdown" data-dropdown="brand-sell" id="brand-dropdown-sell">
+                                        <button type="button" class="hero-custom-dropdown-trigger border border-gray-300 dark:border-gray-600 dark:bg-[#2a2a2a] dark:text-gray-100" data-value="" data-brand-id="">
+                                            <span class="selected-content flex items-center">
+                                                <span class="brand-logo-wrapper hidden mr-2">
+                                                    <img src="" alt="" class="w-6 h-6 object-contain brand-logo">
+                                                </span>
+                                                <span class="selected-text placeholder dark:text-gray-400">Marka Seçin</span>
+                                            </span>
+                                            <svg class="arrow w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                                             </svg>
                                         </button>
-                                        <div class="hero-custom-dropdown-panel">
-                                            <div class="hero-custom-dropdown-option" data-value="">Marka Seçin</div>
-                                            @foreach($brands ?? [] as $brand)
-                                                <div class="hero-custom-dropdown-option" data-value="{{ $brand }}">{{ $brand }}</div>
-                                            @endforeach
+                                        <div class="hero-custom-dropdown-panel hero-brand-panel">
+                                            <div class="brand-loading hidden p-4 text-center">
+                                                <svg class="animate-spin h-6 w-6 mx-auto text-primary-600" fill="none" viewBox="0 0 24 24">
+                                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                </svg>
+                                                <p class="mt-2 text-sm text-gray-500">Markalar yükleniyor...</p>
+                                            </div>
+                                            <div class="brand-list">
+                                                <div class="hero-custom-dropdown-option" data-value="" data-brand-id="">Marka Seçin</div>
+                                            </div>
                                         </div>
                                         <select name="marka" required class="hero-custom-dropdown-native">
                                             <option value="">Marka Seçin</option>
-                                            @foreach($brands ?? [] as $brand)
-                                                <option value="{{ $brand }}">{{ $brand }}</option>
-                                            @endforeach
                                         </select>
+                                        <input type="hidden" name="marka_id" id="marka-id-input" value="">
                                     </div>
                                 </div>
-                                
-                                <!-- Button -->                                
-                                <button type="submit" class="btn btn-primary w-full py-5 px-6 text-lg">
-                                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                                    </svg>
-                                    <span>ARABAMI DEĞERLE</span>
+
+                                <!-- Button -->
+                                <button type="submit" class="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-4 px-6 rounded-lg transition-colors duration-200">
+                                    DEVAM ET
                                 </button>
-                                
-                                <!-- Link -->
-                                <div class="text-center pt-2">
-                                    <a href="{{ route('vehicle-request.index') }}" class="text-sm text-primary-600 hover:text-primary-700 font-semibold transition-colors duration-200 inline-flex items-center space-x-1">
-                                        <span>Aracınızı listede bulamıyorsanız buraya tıklayın</span>
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                        </svg>
-                                    </a>
-                                </div>
                             </form>
                         </div>
                         
@@ -597,22 +1097,1729 @@
         }, 50);
     }
 
+    // Brand & Year Dropdown API Integration
+    let brandsLoaded = false;
+    let brandsData = [];
+    let selectedBrandId = null;
+    let selectedYear = null;
+    let selectedModelId = null;
+    let selectedBodytypeId = null;
+    let selectedFueltypeId = null;
+    let selectedTransmissionId = null;
+    let selectedVersionId = null;
+
+    async function loadBrandsFromAPI() {
+        if (brandsLoaded) return brandsData;
+
+        const brandDropdown = document.getElementById('brand-dropdown-sell');
+        if (!brandDropdown) return [];
+
+        const loading = brandDropdown.querySelector('.brand-loading');
+        const brandList = brandDropdown.querySelector('.brand-list');
+
+        loading.classList.remove('hidden');
+
+        try {
+            const response = await fetch('/api/arabam/brands');
+            const result = await response.json();
+
+            if (result.success && result.data && result.data.Items) {
+                brandsData = result.data.Items;
+                brandsLoaded = true;
+
+                // Clear existing options except first
+                const firstOption = brandList.querySelector('.hero-custom-dropdown-option');
+                brandList.innerHTML = '';
+                brandList.appendChild(firstOption);
+
+                // Add brand options
+                brandsData.forEach(brand => {
+                    const option = document.createElement('div');
+                    option.className = 'hero-custom-dropdown-option';
+                    option.setAttribute('data-value', brand.Name);
+                    option.setAttribute('data-brand-id', brand.Id);
+                    option.setAttribute('data-logo', brand.LogoPath);
+                    option.innerHTML = `
+                        <img src="${brand.LogoPath}" alt="${brand.Name}" class="brand-logo" onerror="this.style.display='none'">
+                        <span class="brand-name">${brand.Name}</span>
+                    `;
+                    brandList.appendChild(option);
+                });
+
+                // Update native select
+                const nativeSelect = brandDropdown.querySelector('.hero-custom-dropdown-native');
+                nativeSelect.innerHTML = '<option value="">Marka Seçin</option>';
+                brandsData.forEach(brand => {
+                    const opt = document.createElement('option');
+                    opt.value = brand.Name;
+                    opt.textContent = brand.Name;
+                    opt.setAttribute('data-brand-id', brand.Id);
+                    nativeSelect.appendChild(opt);
+                });
+
+                // Re-init dropdown event listeners for new options
+                initBrandDropdownOptions(brandDropdown);
+            }
+        } catch (error) {
+            console.error('Error loading brands:', error);
+        } finally {
+            loading.classList.add('hidden');
+        }
+
+        return brandsData;
+    }
+
+    function initBrandDropdownOptions(dropdown) {
+        const panel = dropdown.querySelector('.hero-custom-dropdown-panel');
+        const options = panel.querySelectorAll('.hero-custom-dropdown-option');
+        const trigger = dropdown.querySelector('.hero-custom-dropdown-trigger');
+        const nativeSelect = dropdown.querySelector('.hero-custom-dropdown-native');
+        const selectedText = trigger.querySelector('.selected-text');
+        const logoWrapper = trigger.querySelector('.brand-logo-wrapper');
+        const logoImg = trigger.querySelector('.brand-logo');
+        const brandIdInput = document.getElementById('marka-id-input');
+        const formCard = document.querySelector('.hero-form-card');
+        const yearField = document.getElementById('year-field-sell');
+
+        options.forEach(option => {
+            option.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const value = this.getAttribute('data-value');
+                const brandId = this.getAttribute('data-brand-id');
+                const logo = this.getAttribute('data-logo');
+
+                // Update trigger display
+                selectedText.textContent = value || 'Marka Seçin';
+                if (value) {
+                    selectedText.classList.remove('placeholder');
+                } else {
+                    selectedText.classList.add('placeholder');
+                }
+
+                // Show/hide logo
+                if (logo && value) {
+                    logoWrapper.classList.remove('hidden');
+                    logoImg.src = logo;
+                    logoImg.alt = value;
+                } else {
+                    logoWrapper.classList.add('hidden');
+                }
+
+                // Update values
+                trigger.setAttribute('data-value', value);
+                trigger.setAttribute('data-brand-id', brandId || '');
+                nativeSelect.value = value;
+                if (brandIdInput) brandIdInput.value = brandId || '';
+                selectedBrandId = brandId;
+                selectedYear = null;
+                selectedModelId = null;
+                selectedBodytypeId = null;
+                selectedFueltypeId = null;
+                selectedTransmissionId = null;
+                selectedVersionId = null;
+
+                // Update selected state
+                options.forEach(opt => opt.classList.remove('selected'));
+                if (value) this.classList.add('selected');
+
+                // Close dropdown
+                panel.classList.remove('open');
+                trigger.classList.remove('open');
+                dropdown.classList.remove('dropdown-open');
+
+                // Enable all fields
+                if (formCard) {
+                    formCard.classList.remove('dropdown-open');
+                    formCard.querySelectorAll('.form-field').forEach(field => {
+                        field.style.pointerEvents = '';
+                        field.style.opacity = '';
+                    });
+                    formCard.querySelectorAll('button[type="submit"]').forEach(btn => {
+                        btn.style.pointerEvents = '';
+                        btn.style.opacity = '';
+                    });
+                }
+
+                // Brand selection is complete - form will submit to wizard page
+            });
+        });
+    }
+
+    // Load years from API
+    async function loadYearsFromAPI(brandId) {
+        const yearDropdown = document.getElementById('year-dropdown-sell');
+        if (!yearDropdown) return;
+
+        const loading = yearDropdown.querySelector('.year-loading');
+        const yearList = yearDropdown.querySelector('.year-list');
+
+        loading.classList.remove('hidden');
+        yearList.style.display = 'none';
+
+        try {
+            const response = await fetch(`/api/arabam/step?step=10&brandId=${brandId}`);
+            const result = await response.json();
+
+            if (result.success && result.data && result.data.Items) {
+                // Clear existing options except first
+                const firstOption = yearList.querySelector('.hero-custom-dropdown-option');
+                yearList.innerHTML = '';
+                yearList.appendChild(firstOption);
+
+                // Add year options
+                result.data.Items.forEach(year => {
+                    const option = document.createElement('div');
+                    option.className = 'hero-custom-dropdown-option';
+                    option.setAttribute('data-value', year.Name);
+                    option.setAttribute('data-year-id', year.Id);
+                    option.textContent = year.Name;
+                    yearList.appendChild(option);
+                });
+
+                // Update native select
+                const nativeSelect = yearDropdown.querySelector('.hero-custom-dropdown-native');
+                nativeSelect.innerHTML = '<option value="">Model Yılı Seçin</option>';
+                result.data.Items.forEach(year => {
+                    const opt = document.createElement('option');
+                    opt.value = year.Name;
+                    opt.textContent = year.Name;
+                    opt.setAttribute('data-year-id', year.Id);
+                    nativeSelect.appendChild(opt);
+                });
+
+                // Re-init dropdown event listeners for new options
+                initYearDropdownOptions(yearDropdown);
+            }
+        } catch (error) {
+            console.error('Error loading years:', error);
+        } finally {
+            loading.classList.add('hidden');
+            yearList.style.display = '';
+        }
+    }
+
+    // Reset year dropdown
+    function resetYearDropdown() {
+        const yearDropdown = document.getElementById('year-dropdown-sell');
+        if (!yearDropdown) return;
+
+        const trigger = yearDropdown.querySelector('.hero-custom-dropdown-trigger');
+        const selectedText = trigger.querySelector('.selected-text');
+        const nativeSelect = yearDropdown.querySelector('.hero-custom-dropdown-native');
+        const yilIdInput = document.getElementById('yil-id-input');
+
+        selectedText.textContent = 'Yıl Seçin';
+        selectedText.classList.add('placeholder');
+        trigger.setAttribute('data-value', '');
+        trigger.setAttribute('data-year-id', '');
+        nativeSelect.value = '';
+        if (yilIdInput) yilIdInput.value = '';
+    }
+
+    // Load models from API
+    async function loadModelsFromAPI(brandId, modelYear) {
+        const modelDropdown = document.getElementById('model-dropdown-sell');
+        if (!modelDropdown) return;
+
+        const loading = modelDropdown.querySelector('.model-loading');
+        const modelList = modelDropdown.querySelector('.model-list');
+
+        loading.classList.remove('hidden');
+        modelList.style.display = 'none';
+
+        try {
+            const response = await fetch(`/api/arabam/step?step=20&brandId=${brandId}&modelYear=${modelYear}`);
+            const result = await response.json();
+
+            if (result.success && result.data && result.data.Items) {
+                // Clear existing options except first
+                const firstOption = modelList.querySelector('.hero-custom-dropdown-option');
+                modelList.innerHTML = '';
+                modelList.appendChild(firstOption);
+
+                // Add model options
+                result.data.Items.forEach(model => {
+                    const option = document.createElement('div');
+                    option.className = 'hero-custom-dropdown-option';
+                    option.setAttribute('data-value', model.Name);
+                    option.setAttribute('data-model-id', model.Id);
+                    option.textContent = model.Name;
+                    modelList.appendChild(option);
+                });
+
+                // Update native select
+                const nativeSelect = modelDropdown.querySelector('.hero-custom-dropdown-native');
+                nativeSelect.innerHTML = '<option value="">Model Seçin</option>';
+                result.data.Items.forEach(model => {
+                    const opt = document.createElement('option');
+                    opt.value = model.Name;
+                    opt.textContent = model.Name;
+                    opt.setAttribute('data-model-id', model.Id);
+                    nativeSelect.appendChild(opt);
+                });
+
+                // Re-init dropdown event listeners for new options
+                initModelDropdownOptions(modelDropdown);
+            }
+        } catch (error) {
+            console.error('Error loading models:', error);
+        } finally {
+            loading.classList.add('hidden');
+            modelList.style.display = '';
+        }
+    }
+
+    // Reset model dropdown
+    function resetModelDropdown() {
+        const modelDropdown = document.getElementById('model-dropdown-sell');
+        if (!modelDropdown) return;
+
+        const trigger = modelDropdown.querySelector('.hero-custom-dropdown-trigger');
+        const selectedText = trigger.querySelector('.selected-text');
+        const nativeSelect = modelDropdown.querySelector('.hero-custom-dropdown-native');
+        const modelIdInput = document.getElementById('model-id-input');
+
+        selectedText.textContent = 'Model Seçin';
+        selectedText.classList.add('placeholder');
+        trigger.setAttribute('data-value', '');
+        trigger.setAttribute('data-model-id', '');
+        nativeSelect.value = '';
+        if (modelIdInput) modelIdInput.value = '';
+    }
+
+    // Initialize model dropdown options
+    function initModelDropdownOptions(dropdown) {
+        const panel = dropdown.querySelector('.hero-custom-dropdown-panel');
+        const options = panel.querySelectorAll('.hero-custom-dropdown-option');
+        const trigger = dropdown.querySelector('.hero-custom-dropdown-trigger');
+        const nativeSelect = dropdown.querySelector('.hero-custom-dropdown-native');
+        const selectedText = trigger.querySelector('.selected-text');
+        const modelIdInput = document.getElementById('model-id-input');
+        const formCard = document.querySelector('.hero-form-card');
+
+        options.forEach(option => {
+            option.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const value = this.getAttribute('data-value');
+                const modelId = this.getAttribute('data-model-id');
+
+                // Update trigger display
+                selectedText.textContent = value || 'Model Seçin';
+                if (value) {
+                    selectedText.classList.remove('placeholder');
+                } else {
+                    selectedText.classList.add('placeholder');
+                }
+
+                // Update values
+                trigger.setAttribute('data-value', value);
+                trigger.setAttribute('data-model-id', modelId || '');
+                nativeSelect.value = value;
+                if (modelIdInput) modelIdInput.value = modelId || '';
+                selectedModelId = modelId;
+                selectedBodytypeId = null;
+                selectedFueltypeId = null;
+                selectedTransmissionId = null;
+                selectedVersionId = null;
+
+                // Update selected state
+                options.forEach(opt => opt.classList.remove('selected'));
+                if (value) this.classList.add('selected');
+
+                // Close dropdown
+                panel.classList.remove('open');
+                trigger.classList.remove('open');
+                dropdown.classList.remove('dropdown-open');
+
+                // Enable all fields
+                if (formCard) {
+                    formCard.classList.remove('dropdown-open');
+                    formCard.querySelectorAll('.form-field').forEach(field => {
+                        field.style.pointerEvents = '';
+                        field.style.opacity = '';
+                    });
+                    formCard.querySelectorAll('button[type="submit"]').forEach(btn => {
+                        btn.style.pointerEvents = '';
+                        btn.style.opacity = '';
+                    });
+                }
+
+                // Disable all subsequent dropdowns and reset
+                ['bodytype', 'fueltype', 'transmission', 'version', 'color'].forEach(name => {
+                    const dd = document.getElementById(`${name}-dropdown-sell`);
+                    if (dd) {
+                        dd.classList.add('disabled');
+                        const trig = dd.querySelector('.hero-custom-dropdown-trigger');
+                        if (trig) trig.disabled = true;
+                    }
+                });
+                resetBodytypeDropdown();
+                resetFueltypeDropdown();
+                resetTransmissionDropdown();
+                resetVersionDropdown();
+                resetColorDropdown();
+                resetKilometreInput();
+
+                // Enable/disable bodytype dropdown based on model selection
+                const bodytypeDropdown = document.getElementById('bodytype-dropdown-sell');
+                if (modelId && selectedBrandId && selectedYear) {
+                    // Enable bodytype dropdown and load body types
+                    if (bodytypeDropdown) {
+                        bodytypeDropdown.classList.remove('disabled');
+                        const bodytypeTrigger = bodytypeDropdown.querySelector('.hero-custom-dropdown-trigger');
+                        if (bodytypeTrigger) bodytypeTrigger.disabled = false;
+                    }
+                    loadBodytypesFromAPI(selectedBrandId, selectedYear, modelId);
+                }
+            });
+        });
+    }
+
+    // Initialize year dropdown options
+    function initYearDropdownOptions(dropdown) {
+        const panel = dropdown.querySelector('.hero-custom-dropdown-panel');
+        const options = panel.querySelectorAll('.hero-custom-dropdown-option');
+        const trigger = dropdown.querySelector('.hero-custom-dropdown-trigger');
+        const nativeSelect = dropdown.querySelector('.hero-custom-dropdown-native');
+        const selectedText = trigger.querySelector('.selected-text');
+        const yilIdInput = document.getElementById('yil-id-input');
+        const formCard = document.querySelector('.hero-form-card');
+
+        options.forEach(option => {
+            option.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const value = this.getAttribute('data-value');
+                const yearId = this.getAttribute('data-year-id');
+
+                // Update trigger display
+                selectedText.textContent = value || 'Model Yılı Seçin';
+                if (value) {
+                    selectedText.classList.remove('placeholder');
+                } else {
+                    selectedText.classList.add('placeholder');
+                }
+
+                // Update values
+                trigger.setAttribute('data-value', value);
+                trigger.setAttribute('data-year-id', yearId || '');
+                nativeSelect.value = value;
+                if (yilIdInput) yilIdInput.value = yearId || '';
+                selectedYear = value; // Store selected year globally
+                selectedModelId = null;
+                selectedBodytypeId = null;
+                selectedFueltypeId = null;
+                selectedTransmissionId = null;
+                selectedVersionId = null;
+
+                // Update selected state
+                options.forEach(opt => opt.classList.remove('selected'));
+                if (value) this.classList.add('selected');
+
+                // Close dropdown
+                panel.classList.remove('open');
+                trigger.classList.remove('open');
+                dropdown.classList.remove('dropdown-open');
+
+                // Enable all fields
+                if (formCard) {
+                    formCard.classList.remove('dropdown-open');
+                    formCard.querySelectorAll('.form-field').forEach(field => {
+                        field.style.pointerEvents = '';
+                        field.style.opacity = '';
+                    });
+                    formCard.querySelectorAll('button[type="submit"]').forEach(btn => {
+                        btn.style.pointerEvents = '';
+                        btn.style.opacity = '';
+                    });
+                }
+
+                // Enable/disable model dropdown based on year selection
+                const modelDropdown = document.getElementById('model-dropdown-sell');
+
+                // Disable all subsequent dropdowns
+                ['bodytype', 'fueltype', 'transmission', 'version', 'color'].forEach(name => {
+                    const dd = document.getElementById(`${name}-dropdown-sell`);
+                    if (dd) {
+                        dd.classList.add('disabled');
+                        dd.querySelector('.hero-custom-dropdown-trigger').disabled = true;
+                    }
+                });
+                resetModelDropdown();
+                resetBodytypeDropdown();
+                resetFueltypeDropdown();
+                resetTransmissionDropdown();
+                resetVersionDropdown();
+                resetColorDropdown();
+                resetKilometreInput();
+
+                if (value && selectedBrandId) {
+                    // Enable model dropdown and load models
+                    if (modelDropdown) {
+                        modelDropdown.classList.remove('disabled');
+                        modelDropdown.querySelector('.hero-custom-dropdown-trigger').disabled = false;
+                    }
+                    loadModelsFromAPI(selectedBrandId, value);
+                } else {
+                    // Disable model dropdown
+                    if (modelDropdown) {
+                        modelDropdown.classList.add('disabled');
+                        modelDropdown.querySelector('.hero-custom-dropdown-trigger').disabled = true;
+                    }
+                }
+            });
+        });
+    }
+
+    // Load body types from API
+    async function loadBodytypesFromAPI(brandId, modelYear, modelGroupId) {
+        const bodytypeDropdown = document.getElementById('bodytype-dropdown-sell');
+        if (!bodytypeDropdown) return;
+
+        const loading = bodytypeDropdown.querySelector('.bodytype-loading');
+        const bodytypeList = bodytypeDropdown.querySelector('.bodytype-list');
+
+        loading.classList.remove('hidden');
+        bodytypeList.style.display = 'none';
+
+        try {
+            const response = await fetch(`/api/arabam/step?step=30&brandId=${brandId}&modelYear=${modelYear}&modelGroupId=${modelGroupId}`);
+            const result = await response.json();
+
+            if (result.success && result.data && result.data.Items) {
+                // Clear existing options except first
+                const firstOption = bodytypeList.querySelector('.hero-custom-dropdown-option');
+                bodytypeList.innerHTML = '';
+                bodytypeList.appendChild(firstOption);
+
+                // Add bodytype options
+                result.data.Items.forEach(bodytype => {
+                    const option = document.createElement('div');
+                    option.className = 'hero-custom-dropdown-option';
+                    option.setAttribute('data-value', bodytype.Name);
+                    option.setAttribute('data-bodytype-id', bodytype.Id);
+                    option.textContent = bodytype.Name;
+                    bodytypeList.appendChild(option);
+                });
+
+                // Update native select
+                const nativeSelect = bodytypeDropdown.querySelector('.hero-custom-dropdown-native');
+                nativeSelect.innerHTML = '<option value="">Gövde Tipi Seçin</option>';
+                result.data.Items.forEach(bodytype => {
+                    const opt = document.createElement('option');
+                    opt.value = bodytype.Name;
+                    opt.textContent = bodytype.Name;
+                    opt.setAttribute('data-bodytype-id', bodytype.Id);
+                    nativeSelect.appendChild(opt);
+                });
+
+                // Re-init dropdown event listeners for new options
+                initBodytypeDropdownOptions(bodytypeDropdown);
+            }
+        } catch (error) {
+            console.error('Error loading body types:', error);
+        } finally {
+            loading.classList.add('hidden');
+            bodytypeList.style.display = '';
+        }
+    }
+
+    // Reset bodytype dropdown
+    function resetBodytypeDropdown() {
+        const bodytypeDropdown = document.getElementById('bodytype-dropdown-sell');
+        if (!bodytypeDropdown) return;
+
+        const trigger = bodytypeDropdown.querySelector('.hero-custom-dropdown-trigger');
+        const selectedText = trigger.querySelector('.selected-text');
+        const nativeSelect = bodytypeDropdown.querySelector('.hero-custom-dropdown-native');
+        const bodytypeIdInput = document.getElementById('govde-tipi-id-input');
+
+        selectedText.textContent = 'Gövde Tipi Seçin';
+        selectedText.classList.add('placeholder');
+        trigger.setAttribute('data-value', '');
+        trigger.setAttribute('data-bodytype-id', '');
+        nativeSelect.value = '';
+        if (bodytypeIdInput) bodytypeIdInput.value = '';
+    }
+
+    // Initialize bodytype dropdown options
+    function initBodytypeDropdownOptions(dropdown) {
+        const panel = dropdown.querySelector('.hero-custom-dropdown-panel');
+        const options = panel.querySelectorAll('.hero-custom-dropdown-option');
+        const trigger = dropdown.querySelector('.hero-custom-dropdown-trigger');
+        const nativeSelect = dropdown.querySelector('.hero-custom-dropdown-native');
+        const selectedText = trigger.querySelector('.selected-text');
+        const bodytypeIdInput = document.getElementById('govde-tipi-id-input');
+        const formCard = document.querySelector('.hero-form-card');
+
+        options.forEach(option => {
+            option.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const value = this.getAttribute('data-value');
+                const bodytypeId = this.getAttribute('data-bodytype-id');
+
+                // Update trigger display
+                selectedText.textContent = value || 'Gövde Tipi Seçin';
+                if (value) {
+                    selectedText.classList.remove('placeholder');
+                } else {
+                    selectedText.classList.add('placeholder');
+                }
+
+                // Update values
+                trigger.setAttribute('data-value', value);
+                trigger.setAttribute('data-bodytype-id', bodytypeId || '');
+                nativeSelect.value = value;
+                if (bodytypeIdInput) bodytypeIdInput.value = bodytypeId || '';
+                selectedBodytypeId = bodytypeId; // Store globally
+                selectedFueltypeId = null;
+                selectedTransmissionId = null;
+                selectedVersionId = null;
+
+                // Update selected state
+                options.forEach(opt => opt.classList.remove('selected'));
+                if (value) this.classList.add('selected');
+
+                // Close dropdown
+                panel.classList.remove('open');
+                trigger.classList.remove('open');
+                dropdown.classList.remove('dropdown-open');
+
+                // Enable all fields
+                if (formCard) {
+                    formCard.classList.remove('dropdown-open');
+                    formCard.querySelectorAll('.form-field').forEach(field => {
+                        field.style.pointerEvents = '';
+                        field.style.opacity = '';
+                    });
+                    formCard.querySelectorAll('button[type="submit"]').forEach(btn => {
+                        btn.style.pointerEvents = '';
+                        btn.style.opacity = '';
+                    });
+                }
+
+                // Disable all subsequent dropdowns and reset
+                ['fueltype', 'transmission', 'version', 'color'].forEach(name => {
+                    const dd = document.getElementById(`${name}-dropdown-sell`);
+                    if (dd) {
+                        dd.classList.add('disabled');
+                        const trig = dd.querySelector('.hero-custom-dropdown-trigger');
+                        if (trig) trig.disabled = true;
+                    }
+                });
+                resetFueltypeDropdown();
+                resetTransmissionDropdown();
+                resetVersionDropdown();
+                resetColorDropdown();
+                resetKilometreInput();
+
+                // Enable/disable fueltype dropdown based on bodytype selection
+                const fueltypeDropdown = document.getElementById('fueltype-dropdown-sell');
+                if (bodytypeId && selectedBrandId && selectedYear && selectedModelId) {
+                    // Enable fueltype dropdown and load fuel types
+                    if (fueltypeDropdown) {
+                        fueltypeDropdown.classList.remove('disabled');
+                        const fueltypeTrigger = fueltypeDropdown.querySelector('.hero-custom-dropdown-trigger');
+                        if (fueltypeTrigger) fueltypeTrigger.disabled = false;
+                    }
+                    loadFueltypesFromAPI(selectedBrandId, selectedYear, selectedModelId, bodytypeId);
+                }
+            });
+        });
+    }
+
+    function initBodytypeDropdown() {
+        const bodytypeDropdown = document.getElementById('bodytype-dropdown-sell');
+        if (!bodytypeDropdown) return;
+
+        const trigger = bodytypeDropdown.querySelector('.hero-custom-dropdown-trigger');
+        const panel = bodytypeDropdown.querySelector('.hero-custom-dropdown-panel');
+        const formCard = document.querySelector('.hero-form-card');
+
+        // Toggle dropdown
+        trigger.addEventListener('click', function(e) {
+            // Don't open if disabled
+            if (bodytypeDropdown.classList.contains('disabled') || trigger.disabled) return;
+
+            e.stopPropagation();
+            e.preventDefault();
+
+            // Close other dropdowns
+            document.querySelectorAll('.hero-custom-dropdown-panel.open').forEach(openPanel => {
+                if (openPanel !== panel) {
+                    openPanel.classList.remove('open');
+                    const otherDropdown = openPanel.closest('.hero-custom-dropdown');
+                    otherDropdown.querySelector('.hero-custom-dropdown-trigger').classList.remove('open');
+                    otherDropdown.classList.remove('dropdown-open');
+                }
+            });
+
+            // Toggle current dropdown
+            const isOpen = panel.classList.contains('open');
+            if (!isOpen) {
+                panel.classList.add('open');
+                trigger.classList.add('open');
+                bodytypeDropdown.classList.add('dropdown-open');
+
+                // Disable other fields
+                if (formCard) {
+                    formCard.classList.add('dropdown-open');
+                    const parentField = bodytypeDropdown.closest('.form-field');
+                    formCard.querySelectorAll('.form-field').forEach(field => {
+                        if (field !== parentField) {
+                            field.style.pointerEvents = 'none';
+                            field.style.opacity = '0.6';
+                        }
+                    });
+                    formCard.querySelectorAll('button[type="submit"]').forEach(btn => {
+                        btn.style.pointerEvents = 'none';
+                        btn.style.opacity = '0.6';
+                    });
+                }
+            } else {
+                panel.classList.remove('open');
+                trigger.classList.remove('open');
+                bodytypeDropdown.classList.remove('dropdown-open');
+
+                // Enable all fields
+                if (formCard) {
+                    formCard.classList.remove('dropdown-open');
+                    formCard.querySelectorAll('.form-field').forEach(field => {
+                        field.style.pointerEvents = '';
+                        field.style.opacity = '';
+                    });
+                    formCard.querySelectorAll('button[type="submit"]').forEach(btn => {
+                        btn.style.pointerEvents = '';
+                        btn.style.opacity = '';
+                    });
+                }
+            }
+        });
+
+        // Initialize default option click handler
+        initBodytypeDropdownOptions(bodytypeDropdown);
+    }
+
+    // Load fuel types from API
+    async function loadFueltypesFromAPI(brandId, modelYear, modelGroupId, bodyTypeId) {
+        const fueltypeDropdown = document.getElementById('fueltype-dropdown-sell');
+        if (!fueltypeDropdown) return;
+
+        const loading = fueltypeDropdown.querySelector('.fueltype-loading');
+        const fueltypeList = fueltypeDropdown.querySelector('.fueltype-list');
+
+        loading.classList.remove('hidden');
+        fueltypeList.style.display = 'none';
+
+        try {
+            const response = await fetch(`/api/arabam/step?step=40&brandId=${brandId}&modelYear=${modelYear}&modelGroupId=${modelGroupId}&bodyTypeId=${bodyTypeId}`);
+            const result = await response.json();
+
+            if (result.success && result.data && result.data.Items) {
+                // Clear existing options except first
+                const firstOption = fueltypeList.querySelector('.hero-custom-dropdown-option');
+                fueltypeList.innerHTML = '';
+                fueltypeList.appendChild(firstOption);
+
+                // Add fueltype options
+                result.data.Items.forEach(fueltype => {
+                    const option = document.createElement('div');
+                    option.className = 'hero-custom-dropdown-option';
+                    option.setAttribute('data-value', fueltype.Name);
+                    option.setAttribute('data-fueltype-id', fueltype.Id);
+                    option.textContent = fueltype.Name;
+                    fueltypeList.appendChild(option);
+                });
+
+                // Update native select
+                const nativeSelect = fueltypeDropdown.querySelector('.hero-custom-dropdown-native');
+                nativeSelect.innerHTML = '<option value="">Yakıt Tipi Seçin</option>';
+                result.data.Items.forEach(fueltype => {
+                    const opt = document.createElement('option');
+                    opt.value = fueltype.Name;
+                    opt.textContent = fueltype.Name;
+                    opt.setAttribute('data-fueltype-id', fueltype.Id);
+                    nativeSelect.appendChild(opt);
+                });
+
+                // Re-init dropdown event listeners for new options
+                initFueltypeDropdownOptions(fueltypeDropdown);
+            }
+        } catch (error) {
+            console.error('Error loading fuel types:', error);
+        } finally {
+            loading.classList.add('hidden');
+            fueltypeList.style.display = '';
+        }
+    }
+
+    // Reset fueltype dropdown
+    function resetFueltypeDropdown() {
+        const fueltypeDropdown = document.getElementById('fueltype-dropdown-sell');
+        if (!fueltypeDropdown) return;
+
+        const trigger = fueltypeDropdown.querySelector('.hero-custom-dropdown-trigger');
+        const selectedText = trigger.querySelector('.selected-text');
+        const nativeSelect = fueltypeDropdown.querySelector('.hero-custom-dropdown-native');
+        const fueltypeIdInput = document.getElementById('yakit-tipi-id-input');
+
+        selectedText.textContent = 'Yakıt Tipi Seçin';
+        selectedText.classList.add('placeholder');
+        trigger.setAttribute('data-value', '');
+        trigger.setAttribute('data-fueltype-id', '');
+        nativeSelect.value = '';
+        if (fueltypeIdInput) fueltypeIdInput.value = '';
+    }
+
+    // Initialize fueltype dropdown options
+    function initFueltypeDropdownOptions(dropdown) {
+        const panel = dropdown.querySelector('.hero-custom-dropdown-panel');
+        const options = panel.querySelectorAll('.hero-custom-dropdown-option');
+        const trigger = dropdown.querySelector('.hero-custom-dropdown-trigger');
+        const nativeSelect = dropdown.querySelector('.hero-custom-dropdown-native');
+        const selectedText = trigger.querySelector('.selected-text');
+        const fueltypeIdInput = document.getElementById('yakit-tipi-id-input');
+        const formCard = document.querySelector('.hero-form-card');
+
+        options.forEach(option => {
+            option.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const value = this.getAttribute('data-value');
+                const fueltypeId = this.getAttribute('data-fueltype-id');
+
+                // Update trigger display
+                selectedText.textContent = value || 'Yakıt Tipi Seçin';
+                if (value) {
+                    selectedText.classList.remove('placeholder');
+                } else {
+                    selectedText.classList.add('placeholder');
+                }
+
+                // Update values
+                trigger.setAttribute('data-value', value);
+                trigger.setAttribute('data-fueltype-id', fueltypeId || '');
+                nativeSelect.value = value;
+                if (fueltypeIdInput) fueltypeIdInput.value = fueltypeId || '';
+                selectedFueltypeId = fueltypeId;
+                selectedTransmissionId = null;
+                selectedVersionId = null;
+
+                // Update selected state
+                options.forEach(opt => opt.classList.remove('selected'));
+                if (value) this.classList.add('selected');
+
+                // Close dropdown
+                panel.classList.remove('open');
+                trigger.classList.remove('open');
+                dropdown.classList.remove('dropdown-open');
+
+                // Enable all fields
+                if (formCard) {
+                    formCard.classList.remove('dropdown-open');
+                    formCard.querySelectorAll('.form-field').forEach(field => {
+                        field.style.pointerEvents = '';
+                        field.style.opacity = '';
+                    });
+                    formCard.querySelectorAll('button[type="submit"]').forEach(btn => {
+                        btn.style.pointerEvents = '';
+                        btn.style.opacity = '';
+                    });
+                }
+
+                // Disable all subsequent dropdowns and reset
+                ['transmission', 'version', 'color'].forEach(name => {
+                    const dd = document.getElementById(`${name}-dropdown-sell`);
+                    if (dd) {
+                        dd.classList.add('disabled');
+                        const trig = dd.querySelector('.hero-custom-dropdown-trigger');
+                        if (trig) trig.disabled = true;
+                    }
+                });
+                resetTransmissionDropdown();
+                resetVersionDropdown();
+                resetColorDropdown();
+                resetKilometreInput();
+
+                // Enable/disable transmission dropdown
+                const transmissionDropdown = document.getElementById('transmission-dropdown-sell');
+                if (fueltypeId && selectedBrandId && selectedYear && selectedModelId && selectedBodytypeId) {
+                    if (transmissionDropdown) {
+                        transmissionDropdown.classList.remove('disabled');
+                        const transmissionTrigger = transmissionDropdown.querySelector('.hero-custom-dropdown-trigger');
+                        if (transmissionTrigger) transmissionTrigger.disabled = false;
+                    }
+                    loadTransmissionsFromAPI(selectedBrandId, selectedYear, selectedModelId, selectedBodytypeId, fueltypeId);
+                }
+            });
+        });
+    }
+
+    function initFueltypeDropdown() {
+        const fueltypeDropdown = document.getElementById('fueltype-dropdown-sell');
+        if (!fueltypeDropdown) return;
+
+        const trigger = fueltypeDropdown.querySelector('.hero-custom-dropdown-trigger');
+        const panel = fueltypeDropdown.querySelector('.hero-custom-dropdown-panel');
+        const formCard = document.querySelector('.hero-form-card');
+
+        // Toggle dropdown
+        trigger.addEventListener('click', function(e) {
+            // Don't open if disabled
+            if (fueltypeDropdown.classList.contains('disabled') || trigger.disabled) return;
+
+            e.stopPropagation();
+            e.preventDefault();
+
+            // Close other dropdowns
+            document.querySelectorAll('.hero-custom-dropdown-panel.open').forEach(openPanel => {
+                if (openPanel !== panel) {
+                    openPanel.classList.remove('open');
+                    const otherDropdown = openPanel.closest('.hero-custom-dropdown');
+                    otherDropdown.querySelector('.hero-custom-dropdown-trigger').classList.remove('open');
+                    otherDropdown.classList.remove('dropdown-open');
+                }
+            });
+
+            // Toggle current dropdown
+            const isOpen = panel.classList.contains('open');
+            if (!isOpen) {
+                panel.classList.add('open');
+                trigger.classList.add('open');
+                fueltypeDropdown.classList.add('dropdown-open');
+
+                // Disable other fields
+                if (formCard) {
+                    formCard.classList.add('dropdown-open');
+                    const parentField = fueltypeDropdown.closest('.form-field');
+                    formCard.querySelectorAll('.form-field').forEach(field => {
+                        if (field !== parentField) {
+                            field.style.pointerEvents = 'none';
+                            field.style.opacity = '0.6';
+                        }
+                    });
+                    formCard.querySelectorAll('button[type="submit"]').forEach(btn => {
+                        btn.style.pointerEvents = 'none';
+                        btn.style.opacity = '0.6';
+                    });
+                }
+            } else {
+                panel.classList.remove('open');
+                trigger.classList.remove('open');
+                fueltypeDropdown.classList.remove('dropdown-open');
+
+                // Enable all fields
+                if (formCard) {
+                    formCard.classList.remove('dropdown-open');
+                    formCard.querySelectorAll('.form-field').forEach(field => {
+                        field.style.pointerEvents = '';
+                        field.style.opacity = '';
+                    });
+                    formCard.querySelectorAll('button[type="submit"]').forEach(btn => {
+                        btn.style.pointerEvents = '';
+                        btn.style.opacity = '';
+                    });
+                }
+            }
+        });
+
+        // Initialize default option click handler
+        initFueltypeDropdownOptions(fueltypeDropdown);
+    }
+
+    // Load transmissions from API
+    async function loadTransmissionsFromAPI(brandId, modelYear, modelGroupId, bodyTypeId, fuelTypeId) {
+        const dropdown = document.getElementById('transmission-dropdown-sell');
+        if (!dropdown) return;
+
+        const loading = dropdown.querySelector('.transmission-loading');
+        const list = dropdown.querySelector('.transmission-list');
+
+        loading.classList.remove('hidden');
+        list.style.display = 'none';
+
+        try {
+            const response = await fetch(`/api/arabam/step?step=50&brandId=${brandId}&modelYear=${modelYear}&modelGroupId=${modelGroupId}&bodyTypeId=${bodyTypeId}&fuelTypeId=${fuelTypeId}`);
+            const result = await response.json();
+
+            if (result.success && result.data && result.data.Items) {
+                const firstOption = list.querySelector('.hero-custom-dropdown-option');
+                list.innerHTML = '';
+                list.appendChild(firstOption);
+
+                result.data.Items.forEach(item => {
+                    const option = document.createElement('div');
+                    option.className = 'hero-custom-dropdown-option';
+                    option.setAttribute('data-value', item.Name);
+                    option.setAttribute('data-transmission-id', item.Id);
+                    option.textContent = item.Name;
+                    list.appendChild(option);
+                });
+
+                const nativeSelect = dropdown.querySelector('.hero-custom-dropdown-native');
+                nativeSelect.innerHTML = '<option value="">Vites Tipi Seçin</option>';
+                result.data.Items.forEach(item => {
+                    const opt = document.createElement('option');
+                    opt.value = item.Name;
+                    opt.textContent = item.Name;
+                    opt.setAttribute('data-transmission-id', item.Id);
+                    nativeSelect.appendChild(opt);
+                });
+
+                initTransmissionDropdownOptions(dropdown);
+            }
+        } catch (error) {
+            console.error('Error loading transmissions:', error);
+        } finally {
+            loading.classList.add('hidden');
+            list.style.display = '';
+        }
+    }
+
+    function resetTransmissionDropdown() {
+        const dropdown = document.getElementById('transmission-dropdown-sell');
+        if (!dropdown) return;
+
+        const trigger = dropdown.querySelector('.hero-custom-dropdown-trigger');
+        const selectedText = trigger.querySelector('.selected-text');
+        const nativeSelect = dropdown.querySelector('.hero-custom-dropdown-native');
+        const idInput = document.getElementById('vites-tipi-id-input');
+
+        selectedText.textContent = 'Vites Tipi Seçin';
+        selectedText.classList.add('placeholder');
+        trigger.setAttribute('data-value', '');
+        trigger.setAttribute('data-transmission-id', '');
+        nativeSelect.value = '';
+        if (idInput) idInput.value = '';
+        selectedTransmissionId = null;
+    }
+
+    function initTransmissionDropdownOptions(dropdown) {
+        const panel = dropdown.querySelector('.hero-custom-dropdown-panel');
+        const options = panel.querySelectorAll('.hero-custom-dropdown-option');
+        const trigger = dropdown.querySelector('.hero-custom-dropdown-trigger');
+        const nativeSelect = dropdown.querySelector('.hero-custom-dropdown-native');
+        const selectedText = trigger.querySelector('.selected-text');
+        const idInput = document.getElementById('vites-tipi-id-input');
+        const formCard = document.querySelector('.hero-form-card');
+
+        options.forEach(option => {
+            option.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const value = this.getAttribute('data-value');
+                const transmissionId = this.getAttribute('data-transmission-id');
+
+                selectedText.textContent = value || 'Vites Tipi Seçin';
+                selectedText.classList.toggle('placeholder', !value);
+                trigger.setAttribute('data-value', value);
+                trigger.setAttribute('data-transmission-id', transmissionId || '');
+                nativeSelect.value = value;
+                if (idInput) idInput.value = transmissionId || '';
+                selectedTransmissionId = transmissionId;
+                selectedVersionId = null;
+
+                options.forEach(opt => opt.classList.remove('selected'));
+                if (value) this.classList.add('selected');
+
+                panel.classList.remove('open');
+                trigger.classList.remove('open');
+                dropdown.classList.remove('dropdown-open');
+
+                if (formCard) {
+                    formCard.classList.remove('dropdown-open');
+                    formCard.querySelectorAll('.form-field').forEach(f => { f.style.pointerEvents = ''; f.style.opacity = ''; });
+                    formCard.querySelectorAll('button[type="submit"]').forEach(b => { b.style.pointerEvents = ''; b.style.opacity = ''; });
+                }
+
+                // Disable all subsequent dropdowns and reset
+                ['version', 'color'].forEach(name => {
+                    const dd = document.getElementById(`${name}-dropdown-sell`);
+                    if (dd) {
+                        dd.classList.add('disabled');
+                        const trig = dd.querySelector('.hero-custom-dropdown-trigger');
+                        if (trig) trig.disabled = true;
+                    }
+                });
+                resetVersionDropdown();
+                resetColorDropdown();
+                resetKilometreInput();
+
+                // Enable version dropdown
+                const versionDropdown = document.getElementById('version-dropdown-sell');
+                if (transmissionId && selectedBrandId && selectedYear && selectedModelId && selectedBodytypeId && selectedFueltypeId) {
+                    if (versionDropdown) {
+                        versionDropdown.classList.remove('disabled');
+                        versionDropdown.querySelector('.hero-custom-dropdown-trigger').disabled = false;
+                    }
+                    loadVersionsFromAPI(selectedBrandId, selectedYear, selectedModelId, selectedBodytypeId, selectedFueltypeId, transmissionId);
+                }
+            });
+        });
+    }
+
+    function initTransmissionDropdown() {
+        const dropdown = document.getElementById('transmission-dropdown-sell');
+        if (!dropdown) return;
+
+        const trigger = dropdown.querySelector('.hero-custom-dropdown-trigger');
+        const panel = dropdown.querySelector('.hero-custom-dropdown-panel');
+        const formCard = document.querySelector('.hero-form-card');
+
+        trigger.addEventListener('click', function(e) {
+            if (dropdown.classList.contains('disabled') || trigger.disabled) return;
+            e.stopPropagation();
+            e.preventDefault();
+
+            document.querySelectorAll('.hero-custom-dropdown-panel.open').forEach(p => {
+                if (p !== panel) {
+                    p.classList.remove('open');
+                    p.closest('.hero-custom-dropdown').querySelector('.hero-custom-dropdown-trigger').classList.remove('open');
+                    p.closest('.hero-custom-dropdown').classList.remove('dropdown-open');
+                }
+            });
+
+            const isOpen = panel.classList.contains('open');
+            if (!isOpen) {
+                panel.classList.add('open');
+                trigger.classList.add('open');
+                dropdown.classList.add('dropdown-open');
+                if (formCard) {
+                    formCard.classList.add('dropdown-open');
+                    const parentField = dropdown.closest('.form-field');
+                    formCard.querySelectorAll('.form-field').forEach(f => {
+                        if (f !== parentField) { f.style.pointerEvents = 'none'; f.style.opacity = '0.6'; }
+                    });
+                    formCard.querySelectorAll('button[type="submit"]').forEach(b => { b.style.pointerEvents = 'none'; b.style.opacity = '0.6'; });
+                }
+            } else {
+                panel.classList.remove('open');
+                trigger.classList.remove('open');
+                dropdown.classList.remove('dropdown-open');
+                if (formCard) {
+                    formCard.classList.remove('dropdown-open');
+                    formCard.querySelectorAll('.form-field').forEach(f => { f.style.pointerEvents = ''; f.style.opacity = ''; });
+                    formCard.querySelectorAll('button[type="submit"]').forEach(b => { b.style.pointerEvents = ''; b.style.opacity = ''; });
+                }
+            }
+        });
+
+        initTransmissionDropdownOptions(dropdown);
+    }
+
+    // Load versions from API
+    async function loadVersionsFromAPI(brandId, modelYear, modelGroupId, bodyTypeId, fuelTypeId, transmissionTypeId) {
+        const dropdown = document.getElementById('version-dropdown-sell');
+        if (!dropdown) return;
+
+        const loading = dropdown.querySelector('.version-loading');
+        const list = dropdown.querySelector('.version-list');
+
+        loading.classList.remove('hidden');
+        list.style.display = 'none';
+
+        try {
+            const response = await fetch(`/api/arabam/step?step=60&brandId=${brandId}&modelYear=${modelYear}&modelGroupId=${modelGroupId}&bodyTypeId=${bodyTypeId}&fuelTypeId=${fuelTypeId}&transmissionTypeId=${transmissionTypeId}`);
+            const result = await response.json();
+
+            if (result.success && result.data && result.data.Items) {
+                const firstOption = list.querySelector('.hero-custom-dropdown-option');
+                list.innerHTML = '';
+                list.appendChild(firstOption);
+
+                result.data.Items.forEach(item => {
+                    const option = document.createElement('div');
+                    option.className = 'hero-custom-dropdown-option';
+                    option.setAttribute('data-value', item.Name);
+                    option.setAttribute('data-version-id', item.Id);
+                    option.innerHTML = `<span>${item.ShortName || item.Name}</span>`;
+                    if (item.Properties && item.Properties.length > 0) {
+                        option.innerHTML += `<span class="version-props">${item.Properties.join(' • ')}</span>`;
+                    }
+                    list.appendChild(option);
+                });
+
+                const nativeSelect = dropdown.querySelector('.hero-custom-dropdown-native');
+                nativeSelect.innerHTML = '<option value="">Versiyon Seçin</option>';
+                result.data.Items.forEach(item => {
+                    const opt = document.createElement('option');
+                    opt.value = item.Name;
+                    opt.textContent = item.ShortName || item.Name;
+                    opt.setAttribute('data-version-id', item.Id);
+                    nativeSelect.appendChild(opt);
+                });
+
+                initVersionDropdownOptions(dropdown);
+            }
+        } catch (error) {
+            console.error('Error loading versions:', error);
+        } finally {
+            loading.classList.add('hidden');
+            list.style.display = '';
+        }
+    }
+
+    function resetVersionDropdown() {
+        const dropdown = document.getElementById('version-dropdown-sell');
+        if (!dropdown) return;
+
+        const trigger = dropdown.querySelector('.hero-custom-dropdown-trigger');
+        const selectedText = trigger.querySelector('.selected-text');
+        const nativeSelect = dropdown.querySelector('.hero-custom-dropdown-native');
+        const idInput = document.getElementById('versiyon-id-input');
+
+        selectedText.textContent = 'Versiyon Seçin';
+        selectedText.classList.add('placeholder');
+        trigger.setAttribute('data-value', '');
+        trigger.setAttribute('data-version-id', '');
+        nativeSelect.value = '';
+        if (idInput) idInput.value = '';
+        selectedVersionId = null;
+    }
+
+    function initVersionDropdownOptions(dropdown) {
+        const panel = dropdown.querySelector('.hero-custom-dropdown-panel');
+        const options = panel.querySelectorAll('.hero-custom-dropdown-option');
+        const trigger = dropdown.querySelector('.hero-custom-dropdown-trigger');
+        const nativeSelect = dropdown.querySelector('.hero-custom-dropdown-native');
+        const selectedText = trigger.querySelector('.selected-text');
+        const idInput = document.getElementById('versiyon-id-input');
+        const formCard = document.querySelector('.hero-form-card');
+
+        options.forEach(option => {
+            option.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const value = this.getAttribute('data-value');
+                const versionId = this.getAttribute('data-version-id');
+                const shortName = this.querySelector('span')?.textContent || value;
+
+                selectedText.textContent = shortName || 'Versiyon Seçin';
+                selectedText.classList.toggle('placeholder', !value);
+                trigger.setAttribute('data-value', value);
+                trigger.setAttribute('data-version-id', versionId || '');
+                nativeSelect.value = value;
+                if (idInput) idInput.value = versionId || '';
+                selectedVersionId = versionId;
+
+                options.forEach(opt => opt.classList.remove('selected'));
+                if (value) this.classList.add('selected');
+
+                panel.classList.remove('open');
+                trigger.classList.remove('open');
+                dropdown.classList.remove('dropdown-open');
+
+                if (formCard) {
+                    formCard.classList.remove('dropdown-open');
+                    formCard.querySelectorAll('.form-field').forEach(f => { f.style.pointerEvents = ''; f.style.opacity = ''; });
+                    formCard.querySelectorAll('button[type="submit"]').forEach(b => { b.style.pointerEvents = ''; b.style.opacity = ''; });
+                }
+
+                // Disable color dropdown and kilometre, then reset
+                const colorDropdown = document.getElementById('color-dropdown-sell');
+                const kmInput = document.getElementById('kilometre-input');
+                if (colorDropdown) {
+                    colorDropdown.classList.add('disabled');
+                    const colorTrig = colorDropdown.querySelector('.hero-custom-dropdown-trigger');
+                    if (colorTrig) colorTrig.disabled = true;
+                }
+                if (kmInput) {
+                    kmInput.disabled = true;
+                }
+                resetColorDropdown();
+                resetKilometreInput();
+
+                // Enable color dropdown AND kilometre input when version is selected
+                if (versionId && selectedBrandId && selectedYear && selectedModelId && selectedBodytypeId && selectedFueltypeId && selectedTransmissionId) {
+                    if (colorDropdown) {
+                        colorDropdown.classList.remove('disabled');
+                        colorDropdown.querySelector('.hero-custom-dropdown-trigger').disabled = false;
+                    }
+                    if (kmInput) {
+                        kmInput.disabled = false;
+                        kmInput.placeholder = 'Kilometre giriniz';
+                    }
+                    loadColorsFromAPI(selectedBrandId, selectedYear, selectedModelId, selectedBodytypeId, selectedFueltypeId, selectedTransmissionId, versionId);
+                }
+            });
+        });
+    }
+
+    function initVersionDropdown() {
+        const dropdown = document.getElementById('version-dropdown-sell');
+        if (!dropdown) return;
+
+        const trigger = dropdown.querySelector('.hero-custom-dropdown-trigger');
+        const panel = dropdown.querySelector('.hero-custom-dropdown-panel');
+        const formCard = document.querySelector('.hero-form-card');
+
+        trigger.addEventListener('click', function(e) {
+            if (dropdown.classList.contains('disabled') || trigger.disabled) return;
+            e.stopPropagation();
+            e.preventDefault();
+
+            document.querySelectorAll('.hero-custom-dropdown-panel.open').forEach(p => {
+                if (p !== panel) {
+                    p.classList.remove('open');
+                    p.closest('.hero-custom-dropdown').querySelector('.hero-custom-dropdown-trigger').classList.remove('open');
+                    p.closest('.hero-custom-dropdown').classList.remove('dropdown-open');
+                }
+            });
+
+            const isOpen = panel.classList.contains('open');
+            if (!isOpen) {
+                panel.classList.add('open');
+                trigger.classList.add('open');
+                dropdown.classList.add('dropdown-open');
+                if (formCard) {
+                    formCard.classList.add('dropdown-open');
+                    const parentField = dropdown.closest('.form-field');
+                    formCard.querySelectorAll('.form-field').forEach(f => {
+                        if (f !== parentField) { f.style.pointerEvents = 'none'; f.style.opacity = '0.6'; }
+                    });
+                    formCard.querySelectorAll('button[type="submit"]').forEach(b => { b.style.pointerEvents = 'none'; b.style.opacity = '0.6'; });
+                }
+            } else {
+                panel.classList.remove('open');
+                trigger.classList.remove('open');
+                dropdown.classList.remove('dropdown-open');
+                if (formCard) {
+                    formCard.classList.remove('dropdown-open');
+                    formCard.querySelectorAll('.form-field').forEach(f => { f.style.pointerEvents = ''; f.style.opacity = ''; });
+                    formCard.querySelectorAll('button[type="submit"]').forEach(b => { b.style.pointerEvents = ''; b.style.opacity = ''; });
+                }
+            }
+        });
+
+        initVersionDropdownOptions(dropdown);
+    }
+
+    // Load colors from API
+    async function loadColorsFromAPI(brandId, modelYear, modelGroupId, bodyTypeId, fuelTypeId, transmissionTypeId, modelId) {
+        const dropdown = document.getElementById('color-dropdown-sell');
+        if (!dropdown) return;
+
+        const loading = dropdown.querySelector('.color-loading');
+        const list = dropdown.querySelector('.color-list');
+
+        loading.classList.remove('hidden');
+        list.style.display = 'none';
+
+        try {
+            const response = await fetch(`/api/arabam/step?step=70&brandId=${brandId}&modelYear=${modelYear}&modelGroupId=${modelGroupId}&bodyTypeId=${bodyTypeId}&fuelTypeId=${fuelTypeId}&transmissionTypeId=${transmissionTypeId}&modelId=${modelId}`);
+            const result = await response.json();
+
+            if (result.success && result.data && result.data.Items) {
+                const firstOption = list.querySelector('.hero-custom-dropdown-option');
+                list.innerHTML = '';
+                list.appendChild(firstOption);
+
+                result.data.Items.forEach(item => {
+                    const option = document.createElement('div');
+                    option.className = 'hero-custom-dropdown-option';
+                    option.setAttribute('data-value', item.Name);
+                    option.setAttribute('data-color-id', item.Id);
+                    option.textContent = item.Name;
+                    list.appendChild(option);
+                });
+
+                const nativeSelect = dropdown.querySelector('.hero-custom-dropdown-native');
+                nativeSelect.innerHTML = '<option value="">Renk Seçin</option>';
+                result.data.Items.forEach(item => {
+                    const opt = document.createElement('option');
+                    opt.value = item.Name;
+                    opt.textContent = item.Name;
+                    opt.setAttribute('data-color-id', item.Id);
+                    nativeSelect.appendChild(opt);
+                });
+
+                initColorDropdownOptions(dropdown);
+            }
+        } catch (error) {
+            console.error('Error loading colors:', error);
+        } finally {
+            loading.classList.add('hidden');
+            list.style.display = '';
+        }
+    }
+
+    function resetColorDropdown() {
+        const dropdown = document.getElementById('color-dropdown-sell');
+        if (!dropdown) return;
+
+        const trigger = dropdown.querySelector('.hero-custom-dropdown-trigger');
+        const selectedText = trigger.querySelector('.selected-text');
+        const nativeSelect = dropdown.querySelector('.hero-custom-dropdown-native');
+        const idInput = document.getElementById('renk-id-input');
+
+        selectedText.textContent = 'Renk Seçin';
+        selectedText.classList.add('placeholder');
+        trigger.setAttribute('data-value', '');
+        trigger.setAttribute('data-color-id', '');
+        nativeSelect.value = '';
+        if (idInput) idInput.value = '';
+    }
+
+    function initColorDropdownOptions(dropdown) {
+        const panel = dropdown.querySelector('.hero-custom-dropdown-panel');
+        const options = panel.querySelectorAll('.hero-custom-dropdown-option');
+        const trigger = dropdown.querySelector('.hero-custom-dropdown-trigger');
+        const nativeSelect = dropdown.querySelector('.hero-custom-dropdown-native');
+        const selectedText = trigger.querySelector('.selected-text');
+        const idInput = document.getElementById('renk-id-input');
+        const formCard = document.querySelector('.hero-form-card');
+
+        options.forEach(option => {
+            option.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const value = this.getAttribute('data-value');
+                const colorId = this.getAttribute('data-color-id');
+
+                selectedText.textContent = value || 'Renk Seçin';
+                selectedText.classList.toggle('placeholder', !value);
+                trigger.setAttribute('data-value', value);
+                trigger.setAttribute('data-color-id', colorId || '');
+                nativeSelect.value = value;
+                if (idInput) idInput.value = colorId || '';
+
+                options.forEach(opt => opt.classList.remove('selected'));
+                if (value) this.classList.add('selected');
+
+                panel.classList.remove('open');
+                trigger.classList.remove('open');
+                dropdown.classList.remove('dropdown-open');
+
+                if (formCard) {
+                    formCard.classList.remove('dropdown-open');
+                    formCard.querySelectorAll('.form-field').forEach(f => { f.style.pointerEvents = ''; f.style.opacity = ''; });
+                    formCard.querySelectorAll('button[type="submit"]').forEach(b => { b.style.pointerEvents = ''; b.style.opacity = ''; });
+                }
+            });
+        });
+    }
+
+    function initColorDropdown() {
+        const dropdown = document.getElementById('color-dropdown-sell');
+        if (!dropdown) return;
+
+        const trigger = dropdown.querySelector('.hero-custom-dropdown-trigger');
+        const panel = dropdown.querySelector('.hero-custom-dropdown-panel');
+        const formCard = document.querySelector('.hero-form-card');
+
+        trigger.addEventListener('click', function(e) {
+            if (dropdown.classList.contains('disabled') || trigger.disabled) return;
+            e.stopPropagation();
+            e.preventDefault();
+
+            document.querySelectorAll('.hero-custom-dropdown-panel.open').forEach(p => {
+                if (p !== panel) {
+                    p.classList.remove('open');
+                    p.closest('.hero-custom-dropdown').querySelector('.hero-custom-dropdown-trigger').classList.remove('open');
+                    p.closest('.hero-custom-dropdown').classList.remove('dropdown-open');
+                }
+            });
+
+            const isOpen = panel.classList.contains('open');
+            if (!isOpen) {
+                panel.classList.add('open');
+                trigger.classList.add('open');
+                dropdown.classList.add('dropdown-open');
+                if (formCard) {
+                    formCard.classList.add('dropdown-open');
+                    const parentField = dropdown.closest('.form-field');
+                    formCard.querySelectorAll('.form-field').forEach(f => {
+                        if (f !== parentField) { f.style.pointerEvents = 'none'; f.style.opacity = '0.6'; }
+                    });
+                    formCard.querySelectorAll('button[type="submit"]').forEach(b => { b.style.pointerEvents = 'none'; b.style.opacity = '0.6'; });
+                }
+            } else {
+                panel.classList.remove('open');
+                trigger.classList.remove('open');
+                dropdown.classList.remove('dropdown-open');
+                if (formCard) {
+                    formCard.classList.remove('dropdown-open');
+                    formCard.querySelectorAll('.form-field').forEach(f => { f.style.pointerEvents = ''; f.style.opacity = ''; });
+                    formCard.querySelectorAll('button[type="submit"]').forEach(b => { b.style.pointerEvents = ''; b.style.opacity = ''; });
+                }
+            }
+        });
+
+        initColorDropdownOptions(dropdown);
+    }
+
+    function resetKilometreInput() {
+        const kmInput = document.getElementById('kilometre-input');
+        if (kmInput) {
+            kmInput.disabled = true;
+            kmInput.value = '';
+            kmInput.placeholder = 'Kilometre giriniz';
+        }
+    }
+
     // Custom Dropdown Implementation for Hero Section
     document.addEventListener('DOMContentLoaded', function() {
         initHeroCustomDropdowns();
+
+        // Initialize brand dropdown
+        initBrandDropdown();
     });
-    
+
+    function initBrandDropdown() {
+        const brandDropdown = document.getElementById('brand-dropdown-sell');
+        if (!brandDropdown) return;
+
+        const trigger = brandDropdown.querySelector('.hero-custom-dropdown-trigger');
+        const panel = brandDropdown.querySelector('.hero-custom-dropdown-panel');
+        const formCard = document.querySelector('.hero-form-card');
+
+        // Toggle dropdown
+        trigger.addEventListener('click', function(e) {
+            e.stopPropagation();
+            e.preventDefault();
+
+            // Close other dropdowns
+            document.querySelectorAll('.hero-custom-dropdown-panel.open').forEach(openPanel => {
+                if (openPanel !== panel) {
+                    openPanel.classList.remove('open');
+                    const otherDropdown = openPanel.closest('.hero-custom-dropdown');
+                    otherDropdown.querySelector('.hero-custom-dropdown-trigger').classList.remove('open');
+                    otherDropdown.classList.remove('dropdown-open');
+                }
+            });
+
+            // Toggle current dropdown
+            const isOpen = panel.classList.contains('open');
+            if (!isOpen) {
+                panel.classList.add('open');
+                trigger.classList.add('open');
+                brandDropdown.classList.add('dropdown-open');
+
+                // Load brands if not loaded
+                if (!brandsLoaded) {
+                    loadBrandsFromAPI();
+                }
+
+                // Disable other fields
+                if (formCard) {
+                    formCard.classList.add('dropdown-open');
+                    const parentField = brandDropdown.closest('.form-field');
+                    formCard.querySelectorAll('.form-field').forEach(field => {
+                        if (field !== parentField) {
+                            field.style.pointerEvents = 'none';
+                            field.style.opacity = '0.6';
+                        }
+                    });
+                    formCard.querySelectorAll('button[type="submit"]').forEach(btn => {
+                        btn.style.pointerEvents = 'none';
+                        btn.style.opacity = '0.6';
+                    });
+                }
+            } else {
+                panel.classList.remove('open');
+                trigger.classList.remove('open');
+                brandDropdown.classList.remove('dropdown-open');
+
+                // Enable all fields
+                if (formCard) {
+                    formCard.classList.remove('dropdown-open');
+                    formCard.querySelectorAll('.form-field').forEach(field => {
+                        field.style.pointerEvents = '';
+                        field.style.opacity = '';
+                    });
+                    formCard.querySelectorAll('button[type="submit"]').forEach(btn => {
+                        btn.style.pointerEvents = '';
+                        btn.style.opacity = '';
+                    });
+                }
+            }
+        });
+
+        // Initialize default option click handler
+        initBrandDropdownOptions(brandDropdown);
+
+        // Initialize year dropdown toggle
+        initYearDropdown();
+
+        // Initialize model dropdown toggle
+        initModelDropdown();
+
+        // Initialize bodytype dropdown toggle
+        initBodytypeDropdown();
+
+        // Initialize fueltype dropdown toggle
+        initFueltypeDropdown();
+
+        // Initialize transmission dropdown toggle
+        initTransmissionDropdown();
+
+        // Initialize version dropdown toggle
+        initVersionDropdown();
+
+        // Initialize color dropdown toggle
+        initColorDropdown();
+    }
+
+    function initYearDropdown() {
+        const yearDropdown = document.getElementById('year-dropdown-sell');
+        if (!yearDropdown) return;
+
+        const trigger = yearDropdown.querySelector('.hero-custom-dropdown-trigger');
+        const panel = yearDropdown.querySelector('.hero-custom-dropdown-panel');
+        const formCard = document.querySelector('.hero-form-card');
+
+        // Toggle dropdown
+        trigger.addEventListener('click', function(e) {
+            // Don't open if disabled
+            if (yearDropdown.classList.contains('disabled') || trigger.disabled) return;
+
+            e.stopPropagation();
+            e.preventDefault();
+
+            // Close other dropdowns
+            document.querySelectorAll('.hero-custom-dropdown-panel.open').forEach(openPanel => {
+                if (openPanel !== panel) {
+                    openPanel.classList.remove('open');
+                    const otherDropdown = openPanel.closest('.hero-custom-dropdown');
+                    otherDropdown.querySelector('.hero-custom-dropdown-trigger').classList.remove('open');
+                    otherDropdown.classList.remove('dropdown-open');
+                }
+            });
+
+            // Toggle current dropdown
+            const isOpen = panel.classList.contains('open');
+            if (!isOpen) {
+                panel.classList.add('open');
+                trigger.classList.add('open');
+                yearDropdown.classList.add('dropdown-open');
+
+                // Disable other fields
+                if (formCard) {
+                    formCard.classList.add('dropdown-open');
+                    const parentField = yearDropdown.closest('.form-field');
+                    formCard.querySelectorAll('.form-field').forEach(field => {
+                        if (field !== parentField) {
+                            field.style.pointerEvents = 'none';
+                            field.style.opacity = '0.6';
+                        }
+                    });
+                    formCard.querySelectorAll('button[type="submit"]').forEach(btn => {
+                        btn.style.pointerEvents = 'none';
+                        btn.style.opacity = '0.6';
+                    });
+                }
+            } else {
+                panel.classList.remove('open');
+                trigger.classList.remove('open');
+                yearDropdown.classList.remove('dropdown-open');
+
+                // Enable all fields
+                if (formCard) {
+                    formCard.classList.remove('dropdown-open');
+                    formCard.querySelectorAll('.form-field').forEach(field => {
+                        field.style.pointerEvents = '';
+                        field.style.opacity = '';
+                    });
+                    formCard.querySelectorAll('button[type="submit"]').forEach(btn => {
+                        btn.style.pointerEvents = '';
+                        btn.style.opacity = '';
+                    });
+                }
+            }
+        });
+
+        // Initialize default option click handler
+        initYearDropdownOptions(yearDropdown);
+    }
+
+    function initModelDropdown() {
+        const modelDropdown = document.getElementById('model-dropdown-sell');
+        if (!modelDropdown) return;
+
+        const trigger = modelDropdown.querySelector('.hero-custom-dropdown-trigger');
+        const panel = modelDropdown.querySelector('.hero-custom-dropdown-panel');
+        const formCard = document.querySelector('.hero-form-card');
+
+        // Toggle dropdown
+        trigger.addEventListener('click', function(e) {
+            // Don't open if disabled
+            if (modelDropdown.classList.contains('disabled') || trigger.disabled) return;
+
+            e.stopPropagation();
+            e.preventDefault();
+
+            // Close other dropdowns
+            document.querySelectorAll('.hero-custom-dropdown-panel.open').forEach(openPanel => {
+                if (openPanel !== panel) {
+                    openPanel.classList.remove('open');
+                    const otherDropdown = openPanel.closest('.hero-custom-dropdown');
+                    otherDropdown.querySelector('.hero-custom-dropdown-trigger').classList.remove('open');
+                    otherDropdown.classList.remove('dropdown-open');
+                }
+            });
+
+            // Toggle current dropdown
+            const isOpen = panel.classList.contains('open');
+            if (!isOpen) {
+                panel.classList.add('open');
+                trigger.classList.add('open');
+                modelDropdown.classList.add('dropdown-open');
+
+                // Disable other fields
+                if (formCard) {
+                    formCard.classList.add('dropdown-open');
+                    const parentField = modelDropdown.closest('.form-field');
+                    formCard.querySelectorAll('.form-field').forEach(field => {
+                        if (field !== parentField) {
+                            field.style.pointerEvents = 'none';
+                            field.style.opacity = '0.6';
+                        }
+                    });
+                    formCard.querySelectorAll('button[type="submit"]').forEach(btn => {
+                        btn.style.pointerEvents = 'none';
+                        btn.style.opacity = '0.6';
+                    });
+                }
+            } else {
+                panel.classList.remove('open');
+                trigger.classList.remove('open');
+                modelDropdown.classList.remove('dropdown-open');
+
+                // Enable all fields
+                if (formCard) {
+                    formCard.classList.remove('dropdown-open');
+                    formCard.querySelectorAll('.form-field').forEach(field => {
+                        field.style.pointerEvents = '';
+                        field.style.opacity = '';
+                    });
+                    formCard.querySelectorAll('button[type="submit"]').forEach(btn => {
+                        btn.style.pointerEvents = '';
+                        btn.style.opacity = '';
+                    });
+                }
+            }
+        });
+
+        // Initialize default option click handler
+        initModelDropdownOptions(modelDropdown);
+    }
+
     function initHeroCustomDropdowns() {
         const dropdowns = document.querySelectorAll('.hero-custom-dropdown');
         const formCard = document.querySelector('.hero-form-card');
-        
+
         dropdowns.forEach(dropdown => {
+            // Özel handler'ı olan dropdown'ları atla
+            if (dropdown.classList.contains('hero-brand-dropdown')) return;
+            if (dropdown.classList.contains('hero-year-dropdown')) return;
+            if (dropdown.classList.contains('hero-model-dropdown')) return;
+            if (dropdown.classList.contains('hero-bodytype-dropdown')) return;
+            if (dropdown.classList.contains('hero-fueltype-dropdown')) return;
+            if (dropdown.classList.contains('hero-transmission-dropdown')) return;
+            if (dropdown.classList.contains('hero-version-dropdown')) return;
+            if (dropdown.classList.contains('hero-color-dropdown')) return;
+
             const trigger = dropdown.querySelector('.hero-custom-dropdown-trigger');
             const panel = dropdown.querySelector('.hero-custom-dropdown-panel');
             const options = panel.querySelectorAll('.hero-custom-dropdown-option');
             const nativeSelect = dropdown.querySelector('.hero-custom-dropdown-native');
             const selectedText = trigger.querySelector('.selected-text');
-            
+
             if (!trigger || !panel || !nativeSelect) return;
             
             // Function to disable other form fields

@@ -4,11 +4,73 @@
 @section('page-title', 'Yeni Blog Yazısı')
 
 @push('styles')
+<!-- Quill Editor CSS -->
+<link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
 <style>
+    /* Quill Editor Özelleştirme */
+    .ql-container {
+        font-size: 16px;
+        font-family: inherit;
+        border-bottom-left-radius: 0.75rem;
+        border-bottom-right-radius: 0.75rem;
+        border-color: #e5e7eb;
+    }
+
+    .ql-toolbar {
+        border-top-left-radius: 0.75rem;
+        border-top-right-radius: 0.75rem;
+        border-color: #e5e7eb;
+        background: #f9fafb;
+    }
+
+    .ql-editor {
+        min-height: 300px;
+        max-height: 600px;
+        overflow-y: auto;
+    }
+
+    .ql-editor.ql-blank::before {
+        color: #9ca3af;
+        font-style: normal;
+    }
+
+    .ql-snow .ql-picker {
+        color: #374151;
+    }
+
+    .ql-snow .ql-stroke {
+        stroke: #374151;
+    }
+
+    .ql-snow .ql-fill {
+        fill: #374151;
+    }
+
+    .ql-snow.ql-toolbar button:hover,
+    .ql-snow .ql-toolbar button:hover,
+    .ql-snow.ql-toolbar button.ql-active,
+    .ql-snow .ql-toolbar button.ql-active {
+        color: #e11d48;
+    }
+
+    .ql-snow.ql-toolbar button:hover .ql-stroke,
+    .ql-snow .ql-toolbar button:hover .ql-stroke,
+    .ql-snow.ql-toolbar button.ql-active .ql-stroke,
+    .ql-snow .ql-toolbar button.ql-active .ql-stroke {
+        stroke: #e11d48;
+    }
+
+    .ql-snow.ql-toolbar button:hover .ql-fill,
+    .ql-snow .ql-toolbar button:hover .ql-fill,
+    .ql-snow.ql-toolbar button.ql-active .ql-fill,
+    .ql-snow .ql-toolbar button.ql-active .ql-fill {
+        fill: #e11d48;
+    }
+
     .collapse-trigger.active .arrow {
         transform: rotate(180deg);
     }
-    
+
     .hero-custom-dropdown-panel {
         display: none;
         position: absolute;
@@ -161,13 +223,10 @@
                 <!-- İçerik -->
                 <div>
                     <label class="block text-sm font-bold text-gray-700 mb-2">
-                        İçerik (HTML) <span class="text-red-500">*</span>
+                        İçerik <span class="text-red-500">*</span>
                     </label>
-                    <textarea name="content" 
-                              rows="15" 
-                              required 
-                              placeholder="Blog yazısının HTML içeriğini girin..."
-                              class="w-full px-4 py-3 border border-gray-200 rounded-xl bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all font-mono text-sm resize-none">{{ old('content') }}</textarea>
+                    <div id="quill-editor" class="bg-white">{!! old('content') !!}</div>
+                    <input type="hidden" name="content" id="content-input">
                     @error('content')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
@@ -327,8 +386,45 @@
 </div>
 
 @push('scripts')
+<!-- Quill Editor JS -->
+<script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
+        // Quill Editor Başlatma
+        const quill = new Quill('#quill-editor', {
+            theme: 'snow',
+            placeholder: 'Blog yazınızı buraya yazın...',
+            modules: {
+                toolbar: [
+                    [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                    [{ 'font': [] }],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    [{ 'color': [] }, { 'background': [] }],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    [{ 'indent': '-1'}, { 'indent': '+1' }],
+                    [{ 'align': [] }],
+                    ['blockquote', 'code-block'],
+                    ['link', 'image', 'video'],
+                    ['clean']
+                ]
+            }
+        });
+
+        // Form submit edildiğinde içeriği hidden input'a aktar
+        const form = document.querySelector('form');
+        const contentInput = document.getElementById('content-input');
+
+        form.addEventListener('submit', function(e) {
+            const content = quill.root.innerHTML;
+            // Boş içerik kontrolü
+            if (quill.getText().trim().length === 0) {
+                e.preventDefault();
+                alert('Lütfen içerik girin!');
+                return false;
+            }
+            contentInput.value = content;
+        });
+
         // Category Dropdown Handler
         const categoryDropdown = document.querySelector('[data-dropdown="category"]');
         if (categoryDropdown) {
