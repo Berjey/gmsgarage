@@ -61,6 +61,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::post('/', [AdminBlogController::class, 'store'])->name('store');
             Route::get('/{id}/edit', [AdminBlogController::class, 'edit'])->name('edit');
             Route::put('/{id}', [AdminBlogController::class, 'update'])->name('update');
+            Route::post('/{id}/toggle-featured', [AdminBlogController::class, 'toggleFeatured'])->name('toggle-featured');
             Route::delete('/{id}', [AdminBlogController::class, 'destroy'])->name('destroy');
         });
         
@@ -99,12 +100,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
         // İletişim Mesajları
         Route::prefix('contact-messages')->name('contact-messages.')->group(function () {
             Route::get('/', [ContactMessageController::class, 'index'])->name('index');
-            Route::post('/bulk-action', [ContactMessageController::class, 'bulkAction'])->name('bulk-action');
+            Route::delete('/destroy-all', [ContactMessageController::class, 'destroyAll'])->name('destroy-all');
             Route::get('/{id}', [ContactMessageController::class, 'show'])->name('show');
             Route::post('/{id}/read', [ContactMessageController::class, 'markAsRead'])->name('read');
             Route::post('/{id}/unread', [ContactMessageController::class, 'markAsUnread'])->name('unread');
             Route::delete('/{id}', [ContactMessageController::class, 'destroy'])->name('destroy');
-            Route::delete('/all', [ContactMessageController::class, 'destroyAll'])->name('destroy-all');
         });
         
         // Araç İstekleri

@@ -18,22 +18,23 @@ class BlogController extends Controller
         $query = BlogPost::query();
 
         // Arama
-        if ($request->has('search') && $request->search) {
+        if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'like', "%{$search}%")
                   ->orWhere('excerpt', 'like', "%{$search}%")
-                  ->orWhere('content', 'like', "%{$search}%");
+                  ->orWhere('content', 'like', "%{$search}%")
+                  ->orWhere('category', 'like', "%{$search}%");
             });
         }
 
         // Kategori filtresi
-        if ($request->has('category') && $request->category) {
+        if ($request->filled('category')) {
             $query->where('category', $request->category);
         }
 
         // Durum filtresi
-        if ($request->has('status') && $request->status !== '') {
+        if ($request->filled('status')) {
             if ($request->status === 'published') {
                 $query->where('is_published', true);
             } elseif ($request->status === 'draft') {
@@ -43,12 +44,25 @@ class BlogController extends Controller
             }
         }
 
-        $posts = $query->orderBy('created_at', 'desc')->paginate(15);
+        // Sıralama
+        $sort = $request->get('sort', 'newest');
+        if ($sort === 'oldest') {
+            $query->orderBy('created_at', 'asc');
+        } elseif ($sort === 'views') {
+            $query->orderBy('views', 'desc');
+        } else {
+            $query->orderBy('created_at', 'desc');
+        }
+
+        $perPage = $request->get('per_page', 15);
+        $posts = $query->paginate($perPage)->withQueryString();
         
-        // Kategoriler
+        // Kategoriler (sadece var olan ve boş olmayanlar)
         $categories = BlogPost::select('category')
+            ->whereNotNull('category')
+            ->where('category', '!=', '')
             ->distinct()
-            ->orderBy('category')
+            ->orderBy('category', 'asc')
             ->pluck('category');
 
         return view('admin.blog.index', compact('posts', 'categories'));
@@ -78,23 +92,30 @@ class BlogController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'excerpt' => 'nullable|string',
+            'excerpt' => 'required|string',
             'content' => 'required|string',
-            'featured_image' => 'nullable|url',
+            'featured_image' => 'nullable|image|max:5120',
+            'featured_image_url' => 'nullable|url',
             'meta_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string',
-            'meta_keywords' => 'nullable|array',
+            'meta_keywords_string' => 'nullable|string',
             'category' => 'required|string|max:255',
             'author' => 'nullable|string|max:255',
-            'is_featured' => 'boolean',
-            'is_published' => 'boolean',
+            'is_featured' => 'nullable|boolean',
+            'is_published' => 'nullable|boolean',
             'published_at' => 'nullable|date',
         ], [
             'title.required' => 'Başlık zorunludur.',
+            'excerpt.required' => 'Kısa özet zorunludur.',
             'content.required' => 'İçerik zorunludur.',
             'category.required' => 'Kategori zorunludur.',
         ]);
 
+        // Checkbox değerlerini düzelt
+        $validated['is_featured'] = $request->has('is_featured') ? true : false;
+        $validated['is_published'] = $request->has('is_published') ? true : false;
+
+        // Slug oluştur
         $validated['slug'] = Str::slug($validated['title']);
         
         // Slug benzersizliğini kontrol et
@@ -103,6 +124,12 @@ class BlogController extends Controller
         while (BlogPost::where('slug', $validated['slug'])->exists()) {
             $validated['slug'] = $originalSlug . '-' . $counter;
             $counter++;
+        }
+
+        // Meta keywords'ü array'e çevir
+        if (isset($validated['meta_keywords_string']) && !empty($validated['meta_keywords_string'])) {
+            $validated['meta_keywords'] = array_map('trim', explode(',', $validated['meta_keywords_string']));
+            unset($validated['meta_keywords_string']);
         }
 
         // Meta title ve description varsayılanları
@@ -161,23 +188,28 @@ class BlogController extends Controller
 
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'excerpt' => 'nullable|string',
+            'excerpt' => 'required|string',
             'content' => 'required|string',
             'featured_image' => 'nullable|image|max:5120',
             'featured_image_url' => 'nullable|url',
             'meta_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string',
-            'meta_keywords' => 'nullable|array',
+            'meta_keywords_string' => 'nullable|string',
             'category' => 'required|string|max:255',
             'author' => 'nullable|string|max:255',
-            'is_featured' => 'boolean',
-            'is_published' => 'boolean',
+            'is_featured' => 'nullable|boolean',
+            'is_published' => 'nullable|boolean',
             'published_at' => 'nullable|date',
         ], [
             'title.required' => 'Başlık zorunludur.',
+            'excerpt.required' => 'Kısa özet zorunludur.',
             'content.required' => 'İçerik zorunludur.',
             'category.required' => 'Kategori zorunludur.',
         ]);
+
+        // Checkbox değerlerini düzelt
+        $validated['is_featured'] = $request->has('is_featured') ? true : false;
+        $validated['is_published'] = $request->has('is_published') ? true : false;
 
         // Slug güncelle (eğer title değiştiyse)
         if ($post->title !== $validated['title']) {
@@ -190,6 +222,14 @@ class BlogController extends Controller
                 $validated['slug'] = $originalSlug . '-' . $counter;
                 $counter++;
             }
+        }
+
+        // Meta keywords'ü array'e çevir
+        if (isset($validated['meta_keywords_string']) && !empty($validated['meta_keywords_string'])) {
+            $validated['meta_keywords'] = array_map('trim', explode(',', $validated['meta_keywords_string']));
+            unset($validated['meta_keywords_string']);
+        } else {
+            $validated['meta_keywords'] = null;
         }
 
         // Meta title ve description varsayılanları
@@ -229,5 +269,21 @@ class BlogController extends Controller
         $post->delete();
 
         return redirect()->route('admin.blog.index')->with('success', 'Blog yazısı başarıyla silindi.');
+    }
+
+    /**
+     * Öne çıkan durumunu değiştir
+     */
+    public function toggleFeatured(Request $request, $id)
+    {
+        $post = BlogPost::findOrFail($id);
+        $post->is_featured = $request->input('is_featured', false);
+        $post->save();
+
+        return response()->json([
+            'success' => true,
+            'is_featured' => $post->is_featured,
+            'message' => $post->is_featured ? 'Yazı öne çıkarıldı.' : 'Yazı öne çıkandan kaldırıldı.'
+        ]);
     }
 }

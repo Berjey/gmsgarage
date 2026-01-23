@@ -62,6 +62,12 @@
             <p class="mt-1 text-sm text-gray-500 font-medium tracking-wide uppercase">GELEN MESAJLARIN YÖNETİMİ</p>
         </div>
         <div class="flex items-center gap-3">
+            <button type="button"
+                    onclick="openDeleteAllModal()"
+                    class="inline-flex items-center px-5 py-2.5 bg-red-600 text-white font-bold rounded-xl hover:bg-red-700 transition-all shadow-lg shadow-red-500/25 group">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                Tümünü Sil
+            </button>
             <a href="{{ \App\Models\Setting::get('contact_mail_hostinger_link', 'https://mail.hostinger.com/v2/mailboxes/INBOX') }}" 
                target="_blank"
                class="inline-flex items-center px-5 py-2.5 bg-white text-gray-700 font-bold rounded-xl border border-gray-200 hover:bg-gray-50 hover:text-primary-600 transition-all shadow-sm group">
@@ -70,14 +76,6 @@
             </a>
         </div>
     </div>
-
-    <!-- Stats Cards -->
-    @include('admin.components.stats-cards', [
-        'totalCount' => $totalCount,
-        'unreadCount' => $unreadCount,
-        'readCount' => $readCount,
-        'activeFilter' => $filter
-    ])
 
     <!-- Toolbar & Filters -->
     <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
@@ -150,14 +148,9 @@
         <!-- Table Area -->
         <div class="overflow-x-auto">
             @if($messages->count() > 0)
-            <form id="bulk-action-form" method="POST" action="{{ route('admin.contact-messages.bulk-action') }}">
-                @csrf
                 <table class="w-full">
                     <thead class="bg-gray-50/50">
                         <tr>
-                            <th class="px-6 py-4 text-left">
-                                <input type="checkbox" id="select-all" class="w-5 h-5 rounded border-gray-300 text-primary-600 focus:ring-primary-500/20 transition-all checked:bg-primary-600 checked:border-primary-600">
-                            </th>
                             <th class="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-widest">GÖNDEREN</th>
                             <th class="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-widest">KONU / ÖNİZLEME</th>
                             <th class="px-6 py-4 text-center text-xs font-bold text-gray-400 uppercase tracking-widest">TARİH</th>
@@ -169,9 +162,6 @@
                         @foreach($messages as $message)
                         <tr class="group hover:bg-gray-50 transition-all cursor-pointer {{ !$message->is_read ? 'bg-primary-50/10' : '' }}"
                             onclick="window.location.href='{{ route('admin.contact-messages.show', $message->id) }}'">
-                            <td class="px-6 py-5" onclick="event.stopPropagation()">
-                                <input type="checkbox" name="ids[]" value="{{ $message->id }}" class="message-checkbox w-5 h-5 rounded border-gray-300 text-primary-600 focus:ring-primary-500/20 transition-all checked:bg-primary-600 checked:border-primary-600">
-                            </td>
                             <td class="px-6 py-5">
                                 <div class="font-bold text-gray-900 group-hover:text-primary-600 transition-colors">{{ $message->name }}</div>
                                 <div class="text-sm text-gray-500 font-medium">{{ $message->email }}</div>
@@ -206,19 +196,6 @@
                         @endforeach
                     </tbody>
                 </table>
-
-                <!-- Bulk Actions -->
-                <div id="bulk-actions-bar" class="hidden fixed bottom-8 right-8 bg-white/90 backdrop-blur px-8 py-4 rounded-2xl shadow-2xl border border-primary-100 items-center gap-6 z-50 animate-bounce-subtle">
-                    <span id="selected-count" class="text-sm font-bold text-primary-600 uppercase tracking-widest">0 SEÇİLDİ</span>
-                    <div class="h-8 w-px bg-gray-200"></div>
-                    <div class="flex items-center gap-2">
-                        <input type="hidden" name="action" id="bulk-action-type" value="">
-                        <button type="button" onclick="setBulkAction('mark_read')" class="px-4 py-2 text-sm font-bold text-gray-700 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition-all shadow-sm">Okundu Yap</button>
-                        <button type="button" onclick="setBulkAction('mark_unread')" class="px-4 py-2 text-sm font-bold text-gray-700 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition-all shadow-sm">Okunmamış Yap</button>
-                        <button type="button" onclick="setBulkAction('delete')" class="px-4 py-2 text-sm font-bold text-white bg-red-600 rounded-xl hover:bg-red-700 transition-all shadow-lg shadow-red-500/25">Sil</button>
-                    </div>
-                </div>
-            </form>
             @else
             <div class="text-center py-20 bg-gray-50/20">
                 <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -255,6 +232,14 @@
     'title' => 'Mesajı Sil',
     'message' => 'Bu mesajı silmek istediğinize emin misiniz? Bu işlem geri alınamaz.',
     'confirmText' => 'Sil',
+    'cancelText' => 'Vazgeç'
+])
+
+@include('admin.components.confirm-modal', [
+    'id' => 'delete-all-modal',
+    'title' => 'Tüm Mesajları Sil',
+    'message' => 'Tüm iletişim mesajlarını silmek istediğinize emin misiniz? Bu işlem geri alınamaz ve tüm mesajlar kalıcı olarak silinecektir.',
+    'confirmText' => 'Tümünü Sil',
     'cancelText' => 'Vazgeç'
 ])
 
@@ -305,36 +290,16 @@
                 p.closest('.hero-custom-dropdown').querySelector('.hero-custom-dropdown-trigger').setAttribute('aria-expanded', 'false');
             });
         });
-
-        // Bulk Selection
-        const checkboxes = document.querySelectorAll('.message-checkbox');
-        const bulkBar = document.getElementById('bulk-actions-bar');
-        const countSpan = document.getElementById('selected-count');
-
-        const updateBulkBar = () => {
-            const count = [...checkboxes].filter(cb => cb.checked).length;
-            bulkBar.classList.toggle('hidden', count === 0);
-            bulkBar.classList.toggle('flex', count > 0);
-            countSpan.textContent = `${count} SEÇİLDİ`;
-        };
-
-        document.getElementById('select-all')?.addEventListener('change', e => {
-            checkboxes.forEach(cb => cb.checked = e.target.checked);
-            updateBulkBar();
-        });
-
-        checkboxes.forEach(cb => cb.addEventListener('change', updateBulkBar));
     });
-
-    function setBulkAction(action) {
-        if (action === 'delete' && !confirm('Seçili tüm mesajları silmek istediğinize emin misiniz?')) return;
-        document.getElementById('bulk-action-type').value = action;
-        document.getElementById('bulk-action-form').submit();
-    }
 
     function openDeleteModal(id, url) {
         document.getElementById('confirm-form-delete-modal').action = url;
         document.getElementById('delete-modal').classList.remove('hidden');
+    }
+
+    function openDeleteAllModal() {
+        document.getElementById('confirm-form-delete-all-modal').action = '{{ route('admin.contact-messages.destroy-all') }}';
+        document.getElementById('delete-all-modal').classList.remove('hidden');
     }
 </script>
 @endpush
