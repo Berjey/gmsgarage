@@ -166,6 +166,9 @@ class VehicleEvaluationController extends Controller
         $brands = Cache::remember('arabam_brands', 60 * 60 * 24, function () {
             try {
                 $response = Http::timeout(10)
+                    ->withOptions([
+                        'verify' => false, // SSL doğrulamasını geliştirme ortamında devre dışı bırak
+                    ])
                     ->withHeaders([
                         'Accept' => 'application/json',
                         'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
@@ -177,15 +180,39 @@ class VehicleEvaluationController extends Controller
                 if ($response->successful()) {
                     $data = $response->json();
                     if (isset($data['Data']['Items'])) {
+                        \Log::info('Arabam API başarılı - marka sayısı: ' . count($data['Data']['Items']));
                         return $data['Data'];
                     }
                 }
+                
+                \Log::warning('Arabam API başarısız, fallback kullanılıyor');
                 return null;
             } catch (\Exception $e) {
                 \Log::error('Arabam API error: ' . $e->getMessage());
                 return null;
             }
         });
+
+        // Eğer arabam.com API'den veri alınamadıysa, static markaları kullan
+        if (!$brands) {
+            \Log::info('Fallback: CarBrands kullanılıyor');
+            $staticBrands = \App\Data\CarBrands::all();
+            
+            // Arabam.com formatına dönüştür
+            $formattedBrands = [];
+            foreach ($staticBrands as $index => $brandName) {
+                $formattedBrands[] = [
+                    'Id' => $index + 1,
+                    'Name' => $brandName,
+                    'Value' => $index + 1
+                ];
+            }
+            
+            $brands = [
+                'Items' => $formattedBrands,
+                'SelectedItem' => null
+            ];
+        }
 
         if ($brands) {
             return response()->json([
@@ -197,7 +224,7 @@ class VehicleEvaluationController extends Controller
         return response()->json([
             'success' => false,
             'message' => 'Markalar yüklenemedi'
-        ]);
+        ], 500);
     }
 
     /**
@@ -234,6 +261,9 @@ class VehicleEvaluationController extends Controller
                 if ($versionId) $params['VersionId'] = $versionId;
 
                 $response = Http::timeout(10)
+                    ->withOptions([
+                        'verify' => false, // SSL doğrulamasını geliştirme ortamında devre dışı bırak
+                    ])
                     ->withHeaders([
                         'Accept' => 'application/json',
                         'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
