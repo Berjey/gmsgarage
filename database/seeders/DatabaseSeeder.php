@@ -12,6 +12,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
+            CarBrandSeeder::class, // Arabam.com'dan marka ve modelleri çek
             VehicleSeeder::class,
             BlogPostSeeder::class,
             ContactSettingsSeeder::class,

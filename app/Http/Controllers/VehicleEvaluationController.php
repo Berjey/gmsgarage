@@ -89,7 +89,17 @@ class VehicleEvaluationController extends Controller
             ]);
         }
         
-        $models = \App\Data\VehicleModels::getModels($marka);
+        // Veritabanından modelleri getir
+        $brand = \App\Models\CarBrand::where('name', $marka)
+            ->orWhere('slug', \Illuminate\Support\Str::slug($marka))
+            ->first();
+        
+        if (!$brand) {
+            // Fallback: eski static data
+            $models = \App\Data\VehicleModels::getModels($marka);
+        } else {
+            $models = $brand->activeModels()->pluck('name')->toArray();
+        }
         
         return response()->json([
             'success' => true,
@@ -162,12 +172,36 @@ class VehicleEvaluationController extends Controller
      */
     public function getArabamBrands()
     {
-        // Cache for 24 hours
+        // Önce veritabanından dene
+        $dbBrands = \App\Models\CarBrand::where('is_active', true)
+            ->orderBy('order')
+            ->get();
+        
+        if ($dbBrands->isNotEmpty()) {
+            $formattedBrands = [];
+            foreach ($dbBrands as $brand) {
+                $formattedBrands[] = [
+                    'Id' => $brand->arabam_id ?? $brand->id,
+                    'Name' => $brand->name,
+                    'Value' => $brand->arabam_id ?? $brand->id
+                ];
+            }
+            
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'Items' => $formattedBrands,
+                    'SelectedItem' => null
+                ]
+            ]);
+        }
+        
+        // Cache for 24 hours - fallback to API
         $brands = Cache::remember('arabam_brands', 60 * 60 * 24, function () {
             try {
                 $response = Http::timeout(10)
                     ->withOptions([
-                        'verify' => false, // SSL doğrulamasını geliştirme ortamında devre dışı bırak
+                        'verify' => false,
                     ])
                     ->withHeaders([
                         'Accept' => 'application/json',
@@ -198,7 +232,6 @@ class VehicleEvaluationController extends Controller
             \Log::info('Fallback: CarBrands kullanılıyor');
             $staticBrands = \App\Data\CarBrands::all();
             
-            // Arabam.com formatına dönüştür
             $formattedBrands = [];
             foreach ($staticBrands as $index => $brandName) {
                 $formattedBrands[] = [
