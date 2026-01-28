@@ -54,11 +54,9 @@
     @keyframes fadeInUp {
         from {
             opacity: 0;
-            transform: translateY(20px);
         }
         to {
             opacity: 1;
-            transform: translateY(0);
         }
     }
     
@@ -77,33 +75,41 @@
     .tab-content {
         display: none;
         opacity: 0;
-        transform: translateY(10px);
-        transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+        /* Removed transform to prevent stacking context issues */
+        transition: opacity 0.3s ease-in-out;
     }
     
     .tab-content.active {
         display: block;
         opacity: 1;
-        transform: translateY(0);
+        /* Removed transform to prevent stacking context issues */
         animation: fadeInUp 0.4s ease-out;
     }
     
     .form-field {
         transition: all 0.3s ease;
+        position: relative;
+        z-index: 1;
     }
 
     .form-field:focus-within {
-        transform: translateY(-2px);
+        /* Removed transform to prevent stacking context issues */
     }
 
     /* ===== DROPDOWN WRAPPER - RELATIVE POSITIONING ===== */
     .hero-custom-dropdown {
         position: relative;
-        z-index: 100;
+        z-index: 1;
     }
     
+    /* CRITICAL: When dropdown is open, bring it to absolute front */
     .hero-custom-dropdown.dropdown-open {
-        z-index: 99999 !important;
+        z-index: 999999 !important;
+    }
+    
+    /* CRITICAL: Suppress z-index of sibling form-fields when any dropdown is open */
+    .tab-content.active:has(.hero-custom-dropdown.dropdown-open) .form-field:not(:has(.dropdown-open)) {
+        z-index: 0 !important;
     }
 
     /* ===== DROPDOWN PANEL BASE STYLES - CRITICAL FOR VISIBILITY ===== */
@@ -121,8 +127,8 @@
         opacity: 0;
         visibility: hidden;
         
-        /* CRITICAL: Maximum z-index - above everything */
-        z-index: 99999;
+        /* CRITICAL: Maximum z-index - above everything including other form fields */
+        z-index: 999999;
         
         /* Styling */
         border-radius: 12px;
@@ -154,7 +160,61 @@
         box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
     }
 
-    /* Brand Dropdown Styles */
+    /* ===== SHARED DROPDOWN OPTION STYLES - BÜTÜN DROPDOWN'LAR İÇİN ORTAK ===== */
+    
+    /* Base option style - Araç Al & Araç Sat */
+    .hero-custom-dropdown-option {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 14px 16px; /* STANDART: 14px dikey, 16px yatay */
+        border-radius: 8px;
+        transition: all 0.2s ease;
+        cursor: pointer;
+        font-weight: 500; /* STANDART: 500 */
+        font-size: 15px;   /* STANDART: 15px */
+        color: #1f2937;
+    }
+
+    /* First option (genellikle "Tümü" veya placeholder) */
+    .hero-custom-dropdown-option:first-child {
+        background: #f3f4f6;
+        margin-bottom: 4px;
+    }
+
+    /* HOVER - LIGHT MODE */
+    .hero-custom-dropdown-option:hover {
+        background-color: #fef2f2;
+    }
+
+    /* SELECTED - LIGHT MODE */
+    .hero-custom-dropdown-option.selected {
+        background-color: #fee2e2;
+        border: 1px solid #fca5a5;
+    }
+
+    /* DARK MODE - Base */
+    .dark .hero-custom-dropdown-option {
+        color: #f3f4f6;
+    }
+
+    /* DARK MODE - First option */
+    .dark .hero-custom-dropdown-option:first-child {
+        background: #374151;
+    }
+
+    /* DARK MODE - Hover */
+    .dark .hero-custom-dropdown-option:hover {
+        background-color: #374151;
+    }
+
+    /* DARK MODE - Selected */
+    .dark .hero-custom-dropdown-option.selected {
+        background-color: #7f1d1d;
+        border: 1px solid #991b1b;
+    }
+
+    /* Brand Dropdown - Özel düzenlemeler */
     .hero-brand-panel {
         max-height: 400px;
         overflow-y: auto;
@@ -166,18 +226,9 @@
         padding: 4px;
     }
 
+    /* Brand için sola hizalama (logo var) */
     .hero-brand-panel .hero-custom-dropdown-option {
-        display: flex;
-        align-items: center;
-        padding: 12px 16px;
-        border-radius: 8px;
-        transition: all 0.2s;
-        cursor: pointer;
-    }
-
-    .hero-brand-panel .hero-custom-dropdown-option:first-child {
-        background: #f3f4f6;
-        margin-bottom: 4px;
+        justify-content: flex-start;
     }
 
     .hero-brand-panel .hero-custom-dropdown-option .brand-logo {
@@ -188,39 +239,7 @@
         flex-shrink: 0;
     }
 
-    .hero-brand-panel .hero-custom-dropdown-option .brand-name {
-        font-weight: 600;
-        font-size: 15px;
-        color: #1f2937;
-    }
-
-    .hero-brand-panel .hero-custom-dropdown-option:hover {
-        background-color: #fef2f2;
-    }
-
-    .hero-brand-panel .hero-custom-dropdown-option.selected {
-        background-color: #fee2e2;
-        border: 1px solid #fca5a5;
-    }
-
-    .dark .hero-brand-panel .hero-custom-dropdown-option:first-child {
-        background: #374151;
-    }
-
-    .dark .hero-brand-panel .hero-custom-dropdown-option .brand-name {
-        color: #f3f4f6;
-    }
-
-    .dark .hero-brand-panel .hero-custom-dropdown-option:hover {
-        background-color: #374151;
-    }
-
-    .dark .hero-brand-panel .hero-custom-dropdown-option.selected {
-        background-color: #7f1d1d;
-        border-color: #b91c1c;
-    }
-
-    /* Year Dropdown Styles */
+    /* Year Dropdown - Sadece container */
     .hero-year-panel {
         max-height: 350px;
         overflow-y: auto;
@@ -231,54 +250,9 @@
         flex-direction: column;
         padding: 4px;
     }
+    /* Ortak .hero-custom-dropdown-option stilini kullanır */
 
-    .hero-year-panel .hero-custom-dropdown-option {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 14px 16px;
-        border-radius: 8px;
-        transition: all 0.2s;
-        cursor: pointer;
-        font-weight: 600;
-        font-size: 16px;
-        color: #1f2937;
-    }
-
-    .hero-year-panel .hero-custom-dropdown-option:first-child {
-        background: #f3f4f6;
-        margin-bottom: 4px;
-        font-weight: 500;
-        font-size: 14px;
-    }
-
-    .hero-year-panel .hero-custom-dropdown-option:hover {
-        background-color: #fef2f2;
-    }
-
-    .hero-year-panel .hero-custom-dropdown-option.selected {
-        background-color: #fee2e2;
-        border: 1px solid #fca5a5;
-    }
-
-    .dark .hero-year-panel .hero-custom-dropdown-option {
-        color: #f3f4f6;
-    }
-
-    .dark .hero-year-panel .hero-custom-dropdown-option:first-child {
-        background: #374151;
-    }
-
-    .dark .hero-year-panel .hero-custom-dropdown-option:hover {
-        background-color: #374151;
-    }
-
-    .dark .hero-year-panel .hero-custom-dropdown-option.selected {
-        background-color: #7f1d1d;
-        border-color: #b91c1c;
-    }
-
-    /* Model Dropdown Styles */
+    /* Model Dropdown - Sadece container */
     .hero-model-panel {
         max-height: 350px;
         overflow-y: auto;
@@ -289,52 +263,7 @@
         flex-direction: column;
         padding: 4px;
     }
-
-    .hero-model-panel .hero-custom-dropdown-option {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 14px 16px;
-        border-radius: 8px;
-        transition: all 0.2s;
-        cursor: pointer;
-        font-weight: 600;
-        font-size: 16px;
-        color: #1f2937;
-    }
-
-    .hero-model-panel .hero-custom-dropdown-option:first-child {
-        background: #f3f4f6;
-        margin-bottom: 4px;
-        font-weight: 500;
-        font-size: 14px;
-    }
-
-    .hero-model-panel .hero-custom-dropdown-option:hover {
-        background-color: #fef2f2;
-    }
-
-    .hero-model-panel .hero-custom-dropdown-option.selected {
-        background-color: #fee2e2;
-        border: 1px solid #fca5a5;
-    }
-
-    .dark .hero-model-panel .hero-custom-dropdown-option {
-        color: #f3f4f6;
-    }
-
-    .dark .hero-model-panel .hero-custom-dropdown-option:first-child {
-        background: #374151;
-    }
-
-    .dark .hero-model-panel .hero-custom-dropdown-option:hover {
-        background-color: #374151;
-    }
-
-    .dark .hero-model-panel .hero-custom-dropdown-option.selected {
-        background-color: #7f1d1d;
-        border-color: #b91c1c;
-    }
+    /* Ortak .hero-custom-dropdown-option stilini kullanır */
 
     /* Body Type Dropdown Styles */
     .hero-bodytype-panel {
@@ -394,7 +323,7 @@
         border-color: #b91c1c;
     }
 
-    /* Fuel Type Dropdown Styles */
+    /* Fuel Type Dropdown - Sadece container */
     .hero-fueltype-panel {
         max-height: 350px;
         overflow-y: auto;
@@ -405,54 +334,9 @@
         flex-direction: column;
         padding: 4px;
     }
+    /* Ortak .hero-custom-dropdown-option stilini kullanır */
 
-    .hero-fueltype-panel .hero-custom-dropdown-option {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 14px 16px;
-        border-radius: 8px;
-        transition: all 0.2s;
-        cursor: pointer;
-        font-weight: 600;
-        font-size: 16px;
-        color: #1f2937;
-    }
-
-    .hero-fueltype-panel .hero-custom-dropdown-option:first-child {
-        background: #f3f4f6;
-        margin-bottom: 4px;
-        font-weight: 500;
-        font-size: 14px;
-    }
-
-    .hero-fueltype-panel .hero-custom-dropdown-option:hover {
-        background-color: #fef2f2;
-    }
-
-    .hero-fueltype-panel .hero-custom-dropdown-option.selected {
-        background-color: #fee2e2;
-        border: 1px solid #fca5a5;
-    }
-
-    .dark .hero-fueltype-panel .hero-custom-dropdown-option {
-        color: #f3f4f6;
-    }
-
-    .dark .hero-fueltype-panel .hero-custom-dropdown-option:first-child {
-        background: #374151;
-    }
-
-    .dark .hero-fueltype-panel .hero-custom-dropdown-option:hover {
-        background-color: #374151;
-    }
-
-    .dark .hero-fueltype-panel .hero-custom-dropdown-option.selected {
-        background-color: #7f1d1d;
-        border-color: #b91c1c;
-    }
-
-    /* Transmission Type Dropdown Styles */
+    /* Transmission Dropdown - Sadece container */
     .hero-transmission-panel {
         max-height: 350px;
         overflow-y: auto;
@@ -463,54 +347,9 @@
         flex-direction: column;
         padding: 4px;
     }
+    /* Ortak .hero-custom-dropdown-option stilini kullanır */
 
-    .hero-transmission-panel .hero-custom-dropdown-option {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 14px 16px;
-        border-radius: 8px;
-        transition: all 0.2s;
-        cursor: pointer;
-        font-weight: 600;
-        font-size: 16px;
-        color: #1f2937;
-    }
-
-    .hero-transmission-panel .hero-custom-dropdown-option:first-child {
-        background: #f3f4f6;
-        margin-bottom: 4px;
-        font-weight: 500;
-        font-size: 14px;
-    }
-
-    .hero-transmission-panel .hero-custom-dropdown-option:hover {
-        background-color: #fef2f2;
-    }
-
-    .hero-transmission-panel .hero-custom-dropdown-option.selected {
-        background-color: #fee2e2;
-        border: 1px solid #fca5a5;
-    }
-
-    .dark .hero-transmission-panel .hero-custom-dropdown-option {
-        color: #f3f4f6;
-    }
-
-    .dark .hero-transmission-panel .hero-custom-dropdown-option:first-child {
-        background: #374151;
-    }
-
-    .dark .hero-transmission-panel .hero-custom-dropdown-option:hover {
-        background-color: #374151;
-    }
-
-    .dark .hero-transmission-panel .hero-custom-dropdown-option.selected {
-        background-color: #7f1d1d;
-        border-color: #b91c1c;
-    }
-
-    /* Version Dropdown Styles */
+    /* Version Dropdown - Container ve özel stiller */
     .hero-version-panel {
         max-height: 350px;
         overflow-y: auto;
@@ -522,17 +361,10 @@
         padding: 4px;
     }
 
+    /* Version için özel düzenlemeler (iki satırlı görünüm) */
     .hero-version-panel .hero-custom-dropdown-option {
-        display: flex;
         flex-direction: column;
         align-items: flex-start;
-        padding: 14px 16px;
-        border-radius: 8px;
-        transition: all 0.2s;
-        cursor: pointer;
-        font-weight: 600;
-        font-size: 14px;
-        color: #1f2937;
     }
 
     .hero-version-panel .hero-custom-dropdown-option .version-props {
@@ -543,44 +375,14 @@
     }
 
     .hero-version-panel .hero-custom-dropdown-option:first-child {
-        background: #f3f4f6;
-        margin-bottom: 4px;
-        font-weight: 500;
-        font-size: 14px;
-        align-items: center;
-    }
-
-    .hero-version-panel .hero-custom-dropdown-option:hover {
-        background-color: #fef2f2;
-    }
-
-    .hero-version-panel .hero-custom-dropdown-option.selected {
-        background-color: #fee2e2;
-        border: 1px solid #fca5a5;
-    }
-
-    .dark .hero-version-panel .hero-custom-dropdown-option {
-        color: #f3f4f6;
+        align-items: center; /* İlk seçenek ortalı */
     }
 
     .dark .hero-version-panel .hero-custom-dropdown-option .version-props {
         color: #9ca3af;
     }
 
-    .dark .hero-version-panel .hero-custom-dropdown-option:first-child {
-        background: #374151;
-    }
-
-    .dark .hero-version-panel .hero-custom-dropdown-option:hover {
-        background-color: #374151;
-    }
-
-    .dark .hero-version-panel .hero-custom-dropdown-option.selected {
-        background-color: #7f1d1d;
-        border-color: #b91c1c;
-    }
-
-    /* Color Dropdown Styles */
+    /* Color Dropdown - Sadece container */
     .hero-color-panel {
         max-height: 350px;
         overflow-y: auto;
@@ -591,52 +393,7 @@
         flex-direction: column;
         padding: 4px;
     }
-
-    .hero-color-panel .hero-custom-dropdown-option {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 14px 16px;
-        border-radius: 8px;
-        transition: all 0.2s;
-        cursor: pointer;
-        font-weight: 600;
-        font-size: 16px;
-        color: #1f2937;
-    }
-
-    .hero-color-panel .hero-custom-dropdown-option:first-child {
-        background: #f3f4f6;
-        margin-bottom: 4px;
-        font-weight: 500;
-        font-size: 14px;
-    }
-
-    .hero-color-panel .hero-custom-dropdown-option:hover {
-        background-color: #fef2f2;
-    }
-
-    .hero-color-panel .hero-custom-dropdown-option.selected {
-        background-color: #fee2e2;
-        border: 1px solid #fca5a5;
-    }
-
-    .dark .hero-color-panel .hero-custom-dropdown-option {
-        color: #f3f4f6;
-    }
-
-    .dark .hero-color-panel .hero-custom-dropdown-option:first-child {
-        background: #374151;
-    }
-
-    .dark .hero-color-panel .hero-custom-dropdown-option:hover {
-        background-color: #374151;
-    }
-
-    .dark .hero-color-panel .hero-custom-dropdown-option.selected {
-        background-color: #7f1d1d;
-        border-color: #b91c1c;
-    }
+    /* Ortak .hero-custom-dropdown-option stilini kullanır */
 
     /* Form field animation */
     .form-field.slide-in {
@@ -679,18 +436,28 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        font-weight: 600;
+        color: #111827; /* Seçili değer - çok koyu */
     }
 
+    /* PLACEHOLDER - Daha okunabilir, ama seçili değerden açıkça farklı */
     .hero-custom-dropdown-trigger .selected-text.placeholder {
-        color: #9ca3af;
+        color: #6b7280; /* Placeholder - orta ton gri, okunabilir */
+        font-weight: 500; /* Placeholder daha ince */
     }
 
     .dark .hero-custom-dropdown-trigger {
         background: #2a2a2a;
     }
 
+    .dark .hero-custom-dropdown-trigger .selected-text {
+        color: #f9fafb; /* Dark mode - seçili değer çok açık */
+    }
+
+    /* DARK MODE PLACEHOLDER - Daha okunabilir */
     .dark .hero-custom-dropdown-trigger .selected-text.placeholder {
-        color: #6b7280;
+        color: #9ca3af; /* Dark mode placeholder - daha açık gri */
+        font-weight: 500;
     }
 
     /* Disabled dropdown styles */
