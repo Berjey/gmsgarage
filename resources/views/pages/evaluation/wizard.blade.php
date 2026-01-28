@@ -1202,21 +1202,47 @@ document.addEventListener('DOMContentLoaded', function() {
             const result = await response.json();
 
             if (result.success && result.data && result.data.Items) {
-                modelSelect.innerHTML = '<option value="">Model Seçin</option>';
+                const modelDropdown = document.getElementById('model-dropdown');
+                const panel = modelDropdown.querySelector('.eval-custom-dropdown-panel');
+                panel.innerHTML = '';
+                
                 result.data.Items.forEach(item => {
-                    const option = document.createElement('option');
-                    option.value = item.Name;
+                    const option = document.createElement('div');
+                    option.className = 'eval-custom-dropdown-option';
                     option.textContent = item.Name;
-                    option.dataset.id = item.Id;
-                    modelSelect.appendChild(option);
+                    option.setAttribute('data-value', item.Name);
+                    option.setAttribute('data-id', item.Id);
+                    
+                    option.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const trigger = modelDropdown.querySelector('.eval-custom-dropdown-trigger');
+                        const selectedText = trigger.querySelector('.selected-text');
+                        
+                        selectedText.textContent = item.Name;
+                        selectedText.classList.remove('placeholder');
+                        
+                        document.getElementById('model-input').value = item.Name;
+                        document.getElementById('model-id').value = item.Id;
+                        
+                        panel.querySelectorAll('.eval-custom-dropdown-option').forEach(opt => opt.classList.remove('selected'));
+                        option.classList.add('selected');
+                        
+                        modelDropdown.classList.remove('dropdown-open');
+                        panel.classList.remove('open');
+                        
+                        selectedModelId = item.Id;
+                        resetFrom('govde');
+                        loadGovdeTipleri(selectedBrandId, selectedYear, item.Id);
+                        document.getElementById('govde-dropdown').classList.remove('disabled');
+                    });
+                    
+                    panel.appendChild(option);
                 });
 
                 // Auto-select if only one item
                 if (result.data.Items.length === 1) {
-                    modelSelect.selectedIndex = 1;
-                    selectedModelId = result.data.Items[0].Id;
-                    modelId.value = selectedModelId;
-                    modelSelect.dispatchEvent(new Event('change'));
+                    const firstOption = panel.querySelector('.eval-custom-dropdown-option');
+                    if (firstOption) firstOption.click();
                 }
             }
         } catch (error) {
