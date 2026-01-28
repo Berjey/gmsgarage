@@ -38,12 +38,9 @@
         }
     }
     
-    .slogan-animate {
-        animation: sloganSlide 0.8s ease-out forwards;
-    }
-    
-    .slogan-animate-delay {
-        animation: sloganSlide 0.8s ease-out 0.3s forwards;
+    /* Slogan smooth transitions */
+    #slogan-title, #slogan-description {
+        transition: opacity 0.25s ease-in-out, transform 0.25s ease-in-out;
     }
     
     .trigger-animation {
@@ -522,19 +519,19 @@
                         
                         <!-- Araç Sat Form -->
                         <div id="form-sell" class="tab-content active">
-                            <form method="GET" action="{{ route('evaluation.index') }}" id="sell-form" class="p-6 space-y-4">
+                            <form method="GET" action="{{ route('evaluation.index') }}" id="sell-form" class="p-6 space-y-5">
                                 <!-- Marka -->
                                 <div class="form-field">
-                                    <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">Marka</label>
+                                    <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wider">MARKA</label>
                                     <div class="hero-custom-dropdown hero-brand-dropdown" data-dropdown="brand-sell" id="brand-dropdown-sell">
-                                        <button type="button" class="hero-custom-dropdown-trigger border border-gray-300 dark:border-gray-600 dark:bg-[#2a2a2a] dark:text-gray-100" data-value="" data-brand-id="">
+                                        <button type="button" class="hero-custom-dropdown-trigger border-2 border-gray-300 dark:border-gray-700 dark:bg-[#2a2a2a] dark:text-gray-100" data-value="" data-brand-id="">
                                             <span class="selected-content flex items-center">
                                                 <span class="brand-logo-wrapper hidden mr-2">
                                                     <img src="" alt="" class="w-6 h-6 object-contain brand-logo">
                                                 </span>
                                                 <span class="selected-text placeholder dark:text-gray-400">Marka Seçin</span>
                                             </span>
-                                            <svg class="arrow w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <svg class="arrow w-6 h-6 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                                             </svg>
                                         </button>
@@ -558,15 +555,18 @@
                                 </div>
 
                                 <!-- Button -->
-                                <button type="submit" class="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-4 px-6 rounded-lg transition-colors duration-200">
-                                    DEVAM ET
+                                <button type="submit" class="btn btn-primary w-full py-5 px-6 text-lg">
+                                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                    </svg>
+                                    <span>DEVAM ET</span>
                                 </button>
                             </form>
                         </div>
                         
                         <!-- Araç Al Form - Sadeleştirilmiş -->
                         <div id="form-buy" class="tab-content">
-                            <form method="GET" action="{{ route('vehicles.index') }}" id="buy-form" class="p-8 space-y-6">
+                            <form method="GET" action="{{ route('vehicles.index') }}" id="buy-form" class="p-6 space-y-5">
                                 <!-- Marka -->
                                 <div class="form-field">
                                     <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wider">MARKA</label>
@@ -592,45 +592,9 @@
                                     </div>
                                 </div>
                                 
-                                <!-- Model Yılı -->
-                                <div class="form-field">
-                                    <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wider">MODEL YILI</label>
-                                    <div class="hero-custom-dropdown" data-dropdown="year-buy">
-                                        <button type="button" class="hero-custom-dropdown-trigger border-2 border-gray-300 dark:border-gray-700 dark:bg-[#2a2a2a] dark:text-gray-100" data-value="">
-                                            <span class="selected-text placeholder">Model Yılı Seçin</span>
-                                            <svg class="arrow w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                            </svg>
-                                        </button>
-                                        <div class="hero-custom-dropdown-panel">
-                                            <div class="hero-custom-dropdown-option" data-value="">Model Yılı Seçin</div>
-                                            @foreach($years ?? [] as $year)
-                                                <div class="hero-custom-dropdown-option" data-value="{{ $year }}">{{ $year }}</div>
-                                            @endforeach
-                                        </div>
-                                        <select name="min_year" class="hero-custom-dropdown-native">
-                                            <option value="">Model Yılı Seçin</option>
-                                            @foreach($years ?? [] as $year)
-                                                <option value="{{ $year }}">{{ $year }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                
-                                <!-- Fiyat Aralığı -->
-                                <div class="form-field">
-                                    <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wider">BÜTÇE ARALIĞI (₺)</label>
-                                    <div class="grid grid-cols-2 gap-3">
-                                        <input type="number" name="min_price" placeholder="Min" 
-                                               class="w-full border-2 border-gray-300 dark:border-gray-700 rounded-xl px-4 py-4 focus:ring-2 focus:ring-primary-600 focus:border-primary-600 text-gray-900 dark:text-gray-100 font-semibold transition-all duration-200 bg-white dark:bg-[#2a2a2a] hover:border-primary-400 dark:hover:border-primary-500">
-                                        <input type="number" name="max_price" placeholder="Max" 
-                                               class="w-full border-2 border-gray-300 dark:border-gray-700 rounded-xl px-4 py-4 focus:ring-2 focus:ring-primary-600 focus:border-primary-600 text-gray-900 dark:text-gray-100 font-semibold transition-all duration-200 bg-white dark:bg-[#2a2a2a] hover:border-primary-400 dark:hover:border-primary-500">
-                                    </div>
-                                </div>
-                                
                                 <!-- Yardımcı Metin -->
-                                <div class="text-center pt-2 pb-2">
-                                    <p class="text-xs text-gray-500 leading-relaxed">
+                                <div class="text-center py-2">
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
                                         Detaylı seçim için 
                                         <a href="{{ route('vehicles.index') }}" class="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-semibold underline">
                                             Araçlar sayfasına
@@ -653,10 +617,10 @@
                 
                 <!-- Right Side - Dynamic Headline & Image -->
                 <div class="order-1 lg:order-2">
-                    <h1 id="slogan-title" class="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 dark:text-white mb-6 leading-tight slogan-animate">
+                    <h1 id="slogan-title" class="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 dark:text-white mb-6 leading-tight transition-all duration-300">
                         Aracını <span class="text-primary-600 dark:text-primary-500">Güvenle</span> Sat!
                     </h1>
-                    <p id="slogan-description" class="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8 max-w-lg leading-relaxed slogan-animate-delay">
+                    <p id="slogan-description" class="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8 max-w-lg leading-relaxed transition-all duration-300">
                         Hızlı teklif alın, güvenli süreçten geçin. Aracınızın gerçek değerini öğrenin ve en iyi fiyatı garantileyin.
                     </p>
                 </div>
@@ -860,47 +824,43 @@
         const sloganTitle = document.getElementById('slogan-title');
         const sloganDesc = document.getElementById('slogan-description');
         
-        // Stop current animation
-        sloganTitle.style.animation = 'none';
-        sloganDesc.style.animation = 'none';
+        // Fade out animation
         sloganTitle.style.opacity = '0';
+        sloganTitle.style.transform = 'translateX(-10px)';
         sloganDesc.style.opacity = '0';
+        sloganDesc.style.transform = 'translateX(-10px)';
         
-        if (tab === 'sell') {
-            // Activate Sell Tab
-            sellTab.classList.add('active');
-            buyTab.classList.remove('active');
-            sellForm.classList.add('active');
-            buyForm.classList.remove('active');
-            
-            // Update Slogan - Keep red color
-            sloganTitle.innerHTML = 'Aracını <span class="text-primary-600 dark:text-primary-500">Güvenle</span> Sat!';
-            sloganDesc.innerHTML = 'Hızlı teklif alın, güvenli süreçten geçin. Aracınızın gerçek değerini öğrenin ve en iyi fiyatı garantileyin.';
-        } else {
-            // Activate Buy Tab
-            buyTab.classList.add('active');
-            sellTab.classList.remove('active');
-            buyForm.classList.add('active');
-            sellForm.classList.remove('active');
-            
-            // Update Slogan - Keep red color
-            sloganTitle.innerHTML = '<span class="text-primary-600 dark:text-primary-500">Güvenle</span> Araç Al!';
-            sloganDesc.innerHTML = 'Binlerce araç arasından size en uygun olanı bulun. Garantili, ekspertizli ve güvenilir araçlar.';
-        }
-        
-        // Restart animation after a small delay
         setTimeout(() => {
-            sloganTitle.style.animation = '';
-            sloganDesc.style.animation = '';
-            sloganTitle.classList.remove('slogan-animate');
-            sloganDesc.classList.remove('slogan-animate-delay');
+            if (tab === 'sell') {
+                // Activate Sell Tab
+                sellTab.classList.add('active');
+                buyTab.classList.remove('active');
+                sellForm.classList.add('active');
+                buyForm.classList.remove('active');
+                
+                // Update Slogan
+                sloganTitle.innerHTML = 'Aracını <span class="text-primary-600 dark:text-primary-500">Güvenle</span> Sat!';
+                sloganDesc.innerHTML = 'Hızlı teklif alın, güvenli süreçten geçin. Aracınızın gerçek değerini öğrenin ve en iyi fiyatı garantileyin.';
+            } else {
+                // Activate Buy Tab
+                buyTab.classList.add('active');
+                sellTab.classList.remove('active');
+                buyForm.classList.add('active');
+                sellForm.classList.remove('active');
+                
+                // Update Slogan
+                sloganTitle.innerHTML = '<span class="text-primary-600 dark:text-primary-500">Güvenle</span> Aracını Al!';
+                sloganDesc.innerHTML = 'Binlerce araç arasından size en uygun olanı bulun. Garantili, ekspertizli ve güvenilir araçlar.';
+            }
             
-            // Force reflow
-            void sloganTitle.offsetWidth;
-            
-            sloganTitle.classList.add('slogan-animate');
-            sloganDesc.classList.add('slogan-animate-delay');
-        }, 50);
+            // Fade in animation
+            setTimeout(() => {
+                sloganTitle.style.opacity = '1';
+                sloganTitle.style.transform = 'translateX(0)';
+                sloganDesc.style.opacity = '1';
+                sloganDesc.style.transform = 'translateX(0)';
+            }, 50);
+        }, 250);
     }
 
     // Brand & Year Dropdown API Integration
