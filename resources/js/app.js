@@ -267,23 +267,31 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (!titleContent || !descContent) return;
         
-        // Önce görünmez yap
+        // Önce görünmez yap ve sola kaydır
         titleContent.style.opacity = '0';
+        titleContent.style.transform = 'translateX(-40px)';
         descContent.style.opacity = '0';
+        descContent.style.transform = 'translateX(-40px)';
         
-        // Kısa bir gecikme sonra içeriği değiştir ve animasyonu başlat
+        // İçeriği değiştir ve animasyonu başlat
         setTimeout(() => {
             // İçeriği güncelle
             titleContent.innerHTML = newContent.title;
             descContent.textContent = newContent.description;
             
-            // Style'ı kaldır ve animasyon sınıfını ekle
-            titleContent.style.opacity = '';
-            descContent.style.opacity = '';
+            // Animasyon sınıfını kaldır
+            titleContent.classList.remove('slogan-enter');
+            descContent.classList.remove('slogan-enter');
             
             // Force reflow
-            void titleContent.offsetWidth;
-            void descContent.offsetWidth;
+            void titleContent.offsetHeight;
+            void descContent.offsetHeight;
+            
+            // Style'ı kaldır ve animasyon sınıfını ekle
+            titleContent.style.opacity = '';
+            titleContent.style.transform = '';
+            descContent.style.opacity = '';
+            descContent.style.transform = '';
             
             // Animasyon sınıfını ekle
             titleContent.classList.add('slogan-enter');
@@ -293,8 +301,8 @@ document.addEventListener('DOMContentLoaded', function() {
             setTimeout(() => {
                 titleContent.classList.remove('slogan-enter');
                 descContent.classList.remove('slogan-enter');
-            }, 350);
-        }, 50);
+            }, 600);
+        }, 100);
     }
     
     function switchTab(tab) {
