@@ -251,12 +251,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Slogan content data
     const content = {
         sell: {
-            title: 'Aracını <span class="slogan-highlight-red">Güvenle</span> Sat',
+            title: 'Aracını <span class="text-primary-600 dark:text-primary-500">Güvenle</span> Sat!',
             description: 'Hızlı teklif alın, güvenli süreçten geçin. Aracınızın gerçek değerini öğrenin ve en iyi fiyatı garantileyin.'
         },
         buy: {
-            title: 'Aracını <span class="slogan-highlight-red">Güvenle</span> Al',
-            description: 'Garantili, bakımlı ve ekspertizli araçlar. Profesyonel seçim, güvenli alışveriş ve en iyi fiyat garantisi.'
+            title: '<span class="text-primary-600 dark:text-primary-500">Güvenle</span> Aracını Al!',
+            description: 'Binlerce araç arasından size en uygun olanı bulun. Garantili, ekspertizli ve güvenilir araçlar.'
         }
     };
     
@@ -328,6 +328,10 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Make switchTab globally available
     window.switchTab = switchTab;
+    
+    // Add click event listeners
+    sellTab.addEventListener('click', () => switchTab('sell'));
+    buyTab.addEventListener('click', () => switchTab('buy'));
     
     // Initialize with sell tab
     if (sellTab.classList.contains('active')) {
