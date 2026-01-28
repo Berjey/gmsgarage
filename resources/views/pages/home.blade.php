@@ -96,6 +96,54 @@
         transform: translateY(-2px);
     }
 
+    /* ===== DROPDOWN PANEL BASE STYLES - CRITICAL FOR VISIBILITY ===== */
+    .hero-custom-dropdown-panel {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        margin-top: 8px;
+        
+        /* CRITICAL: Solid background - no transparency */
+        background-color: #ffffff;
+        
+        /* CRITICAL: Full opacity */
+        opacity: 0;
+        visibility: hidden;
+        
+        /* CRITICAL: High z-index above header/hero overlays */
+        z-index: 9999;
+        
+        /* Styling */
+        border-radius: 12px;
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        
+        /* Animation */
+        transform: translateY(-10px);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        
+        /* Remove any blur effects */
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+    }
+
+    .hero-custom-dropdown-panel.open {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    /* Dark Mode Dropdown Panel */
+    .dark .hero-custom-dropdown-panel {
+        /* CRITICAL: Solid dark background */
+        background-color: #1f2937;
+        border-color: #374151;
+        
+        /* Enhanced shadow for dark mode */
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
+    }
+
     /* Brand Dropdown Styles */
     .hero-brand-panel {
         max-height: 400px;
