@@ -255,7 +255,7 @@ document.addEventListener('DOMContentLoaded', function() {
             description: 'Hızlı teklif alın, güvenli süreçten geçin. Aracınızın gerçek değerini öğrenin ve en iyi fiyatı garantileyin.'
         },
         buy: {
-            title: '<span class="text-primary-600 dark:text-primary-500">Güvenle</span> Aracını Al!',
+            title: 'Aracını <span class="text-primary-600 dark:text-primary-500">Güvenle</span> Al!',
             description: 'Binlerce araç arasından size en uygun olanı bulun. Garantili, ekspertizli ve güvenilir araçlar.'
         }
     };
@@ -267,32 +267,26 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (!titleContent || !descContent) return;
         
-        // Fade out
-        titleContent.classList.add('fade-out');
-        descContent.classList.add('fade-out');
+        // Remove animation class
+        titleContent.classList.remove('slogan-enter');
+        descContent.classList.remove('slogan-enter');
         
+        // Update content
+        titleContent.innerHTML = newContent.title;
+        descContent.textContent = newContent.description;
+        
+        // Force reflow
+        void titleContent.offsetWidth;
+        void descContent.offsetWidth;
+        
+        // Add animation class
+        titleContent.classList.add('slogan-enter');
+        descContent.classList.add('slogan-enter');
+        
+        // Remove animation class after completion
         setTimeout(() => {
-            // Update content with HTML (for span with red highlight)
-            titleContent.innerHTML = newContent.title;
-            descContent.textContent = newContent.description;
-            
-            // Reset animation by removing and re-adding class
-            titleContent.classList.remove('fade-out', 'fade-in', 'reveal-left');
-            descContent.classList.remove('fade-out', 'fade-in');
-            
-            // Force reflow to restart animation
-            void titleContent.offsetWidth;
-            void descContent.offsetWidth;
-            
-            // Add reveal-left animation for title, fade-in for description
-            titleContent.classList.add('reveal-left');
-            descContent.classList.add('fade-in');
-            
-            // Remove animations after completion
-            setTimeout(() => {
-                titleContent.classList.remove('reveal-left');
-                descContent.classList.remove('fade-in');
-            }, 400);
+            titleContent.classList.remove('slogan-enter');
+            descContent.classList.remove('slogan-enter');
         }, 250);
     }
     
