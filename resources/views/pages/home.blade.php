@@ -218,17 +218,9 @@
         padding: 4px;
     }
 
-    /* Brand için sola hizalama (logo var) */
+    /* Brand için sola hizalama */
     .hero-brand-panel .hero-custom-dropdown-option {
         justify-content: flex-start;
-    }
-
-    .hero-brand-panel .hero-custom-dropdown-option .brand-logo {
-        width: 36px;
-        height: 36px;
-        object-fit: contain;
-        margin-right: 12px;
-        flex-shrink: 0;
     }
 
     /* Year Dropdown - Sadece container */
@@ -518,12 +510,7 @@
                                     <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wider">MARKA</label>
                                     <div class="hero-custom-dropdown hero-brand-dropdown" data-dropdown="brand-sell" id="brand-dropdown-sell">
                                         <button type="button" class="hero-custom-dropdown-trigger border-2 border-gray-300 dark:border-gray-700 dark:bg-[#2a2a2a] dark:text-gray-100" data-value="" data-brand-id="">
-                                            <span class="selected-content flex items-center">
-                                                <span class="brand-logo-wrapper hidden mr-2">
-                                                    <img src="" alt="" class="w-6 h-6 object-contain brand-logo">
-                                                </span>
-                                                <span class="selected-text placeholder dark:text-gray-400">Marka Seçin</span>
-                                            </span>
+                                            <span class="selected-text placeholder dark:text-gray-400">Marka Seçin</span>
                                             <svg class="arrow w-6 h-6 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                                             </svg>
@@ -851,11 +838,7 @@
                     option.className = 'hero-custom-dropdown-option';
                     option.setAttribute('data-value', brand.Name);
                     option.setAttribute('data-brand-id', brand.Id);
-                    option.setAttribute('data-logo', brand.LogoPath);
-                    option.innerHTML = `
-                        <img src="${brand.LogoPath}" alt="${brand.Name}" class="brand-logo" onerror="this.style.display='none'">
-                        <span class="brand-name">${brand.Name}</span>
-                    `;
+                    option.textContent = brand.Name;
                     brandList.appendChild(option);
                 });
 
@@ -888,8 +871,6 @@
         const trigger = dropdown.querySelector('.hero-custom-dropdown-trigger');
         const nativeSelect = dropdown.querySelector('.hero-custom-dropdown-native');
         const selectedText = trigger.querySelector('.selected-text');
-        const logoWrapper = trigger.querySelector('.brand-logo-wrapper');
-        const logoImg = trigger.querySelector('.brand-logo');
         const brandIdInput = document.getElementById('marka-id-input');
         const formCard = document.querySelector('.hero-form-card');
         const yearField = document.getElementById('year-field-sell');
@@ -899,7 +880,6 @@
                 e.stopPropagation();
                 const value = this.getAttribute('data-value');
                 const brandId = this.getAttribute('data-brand-id');
-                const logo = this.getAttribute('data-logo');
 
                 // Update trigger display
                 selectedText.textContent = value || 'Marka Seçin';
@@ -907,15 +887,6 @@
                     selectedText.classList.remove('placeholder');
                 } else {
                     selectedText.classList.add('placeholder');
-                }
-
-                // Show/hide logo
-                if (logo && value) {
-                    logoWrapper.classList.remove('hidden');
-                    logoImg.src = logo;
-                    logoImg.alt = value;
-                } else {
-                    logoWrapper.classList.add('hidden');
                 }
 
                 // Update values
