@@ -2,13 +2,40 @@
 
 <div class="card-vehicle group bg-white dark:bg-[#252525] rounded-2xl shadow-lg dark:shadow-xl border-2 border-transparent dark:border-gray-800 transition-all duration-300 flex flex-col h-full hover:border-primary-600 dark:hover:border-primary-500 hover:shadow-2xl hover:-translate-y-1">
     <div class="block flex flex-col h-full">
-        <!-- İçerik -->
-        <div class="p-6 flex flex-col flex-grow">
+        <!-- Temsili Görsel Bölümü -->
+        <div class="relative h-56 bg-gradient-to-br from-gray-100 via-gray-50 to-gray-100 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 overflow-hidden rounded-t-2xl">
+            @if(is_array($vehicle->images) && count($vehicle->images) > 0)
+                <!-- Gerçek Görsel Varsa -->
+                <img src="{{ $vehicle->images[0] }}" 
+                     alt="{{ $vehicle->title }}"
+                     loading="lazy"
+                     class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                     onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-50 to-primary-100 dark:from-primary-900/20 dark:to-primary-800/20\'><svg class=\'w-24 h-24 text-primary-600 dark:text-primary-400 opacity-50\' fill=\'none\' stroke=\'currentColor\' viewBox=\'0 0 24 24\'><path stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'1.5\' d=\'M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z\'></path><path stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'1.5\' d=\'M9 22V12h6v10\'></path><circle cx=\'12\' cy=\'8\' r=\'1\' fill=\'currentColor\'></circle></svg></div>';">
+            @else
+                <!-- Temsili Görsel (Placeholder) -->
+                <div class="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-primary-50 to-primary-100 dark:from-primary-900/20 dark:to-primary-800/20">
+                    <!-- Araç İkonu -->
+                    <svg class="w-24 h-24 text-primary-600 dark:text-primary-400 opacity-50 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 22V12h6v10"></path>
+                        <circle cx="12" cy="8" r="1" fill="currentColor"></circle>
+                    </svg>
+                    <span class="text-sm text-gray-500 dark:text-gray-400 font-medium">{{ $vehicle->brand }} {{ $vehicle->model }}</span>
+                </div>
+            @endif
+            
             @if($vehicle->is_featured)
-                <span class="inline-block mb-3 bg-accent-600 text-white px-3 py-1.5 rounded-full text-xs font-bold shadow-lg w-fit">
+                <span class="absolute top-3 left-3 bg-accent-600 text-white px-3 py-1.5 rounded-full text-xs font-bold shadow-lg z-10">
                     ⭐ Öne Çıkan
                 </span>
             @endif
+            
+            <!-- Hover Overlay -->
+            <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
+        </div>
+        
+        <!-- İçerik -->
+        <div class="p-6 flex flex-col flex-grow">
             <!-- Başlık -->
             <div class="mb-3">
                 <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-1 line-clamp-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
