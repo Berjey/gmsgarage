@@ -2553,12 +2553,7 @@
     }
 
     // Custom Dropdown Implementation for Hero Section
-    document.addEventListener('DOMContentLoaded', function() {
-        initHeroCustomDropdowns();
-
-        // Initialize brand dropdown
-        initBrandDropdown();
-    });
+    // MOVED TO END OF SCRIPT - see DOMContentLoaded at bottom
 
     function initBrandDropdown() {
         const brandDropdown = document.getElementById('brand-dropdown-sell');
@@ -3045,6 +3040,12 @@
     // Form validation for Hero "ARABAMI DEĞERLE" button
     // Native form submit - JS only for validation
     document.addEventListener('DOMContentLoaded', function() {
+        // Initialize custom dropdowns FIRST
+        initHeroCustomDropdowns();
+        
+        // Initialize brand dropdown
+        initBrandDropdown();
+        
         const sellForm = document.getElementById('sell-form');
         if (!sellForm) {
             // Form bulunamadı, sessizce devam et
