@@ -2,34 +2,13 @@
 
 <div class="card-vehicle group bg-white dark:bg-[#252525] rounded-2xl shadow-lg dark:shadow-xl border-2 border-transparent dark:border-gray-800 transition-all duration-300 flex flex-col h-full hover:border-primary-600 dark:hover:border-primary-500 hover:shadow-2xl hover:-translate-y-1">
     <div class="block flex flex-col h-full">
-        <!-- Görsel -->
-        <div class="relative h-56 bg-gray-100 dark:bg-gray-700 overflow-hidden rounded-t-2xl">
-            @if(is_array($vehicle->images) && count($vehicle->images) > 0)
-                <img src="{{ $vehicle->images[0] }}" 
-                     alt="{{ $vehicle->title }}"
-                     loading="lazy"
-                     class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                     onerror="this.src='/images/vehicles/default.jpg'">
-            @else
-                <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-200 to-gray-300">
-                    <svg class="w-20 h-20 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                    </svg>
-                </div>
-            @endif
-            
+        <!-- İçerik -->
+        <div class="p-6 flex flex-col flex-grow">
             @if($vehicle->is_featured)
-                <span class="absolute top-3 left-3 bg-accent-600 text-white px-3 py-1.5 rounded-full text-xs font-bold shadow-lg z-10">
+                <span class="inline-block mb-3 bg-accent-600 text-white px-3 py-1.5 rounded-full text-xs font-bold shadow-lg w-fit">
                     ⭐ Öne Çıkan
                 </span>
             @endif
-            
-            <!-- Hover Overlay -->
-            <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300"></div>
-        </div>
-        
-        <!-- İçerik -->
-        <div class="p-6 flex flex-col flex-grow">
             <!-- Başlık -->
             <div class="mb-3">
                 <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-1 line-clamp-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">

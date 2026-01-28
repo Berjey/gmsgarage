@@ -834,25 +834,6 @@
                     <p id="slogan-description" class="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8 max-w-lg leading-relaxed slogan-animate-delay">
                         Hızlı teklif alın, güvenli süreçten geçin. Aracınızın gerçek değerini öğrenin ve en iyi fiyatı garantileyin.
                     </p>
-                    
-                    <!-- Featured Vehicle Image -->
-                    @if($featuredVehicles->count() > 0 && isset($featuredVehicles[0]->images) && is_array($featuredVehicles[0]->images) && count($featuredVehicles[0]->images) > 0)
-                        <div class="relative animate-fade-in-up">
-                            <img src="{{ asset($featuredVehicles[0]->images[0]) }}" 
-                                 alt="{{ $featuredVehicles[0]->title }}"
-                                 class="w-full h-auto rounded-2xl shadow-2xl transform hover:scale-105 transition-transform duration-500"
-                                 onerror="this.src='/images/vehicles/default.jpg'">
-                            <!-- Decorative red shapes behind image -->
-                            <div class="absolute -bottom-6 -right-6 w-40 h-40 bg-primary-600 rounded-2xl opacity-20 -z-10 transform rotate-12 blur-xl"></div>
-                            <div class="absolute -top-6 -left-6 w-32 h-32 bg-primary-600 rounded-2xl opacity-20 -z-10 transform -rotate-12 blur-xl"></div>
-                        </div>
-                    @else
-                        <div class="w-full h-80 bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl flex items-center justify-center shadow-2xl">
-                            <svg class="w-32 h-32 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
-                            </svg>
-                        </div>
-                    @endif
                 </div>
             </div>
         </div>
