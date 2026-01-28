@@ -826,24 +826,82 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Elements
-    const markaSelect = document.getElementById('marka-select');
-    const markaId = document.getElementById('marka-id');
-    const yilSelect = document.getElementById('yil-select');
-    const modelSelect = document.getElementById('model-select');
-    const modelId = document.getElementById('model-id');
-    const govdeSelect = document.getElementById('govde-select');
-    const govdeId = document.getElementById('govde-id');
-    const yakitSelect = document.getElementById('yakit-select');
-    const yakitId = document.getElementById('yakit-id');
-    const vitesSelect = document.getElementById('vites-select');
-    const vitesId = document.getElementById('vites-id');
-    const versiyonSelect = document.getElementById('versiyon-select');
-    const versiyonId = document.getElementById('versiyon-id');
-    const kilometreInput = document.getElementById('kilometre-input');
-    const renkSelect = document.getElementById('renk-select');
-    const renkId = document.getElementById('renk-id');
-
+    // ===== CUSTOM DROPDOWN GENEL DAVRANIŞLARI =====
+    
+    // Initialize all custom dropdowns
+    function initCustomDropdown(dropdown) {
+        const trigger = dropdown.querySelector('.eval-custom-dropdown-trigger');
+        const panel = dropdown.querySelector('.eval-custom-dropdown-panel');
+        const options = panel.querySelectorAll('.eval-custom-dropdown-option');
+        const selectedText = trigger.querySelector('.selected-text');
+        const dropdownId = dropdown.id;
+        
+        // Get associated hidden input
+        const inputName = dropdownId.replace('-dropdown', '');
+        const hiddenInput = document.getElementById(inputName + '-input');
+        
+        // Toggle dropdown
+        trigger.addEventListener('click', function(e) {
+            if (dropdown.classList.contains('disabled')) return;
+            e.stopPropagation();
+            
+            // Close all other dropdowns
+            document.querySelectorAll('.eval-custom-dropdown').forEach(dd => {
+                if (dd !== dropdown) {
+                    dd.classList.remove('dropdown-open');
+                    dd.querySelector('.eval-custom-dropdown-panel').classList.remove('open');
+                }
+            });
+            
+            // Toggle this dropdown
+            dropdown.classList.toggle('dropdown-open');
+            panel.classList.toggle('open');
+        });
+        
+        // Handle option selection
+        options.forEach(option => {
+            option.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const value = this.getAttribute('data-value');
+                const id = this.getAttribute('data-id') || '';
+                
+                // Update trigger display
+                selectedText.textContent = this.textContent;
+                selectedText.classList.remove('placeholder');
+                trigger.setAttribute('data-value', value);
+                if (id) trigger.setAttribute('data-id', id);
+                
+                // Update hidden input
+                if (hiddenInput) hiddenInput.value = value;
+                
+                // Update selected state
+                options.forEach(opt => opt.classList.remove('selected'));
+                this.classList.add('selected');
+                
+                // Close dropdown
+                dropdown.classList.remove('dropdown-open');
+                panel.classList.remove('open');
+                
+                // Trigger custom event for specific handling
+                const event = new CustomEvent('dropdown-change', { 
+                    detail: { value, id, dropdown: dropdownId } 
+                });
+                dropdown.dispatchEvent(event);
+            });
+        });
+    }
+    
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function() {
+        document.querySelectorAll('.eval-custom-dropdown').forEach(dropdown => {
+            dropdown.classList.remove('dropdown-open');
+            dropdown.querySelector('.eval-custom-dropdown-panel').classList.remove('open');
+        });
+    });
+    
+    // Initialize all dropdowns
+    document.querySelectorAll('.eval-custom-dropdown').forEach(initCustomDropdown);
+    
     // State
     let selectedBrandId = '{{ request("marka_id") }}' || null;
     let selectedYear = null;
@@ -860,13 +918,13 @@ document.addEventListener('DOMContentLoaded', function() {
     if (selectedBrandId) {
         setTimeout(() => {
             loadYears(selectedBrandId);
-            yilSelect.disabled = false;
+            document.getElementById('yil-dropdown').classList.remove('disabled');
         }, 500);
     }
 
-    // Event listeners
-    markaSelect.addEventListener('change', function() {
-        selectedBrandId = this.options[this.selectedIndex].dataset.id || null;
+    // Event listeners for custom dropdowns
+    document.getElementById('marka-dropdown').addEventListener('dropdown-change', function(e) {
+        selectedBrandId = e.detail.id || null;
         markaId.value = selectedBrandId || '';
 
         // Reset all subsequent fields
