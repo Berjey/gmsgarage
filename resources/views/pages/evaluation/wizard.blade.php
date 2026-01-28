@@ -1101,7 +1101,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         selectedBrandId = item.Id;
                         resetFrom('yil');
                         loadYears(item.Id);
-                        document.getElementById('yil-dropdown').classList.remove('disabled');
                     });
                     
                     panel.appendChild(option);
@@ -1207,7 +1206,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         selectedModelId = item.Id;
                         resetFrom('govde');
                         loadGovdeTipleri(selectedBrandId, selectedYear, item.Id);
-                        document.getElementById('govde-dropdown').classList.remove('disabled');
                     });
                     
                     panel.appendChild(option);
@@ -1264,7 +1262,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         selectedGovdeId = item.Id;
                         resetFrom('yakit');
                         loadYakitTipleri(selectedBrandId, selectedYear, selectedModelId, item.Id);
-                        document.getElementById('yakit-dropdown').classList.remove('disabled');
                     });
                     
                     panel.appendChild(option);
@@ -1321,7 +1318,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         selectedYakitId = item.Id;
                         resetFrom('vites');
                         loadVitesTipleri(selectedBrandId, selectedYear, selectedModelId, selectedGovdeId, item.Id);
-                        document.getElementById('vites-dropdown').classList.remove('disabled');
                     });
                     
                     panel.appendChild(option);
@@ -1378,7 +1374,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         selectedVitesId = item.Id;
                         resetFrom('versiyon');
                         loadVersiyonlar(selectedBrandId, selectedYear, selectedModelId, selectedGovdeId, selectedYakitId, item.Id);
-                        document.getElementById('versiyon-dropdown').classList.remove('disabled');
                     });
                     
                     panel.appendChild(option);
@@ -1436,7 +1431,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         resetFrom('renk');
                         loadRenkler(selectedBrandId, selectedYear, selectedModelId, selectedGovdeId, selectedYakitId, selectedVitesId, item.Id);
                         document.getElementById('kilometre-input').disabled = false;
-                        document.getElementById('renk-dropdown').classList.remove('disabled');
                     });
                     
                     panel.appendChild(option);
