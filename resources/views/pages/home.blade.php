@@ -96,6 +96,16 @@
         transform: translateY(-2px);
     }
 
+    /* ===== DROPDOWN WRAPPER - RELATIVE POSITIONING ===== */
+    .hero-custom-dropdown {
+        position: relative;
+        z-index: 100;
+    }
+    
+    .hero-custom-dropdown.dropdown-open {
+        z-index: 99999 !important;
+    }
+
     /* ===== DROPDOWN PANEL BASE STYLES - CRITICAL FOR VISIBILITY ===== */
     .hero-custom-dropdown-panel {
         position: absolute;
@@ -111,8 +121,8 @@
         opacity: 0;
         visibility: hidden;
         
-        /* CRITICAL: High z-index above header/hero overlays */
-        z-index: 9999;
+        /* CRITICAL: Maximum z-index - above everything */
+        z-index: 99999;
         
         /* Styling */
         border-radius: 12px;
@@ -718,7 +728,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                 <!-- Left Side - Modern Search Form -->
                 <div class="order-2 lg:order-1 animate-slide-in-left">
-                    <div class="bg-white dark:bg-[#252525] rounded-2xl shadow-2xl border-b-4 border-primary-600 dark:border-primary-500 overflow-visible transform hover:shadow-3xl transition-shadow duration-300 hero-form-card">
+                    <div class="bg-white dark:bg-[#252525] rounded-2xl shadow-2xl border-b-4 border-primary-600 dark:border-primary-500 overflow-visible hover:shadow-3xl transition-shadow duration-300 hero-form-card">
                         <!-- Tabs -->
                         <div class="flex border-b-2 border-gray-100 dark:border-gray-800 relative">
                             <button id="tab-sell" 
