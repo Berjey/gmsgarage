@@ -993,7 +993,7 @@ document.addEventListener('DOMContentLoaded', function() {
         this.value = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
     });
 
-    // Reset functions
+    // Reset functions for custom dropdowns
     function resetFrom(field) {
         const fields = ['yil', 'model', 'govde', 'yakit', 'vites', 'versiyon', 'km', 'renk'];
         const index = fields.indexOf(field);
@@ -1002,38 +1002,27 @@ document.addEventListener('DOMContentLoaded', function() {
             fields.slice(index).forEach(f => {
                 switch(f) {
                     case 'yil':
-                        yilSelect.innerHTML = '<option value="">Yıl Seçin</option>';
-                        yilSelect.disabled = true;
+                        resetDropdown('yil', 'Yıl Seçin');
                         selectedYear = null;
                         break;
                     case 'model':
-                        modelSelect.innerHTML = '<option value="">Model Seçin</option>';
-                        modelSelect.disabled = true;
-                        modelId.value = '';
+                        resetDropdown('model', 'Model Seçin');
                         selectedModelId = null;
                         break;
                     case 'govde':
-                        govdeSelect.innerHTML = '<option value="">Gövde Tipi Seçin</option>';
-                        govdeSelect.disabled = true;
-                        govdeId.value = '';
+                        resetDropdown('govde', 'Gövde Tipi Seçin');
                         selectedGovdeId = null;
                         break;
                     case 'yakit':
-                        yakitSelect.innerHTML = '<option value="">Yakıt Tipi Seçin</option>';
-                        yakitSelect.disabled = true;
-                        yakitId.value = '';
+                        resetDropdown('yakit', 'Yakıt Tipi Seçin');
                         selectedYakitId = null;
                         break;
                     case 'vites':
-                        vitesSelect.innerHTML = '<option value="">Vites Tipi Seçin</option>';
-                        vitesSelect.disabled = true;
-                        vitesId.value = '';
+                        resetDropdown('vites', 'Vites Tipi Seçin');
                         selectedVitesId = null;
                         break;
                     case 'versiyon':
-                        versiyonSelect.innerHTML = '<option value="">Versiyon Seçin</option>';
-                        versiyonSelect.disabled = true;
-                        versiyonId.value = '';
+                        resetDropdown('versiyon', 'Versiyon Seçin');
                         selectedVersiyonId = null;
                         break;
                     case 'km':
@@ -1041,13 +1030,34 @@ document.addEventListener('DOMContentLoaded', function() {
                         kilometreInput.disabled = true;
                         break;
                     case 'renk':
-                        renkSelect.innerHTML = '<option value="">Renk Seçin</option>';
-                        renkSelect.disabled = true;
-                        renkId.value = '';
+                        resetDropdown('renk', 'Renk Seçin');
                         break;
                 }
             });
         }
+    }
+    
+    function resetDropdown(name, placeholder) {
+        const dropdown = document.getElementById(name + '-dropdown');
+        if (!dropdown) return;
+        
+        const trigger = dropdown.querySelector('.eval-custom-dropdown-trigger');
+        const selectedText = trigger.querySelector('.selected-text');
+        const panel = dropdown.querySelector('.eval-custom-dropdown-panel');
+        
+        selectedText.textContent = placeholder;
+        selectedText.classList.add('placeholder');
+        trigger.setAttribute('data-value', '');
+        trigger.setAttribute('data-id', '');
+        
+        const inputElem = document.getElementById(name + '-input');
+        if (inputElem) inputElem.value = '';
+        
+        const idElem = document.getElementById(name + '-id');
+        if (idElem) idElem.value = '';
+        
+        panel.innerHTML = '';
+        dropdown.classList.add('disabled');
     }
 
     // API functions
@@ -1217,21 +1227,47 @@ document.addEventListener('DOMContentLoaded', function() {
             const result = await response.json();
 
             if (result.success && result.data && result.data.Items) {
-                govdeSelect.innerHTML = '<option value="">Gövde Tipi Seçin</option>';
+                const govdeDropdown = document.getElementById('govde-dropdown');
+                const panel = govdeDropdown.querySelector('.eval-custom-dropdown-panel');
+                panel.innerHTML = '';
+                
                 result.data.Items.forEach(item => {
-                    const option = document.createElement('option');
-                    option.value = item.Name;
+                    const option = document.createElement('div');
+                    option.className = 'eval-custom-dropdown-option';
                     option.textContent = item.Name;
-                    option.dataset.id = item.Id;
-                    govdeSelect.appendChild(option);
+                    option.setAttribute('data-value', item.Name);
+                    option.setAttribute('data-id', item.Id);
+                    
+                    option.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const trigger = govdeDropdown.querySelector('.eval-custom-dropdown-trigger');
+                        const selectedText = trigger.querySelector('.selected-text');
+                        
+                        selectedText.textContent = item.Name;
+                        selectedText.classList.remove('placeholder');
+                        
+                        document.getElementById('govde-input').value = item.Name;
+                        document.getElementById('govde-id').value = item.Id;
+                        
+                        panel.querySelectorAll('.eval-custom-dropdown-option').forEach(opt => opt.classList.remove('selected'));
+                        option.classList.add('selected');
+                        
+                        govdeDropdown.classList.remove('dropdown-open');
+                        panel.classList.remove('open');
+                        
+                        selectedGovdeId = item.Id;
+                        resetFrom('yakit');
+                        loadYakitTipleri(selectedBrandId, selectedYear, selectedModelId, item.Id);
+                        document.getElementById('yakit-dropdown').classList.remove('disabled');
+                    });
+                    
+                    panel.appendChild(option);
                 });
 
                 // Auto-select if only one item
                 if (result.data.Items.length === 1) {
-                    govdeSelect.selectedIndex = 1;
-                    selectedGovdeId = result.data.Items[0].Id;
-                    govdeId.value = selectedGovdeId;
-                    govdeSelect.dispatchEvent(new Event('change'));
+                    const firstOption = panel.querySelector('.eval-custom-dropdown-option');
+                    if (firstOption) firstOption.click();
                 }
             }
         } catch (error) {
@@ -1245,21 +1281,47 @@ document.addEventListener('DOMContentLoaded', function() {
             const result = await response.json();
 
             if (result.success && result.data && result.data.Items) {
-                yakitSelect.innerHTML = '<option value="">Yakıt Tipi Seçin</option>';
+                const yakitDropdown = document.getElementById('yakit-dropdown');
+                const panel = yakitDropdown.querySelector('.eval-custom-dropdown-panel');
+                panel.innerHTML = '';
+                
                 result.data.Items.forEach(item => {
-                    const option = document.createElement('option');
-                    option.value = item.Name;
+                    const option = document.createElement('div');
+                    option.className = 'eval-custom-dropdown-option';
                     option.textContent = item.Name;
-                    option.dataset.id = item.Id;
-                    yakitSelect.appendChild(option);
+                    option.setAttribute('data-value', item.Name);
+                    option.setAttribute('data-id', item.Id);
+                    
+                    option.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const trigger = yakitDropdown.querySelector('.eval-custom-dropdown-trigger');
+                        const selectedText = trigger.querySelector('.selected-text');
+                        
+                        selectedText.textContent = item.Name;
+                        selectedText.classList.remove('placeholder');
+                        
+                        document.getElementById('yakit-input').value = item.Name;
+                        document.getElementById('yakit-id').value = item.Id;
+                        
+                        panel.querySelectorAll('.eval-custom-dropdown-option').forEach(opt => opt.classList.remove('selected'));
+                        option.classList.add('selected');
+                        
+                        yakitDropdown.classList.remove('dropdown-open');
+                        panel.classList.remove('open');
+                        
+                        selectedYakitId = item.Id;
+                        resetFrom('vites');
+                        loadVitesTipleri(selectedBrandId, selectedYear, selectedModelId, selectedGovdeId, item.Id);
+                        document.getElementById('vites-dropdown').classList.remove('disabled');
+                    });
+                    
+                    panel.appendChild(option);
                 });
 
                 // Auto-select if only one item
                 if (result.data.Items.length === 1) {
-                    yakitSelect.selectedIndex = 1;
-                    selectedYakitId = result.data.Items[0].Id;
-                    yakitId.value = selectedYakitId;
-                    yakitSelect.dispatchEvent(new Event('change'));
+                    const firstOption = panel.querySelector('.eval-custom-dropdown-option');
+                    if (firstOption) firstOption.click();
                 }
             }
         } catch (error) {
@@ -1273,21 +1335,47 @@ document.addEventListener('DOMContentLoaded', function() {
             const result = await response.json();
 
             if (result.success && result.data && result.data.Items) {
-                vitesSelect.innerHTML = '<option value="">Vites Tipi Seçin</option>';
+                const vitesDropdown = document.getElementById('vites-dropdown');
+                const panel = vitesDropdown.querySelector('.eval-custom-dropdown-panel');
+                panel.innerHTML = '';
+                
                 result.data.Items.forEach(item => {
-                    const option = document.createElement('option');
-                    option.value = item.Name;
+                    const option = document.createElement('div');
+                    option.className = 'eval-custom-dropdown-option';
                     option.textContent = item.Name;
-                    option.dataset.id = item.Id;
-                    vitesSelect.appendChild(option);
+                    option.setAttribute('data-value', item.Name);
+                    option.setAttribute('data-id', item.Id);
+                    
+                    option.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const trigger = vitesDropdown.querySelector('.eval-custom-dropdown-trigger');
+                        const selectedText = trigger.querySelector('.selected-text');
+                        
+                        selectedText.textContent = item.Name;
+                        selectedText.classList.remove('placeholder');
+                        
+                        document.getElementById('vites-input').value = item.Name;
+                        document.getElementById('vites-id').value = item.Id;
+                        
+                        panel.querySelectorAll('.eval-custom-dropdown-option').forEach(opt => opt.classList.remove('selected'));
+                        option.classList.add('selected');
+                        
+                        vitesDropdown.classList.remove('dropdown-open');
+                        panel.classList.remove('open');
+                        
+                        selectedVitesId = item.Id;
+                        resetFrom('versiyon');
+                        loadVersiyonlar(selectedBrandId, selectedYear, selectedModelId, selectedGovdeId, selectedYakitId, item.Id);
+                        document.getElementById('versiyon-dropdown').classList.remove('disabled');
+                    });
+                    
+                    panel.appendChild(option);
                 });
 
                 // Auto-select if only one item
                 if (result.data.Items.length === 1) {
-                    vitesSelect.selectedIndex = 1;
-                    selectedVitesId = result.data.Items[0].Id;
-                    vitesId.value = selectedVitesId;
-                    vitesSelect.dispatchEvent(new Event('change'));
+                    const firstOption = panel.querySelector('.eval-custom-dropdown-option');
+                    if (firstOption) firstOption.click();
                 }
             }
         } catch (error) {
@@ -1301,21 +1389,48 @@ document.addEventListener('DOMContentLoaded', function() {
             const result = await response.json();
 
             if (result.success && result.data && result.data.Items) {
-                versiyonSelect.innerHTML = '<option value="">Versiyon Seçin</option>';
+                const versiyonDropdown = document.getElementById('versiyon-dropdown');
+                const panel = versiyonDropdown.querySelector('.eval-custom-dropdown-panel');
+                panel.innerHTML = '';
+                
                 result.data.Items.forEach(item => {
-                    const option = document.createElement('option');
-                    option.value = item.Name;
+                    const option = document.createElement('div');
+                    option.className = 'eval-custom-dropdown-option';
                     option.textContent = item.Name;
-                    option.dataset.id = item.Id;
-                    versiyonSelect.appendChild(option);
+                    option.setAttribute('data-value', item.Name);
+                    option.setAttribute('data-id', item.Id);
+                    
+                    option.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const trigger = versiyonDropdown.querySelector('.eval-custom-dropdown-trigger');
+                        const selectedText = trigger.querySelector('.selected-text');
+                        
+                        selectedText.textContent = item.Name;
+                        selectedText.classList.remove('placeholder');
+                        
+                        document.getElementById('versiyon-input').value = item.Name;
+                        document.getElementById('versiyon-id').value = item.Id;
+                        
+                        panel.querySelectorAll('.eval-custom-dropdown-option').forEach(opt => opt.classList.remove('selected'));
+                        option.classList.add('selected');
+                        
+                        versiyonDropdown.classList.remove('dropdown-open');
+                        panel.classList.remove('open');
+                        
+                        selectedVersiyonId = item.Id;
+                        resetFrom('renk');
+                        loadRenkler(selectedBrandId, selectedYear, selectedModelId, selectedGovdeId, selectedYakitId, selectedVitesId, item.Id);
+                        document.getElementById('kilometre-input').disabled = false;
+                        document.getElementById('renk-dropdown').classList.remove('disabled');
+                    });
+                    
+                    panel.appendChild(option);
                 });
 
                 // Auto-select if only one item
                 if (result.data.Items.length === 1) {
-                    versiyonSelect.selectedIndex = 1;
-                    selectedVersiyonId = result.data.Items[0].Id;
-                    versiyonId.value = selectedVersiyonId;
-                    versiyonSelect.dispatchEvent(new Event('change'));
+                    const firstOption = panel.querySelector('.eval-custom-dropdown-option');
+                    if (firstOption) firstOption.click();
                 }
             }
         } catch (error) {
@@ -1329,19 +1444,42 @@ document.addEventListener('DOMContentLoaded', function() {
             const result = await response.json();
 
             if (result.success && result.data && result.data.Items) {
-                renkSelect.innerHTML = '<option value="">Renk Seçin</option>';
+                const renkDropdown = document.getElementById('renk-dropdown');
+                const panel = renkDropdown.querySelector('.eval-custom-dropdown-panel');
+                panel.innerHTML = '';
+                
                 result.data.Items.forEach(item => {
-                    const option = document.createElement('option');
-                    option.value = item.Name;
+                    const option = document.createElement('div');
+                    option.className = 'eval-custom-dropdown-option';
                     option.textContent = item.Name;
-                    option.dataset.id = item.Id;
-                    renkSelect.appendChild(option);
+                    option.setAttribute('data-value', item.Name);
+                    option.setAttribute('data-id', item.Id);
+                    
+                    option.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const trigger = renkDropdown.querySelector('.eval-custom-dropdown-trigger');
+                        const selectedText = trigger.querySelector('.selected-text');
+                        
+                        selectedText.textContent = item.Name;
+                        selectedText.classList.remove('placeholder');
+                        
+                        document.getElementById('renk-input').value = item.Name;
+                        document.getElementById('renk-id').value = item.Id;
+                        
+                        panel.querySelectorAll('.eval-custom-dropdown-option').forEach(opt => opt.classList.remove('selected'));
+                        option.classList.add('selected');
+                        
+                        renkDropdown.classList.remove('dropdown-open');
+                        panel.classList.remove('open');
+                    });
+                    
+                    panel.appendChild(option);
                 });
 
                 // Auto-select if only one item
                 if (result.data.Items.length === 1) {
-                    renkSelect.selectedIndex = 1;
-                    renkId.value = result.data.Items[0].Id;
+                    const firstOption = panel.querySelector('.eval-custom-dropdown-option');
+                    if (firstOption) firstOption.click();
                 }
             }
         } catch (error) {
@@ -1349,17 +1487,39 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Tramer select toggle
-    const tramerSelect = document.getElementById('tramer-select');
+    // Tramer dropdown event listener
+    const tramerDropdown = document.getElementById('tramer-dropdown');
     const tramerTutari = document.getElementById('tramer-tutari');
-
-    tramerSelect.addEventListener('change', function() {
-        if (this.value === 'VAR' || this.value === 'AGIR_HASAR') {
-            tramerTutari.disabled = false;
-        } else {
-            tramerTutari.disabled = true;
-            tramerTutari.value = '';
-        }
+    
+    // Add event listeners to tramer options
+    tramerDropdown.querySelectorAll('.eval-custom-dropdown-option').forEach(option => {
+        option.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const value = this.getAttribute('data-value');
+            const trigger = tramerDropdown.querySelector('.eval-custom-dropdown-trigger');
+            const selectedText = trigger.querySelector('.selected-text');
+            const panel = tramerDropdown.querySelector('.eval-custom-dropdown-panel');
+            
+            selectedText.textContent = this.textContent;
+            selectedText.classList.remove('placeholder');
+            trigger.setAttribute('data-value', value);
+            
+            document.getElementById('tramer-input').value = value;
+            
+            panel.querySelectorAll('.eval-custom-dropdown-option').forEach(opt => opt.classList.remove('selected'));
+            this.classList.add('selected');
+            
+            tramerDropdown.classList.remove('dropdown-open');
+            panel.classList.remove('open');
+            
+            // Enable/disable tramer tutarı based on selection
+            if (value === 'VAR' || value === 'AGIR_HASAR') {
+                tramerTutari.disabled = false;
+            } else {
+                tramerTutari.disabled = true;
+                tramerTutari.value = '';
+            }
+        });
     });
 
     // Part key to SVG ID mapping
