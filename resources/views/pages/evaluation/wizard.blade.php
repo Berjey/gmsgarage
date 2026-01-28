@@ -1155,6 +1155,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     panel.appendChild(option);
                 });
+                
+                // Enable dropdown
+                yilDropdown.classList.remove('disabled');
 
                 // Auto-select if only one item
                 if (result.data.Items.length === 1) {
@@ -1209,6 +1212,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     panel.appendChild(option);
                 });
+                
+                // Enable dropdown
+                modelDropdown.classList.remove('disabled');
 
                 // Auto-select if only one item
                 if (result.data.Items.length === 1) {
@@ -1263,6 +1269,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     panel.appendChild(option);
                 });
+                
+                // Enable dropdown
+                govdeDropdown.classList.remove('disabled');
 
                 // Auto-select if only one item
                 if (result.data.Items.length === 1) {
@@ -1317,6 +1326,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     panel.appendChild(option);
                 });
+                
+                // Enable dropdown
+                yakitDropdown.classList.remove('disabled');
 
                 // Auto-select if only one item
                 if (result.data.Items.length === 1) {
@@ -1371,6 +1383,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     panel.appendChild(option);
                 });
+                
+                // Enable dropdown
+                vitesDropdown.classList.remove('disabled');
 
                 // Auto-select if only one item
                 if (result.data.Items.length === 1) {
@@ -1426,6 +1441,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     panel.appendChild(option);
                 });
+                
+                // Enable dropdown
+                versiyonDropdown.classList.remove('disabled');
 
                 // Auto-select if only one item
                 if (result.data.Items.length === 1) {
@@ -1475,6 +1493,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     panel.appendChild(option);
                 });
+                
+                // Enable dropdown
+                renkDropdown.classList.remove('disabled');
 
                 // Auto-select if only one item
                 if (result.data.Items.length === 1) {
