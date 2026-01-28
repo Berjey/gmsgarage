@@ -227,57 +227,87 @@
         transition: all 0.3s ease-in-out;
     }
     
-    /* Custom Dropdown for Hero Section */
+    /* ===== HERO SECTION DROPDOWN - KURUMSAL KİMLİK (CANLI TASARIM) ===== */
     .hero-custom-dropdown {
         position: relative;
         z-index: 10;
     }
 
+    /* Light Mode Trigger - Hero için daha canlı */
     .hero-custom-dropdown-trigger {
         @apply w-full px-5 py-4 rounded-xl text-left;
-        @apply bg-white text-gray-900;
+        @apply bg-white text-gray-900 border-2 border-gray-200;
         @apply flex items-center justify-between;
-        @apply font-semibold transition-all duration-200;
-        @apply hover:border-primary-500;
+        @apply font-bold transition-all duration-300;
+        @apply hover:border-primary-600 hover:shadow-lg;
         cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .hero-custom-dropdown-trigger::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(239, 68, 68, 0.08), transparent);
+        transition: left 0.4s ease;
+    }
+    
+    .hero-custom-dropdown-trigger:hover::before {
+        left: 100%;
     }
 
     .hero-custom-dropdown-trigger.open {
-        @apply border-primary-500 ring-2 ring-primary-500/20;
+        @apply border-primary-600 ring-4 shadow-xl;
+        ring-color: rgba(220, 38, 38, 0.25);
+        background: linear-gradient(135deg, #ffffff 0%, #fee2e2 100%);
+        box-shadow: 0 10px 25px -5px rgba(220, 38, 38, 0.3);
     }
 
     .hero-custom-dropdown-trigger .selected-text.placeholder {
-        @apply text-gray-400 font-normal;
+        @apply text-gray-400 font-semibold;
     }
 
     .hero-custom-dropdown-trigger .arrow {
-        transition: transform 0.3s ease;
+        transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        @apply text-primary-600;
+        filter: drop-shadow(0 2px 4px rgba(220, 38, 38, 0.2));
     }
 
     .hero-custom-dropdown-trigger.open .arrow {
-        transform: rotate(180deg);
+        transform: rotate(180deg) scale(1.15);
+        filter: drop-shadow(0 4px 8px rgba(220, 38, 38, 0.4));
     }
 
+    /* Light Mode Panel - Hero için daha dikkat çekici */
     .hero-custom-dropdown-panel {
         display: none;
         position: absolute;
         top: calc(100% + 0.5rem);
         left: 0;
         right: 0;
-        @apply bg-white rounded-xl shadow-2xl border-2 border-gray-100;
-        @apply max-h-72 overflow-y-auto;
+        @apply bg-white rounded-xl border-2;
+        border-color: rgba(220, 38, 38, 0.25);
+        @apply max-h-80 overflow-y-auto;
         z-index: 100;
-        animation: dropdownFadeIn 0.2s ease-out;
+        animation: heroDropdownSlideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        backdrop-filter: blur(12px);
+        box-shadow: 0 20px 40px -10px rgba(220, 38, 38, 0.2), 
+                    0 10px 20px -5px rgba(0, 0, 0, 0.1),
+                    0 0 0 1px rgba(220, 38, 38, 0.1);
     }
 
-    @keyframes dropdownFadeIn {
+    @keyframes heroDropdownSlideIn {
         from {
             opacity: 0;
-            transform: translateY(-10px);
+            transform: translateY(-18px) scale(0.94);
         }
         to {
             opacity: 1;
-            transform: translateY(0);
+            transform: translateY(0) scale(1);
         }
     }
 
@@ -285,12 +315,63 @@
         display: block;
     }
 
+    /* Custom Scrollbar - Light Mode (Hero - daha canlı) */
+    .hero-custom-dropdown-panel::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    .hero-custom-dropdown-panel::-webkit-scrollbar-track {
+        background: linear-gradient(180deg, #f9fafb, #f3f4f6);
+        border-radius: 8px;
+    }
+
+    .hero-custom-dropdown-panel::-webkit-scrollbar-thumb {
+        background: linear-gradient(180deg, #ef4444, #dc2626);
+        border-radius: 8px;
+        transition: all 0.3s;
+        box-shadow: 0 2px 4px rgba(220, 38, 38, 0.2);
+    }
+
+    .hero-custom-dropdown-panel::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(180deg, #f87171, #ef4444);
+        box-shadow: 0 4px 8px rgba(220, 38, 38, 0.4);
+    }
+
+    /* Light Mode Options - Hero için daha belirgin */
     .hero-custom-dropdown-option {
         @apply px-5 py-4 cursor-pointer;
-        @apply text-gray-700 font-medium;
-        @apply hover:bg-primary-50 hover:text-primary-700;
-        @apply transition-all duration-150;
-        border-bottom: 1px solid #f3f4f6;
+        @apply text-gray-700 font-semibold;
+        @apply transition-all duration-200;
+        border-bottom: 1px solid rgba(243, 244, 246, 0.8);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .hero-custom-dropdown-option::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 5px;
+        height: 100%;
+        background: linear-gradient(180deg, #ef4444, #dc2626, #b91c1c);
+        transform: scaleY(0);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 0 12px rgba(220, 38, 38, 0.4);
+    }
+    
+    .hero-custom-dropdown-option:hover::before {
+        transform: scaleY(1);
+    }
+
+    .hero-custom-dropdown-option:hover {
+        background: linear-gradient(90deg, 
+                    rgba(239, 68, 68, 0.12) 0%, 
+                    rgba(239, 68, 68, 0.06) 50%,
+                    transparent 100%);
+        @apply text-primary-700;
+        padding-left: 1.75rem;
+        box-shadow: inset 0 0 20px rgba(220, 38, 38, 0.08);
     }
 
     .hero-custom-dropdown-option:last-child {
@@ -298,29 +379,156 @@
     }
 
     .hero-custom-dropdown-option.selected {
-        @apply bg-primary-100 text-primary-700 font-bold;
+        background: linear-gradient(90deg, 
+                    rgba(239, 68, 68, 0.18) 0%, 
+                    rgba(239, 68, 68, 0.1) 50%,
+                    rgba(239, 68, 68, 0.04) 100%);
+        @apply text-primary-700 font-bold;
+        border-left: 5px solid #ef4444;
+        padding-left: calc(1.25rem + 5px);
+        box-shadow: inset 0 0 25px rgba(220, 38, 38, 0.12);
+    }
+    
+    .hero-custom-dropdown-option.selected::after {
+        content: '✓';
+        position: absolute;
+        right: 1.25rem;
+        top: 50%;
+        transform: translateY(-50%);
+        @apply text-primary-600 font-bold;
+        font-size: 1.25rem;
+        text-shadow: 0 2px 4px rgba(220, 38, 38, 0.3);
     }
 
     .hero-custom-dropdown-native {
         display: none;
     }
 
-    /* Dark Mode Dropdown */
+    /* ========================================
+       DARK MODE - HERO SECTION (ULTRA PREMIUM)
+       ======================================== */
+    
+    /* Dark Mode Trigger - Hero için parlak ve dikkat çekici */
     .dark .hero-custom-dropdown-trigger {
-        @apply bg-[#2a2a2a] text-gray-100 border-gray-700;
+        background: linear-gradient(135deg, #1f1f1f 0%, #2d2d2d 100%);
+        @apply text-gray-50 border-gray-600;
+        box-shadow: 0 6px 12px -2px rgba(0, 0, 0, 0.4), 
+                    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+                    0 0 0 1px rgba(220, 38, 38, 0.1);
+    }
+    
+    .dark .hero-custom-dropdown-trigger::before {
+        background: linear-gradient(90deg, 
+                    transparent, 
+                    rgba(239, 68, 68, 0.2), 
+                    transparent);
+    }
+    
+    .dark .hero-custom-dropdown-trigger:hover {
+        @apply border-primary-500;
+        background: linear-gradient(135deg, #282828 0%, #333333 100%);
+        box-shadow: 0 10px 20px -4px rgba(220, 38, 38, 0.4),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+                    0 0 20px rgba(220, 38, 38, 0.15);
+    }
+    
+    .dark .hero-custom-dropdown-trigger.open {
+        @apply border-primary-500 ring-4;
+        ring-color: rgba(220, 38, 38, 0.35);
+        background: linear-gradient(135deg, #2d2d2d 0%, #242424 100%);
+        box-shadow: 0 15px 35px -10px rgba(220, 38, 38, 0.5),
+                    inset 0 3px 8px rgba(0, 0, 0, 0.4),
+                    inset 0 -2px 0 rgba(220, 38, 38, 0.3),
+                    0 0 30px rgba(220, 38, 38, 0.2);
+    }
+    
+    .dark .hero-custom-dropdown-trigger .selected-text {
+        @apply text-gray-50;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    }
+    
+    .dark .hero-custom-dropdown-trigger .selected-text.placeholder {
+        @apply text-gray-500 font-semibold;
+    }
+    
+    .dark .hero-custom-dropdown-trigger .arrow {
+        color: #fca5a5;
+        filter: drop-shadow(0 0 6px rgba(220, 38, 38, 0.5));
+    }
+    
+    .dark .hero-custom-dropdown-trigger.open .arrow {
+        color: #fecaca;
+        filter: drop-shadow(0 0 12px rgba(220, 38, 38, 0.7));
     }
 
+    /* Dark Mode Panel - Hero için premium görünüm */
     .dark .hero-custom-dropdown-panel {
-        @apply bg-[#2a2a2a] border-gray-700;
+        background: linear-gradient(180deg, #242424 0%, #1a1a1a 100%);
+        border-color: rgba(220, 38, 38, 0.3);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7),
+                    0 0 0 1px rgba(220, 38, 38, 0.3),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+                    0 0 40px rgba(220, 38, 38, 0.15);
+        backdrop-filter: blur(24px);
     }
 
+    /* Dark Mode Scrollbar - Hero için parlak */
+    .dark .hero-custom-dropdown-panel::-webkit-scrollbar-track {
+        background: linear-gradient(180deg, #1a1a1a, #111827);
+        border-radius: 8px;
+    }
+
+    .dark .hero-custom-dropdown-panel::-webkit-scrollbar-thumb {
+        background: linear-gradient(180deg, #ef4444, #dc2626, #991b1b);
+        border-radius: 8px;
+        box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.4),
+                    0 0 12px rgba(220, 38, 38, 0.4);
+    }
+
+    .dark .hero-custom-dropdown-panel::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(180deg, #f87171, #ef4444, #dc2626);
+        box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.3),
+                    0 0 16px rgba(220, 38, 38, 0.6);
+    }
+
+    /* Dark Mode Options - Hero için belirgin ve canlı */
     .dark .hero-custom-dropdown-option {
-        @apply text-gray-300 hover:bg-primary-900/20 hover:text-primary-400;
-        border-bottom-color: #374151;
+        @apply text-gray-200;
+        border-bottom-color: rgba(75, 85, 99, 0.25);
+        background: transparent;
+    }
+    
+    .dark .hero-custom-dropdown-option::before {
+        background: linear-gradient(180deg, #ef4444, #dc2626, #7f1d1d);
+        box-shadow: 0 0 16px rgba(220, 38, 38, 0.6);
+    }
+    
+    .dark .hero-custom-dropdown-option:hover {
+        background: linear-gradient(90deg, 
+                    rgba(239, 68, 68, 0.2) 0%, 
+                    rgba(239, 68, 68, 0.08) 50%,
+                    transparent 100%);
+        color: #fca5a5;
+        box-shadow: inset 0 0 30px rgba(220, 38, 38, 0.15);
     }
 
     .dark .hero-custom-dropdown-option.selected {
-        @apply bg-primary-900/30 text-primary-400;
+        background: linear-gradient(90deg, 
+                    rgba(239, 68, 68, 0.3) 0%, 
+                    rgba(239, 68, 68, 0.18) 50%,
+                    rgba(239, 68, 68, 0.08) 100%);
+        color: #fecaca;
+        @apply font-bold;
+        border-left: 5px solid #ef4444;
+        box-shadow: inset 0 0 40px rgba(220, 38, 38, 0.25),
+                    inset 5px 0 0 #ef4444,
+                    0 0 20px rgba(220, 38, 38, 0.1);
+    }
+    
+    .dark .hero-custom-dropdown-option.selected::after {
+        color: #fecaca;
+        text-shadow: 0 0 12px rgba(220, 38, 38, 0.8),
+                     0 2px 4px rgba(0, 0, 0, 0.3);
     }
     
     /* Dark Mode Utility Overrides (Website Only) */

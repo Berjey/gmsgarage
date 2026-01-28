@@ -58,7 +58,7 @@
         color: #e5e7eb;
     }
 
-    /* ===== CUSTOM DROPDOWN STYLES ===== */
+    /* ===== CUSTOM DROPDOWN STYLES - KURUMSAL KİMLİK ===== */
     .eval-custom-dropdown {
         position: relative;
         z-index: 1;
@@ -68,23 +68,48 @@
         z-index: 999999 !important;
     }
 
+    /* Light Mode Trigger */
     .eval-custom-dropdown-trigger {
         width: 100%;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 10px 14px;
-        border-radius: 8px;
+        padding: 12px 16px;
+        border-radius: 12px;
         background: white;
-        border: 1px solid #d1d5db;
+        border: 2px solid #e5e7eb;
         font-size: 14px;
-        font-weight: 500;
+        font-weight: 600;
         cursor: pointer;
-        transition: all 0.2s;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .eval-custom-dropdown-trigger::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(220, 38, 38, 0.05), transparent);
+        transition: left 0.5s ease;
+    }
+    
+    .eval-custom-dropdown-trigger:hover::before {
+        left: 100%;
     }
 
     .eval-custom-dropdown-trigger:hover {
         border-color: #dc2626;
+        box-shadow: 0 4px 12px rgba(220, 38, 38, 0.15);
+    }
+
+    .eval-custom-dropdown.dropdown-open .eval-custom-dropdown-trigger {
+        border-color: #dc2626;
+        box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.2), 0 8px 16px rgba(220, 38, 38, 0.2);
+        background: linear-gradient(135deg, #ffffff 0%, #fef2f2 100%);
     }
 
     .eval-custom-dropdown-trigger .selected-text {
@@ -95,31 +120,20 @@
     }
 
     .eval-custom-dropdown-trigger .selected-text.placeholder {
-        color: #6b7280;
+        color: #9ca3af;
         font-weight: 500;
     }
 
     .eval-custom-dropdown-trigger .arrow {
-        transition: transform 0.2s;
+        transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        color: #dc2626;
     }
 
     .eval-custom-dropdown.dropdown-open .arrow {
-        transform: rotate(180deg);
+        transform: rotate(180deg) scale(1.1);
     }
 
-    .dark .eval-custom-dropdown-trigger {
-        background: #2a2a2a;
-        border-color: #4b5563;
-    }
-
-    .dark .eval-custom-dropdown-trigger .selected-text {
-        color: #f9fafb;
-    }
-
-    .dark .eval-custom-dropdown-trigger .selected-text.placeholder {
-        color: #9ca3af;
-    }
-
+    /* Light Mode Panel */
     .eval-custom-dropdown-panel {
         position: absolute;
         top: 100%;
@@ -131,62 +145,208 @@
         visibility: hidden;
         z-index: 999999;
         border-radius: 12px;
-        border: 1px solid #e5e7eb;
-        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-        transform: translateY(-10px);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        max-height: 300px;
+        border: 2px solid rgba(220, 38, 38, 0.2);
+        box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15), 0 10px 20px -5px rgba(220, 38, 38, 0.1);
+        transform: translateY(-15px) scale(0.95);
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        max-height: 320px;
         overflow-y: auto;
+        backdrop-filter: blur(10px);
     }
 
     .eval-custom-dropdown-panel.open {
         opacity: 1;
         visibility: visible;
-        transform: translateY(0);
+        transform: translateY(0) scale(1);
     }
 
-    .dark .eval-custom-dropdown-panel {
-        background-color: #1f2937;
-        border-color: #374151;
-        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
+    /* Custom Scrollbar - Light Mode */
+    .eval-custom-dropdown-panel::-webkit-scrollbar {
+        width: 8px;
     }
 
+    .eval-custom-dropdown-panel::-webkit-scrollbar-track {
+        background: #f3f4f6;
+        border-radius: 8px;
+    }
+
+    .eval-custom-dropdown-panel::-webkit-scrollbar-thumb {
+        background: linear-gradient(180deg, #dc2626, #991b1b);
+        border-radius: 8px;
+        transition: background 0.3s;
+    }
+
+    .eval-custom-dropdown-panel::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(180deg, #ef4444, #b91c1c);
+    }
+
+    /* Light Mode Options */
     .eval-custom-dropdown-option {
         display: flex;
         align-items: center;
         justify-content: flex-start;
         padding: 14px 16px;
+        margin: 4px 8px;
         border-radius: 8px;
-        margin: 4px;
         transition: all 0.2s ease;
         cursor: pointer;
         font-weight: 500;
         font-size: 15px;
         color: #1f2937;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .eval-custom-dropdown-option::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(180deg, #dc2626, #b91c1c);
+        transform: scaleY(0);
+        transition: transform 0.3s ease;
+    }
+    
+    .eval-custom-dropdown-option:hover::before {
+        transform: scaleY(1);
     }
 
     .eval-custom-dropdown-option:hover {
-        background-color: #fef2f2;
+        background: linear-gradient(90deg, rgba(220, 38, 38, 0.1) 0%, rgba(220, 38, 38, 0.05) 50%, transparent 100%);
+        color: #dc2626;
+        padding-left: 20px;
     }
 
     .eval-custom-dropdown-option.selected {
-        background-color: #fee2e2;
-        border: 1px solid #fca5a5;
+        background: linear-gradient(90deg, rgba(220, 38, 38, 0.15) 0%, rgba(220, 38, 38, 0.08) 50%, transparent 100%);
+        color: #dc2626;
+        font-weight: 700;
+        border-left: 4px solid #dc2626;
+        padding-left: calc(16px + 4px);
+    }
+    
+    .eval-custom-dropdown-option.selected::after {
+        content: '✓';
+        position: absolute;
+        right: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #dc2626;
+        font-weight: bold;
+        font-size: 18px;
     }
 
+    /* ========================================
+       DARK MODE - KURUMSAL KİMLİK TASARIMI
+       ======================================== */
+    
+    /* Dark Mode Trigger */
+    .dark .eval-custom-dropdown-trigger {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+        border-color: #4b5563;
+        color: #f9fafb;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 
+                    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    }
+    
+    .dark .eval-custom-dropdown-trigger::before {
+        background: linear-gradient(90deg, transparent, rgba(220, 38, 38, 0.15), transparent);
+    }
+    
+    .dark .eval-custom-dropdown-trigger:hover {
+        border-color: #dc2626;
+        box-shadow: 0 8px 16px -4px rgba(220, 38, 38, 0.3),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        background: linear-gradient(135deg, #242424 0%, #2f2f2f 100%);
+    }
+    
+    .dark .eval-custom-dropdown.dropdown-open .eval-custom-dropdown-trigger {
+        border-color: #dc2626;
+        box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.3),
+                    0 12px 24px -8px rgba(220, 38, 38, 0.4),
+                    inset 0 2px 4px rgba(0, 0, 0, 0.3),
+                    inset 0 -1px 0 rgba(220, 38, 38, 0.2);
+        background: linear-gradient(135deg, #2a2a2a 0%, #1f1f1f 100%);
+    }
+
+    .dark .eval-custom-dropdown-trigger .selected-text {
+        color: #f9fafb;
+    }
+
+    .dark .eval-custom-dropdown-trigger .selected-text.placeholder {
+        color: #6b7280;
+    }
+    
+    .dark .eval-custom-dropdown-trigger .arrow {
+        color: #fca5a5;
+        filter: drop-shadow(0 0 4px rgba(220, 38, 38, 0.3));
+    }
+
+    /* Dark Mode Panel */
+    .dark .eval-custom-dropdown-panel {
+        background: linear-gradient(180deg, #1f1f1f 0%, #1a1a1a 100%);
+        border-color: #4b5563;
+        box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.6),
+                    0 0 0 1px rgba(220, 38, 38, 0.2),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(20px);
+    }
+
+    /* Dark Mode Scrollbar */
+    .dark .eval-custom-dropdown-panel::-webkit-scrollbar-track {
+        background: #111827;
+        border-radius: 8px;
+    }
+
+    .dark .eval-custom-dropdown-panel::-webkit-scrollbar-thumb {
+        background: linear-gradient(180deg, #dc2626, #991b1b);
+        box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .dark .eval-custom-dropdown-panel::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(180deg, #ef4444, #b91c1c);
+        box-shadow: 0 0 8px rgba(220, 38, 38, 0.5);
+    }
+
+    /* Dark Mode Options */
     .dark .eval-custom-dropdown-option {
-        color: #f3f4f6;
+        color: #e5e7eb;
+    }
+    
+    .dark .eval-custom-dropdown-option::before {
+        background: linear-gradient(180deg, #dc2626, #7f1d1d);
+        box-shadow: 0 0 10px rgba(220, 38, 38, 0.5);
     }
 
     .dark .eval-custom-dropdown-option:hover {
-        background-color: #374151;
+        background: linear-gradient(90deg, 
+                    rgba(220, 38, 38, 0.15) 0%, 
+                    rgba(220, 38, 38, 0.05) 50%,
+                    transparent 100%);
+        color: #fca5a5;
+        box-shadow: inset 0 0 20px rgba(220, 38, 38, 0.1);
     }
 
     .dark .eval-custom-dropdown-option.selected {
-        background-color: #7f1d1d;
-        border: 1px solid #991b1b;
+        background: linear-gradient(90deg, 
+                    rgba(220, 38, 38, 0.25) 0%, 
+                    rgba(220, 38, 38, 0.15) 50%,
+                    rgba(220, 38, 38, 0.05) 100%);
+        color: #fca5a5;
+        font-weight: 700;
+        border-left: 4px solid #dc2626;
+        box-shadow: inset 0 0 30px rgba(220, 38, 38, 0.2),
+                    inset 4px 0 0 #dc2626;
+    }
+    
+    .dark .eval-custom-dropdown-option.selected::after {
+        color: #fca5a5;
+        text-shadow: 0 0 8px rgba(220, 38, 38, 0.6);
     }
 
+    /* Disabled State */
     .eval-custom-dropdown.disabled {
         opacity: 0.5;
         pointer-events: none;
@@ -198,7 +358,7 @@
     }
 
     .dark .eval-custom-dropdown.disabled .eval-custom-dropdown-trigger {
-        background-color: #1f2937;
+        background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
     }
 
     .wizard-step { display: none; }
@@ -384,6 +544,10 @@
         border-color: #d1d5db;
     }
     .car-tooltip-dot.dot-boyali {
+        background: #3b82f6;
+        border-color: #3b82f6;
+    }
+    .car-tooltip-dot.dot-lokal-boyali {
         background: #fbbf24;
         border-color: #fbbf24;
     }
@@ -657,6 +821,7 @@
                                     <th style="min-width: 130px;"></th>
                                     <th>Orijinal</th>
                                     <th>Boyalı</th>
+                                    <th>Lokal Boyalı</th>
                                     <th>Değişmiş</th>
                                 </tr>
                             </thead>
@@ -683,6 +848,7 @@
                                         <td>{{ $partName }}</td>
                                         <td><input type="checkbox" name="ekspertiz[{{ $partKey }}]" value="ORIJINAL" checked class="ekspertiz-checkbox" data-part="{{ $partKey }}"></td>
                                         <td><input type="checkbox" name="ekspertiz[{{ $partKey }}]" value="BOYALI" class="ekspertiz-checkbox" data-part="{{ $partKey }}"></td>
+                                        <td><input type="checkbox" name="ekspertiz[{{ $partKey }}]" value="LOKAL_BOYALI" class="ekspertiz-checkbox" data-part="{{ $partKey }}"></td>
                                         <td><input type="checkbox" name="ekspertiz[{{ $partKey }}]" value="DEGISMIS" class="ekspertiz-checkbox" data-part="{{ $partKey }}"></td>
                                     </tr>
                                 @endforeach
@@ -702,6 +868,10 @@
                             <div class="car-tooltip-option" data-value="BOYALI">
                                 <span class="car-tooltip-dot dot-boyali"></span>
                                 <span>Boyalı</span>
+                            </div>
+                            <div class="car-tooltip-option" data-value="LOKAL_BOYALI">
+                                <span class="car-tooltip-dot dot-lokal-boyali"></span>
+                                <span>Lokal Boyalı</span>
                             </div>
                             <div class="car-tooltip-option" data-value="DEGISMIS">
                                 <span class="car-tooltip-dot dot-degismis"></span>
@@ -889,106 +1059,106 @@ document.addEventListener('DOMContentLoaded', function() {
     // Event listeners for custom dropdowns
     document.getElementById('marka-dropdown').addEventListener('dropdown-change', function(e) {
         selectedBrandId = e.detail.id || null;
-        markaId.value = selectedBrandId || '';
+        document.getElementById('marka-input').value = e.detail.value || '';
+        document.getElementById('marka-id').value = selectedBrandId || '';
 
         // Reset all subsequent fields
         resetFrom('yil');
 
         if (selectedBrandId) {
             loadYears(selectedBrandId);
-            yilSelect.disabled = false;
+            document.getElementById('yil-dropdown').classList.remove('disabled');
         }
     });
 
-    yilSelect.addEventListener('change', function() {
-        selectedYear = this.value;
+    document.getElementById('yil-dropdown').addEventListener('dropdown-change', function(e) {
+        selectedYear = e.detail.value || null;
+        document.getElementById('yil-input').value = selectedYear || '';
 
         // Reset all subsequent fields
         resetFrom('model');
 
         if (selectedYear && selectedBrandId) {
             loadModels(selectedBrandId, selectedYear);
-            modelSelect.disabled = false;
+            document.getElementById('model-dropdown').classList.remove('disabled');
         }
     });
 
-    modelSelect.addEventListener('change', function() {
-        selectedModelId = this.options[this.selectedIndex].dataset.id || null;
-        modelId.value = selectedModelId || '';
+    document.getElementById('model-dropdown').addEventListener('dropdown-change', function(e) {
+        selectedModelId = e.detail.id || null;
+        document.getElementById('model-input').value = e.detail.value || '';
+        document.getElementById('model-id').value = selectedModelId || '';
 
         // Reset all subsequent fields
         resetFrom('govde');
 
         if (selectedModelId) {
             loadGovdeTipleri(selectedBrandId, selectedYear, selectedModelId);
-            govdeSelect.disabled = false;
+            document.getElementById('govde-dropdown').classList.remove('disabled');
         }
     });
 
-    govdeSelect.addEventListener('change', function() {
-        selectedGovdeId = this.options[this.selectedIndex].dataset.id || null;
-        govdeId.value = selectedGovdeId || '';
+    document.getElementById('govde-dropdown').addEventListener('dropdown-change', function(e) {
+        selectedGovdeId = e.detail.id || null;
+        document.getElementById('govde-input').value = e.detail.value || '';
+        document.getElementById('govde-id').value = selectedGovdeId || '';
 
         // Reset all subsequent fields
         resetFrom('yakit');
 
         if (selectedGovdeId) {
             loadYakitTipleri(selectedBrandId, selectedYear, selectedModelId, selectedGovdeId);
-            yakitSelect.disabled = false;
+            document.getElementById('yakit-dropdown').classList.remove('disabled');
         }
     });
 
-    yakitSelect.addEventListener('change', function() {
-        selectedYakitId = this.options[this.selectedIndex].dataset.id || null;
-        yakitId.value = selectedYakitId || '';
+    document.getElementById('yakit-dropdown').addEventListener('dropdown-change', function(e) {
+        selectedYakitId = e.detail.id || null;
+        document.getElementById('yakit-input').value = e.detail.value || '';
+        document.getElementById('yakit-id').value = selectedYakitId || '';
 
         // Reset all subsequent fields
         resetFrom('vites');
 
         if (selectedYakitId) {
             loadVitesTipleri(selectedBrandId, selectedYear, selectedModelId, selectedGovdeId, selectedYakitId);
-            vitesSelect.disabled = false;
+            document.getElementById('vites-dropdown').classList.remove('disabled');
         }
     });
 
-    vitesSelect.addEventListener('change', function() {
-        selectedVitesId = this.options[this.selectedIndex].dataset.id || null;
-        vitesId.value = selectedVitesId || '';
+    document.getElementById('vites-dropdown').addEventListener('dropdown-change', function(e) {
+        selectedVitesId = e.detail.id || null;
+        document.getElementById('vites-input').value = e.detail.value || '';
+        document.getElementById('vites-id').value = selectedVitesId || '';
 
         // Reset all subsequent fields
         resetFrom('versiyon');
 
         if (selectedVitesId) {
             loadVersiyonlar(selectedBrandId, selectedYear, selectedModelId, selectedGovdeId, selectedYakitId, selectedVitesId);
-            versiyonSelect.disabled = false;
+            document.getElementById('versiyon-dropdown').classList.remove('disabled');
         }
     });
 
-    versiyonSelect.addEventListener('change', function() {
-        selectedVersiyonId = this.options[this.selectedIndex].dataset.id || null;
-        versiyonId.value = selectedVersiyonId || '';
-
-        // Reset kilometre and renk
-        kilometreInput.value = '';
-        renkSelect.innerHTML = '<option value="">Renk Seçin</option>';
-        renkId.value = '';
+    document.getElementById('versiyon-dropdown').addEventListener('dropdown-change', function(e) {
+        selectedVersiyonId = e.detail.id || null;
+        document.getElementById('versiyon-input').value = e.detail.value || '';
+        document.getElementById('versiyon-id').value = selectedVersiyonId || '';
 
         if (selectedVersiyonId) {
             loadRenkler(selectedBrandId, selectedYear, selectedModelId, selectedGovdeId, selectedYakitId, selectedVitesId, selectedVersiyonId);
-            kilometreInput.disabled = false;
-            renkSelect.disabled = false;
-        } else {
-            kilometreInput.disabled = true;
-            renkSelect.disabled = true;
+            document.getElementById('kilometre-input').disabled = false;
+            document.getElementById('renk-dropdown').classList.remove('disabled');
         }
     });
 
-    renkSelect.addEventListener('change', function() {
-        renkId.value = this.options[this.selectedIndex].dataset.id || '';
+    document.getElementById('renk-dropdown').addEventListener('dropdown-change', function(e) {
+        document.getElementById('renk-input').value = e.detail.value || '';
+        document.getElementById('renk-id').value = e.detail.id || '';
     });
 
     // Format kilometre input
-    kilometreInput.addEventListener('input', function() {
+    document.getElementById('kilometre-input').addEventListener('input', function() {
         let value = this.value.replace(/\D/g, '');
         this.value = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
     });
@@ -1026,8 +1196,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         selectedVersiyonId = null;
                         break;
                     case 'km':
-                        kilometreInput.value = '';
-                        kilometreInput.disabled = true;
+                        document.getElementById('kilometre-input').value = '';
+                        document.getElementById('kilometre-input').disabled = true;
                         break;
                     case 'renk':
                         resetDropdown('renk', 'Renk Seçin');
@@ -1069,6 +1239,8 @@ document.addEventListener('DOMContentLoaded', function() {
             if (result.success && result.data && result.data.Items) {
                 const markaDropdown = document.getElementById('marka-dropdown');
                 const panel = markaDropdown.querySelector('.eval-custom-dropdown-panel');
+                const trigger = markaDropdown.querySelector('.eval-custom-dropdown-trigger');
+                const selectedText = trigger.querySelector('.selected-text');
                 panel.innerHTML = '';
                 
                 result.data.Items.forEach(item => {
@@ -1080,8 +1252,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     option.addEventListener('click', function(e) {
                         e.stopPropagation();
-                        const trigger = markaDropdown.querySelector('.eval-custom-dropdown-trigger');
-                        const selectedText = trigger.querySelector('.selected-text');
                         
                         selectedText.textContent = item.Name;
                         selectedText.classList.remove('placeholder');
@@ -1097,13 +1267,27 @@ document.addEventListener('DOMContentLoaded', function() {
                         markaDropdown.classList.remove('dropdown-open');
                         panel.classList.remove('open');
                         
-                        // Trigger brand change
-                        selectedBrandId = item.Id;
-                        resetFrom('yil');
-                        loadYears(item.Id);
+                        // Dispatch custom event
+                        const event = new CustomEvent('dropdown-change', { 
+                            detail: { value: item.Name, id: item.Id } 
+                        });
+                        markaDropdown.dispatchEvent(event);
                     });
                     
                     panel.appendChild(option);
+                    
+                    // Auto-select brand if it comes from URL
+                    if (selectedBrandId && item.Id == selectedBrandId) {
+                        selectedText.textContent = item.Name;
+                        selectedText.classList.remove('placeholder');
+                        trigger.setAttribute('data-value', item.Name);
+                        trigger.setAttribute('data-id', item.Id);
+                        
+                        document.getElementById('marka-input').value = item.Name;
+                        document.getElementById('marka-id').value = item.Id;
+                        
+                        option.classList.add('selected');
+                    }
                 });
             }
         } catch (error) {
@@ -1145,11 +1329,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         yilDropdown.classList.remove('dropdown-open');
                         panel.classList.remove('open');
                         
-                        // Trigger year change
-                        selectedYear = item.Name;
-                        resetFrom('model');
-                        loadModels(selectedBrandId, item.Name);
-                        document.getElementById('model-dropdown').classList.remove('disabled');
+                        // Dispatch custom event
+                        const event = new CustomEvent('dropdown-change', { 
+                            detail: { value: item.Name, id: item.Id } 
+                        });
+                        yilDropdown.dispatchEvent(event);
                     });
                     
                     panel.appendChild(option);
@@ -1203,9 +1387,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         modelDropdown.classList.remove('dropdown-open');
                         panel.classList.remove('open');
                         
-                        selectedModelId = item.Id;
-                        resetFrom('govde');
-                        loadGovdeTipleri(selectedBrandId, selectedYear, item.Id);
+                        // Dispatch custom event
+                        const event = new CustomEvent('dropdown-change', { 
+                            detail: { value: item.Name, id: item.Id } 
+                        });
+                        modelDropdown.dispatchEvent(event);
                     });
                     
                     panel.appendChild(option);
@@ -1259,9 +1445,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         govdeDropdown.classList.remove('dropdown-open');
                         panel.classList.remove('open');
                         
-                        selectedGovdeId = item.Id;
-                        resetFrom('yakit');
-                        loadYakitTipleri(selectedBrandId, selectedYear, selectedModelId, item.Id);
+                        // Dispatch custom event
+                        const event = new CustomEvent('dropdown-change', { 
+                            detail: { value: item.Name, id: item.Id } 
+                        });
+                        govdeDropdown.dispatchEvent(event);
                     });
                     
                     panel.appendChild(option);
@@ -1315,9 +1503,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         yakitDropdown.classList.remove('dropdown-open');
                         panel.classList.remove('open');
                         
-                        selectedYakitId = item.Id;
-                        resetFrom('vites');
-                        loadVitesTipleri(selectedBrandId, selectedYear, selectedModelId, selectedGovdeId, item.Id);
+                        // Dispatch custom event
+                        const event = new CustomEvent('dropdown-change', { 
+                            detail: { value: item.Name, id: item.Id } 
+                        });
+                        yakitDropdown.dispatchEvent(event);
                     });
                     
                     panel.appendChild(option);
@@ -1371,9 +1561,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         vitesDropdown.classList.remove('dropdown-open');
                         panel.classList.remove('open');
                         
-                        selectedVitesId = item.Id;
-                        resetFrom('versiyon');
-                        loadVersiyonlar(selectedBrandId, selectedYear, selectedModelId, selectedGovdeId, selectedYakitId, item.Id);
+                        // Dispatch custom event
+                        const event = new CustomEvent('dropdown-change', { 
+                            detail: { value: item.Name, id: item.Id } 
+                        });
+                        vitesDropdown.dispatchEvent(event);
                     });
                     
                     panel.appendChild(option);
@@ -1427,10 +1619,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         versiyonDropdown.classList.remove('dropdown-open');
                         panel.classList.remove('open');
                         
-                        selectedVersiyonId = item.Id;
-                        resetFrom('renk');
-                        loadRenkler(selectedBrandId, selectedYear, selectedModelId, selectedGovdeId, selectedYakitId, selectedVitesId, item.Id);
-                        document.getElementById('kilometre-input').disabled = false;
+                        // Dispatch custom event
+                        const event = new CustomEvent('dropdown-change', { 
+                            detail: { value: item.Name, id: item.Id } 
+                        });
+                        versiyonDropdown.dispatchEvent(event);
                     });
                     
                     panel.appendChild(option);
@@ -1483,6 +1676,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         
                         renkDropdown.classList.remove('dropdown-open');
                         panel.classList.remove('open');
+                        
+                        // Dispatch custom event
+                        const event = new CustomEvent('dropdown-change', { 
+                            detail: { value: item.Name, id: item.Id } 
+                        });
+                        renkDropdown.dispatchEvent(event);
                     });
                     
                     panel.appendChild(option);
@@ -1568,6 +1767,8 @@ document.addEventListener('DOMContentLoaded', function() {
         if (checkedBox) {
             const value = checkedBox.value;
             if (value === 'BOYALI') {
+                svgPart.style.fill = '#3b82f6'; // Blue
+            } else if (value === 'LOKAL_BOYALI') {
                 svgPart.style.fill = '#fbbf24'; // Yellow
             } else if (value === 'DEGISMIS') {
                 svgPart.style.fill = '#dc2626'; // Red
@@ -1877,24 +2078,24 @@ function goToStep(step) {
     // Validate before moving forward
     if (step > currentStep) {
         if (currentStep === 1 && step >= 2) {
-            const markaSelect = document.getElementById('marka-select');
-            const yilSelect = document.getElementById('yil-select');
-            const modelSelect = document.getElementById('model-select');
+            const markaInput = document.getElementById('marka-input');
+            const yilInput = document.getElementById('yil-input');
+            const modelInput = document.getElementById('model-input');
             const kilometreInput = document.getElementById('kilometre-input');
 
-            if (!markaSelect.value) {
+            if (!markaInput.value) {
                 alert('Lütfen marka seçin');
-                markaSelect.focus();
+                document.getElementById('marka-dropdown').querySelector('.eval-custom-dropdown-trigger').focus();
                 return;
             }
-            if (!yilSelect.value) {
+            if (!yilInput.value) {
                 alert('Lütfen yıl seçin');
-                yilSelect.focus();
+                document.getElementById('yil-dropdown').querySelector('.eval-custom-dropdown-trigger').focus();
                 return;
             }
-            if (!modelSelect.value) {
+            if (!modelInput.value) {
                 alert('Lütfen model seçin');
-                modelSelect.focus();
+                document.getElementById('model-dropdown').querySelector('.eval-custom-dropdown-trigger').focus();
                 return;
             }
             if (!kilometreInput.value) {

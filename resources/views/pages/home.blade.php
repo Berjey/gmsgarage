@@ -145,11 +145,14 @@
     /* Dark Mode Dropdown Panel */
     .dark .hero-custom-dropdown-panel {
         /* CRITICAL: Solid dark background */
-        background-color: #1f2937;
-        border-color: #374151;
+        background: linear-gradient(180deg, #242424 0%, #1a1a1a 100%);
+        border-color: rgba(220, 38, 38, 0.3);
         
         /* Enhanced shadow for dark mode */
-        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7),
+                    0 0 0 1px rgba(220, 38, 38, 0.3),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+                    0 0 40px rgba(220, 38, 38, 0.15);
     }
 
     /* ===== SHARED DROPDOWN OPTION STYLES - BÜTÜN DROPDOWN'LAR İÇİN ORTAK ===== */
@@ -192,12 +195,19 @@
 
     /* DARK MODE - First option */
     .dark .hero-custom-dropdown-option:first-child {
-        background: #374151;
+        background: linear-gradient(90deg, 
+                    rgba(239, 68, 68, 0.15) 0%, 
+                    rgba(239, 68, 68, 0.08) 50%,
+                    transparent 100%);
     }
 
     /* DARK MODE - Hover */
     .dark .hero-custom-dropdown-option:hover {
-        background-color: #374151;
+        background: linear-gradient(90deg, 
+                    rgba(239, 68, 68, 0.2) 0%, 
+                    rgba(239, 68, 68, 0.08) 50%,
+                    transparent 100%);
+        box-shadow: inset 0 0 30px rgba(220, 38, 38, 0.15);
     }
 
     /* DARK MODE - Selected */
@@ -295,11 +305,18 @@
     }
 
     .dark .hero-bodytype-panel .hero-custom-dropdown-option:first-child {
-        background: #374151;
+        background: linear-gradient(90deg, 
+                    rgba(239, 68, 68, 0.15) 0%, 
+                    rgba(239, 68, 68, 0.08) 50%,
+                    transparent 100%);
     }
 
     .dark .hero-bodytype-panel .hero-custom-dropdown-option:hover {
-        background-color: #374151;
+        background: linear-gradient(90deg, 
+                    rgba(239, 68, 68, 0.2) 0%, 
+                    rgba(239, 68, 68, 0.08) 50%,
+                    transparent 100%);
+        box-shadow: inset 0 0 30px rgba(220, 38, 38, 0.15);
     }
 
     .dark .hero-bodytype-panel .hero-custom-dropdown-option.selected {
