@@ -20,7 +20,7 @@
     @keyframes sloganEnter {
         from {
             opacity: 0;
-            transform: translateX(-12px);
+            transform: translateX(-20px);
         }
         to {
             opacity: 1;
@@ -29,7 +29,7 @@
     }
     
     .slogan-enter {
-        animation: sloganEnter 250ms ease-out;
+        animation: sloganEnter 350ms ease-out forwards;
     }
     
     body {

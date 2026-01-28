@@ -267,27 +267,34 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (!titleContent || !descContent) return;
         
-        // Remove animation class
-        titleContent.classList.remove('slogan-enter');
-        descContent.classList.remove('slogan-enter');
+        // Önce görünmez yap
+        titleContent.style.opacity = '0';
+        descContent.style.opacity = '0';
         
-        // Update content
-        titleContent.innerHTML = newContent.title;
-        descContent.textContent = newContent.description;
-        
-        // Force reflow
-        void titleContent.offsetWidth;
-        void descContent.offsetWidth;
-        
-        // Add animation class
-        titleContent.classList.add('slogan-enter');
-        descContent.classList.add('slogan-enter');
-        
-        // Remove animation class after completion
+        // Kısa bir gecikme sonra içeriği değiştir ve animasyonu başlat
         setTimeout(() => {
-            titleContent.classList.remove('slogan-enter');
-            descContent.classList.remove('slogan-enter');
-        }, 250);
+            // İçeriği güncelle
+            titleContent.innerHTML = newContent.title;
+            descContent.textContent = newContent.description;
+            
+            // Style'ı kaldır ve animasyon sınıfını ekle
+            titleContent.style.opacity = '';
+            descContent.style.opacity = '';
+            
+            // Force reflow
+            void titleContent.offsetWidth;
+            void descContent.offsetWidth;
+            
+            // Animasyon sınıfını ekle
+            titleContent.classList.add('slogan-enter');
+            descContent.classList.add('slogan-enter');
+            
+            // Animasyonu kaldır
+            setTimeout(() => {
+                titleContent.classList.remove('slogan-enter');
+                descContent.classList.remove('slogan-enter');
+            }, 350);
+        }, 50);
     }
     
     function switchTab(tab) {
