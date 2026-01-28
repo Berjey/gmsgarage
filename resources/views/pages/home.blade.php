@@ -158,7 +158,7 @@
     .hero-custom-dropdown-option {
         display: flex;
         align-items: center;
-        justify-content: center;
+        justify-content: flex-start; /* SOLDAN SAĞA HİZALAMA */
         padding: 14px 16px; /* STANDART: 14px dikey, 16px yatay */
         border-radius: 8px;
         transition: all 0.2s ease;
@@ -484,7 +484,7 @@
         </div>
         
         <div class="container-custom relative z-10 py-12 lg:py-16">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
                 <!-- Left Side - Modern Search Form -->
                 <div class="order-2 lg:order-1 animate-slide-in-left">
                     <div class="bg-white dark:bg-[#252525] rounded-2xl shadow-2xl border-b-4 border-primary-600 dark:border-primary-500 overflow-visible hover:shadow-3xl transition-shadow duration-300 hero-form-card">
@@ -609,7 +609,7 @@
                 </div>
                 
                 <!-- Right Side - Dynamic Headline & Image -->
-                <div class="order-1 lg:order-2">
+                <div class="order-1 lg:order-2 mt-0 lg:mt-6">
                     <h1 id="slogan-title" class="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 dark:text-white mb-6 leading-tight">
                         <span class="slogan-content">Aracını <span class="slogan-highlight-red text-primary-600 dark:text-primary-500">Güvenle</span> Sat</span>
                     </h1>
