@@ -1093,17 +1093,48 @@ document.addEventListener('DOMContentLoaded', function() {
             const result = await response.json();
 
             if (result.success && result.data && result.data.Items) {
-                markaSelect.innerHTML = '<option value="">Marka Seçin</option>';
+                const markaDropdown = document.getElementById('marka-dropdown');
+                const panel = markaDropdown.querySelector('.eval-custom-dropdown-panel');
+                panel.innerHTML = '';
+                
                 result.data.Items.forEach(item => {
-                    const option = document.createElement('option');
-                    option.value = item.Name;
+                    const option = document.createElement('div');
+                    option.className = 'eval-custom-dropdown-option';
                     option.textContent = item.Name;
-                    option.dataset.id = item.Id;
-                    if (item.Id == selectedBrandId) {
-                        option.selected = true;
-                    }
-                    markaSelect.appendChild(option);
+                    option.setAttribute('data-value', item.Name);
+                    option.setAttribute('data-id', item.Id);
+                    
+                    option.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const trigger = markaDropdown.querySelector('.eval-custom-dropdown-trigger');
+                        const selectedText = trigger.querySelector('.selected-text');
+                        
+                        selectedText.textContent = item.Name;
+                        selectedText.classList.remove('placeholder');
+                        trigger.setAttribute('data-value', item.Name);
+                        trigger.setAttribute('data-id', item.Id);
+                        
+                        document.getElementById('marka-input').value = item.Name;
+                        document.getElementById('marka-id').value = item.Id;
+                        
+                        panel.querySelectorAll('.eval-custom-dropdown-option').forEach(opt => opt.classList.remove('selected'));
+                        option.classList.add('selected');
+                        
+                        markaDropdown.classList.remove('dropdown-open');
+                        panel.classList.remove('open');
+                        
+                        // Trigger brand change
+                        selectedBrandId = item.Id;
+                        resetFrom('yil');
+                        loadYears(item.Id);
+                        document.getElementById('yil-dropdown').classList.remove('disabled');
+                    });
+                    
+                    panel.appendChild(option);
                 });
+                
+                // Re-initialize dropdown
+                initCustomDropdown(markaDropdown);
             }
         } catch (error) {
             console.error('Error loading brands:', error);
@@ -1116,20 +1147,48 @@ document.addEventListener('DOMContentLoaded', function() {
             const result = await response.json();
 
             if (result.success && result.data && result.data.Items) {
-                yilSelect.innerHTML = '<option value="">Yıl Seçin</option>';
+                const yilDropdown = document.getElementById('yil-dropdown');
+                const panel = yilDropdown.querySelector('.eval-custom-dropdown-panel');
+                panel.innerHTML = '';
+                
                 result.data.Items.forEach(item => {
-                    const option = document.createElement('option');
-                    option.value = item.Name;
+                    const option = document.createElement('div');
+                    option.className = 'eval-custom-dropdown-option';
                     option.textContent = item.Name;
-                    option.dataset.id = item.Id;
-                    yilSelect.appendChild(option);
+                    option.setAttribute('data-value', item.Name);
+                    option.setAttribute('data-id', item.Id);
+                    
+                    option.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const trigger = yilDropdown.querySelector('.eval-custom-dropdown-trigger');
+                        const selectedText = trigger.querySelector('.selected-text');
+                        
+                        selectedText.textContent = item.Name;
+                        selectedText.classList.remove('placeholder');
+                        trigger.setAttribute('data-value', item.Name);
+                        
+                        document.getElementById('yil-input').value = item.Name;
+                        
+                        panel.querySelectorAll('.eval-custom-dropdown-option').forEach(opt => opt.classList.remove('selected'));
+                        option.classList.add('selected');
+                        
+                        yilDropdown.classList.remove('dropdown-open');
+                        panel.classList.remove('open');
+                        
+                        // Trigger year change
+                        selectedYear = item.Name;
+                        resetFrom('model');
+                        loadModels(selectedBrandId, item.Name);
+                        document.getElementById('model-dropdown').classList.remove('disabled');
+                    });
+                    
+                    panel.appendChild(option);
                 });
 
                 // Auto-select if only one item
                 if (result.data.Items.length === 1) {
-                    yilSelect.selectedIndex = 1;
-                    selectedYear = result.data.Items[0].Name;
-                    yilSelect.dispatchEvent(new Event('change'));
+                    const firstOption = panel.querySelector('.eval-custom-dropdown-option');
+                    if (firstOption) firstOption.click();
                 }
             }
         } catch (error) {
