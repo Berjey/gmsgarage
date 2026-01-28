@@ -38,11 +38,6 @@
         }
     }
     
-    /* Slogan smooth transitions */
-    #slogan-title, #slogan-description {
-        transition: opacity 0.25s ease-in-out, transform 0.25s ease-in-out;
-    }
-    
     .trigger-animation {
         animation: none !important;
         opacity: 0;
@@ -496,7 +491,6 @@
                         <!-- Tabs -->
                         <div class="flex border-b-2 border-gray-100 dark:border-gray-800 relative">
                             <button id="tab-sell" 
-                                    onclick="switchTab('sell')"
                                     class="hero-tab active">
                                 <span class="flex items-center justify-center space-x-2">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -506,7 +500,6 @@
                                 </span>
                             </button>
                             <button id="tab-buy" 
-                                    onclick="switchTab('buy')"
                                     class="hero-tab">
                                 <span class="flex items-center justify-center space-x-2">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -617,11 +610,11 @@
                 
                 <!-- Right Side - Dynamic Headline & Image -->
                 <div class="order-1 lg:order-2">
-                    <h1 id="slogan-title" class="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 dark:text-white mb-6 leading-tight transition-all duration-300">
-                        Aracını <span class="text-primary-600 dark:text-primary-500">Güvenle</span> Sat!
+                    <h1 id="slogan-title" class="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 dark:text-white mb-6 leading-tight">
+                        <span class="slogan-content">Aracını <span class="slogan-highlight-red text-primary-600 dark:text-primary-500">Güvenle</span> Sat</span>
                     </h1>
-                    <p id="slogan-description" class="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8 max-w-lg leading-relaxed transition-all duration-300">
-                        Hızlı teklif alın, güvenli süreçten geçin. Aracınızın gerçek değerini öğrenin ve en iyi fiyatı garantileyin.
+                    <p id="slogan-description" class="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8 max-w-lg leading-relaxed">
+                        <span class="slogan-content">Hızlı teklif alın, güvenli süreçten geçin. Aracınızın gerçek değerini öğrenin ve en iyi fiyatı garantileyin.</span>
                     </p>
                 </div>
             </div>
@@ -815,53 +808,7 @@
 
 @push('scripts')
 <script>
-    // Tab Switch Function with Dynamic Slogan and Animation
-    function switchTab(tab) {
-        const sellTab = document.getElementById('tab-sell');
-        const buyTab = document.getElementById('tab-buy');
-        const sellForm = document.getElementById('form-sell');
-        const buyForm = document.getElementById('form-buy');
-        const sloganTitle = document.getElementById('slogan-title');
-        const sloganDesc = document.getElementById('slogan-description');
-        
-        // Fade out animation
-        sloganTitle.style.opacity = '0';
-        sloganTitle.style.transform = 'translateX(-10px)';
-        sloganDesc.style.opacity = '0';
-        sloganDesc.style.transform = 'translateX(-10px)';
-        
-        setTimeout(() => {
-            if (tab === 'sell') {
-                // Activate Sell Tab
-                sellTab.classList.add('active');
-                buyTab.classList.remove('active');
-                sellForm.classList.add('active');
-                buyForm.classList.remove('active');
-                
-                // Update Slogan
-                sloganTitle.innerHTML = 'Aracını <span class="text-primary-600 dark:text-primary-500">Güvenle</span> Sat!';
-                sloganDesc.innerHTML = 'Hızlı teklif alın, güvenli süreçten geçin. Aracınızın gerçek değerini öğrenin ve en iyi fiyatı garantileyin.';
-            } else {
-                // Activate Buy Tab
-                buyTab.classList.add('active');
-                sellTab.classList.remove('active');
-                buyForm.classList.add('active');
-                sellForm.classList.remove('active');
-                
-                // Update Slogan
-                sloganTitle.innerHTML = '<span class="text-primary-600 dark:text-primary-500">Güvenle</span> Aracını Al!';
-                sloganDesc.innerHTML = 'Binlerce araç arasından size en uygun olanı bulun. Garantili, ekspertizli ve güvenilir araçlar.';
-            }
-            
-            // Fade in animation
-            setTimeout(() => {
-                sloganTitle.style.opacity = '1';
-                sloganTitle.style.transform = 'translateX(0)';
-                sloganDesc.style.opacity = '1';
-                sloganDesc.style.transform = 'translateX(0)';
-            }, 50);
-        }, 250);
-    }
+    // Tab switching handled by app.js (initHeroTabs)
 
     // Brand & Year Dropdown API Integration
     let brandsLoaded = false;
@@ -2806,6 +2753,8 @@
     // Form validation for Hero "ARABAMI DEĞERLE" button
     // Native form submit - JS only for validation
     document.addEventListener('DOMContentLoaded', function() {
+        // Tab switchers handled by app.js (initHeroTabs)
+        
         // Initialize custom dropdowns FIRST
         initHeroCustomDropdowns();
         
