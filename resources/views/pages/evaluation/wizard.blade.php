@@ -832,63 +832,27 @@ document.addEventListener('DOMContentLoaded', function() {
     function initCustomDropdown(dropdown) {
         const trigger = dropdown.querySelector('.eval-custom-dropdown-trigger');
         const panel = dropdown.querySelector('.eval-custom-dropdown-panel');
-        const options = panel.querySelectorAll('.eval-custom-dropdown-option');
-        const selectedText = trigger.querySelector('.selected-text');
-        const dropdownId = dropdown.id;
         
-        // Get associated hidden input
-        const inputName = dropdownId.replace('-dropdown', '');
-        const hiddenInput = document.getElementById(inputName + '-input');
-        
-        // Toggle dropdown
-        trigger.addEventListener('click', function(e) {
-            if (dropdown.classList.contains('disabled')) return;
-            e.stopPropagation();
-            
-            // Close all other dropdowns
-            document.querySelectorAll('.eval-custom-dropdown').forEach(dd => {
-                if (dd !== dropdown) {
-                    dd.classList.remove('dropdown-open');
-                    dd.querySelector('.eval-custom-dropdown-panel').classList.remove('open');
-                }
-            });
-            
-            // Toggle this dropdown
-            dropdown.classList.toggle('dropdown-open');
-            panel.classList.toggle('open');
-        });
-        
-        // Handle option selection
-        options.forEach(option => {
-            option.addEventListener('click', function(e) {
+        // Toggle dropdown - bu sadece bir kez eklenmeli
+        if (!trigger.dataset.initialized) {
+            trigger.dataset.initialized = 'true';
+            trigger.addEventListener('click', function(e) {
+                if (dropdown.classList.contains('disabled')) return;
                 e.stopPropagation();
-                const value = this.getAttribute('data-value');
-                const id = this.getAttribute('data-id') || '';
                 
-                // Update trigger display
-                selectedText.textContent = this.textContent;
-                selectedText.classList.remove('placeholder');
-                trigger.setAttribute('data-value', value);
-                if (id) trigger.setAttribute('data-id', id);
-                
-                // Update hidden input
-                if (hiddenInput) hiddenInput.value = value;
-                
-                // Update selected state
-                options.forEach(opt => opt.classList.remove('selected'));
-                this.classList.add('selected');
-                
-                // Close dropdown
-                dropdown.classList.remove('dropdown-open');
-                panel.classList.remove('open');
-                
-                // Trigger custom event for specific handling
-                const event = new CustomEvent('dropdown-change', { 
-                    detail: { value, id, dropdown: dropdownId } 
+                // Close all other dropdowns
+                document.querySelectorAll('.eval-custom-dropdown').forEach(dd => {
+                    if (dd !== dropdown) {
+                        dd.classList.remove('dropdown-open');
+                        dd.querySelector('.eval-custom-dropdown-panel').classList.remove('open');
+                    }
                 });
-                dropdown.dispatchEvent(event);
+                
+                // Toggle this dropdown
+                dropdown.classList.toggle('dropdown-open');
+                panel.classList.toggle('open');
             });
-        });
+        }
     }
     
     // Close dropdowns when clicking outside
@@ -1132,9 +1096,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     panel.appendChild(option);
                 });
-                
-                // Re-initialize dropdown
-                initCustomDropdown(markaDropdown);
             }
         } catch (error) {
             console.error('Error loading brands:', error);
