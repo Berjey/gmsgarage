@@ -25,16 +25,18 @@
     .form-label {
         display: block;
         font-size: 12px;
-        font-weight: 500;
-        color: #6b7280;
-        margin-bottom: 6px;
+        font-weight: 700;
+        color: #374151;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
 
     .dark .form-label {
-        color: #9ca3af;
+        color: #d1d5db;
     }
 
-    .form-select, .form-input {
+    .form-input {
         width: 100%;
         padding: 10px 14px;
         border: 1px solid #d1d5db;
@@ -45,31 +47,158 @@
         transition: border-color 0.2s;
     }
 
-    .form-select:focus, .form-input:focus {
+    .form-input:focus {
         outline: none;
         border-color: #dc2626;
     }
 
-    /* Select option stilleri */
-    .form-select option {
-        padding: 10px 14px;
-        background: white;
-        color: #1f2937;
-        font-size: 14px;
-        font-weight: 500;
-    }
-
-    .form-select option:hover {
-        background: #f3f4f6;
-    }
-
-    .dark .form-select option {
+    .dark .form-input {
         background: #2a2a2a;
+        border-color: #4b5563;
         color: #e5e7eb;
     }
 
-    .dark .form-select option:hover {
-        background: #374151;
+    /* ===== CUSTOM DROPDOWN STYLES ===== */
+    .eval-custom-dropdown {
+        position: relative;
+        z-index: 1;
+    }
+
+    .eval-custom-dropdown.dropdown-open {
+        z-index: 999999 !important;
+    }
+
+    .eval-custom-dropdown-trigger {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 14px;
+        border-radius: 8px;
+        background: white;
+        border: 1px solid #d1d5db;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .eval-custom-dropdown-trigger:hover {
+        border-color: #dc2626;
+    }
+
+    .eval-custom-dropdown-trigger .selected-text {
+        flex: 1;
+        text-align: left;
+        font-weight: 600;
+        color: #111827;
+    }
+
+    .eval-custom-dropdown-trigger .selected-text.placeholder {
+        color: #6b7280;
+        font-weight: 500;
+    }
+
+    .eval-custom-dropdown-trigger .arrow {
+        transition: transform 0.2s;
+    }
+
+    .eval-custom-dropdown.dropdown-open .arrow {
+        transform: rotate(180deg);
+    }
+
+    .dark .eval-custom-dropdown-trigger {
+        background: #2a2a2a;
+        border-color: #4b5563;
+    }
+
+    .dark .eval-custom-dropdown-trigger .selected-text {
+        color: #f9fafb;
+    }
+
+    .dark .eval-custom-dropdown-trigger .selected-text.placeholder {
+        color: #9ca3af;
+    }
+
+    .eval-custom-dropdown-panel {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        margin-top: 8px;
+        background-color: #ffffff;
+        opacity: 0;
+        visibility: hidden;
+        z-index: 999999;
+        border-radius: 12px;
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        transform: translateY(-10px);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        max-height: 300px;
+        overflow-y: auto;
+    }
+
+    .eval-custom-dropdown-panel.open {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    .dark .eval-custom-dropdown-panel {
+        background-color: #1f2937;
+        border-color: #374151;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
+    }
+
+    .eval-custom-dropdown-option {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 14px 16px;
+        border-radius: 8px;
+        margin: 4px;
+        transition: all 0.2s ease;
+        cursor: pointer;
+        font-weight: 500;
+        font-size: 15px;
+        color: #1f2937;
+    }
+
+    .eval-custom-dropdown-option:hover {
+        background-color: #fef2f2;
+    }
+
+    .eval-custom-dropdown-option.selected {
+        background-color: #fee2e2;
+        border: 1px solid #fca5a5;
+    }
+
+    .dark .eval-custom-dropdown-option {
+        color: #f3f4f6;
+    }
+
+    .dark .eval-custom-dropdown-option:hover {
+        background-color: #374151;
+    }
+
+    .dark .eval-custom-dropdown-option.selected {
+        background-color: #7f1d1d;
+        border: 1px solid #991b1b;
+    }
+
+    .eval-custom-dropdown.disabled {
+        opacity: 0.5;
+        pointer-events: none;
+    }
+
+    .eval-custom-dropdown.disabled .eval-custom-dropdown-trigger {
+        cursor: not-allowed;
+        background-color: #f3f4f6;
+    }
+
+    .dark .eval-custom-dropdown.disabled .eval-custom-dropdown-trigger {
+        background-color: #1f2937;
     }
 
     .wizard-step { display: none; }
@@ -382,16 +511,30 @@
             <div class="grid grid-cols-2 gap-4 mb-4">
                 <div>
                     <label class="form-label">Marka *</label>
-                    <select name="marka" id="marka-select" class="form-select" required>
-                        <option value="">{{ $selectedMarka ?? 'Marka Seçin' }}</option>
-                    </select>
+                    <div class="eval-custom-dropdown" id="marka-dropdown">
+                        <button type="button" class="eval-custom-dropdown-trigger" data-value="" data-id="">
+                            <span class="selected-text placeholder">Marka Seçin</span>
+                            <svg class="arrow w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="eval-custom-dropdown-panel"></div>
+                    </div>
+                    <input type="hidden" name="marka" id="marka-input" value="" required>
                     <input type="hidden" name="marka_id" id="marka-id" value="{{ request('marka_id') }}">
                 </div>
                 <div>
                     <label class="form-label">Yıl *</label>
-                    <select name="yil" id="yil-select" class="form-select" disabled required>
-                        <option value="">Yıl Seçin</option>
-                    </select>
+                    <div class="eval-custom-dropdown disabled" id="yil-dropdown">
+                        <button type="button" class="eval-custom-dropdown-trigger" data-value="">
+                            <span class="selected-text placeholder">Yıl Seçin</span>
+                            <svg class="arrow w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="eval-custom-dropdown-panel"></div>
+                    </div>
+                    <input type="hidden" name="yil" id="yil-input" value="" required>
                 </div>
             </div>
 
@@ -399,16 +542,30 @@
             <div class="grid grid-cols-2 gap-4 mb-4">
                 <div>
                     <label class="form-label">Model *</label>
-                    <select name="model" id="model-select" class="form-select" disabled required>
-                        <option value="">Model Seçin</option>
-                    </select>
+                    <div class="eval-custom-dropdown disabled" id="model-dropdown">
+                        <button type="button" class="eval-custom-dropdown-trigger" data-value="" data-id="">
+                            <span class="selected-text placeholder">Model Seçin</span>
+                            <svg class="arrow w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="eval-custom-dropdown-panel"></div>
+                    </div>
+                    <input type="hidden" name="model" id="model-input" value="" required>
                     <input type="hidden" name="model_id" id="model-id" value="">
                 </div>
                 <div>
                     <label class="form-label">Gövde Tipi</label>
-                    <select name="govde_tipi" id="govde-select" class="form-select" disabled>
-                        <option value="">Gövde Tipi Seçin</option>
-                    </select>
+                    <div class="eval-custom-dropdown disabled" id="govde-dropdown">
+                        <button type="button" class="eval-custom-dropdown-trigger" data-value="" data-id="">
+                            <span class="selected-text placeholder">Gövde Tipi Seçin</span>
+                            <svg class="arrow w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="eval-custom-dropdown-panel"></div>
+                    </div>
+                    <input type="hidden" name="govde_tipi" id="govde-input" value="">
                     <input type="hidden" name="govde_tipi_id" id="govde-id" value="">
                 </div>
             </div>
@@ -417,16 +574,30 @@
             <div class="grid grid-cols-2 gap-4 mb-4">
                 <div>
                     <label class="form-label">Yakıt Tipi</label>
-                    <select name="yakit_tipi" id="yakit-select" class="form-select" disabled>
-                        <option value="">Yakıt Tipi Seçin</option>
-                    </select>
+                    <div class="eval-custom-dropdown disabled" id="yakit-dropdown">
+                        <button type="button" class="eval-custom-dropdown-trigger" data-value="" data-id="">
+                            <span class="selected-text placeholder">Yakıt Tipi Seçin</span>
+                            <svg class="arrow w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="eval-custom-dropdown-panel"></div>
+                    </div>
+                    <input type="hidden" name="yakit_tipi" id="yakit-input" value="">
                     <input type="hidden" name="yakit_tipi_id" id="yakit-id" value="">
                 </div>
                 <div>
                     <label class="form-label">Vites Tipi</label>
-                    <select name="vites_tipi" id="vites-select" class="form-select" disabled>
-                        <option value="">Vites Tipi Seçin</option>
-                    </select>
+                    <div class="eval-custom-dropdown disabled" id="vites-dropdown">
+                        <button type="button" class="eval-custom-dropdown-trigger" data-value="" data-id="">
+                            <span class="selected-text placeholder">Vites Tipi Seçin</span>
+                            <svg class="arrow w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="eval-custom-dropdown-panel"></div>
+                    </div>
+                    <input type="hidden" name="vites_tipi" id="vites-input" value="">
                     <input type="hidden" name="vites_tipi_id" id="vites-id" value="">
                 </div>
             </div>
@@ -434,9 +605,16 @@
             <!-- Row 4: Versiyon (full width) -->
             <div class="mb-4">
                 <label class="form-label">Versiyon</label>
-                <select name="versiyon" id="versiyon-select" class="form-select" disabled>
-                    <option value="">Versiyon Seçin</option>
-                </select>
+                <div class="eval-custom-dropdown disabled" id="versiyon-dropdown">
+                    <button type="button" class="eval-custom-dropdown-trigger" data-value="" data-id="">
+                        <span class="selected-text placeholder">Versiyon Seçin</span>
+                        <svg class="arrow w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div class="eval-custom-dropdown-panel"></div>
+                </div>
+                <input type="hidden" name="versiyon" id="versiyon-input" value="">
                 <input type="hidden" name="versiyon_id" id="versiyon-id" value="">
             </div>
 
@@ -448,9 +626,16 @@
                 </div>
                 <div>
                     <label class="form-label">Renk</label>
-                    <select name="renk" id="renk-select" class="form-select" disabled>
-                        <option value="">Renk Seçin</option>
-                    </select>
+                    <div class="eval-custom-dropdown disabled" id="renk-dropdown">
+                        <button type="button" class="eval-custom-dropdown-trigger" data-value="" data-id="">
+                            <span class="selected-text placeholder">Renk Seçin</span>
+                            <svg class="arrow w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="eval-custom-dropdown-panel"></div>
+                    </div>
+                    <input type="hidden" name="renk" id="renk-input" value="">
                     <input type="hidden" name="renk_id" id="renk-id" value="">
                 </div>
             </div>
@@ -537,12 +722,21 @@
                 <div class="tramer-row">
                     <div class="tramer-select-wrapper">
                         <label class="form-label">Tramer *</label>
-                        <select name="tramer" id="tramer-select" class="form-select" required>
-                            <option value="YOK">Yok</option>
-                            <option value="VAR">Var</option>
-                            <option value="BILMIYORUM">Bilmiyorum</option>
-                            <option value="AGIR_HASAR">Ağır Hasar Kayıtlı</option>
-                        </select>
+                        <div class="eval-custom-dropdown" id="tramer-dropdown">
+                            <button type="button" class="eval-custom-dropdown-trigger" data-value="YOK">
+                                <span class="selected-text">Yok</span>
+                                <svg class="arrow w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            <div class="eval-custom-dropdown-panel">
+                                <div class="eval-custom-dropdown-option selected" data-value="YOK">Yok</div>
+                                <div class="eval-custom-dropdown-option" data-value="VAR">Var</div>
+                                <div class="eval-custom-dropdown-option" data-value="BILMIYORUM">Bilmiyorum</div>
+                                <div class="eval-custom-dropdown-option" data-value="AGIR_HASAR">Ağır Hasar Kayıtlı</div>
+                            </div>
+                        </div>
+                        <input type="hidden" name="tramer" id="tramer-input" value="YOK" required>
                     </div>
                     <div class="tramer-tutar-wrapper">
                         <label class="form-label">Toplam Tramer Tutarı</label>
@@ -585,16 +779,24 @@
 
                 <div class="mb-4">
                     <label class="form-label">Şehir *</label>
-                    <select name="sehir" id="sehir-select" class="form-select" required>
-                        <option value="">Şehir Seçin</option>
-                        @php
-                            $cities = ['Adana', 'Adıyaman', 'Afyonkarahisar', 'Ağrı', 'Amasya', 'Ankara', 'Antalya', 'Artvin', 'Aydın', 'Balıkesir', 'Bilecik', 'Bingöl', 'Bitlis', 'Bolu', 'Burdur', 'Bursa', 'Çanakkale', 'Çankırı', 'Çorum', 'Denizli', 'Diyarbakır', 'Edirne', 'Elazığ', 'Erzincan', 'Erzurum', 'Eskişehir', 'Gaziantep', 'Giresun', 'Gümüşhane', 'Hakkari', 'Hatay', 'Isparta', 'Mersin', 'İstanbul', 'İzmir', 'Kars', 'Kastamonu', 'Kayseri', 'Kırklareli', 'Kırşehir', 'Kocaeli', 'Konya', 'Kütahya', 'Malatya', 'Manisa', 'Kahramanmaraş', 'Mardin', 'Muğla', 'Muş', 'Nevşehir', 'Niğde', 'Ordu', 'Rize', 'Sakarya', 'Samsun', 'Siirt', 'Sinop', 'Sivas', 'Tekirdağ', 'Tokat', 'Trabzon', 'Tunceli', 'Şanlıurfa', 'Uşak', 'Van', 'Yozgat', 'Zonguldak', 'Aksaray', 'Bayburt', 'Karaman', 'Kırıkkale', 'Batman', 'Şırnak', 'Bartın', 'Ardahan', 'Iğdır', 'Yalova', 'Karabük', 'Kilis', 'Osmaniye', 'Düzce'];
-                            sort($cities);
-                        @endphp
-                        @foreach($cities as $city)
-                            <option value="{{ $city }}">{{ $city }}</option>
-                        @endforeach
-                    </select>
+                    <div class="eval-custom-dropdown" id="sehir-dropdown">
+                        <button type="button" class="eval-custom-dropdown-trigger" data-value="">
+                            <span class="selected-text placeholder">Şehir Seçin</span>
+                            <svg class="arrow w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="eval-custom-dropdown-panel">
+                            @php
+                                $cities = ['Adana', 'Adıyaman', 'Afyonkarahisar', 'Ağrı', 'Amasya', 'Ankara', 'Antalya', 'Artvin', 'Aydın', 'Balıkesir', 'Bilecik', 'Bingöl', 'Bitlis', 'Bolu', 'Burdur', 'Bursa', 'Çanakkale', 'Çankırı', 'Çorum', 'Denizli', 'Diyarbakır', 'Edirne', 'Elazığ', 'Erzincan', 'Erzurum', 'Eskişehir', 'Gaziantep', 'Giresun', 'Gümüşhane', 'Hakkari', 'Hatay', 'Isparta', 'Mersin', 'İstanbul', 'İzmir', 'Kars', 'Kastamonu', 'Kayseri', 'Kırklareli', 'Kırşehir', 'Kocaeli', 'Konya', 'Kütahya', 'Malatya', 'Manisa', 'Kahramanmaraş', 'Mardin', 'Muğla', 'Muş', 'Nevşehir', 'Niğde', 'Ordu', 'Rize', 'Sakarya', 'Samsun', 'Siirt', 'Sinop', 'Sivas', 'Tekirdağ', 'Tokat', 'Trabzon', 'Tunceli', 'Şanlıurfa', 'Uşak', 'Van', 'Yozgat', 'Zonguldak', 'Aksaray', 'Bayburt', 'Karaman', 'Kırıkkale', 'Batman', 'Şırnak', 'Bartın', 'Ardahan', 'Iğdır', 'Yalova', 'Karabük', 'Kilis', 'Osmaniye', 'Düzce'];
+                                sort($cities);
+                            @endphp
+                            @foreach($cities as $city)
+                                <div class="eval-custom-dropdown-option" data-value="{{ $city }}">{{ $city }}</div>
+                            @endforeach
+                        </div>
+                    </div>
+                    <input type="hidden" name="sehir" id="sehir-input" value="" required>
                 </div>
 
                 <div class="mb-4">
