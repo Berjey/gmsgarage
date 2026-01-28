@@ -50,6 +50,28 @@
         border-color: #dc2626;
     }
 
+    /* Select option stilleri */
+    .form-select option {
+        padding: 10px 14px;
+        background: white;
+        color: #1f2937;
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    .form-select option:hover {
+        background: #f3f4f6;
+    }
+
+    .dark .form-select option {
+        background: #2a2a2a;
+        color: #e5e7eb;
+    }
+
+    .dark .form-select option:hover {
+        background: #374151;
+    }
+
     .wizard-step { display: none; }
     .wizard-step.active { display: block; }
 
