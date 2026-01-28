@@ -251,7 +251,6 @@
     $ekspertiz = $messageData['ekspertiz'] ?? [];
     $tramer = $messageData['tramer'] ?? 'YOK';
     $tramerTutari = $messageData['tramer_tutari'] ?? null;
-    $sehir = $messageData['sehir'] ?? '';
     $renk = $messageData['renk'] ?? '';
     $govdeTipi = $messageData['govde_tipi'] ?? '';
     $not = $messageData['not'] ?? '';
@@ -379,18 +378,18 @@
                             <div class="info-value" style="font-size:14px;">{{ $request->name }}</div>
                         </div>
                         <div class="info-cell">
-                            <div class="info-label">Sehir</div>
-                            <div class="info-value">{{ $sehir ?: '-' }}</div>
+                            <div class="info-label">Telefon</div>
+                            <div class="info-value">{{ $request->phone }}</div>
                         </div>
                     </div>
                     <div class="info-row">
                         <div class="info-cell">
-                            <div class="info-label">Telefon</div>
-                            <div class="info-value">{{ $request->phone }}</div>
-                        </div>
-                        <div class="info-cell">
                             <div class="info-label">E-posta</div>
                             <div class="info-value">{{ $request->email ?? '-' }}</div>
+                        </div>
+                        <div class="info-cell">
+                            <div class="info-label">Talep Tarihi</div>
+                            <div class="info-value">{{ $request->created_at->format('d.m.Y H:i') }}</div>
                         </div>
                     </div>
                 </div>

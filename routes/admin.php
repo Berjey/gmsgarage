@@ -122,6 +122,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/{id}', [EvaluationRequestController::class, 'show'])->name('show');
             Route::get('/{id}/pdf', [EvaluationRequestController::class, 'downloadPdf'])->name('pdf');
             Route::post('/{id}/read', [EvaluationRequestController::class, 'markAsRead'])->name('read');
+            Route::post('/{id}/send-email', [EvaluationRequestController::class, 'sendEmail'])->name('send-email');
             Route::delete('/{id}', [EvaluationRequestController::class, 'destroy'])->name('destroy');
         });
         

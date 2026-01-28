@@ -362,7 +362,6 @@ class VehicleEvaluationController extends Controller
                 'soyad' => 'required|string|max:255',
                 'telefon' => 'required|string|max:20',
                 'email' => 'required|email|max:255',
-                'sehir' => 'required|string|max:255',
                 'not' => 'nullable|string|max:1000',
                 'kvkk_onay' => 'required|accepted',
             ], [
@@ -371,11 +370,10 @@ class VehicleEvaluationController extends Controller
                 'kilometre.required' => 'Kilometre alanı zorunludur.',
                 'tramer.required' => 'Tramer bilgisi zorunludur.',
                 'ad.required' => 'Ad alanı zorunludur.',
-                'soyad.required' => 'Soyad alanı zorunludur.',
+                'soyad.required' => 'Soyadı alanı zorunludur.',
                 'telefon.required' => 'Telefon alanı zorunludur.',
                 'email.required' => 'E-posta alanı zorunludur.',
                 'email.email' => 'Geçerli bir e-posta adresi girin.',
-                'sehir.required' => 'Şehir alanı zorunludur.',
                 'kvkk_onay.required' => 'KVKK onayı zorunludur.',
             ]);
 
@@ -424,7 +422,6 @@ class VehicleEvaluationController extends Controller
                     'tramer' => $request->tramer,
                     'tramer_tutari' => $tramerTutari,
                     'ekspertiz' => $ekspertiz,
-                    'sehir' => $request->sehir,
                     'not' => $request->not,
                 ], JSON_UNESCAPED_UNICODE),
             ]);

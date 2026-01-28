@@ -31,3 +31,10 @@ composer-setup.php
 Thumbs.db
 *.sqlite
 *.sqlite-journal
+
+# Geçici ve yanlışlıkla oluşturulmuş dosyalar
+-w
+*.tmp
+*.bak
+*.swp
+*~

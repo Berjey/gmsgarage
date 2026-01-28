@@ -456,7 +456,12 @@
         width: 18px;
         height: 18px;
         cursor: pointer;
-        accent-color: #3b82f6;
+        accent-color: #ef4444;
+    }
+
+    .kvkk-checkbox {
+        accent-color: #ef4444;
+        cursor: pointer;
     }
 
     /* Car Diagram */
@@ -931,7 +936,7 @@
                         <input type="text" name="ad" id="ad-input" class="form-input" placeholder="Adınız" required>
                     </div>
                     <div>
-                        <label class="form-label">Soyad *</label>
+                        <label class="form-label">Soyadı *</label>
                         <input type="text" name="soyad" id="soyad-input" class="form-input" placeholder="Soyadınız" required>
                     </div>
                 </div>
@@ -948,35 +953,13 @@
                 </div>
 
                 <div class="mb-4">
-                    <label class="form-label">Şehir *</label>
-                    <div class="eval-custom-dropdown" id="sehir-dropdown">
-                        <button type="button" class="eval-custom-dropdown-trigger" data-value="">
-                            <span class="selected-text placeholder">Şehir Seçin</span>
-                            <svg class="arrow w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </button>
-                        <div class="eval-custom-dropdown-panel">
-                            @php
-                                $cities = ['Adana', 'Adıyaman', 'Afyonkarahisar', 'Ağrı', 'Amasya', 'Ankara', 'Antalya', 'Artvin', 'Aydın', 'Balıkesir', 'Bilecik', 'Bingöl', 'Bitlis', 'Bolu', 'Burdur', 'Bursa', 'Çanakkale', 'Çankırı', 'Çorum', 'Denizli', 'Diyarbakır', 'Edirne', 'Elazığ', 'Erzincan', 'Erzurum', 'Eskişehir', 'Gaziantep', 'Giresun', 'Gümüşhane', 'Hakkari', 'Hatay', 'Isparta', 'Mersin', 'İstanbul', 'İzmir', 'Kars', 'Kastamonu', 'Kayseri', 'Kırklareli', 'Kırşehir', 'Kocaeli', 'Konya', 'Kütahya', 'Malatya', 'Manisa', 'Kahramanmaraş', 'Mardin', 'Muğla', 'Muş', 'Nevşehir', 'Niğde', 'Ordu', 'Rize', 'Sakarya', 'Samsun', 'Siirt', 'Sinop', 'Sivas', 'Tekirdağ', 'Tokat', 'Trabzon', 'Tunceli', 'Şanlıurfa', 'Uşak', 'Van', 'Yozgat', 'Zonguldak', 'Aksaray', 'Bayburt', 'Karaman', 'Kırıkkale', 'Batman', 'Şırnak', 'Bartın', 'Ardahan', 'Iğdır', 'Yalova', 'Karabük', 'Kilis', 'Osmaniye', 'Düzce'];
-                                sort($cities);
-                            @endphp
-                            @foreach($cities as $city)
-                                <div class="eval-custom-dropdown-option" data-value="{{ $city }}">{{ $city }}</div>
-                            @endforeach
-                        </div>
-                    </div>
-                    <input type="hidden" name="sehir" id="sehir-input" value="" required>
-                </div>
-
-                <div class="mb-4">
                     <label class="form-label">Not (Opsiyonel)</label>
                     <textarea name="not" id="not-input" class="form-input" rows="3" placeholder="Eklemek istediğiniz notlar..."></textarea>
                 </div>
 
                 <div class="mb-6">
                     <label class="flex items-start gap-3 cursor-pointer">
-                        <input type="checkbox" name="kvkk_onay" id="kvkk-checkbox" class="mt-1" required>
+                        <input type="checkbox" name="kvkk_onay" id="kvkk-checkbox" class="mt-1 kvkk-checkbox" required>
                         <span class="text-sm text-gray-600 dark:text-gray-400">
                             <a href="{{ route('kvkk') }}" target="_blank" class="text-primary-600 hover:underline">KVKK Aydınlatma Metni</a>'ni okudum ve kabul ediyorum. *
                         </span>
@@ -1951,7 +1934,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const soyadInput = document.getElementById('soyad-input');
         const telefonInput = document.getElementById('telefon-input');
         const emailInput = document.getElementById('email-input');
-        const sehirSelect = document.getElementById('sehir-select');
         const kvkkCheckbox = document.getElementById('kvkk-checkbox');
 
         if (!adInput.value.trim()) {
@@ -1972,11 +1954,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!emailInput.value.trim() || !emailInput.value.includes('@')) {
             alert('Lütfen geçerli bir e-posta adresi girin');
             emailInput.focus();
-            return;
-        }
-        if (!sehirSelect.value) {
-            alert('Lütfen şehir seçin');
-            sehirSelect.focus();
             return;
         }
         if (!kvkkCheckbox.checked) {
