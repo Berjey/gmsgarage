@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>Araç Değerleme Raporu #{{ $request->id }}</title>
+    <title>Araç Değerleme Raporu - GMS GARAGE</title>
     <style>
         @page {
-            margin: 15mm;
+            margin: 0;
             size: A4 portrait;
         }
         
@@ -19,23 +19,25 @@
         body {
             font-family: DejaVu Sans, sans-serif;
             font-size: 9pt;
-            line-height: 1.4;
-            color: #1a1a1a;
+            line-height: 1.5;
+            color: #1f2937;
+            background: #ffffff;
         }
 
-        /* ===== COMPACT HEADER ===== */
-        .header {
-            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
-            padding: 12px 20px;
-            margin: -15mm -15mm 8mm -15mm;
-            color: white;
-            position: relative;
+        /* ===== CONTAINER - CENTERED CONTENT ===== */
+        .page-container {
+            max-width: 190mm;
+            margin: 0 auto;
+            padding: 15mm;
         }
-        
-        .header-grid {
+
+        /* ===== PROFESSIONAL HEADER WITH LOGO ===== */
+        .header {
             display: table;
             width: 100%;
-            table-layout: fixed;
+            margin-bottom: 12mm;
+            padding-bottom: 8mm;
+            border-bottom: 3px solid #dc2626;
         }
         
         .header-cell {
@@ -44,91 +46,133 @@
         }
         
         .header-left {
-            width: 40%;
-        }
-        
-        .header-center {
-            width: 35%;
-            text-align: center;
+            width: 60%;
         }
         
         .header-right {
-            width: 25%;
+            width: 40%;
             text-align: right;
         }
         
-        .company-name {
-            font-size: 18pt;
+        /* Logo Design */
+        .logo-container {
+            margin-bottom: 3mm;
+        }
+        
+        .logo-box {
+            display: inline-block;
+            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+            padding: 8px 16px;
+            border-radius: 6px;
+        }
+        
+        .logo-text {
+            font-size: 16pt;
             font-weight: bold;
-            letter-spacing: 1px;
-            margin-bottom: 2px;
+            color: #ffffff;
+            letter-spacing: 2px;
         }
         
         .company-tagline {
-            font-size: 7pt;
-            opacity: 0.9;
+            font-size: 8pt;
+            color: #6b7280;
+            margin-top: 2mm;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
         
-        .vehicle-info {
-            font-size: 8pt;
-        }
-        
-        .vehicle-title {
-            font-size: 11pt;
-            font-weight: bold;
-            margin-bottom: 2px;
+        /* Report Info */
+        .report-info {
+            text-align: right;
         }
         
         .report-number {
-            font-size: 10pt;
+            font-size: 11pt;
             font-weight: bold;
-            background: rgba(255,255,255,0.15);
-            padding: 6px 12px;
-            border-radius: 4px;
-            display: inline-block;
+            color: #dc2626;
+            margin-bottom: 2mm;
         }
         
         .report-date {
-            font-size: 7pt;
-            opacity: 0.85;
-            margin-top: 3px;
+            font-size: 8pt;
+            color: #6b7280;
+        }
+        
+        .vehicle-title {
+            font-size: 13pt;
+            font-weight: bold;
+            color: #1f2937;
+            margin-top: 2mm;
         }
 
-        /* ===== THREE COLUMN LAYOUT ===== */
-        .main-grid {
-            display: table;
-            width: 100%;
+        /* ===== CARD SYSTEM ===== */
+        .card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 12px;
             margin-bottom: 8mm;
-            table-layout: fixed;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
         
-        .main-col {
-            display: table-cell;
-            vertical-align: top;
-            padding: 0 6px;
+        .card-header {
+            border-bottom: 2px solid #f3f4f6;
+            padding-bottom: 6px;
+            margin-bottom: 10px;
         }
         
-        .col-left { width: 33%; border-right: 1px solid #e5e7eb; }
-        .col-center { width: 34%; border-right: 1px solid #e5e7eb; }
-        .col-right { width: 33%; }
-
-        /* ===== SECTION STYLES ===== */
-        .section-title {
-            font-size: 9pt;
+        .card-title {
+            font-size: 10pt;
             font-weight: bold;
             color: #dc2626;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            border-bottom: 2px solid #dc2626;
-            padding-bottom: 3px;
-            margin-bottom: 6px;
         }
         
+        .card-icon {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #dc2626;
+            border-radius: 50%;
+            margin-right: 6px;
+            vertical-align: middle;
+        }
+
+        /* ===== GRID SYSTEM ===== */
+        .grid {
+            display: table;
+            width: 100%;
+            table-layout: fixed;
+        }
+        
+        .grid-row {
+            display: table-row;
+        }
+        
+        .grid-col {
+            display: table-cell;
+            vertical-align: top;
+            padding: 0 4mm;
+        }
+        
+        .grid-col:first-child {
+            padding-left: 0;
+        }
+        
+        .grid-col:last-child {
+            padding-right: 0;
+        }
+        
+        .col-3 { width: 33.333%; }
+        .col-4 { width: 25%; }
+        .col-6 { width: 50%; }
+        .col-12 { width: 100%; }
+
+        /* ===== INFO ITEMS ===== */
         .info-item {
-            margin-bottom: 5px;
-            padding-bottom: 5px;
+            margin-bottom: 8px;
+            padding-bottom: 8px;
             border-bottom: 1px solid #f3f4f6;
         }
         
@@ -140,7 +184,7 @@
         
         .info-label {
             font-size: 7pt;
-            color: #6b7280;
+            color: #9ca3af;
             text-transform: uppercase;
             font-weight: bold;
             letter-spacing: 0.3px;
@@ -149,7 +193,7 @@
         
         .info-value {
             font-size: 9pt;
-            color: #1a1a1a;
+            color: #1f2937;
             font-weight: 600;
         }
         
@@ -159,117 +203,153 @@
             font-weight: bold;
         }
 
-        /* ===== STATS COMPACT ===== */
-        .stats-compact {
+        /* ===== STATS CARDS ===== */
+        .stats-grid {
             display: table;
             width: 100%;
-            margin-bottom: 8px;
             table-layout: fixed;
+            margin-bottom: 8mm;
         }
         
-        .stat-item {
+        .stat-card {
             display: table-cell;
             text-align: center;
-            padding: 8px 4px;
-            border-radius: 4px;
+            padding: 12px 8px;
+            border-radius: 8px;
+            border: 1px solid;
         }
         
-        .stat-item:nth-child(1) { background: #d1fae5; }
-        .stat-item:nth-child(2) { background: #dbeafe; }
-        .stat-item:nth-child(3) { background: #fef3c7; }
-        .stat-item:nth-child(4) { background: #fee2e2; }
+        .stat-card:not(:last-child) {
+            padding-right: 4px;
+        }
+        
+        .stat-card:not(:first-child) {
+            padding-left: 4px;
+        }
+        
+        .stat-card-green {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border-color: #6ee7b7;
+        }
+        
+        .stat-card-blue {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border-color: #93c5fd;
+        }
+        
+        .stat-card-yellow {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-color: #fcd34d;
+        }
+        
+        .stat-card-red {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            border-color: #fca5a5;
+        }
         
         .stat-number {
-            font-size: 16pt;
+            font-size: 20pt;
             font-weight: bold;
             line-height: 1;
+            margin-bottom: 3px;
         }
         
-        .stat-number.green { color: #065f46; }
-        .stat-number.blue { color: #1e40af; }
-        .stat-number.yellow { color: #92400e; }
-        .stat-number.red { color: #991b1b; }
+        .stat-number-green { color: #065f46; }
+        .stat-number-blue { color: #1e40af; }
+        .stat-number-yellow { color: #92400e; }
+        .stat-number-red { color: #991b1b; }
         
         .stat-label {
-            font-size: 6pt;
-            text-transform: uppercase;
-            font-weight: bold;
-            color: #374151;
-            margin-top: 2px;
-        }
-
-        /* ===== EKSPERTIZ TABLE ===== */
-        .ekspertiz-section {
-            margin-top: 0;
-        }
-        
-        .ekspertiz-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 6px;
-            font-size: 8pt;
-        }
-        
-        .ekspertiz-table thead {
-            background: #f3f4f6;
-        }
-        
-        .ekspertiz-table th {
-            padding: 5px 6px;
-            text-align: left;
             font-size: 7pt;
+            text-transform: uppercase;
             font-weight: bold;
             color: #374151;
-            text-transform: uppercase;
-            border-bottom: 2px solid #e5e7eb;
-        }
-        
-        .ekspertiz-table td {
-            padding: 4px 6px;
-            border-bottom: 1px solid #f9fafb;
-        }
-        
-        .ekspertiz-table tbody tr:nth-child(even) {
-            background-color: #f9fafb;
+            letter-spacing: 0.3px;
         }
 
-        /* ===== BADGES ===== */
+        /* ===== STATUS BADGES (Uniform Design) ===== */
         .badge {
             display: inline-block;
-            padding: 2px 6px;
-            border-radius: 3px;
+            padding: 3px 8px;
+            border-radius: 12px;
             font-size: 7pt;
             font-weight: bold;
             text-transform: uppercase;
+            letter-spacing: 0.3px;
+            border: 1px solid;
         }
         
         .badge-green {
             background: #d1fae5;
             color: #065f46;
+            border-color: #6ee7b7;
         }
         
         .badge-blue {
             background: #dbeafe;
             color: #1e40af;
+            border-color: #93c5fd;
         }
         
         .badge-yellow {
             background: #fef3c7;
             color: #92400e;
+            border-color: #fcd34d;
         }
         
         .badge-red {
             background: #fee2e2;
             color: #991b1b;
+            border-color: #fca5a5;
+        }
+
+        /* ===== EKSPERTIZ TABLE (Symmetrical) ===== */
+        .ekspertiz-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .ekspertiz-table thead {
+            background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+        }
+        
+        .ekspertiz-table th {
+            padding: 8px 10px;
+            text-align: left;
+            font-size: 7pt;
+            font-weight: bold;
+            color: #374151;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        
+        .ekspertiz-table td {
+            padding: 7px 10px;
+            font-size: 8pt;
+            border-bottom: 1px solid #f3f4f6;
+            vertical-align: middle;
+        }
+        
+        .ekspertiz-table tbody tr:nth-child(even) {
+            background-color: #f9fafb;
+        }
+        
+        .ekspertiz-table tbody tr:last-child td {
+            border-bottom: none;
         }
 
         /* ===== NOTE BOX ===== */
         .note-box {
-            background: #fffbeb;
-            border-left: 3px solid #f59e0b;
-            padding: 6px 8px;
-            margin-top: 6px;
-            border-radius: 3px;
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+            border-left: 4px solid #f59e0b;
+            border-radius: 6px;
+            padding: 8px 10px;
+            margin-top: 8px;
         }
         
         .note-label {
@@ -277,34 +357,37 @@
             color: #92400e;
             text-transform: uppercase;
             font-weight: bold;
-            margin-bottom: 3px;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
         }
         
         .note-text {
             font-size: 8pt;
             color: #78350f;
-            line-height: 1.3;
+            line-height: 1.4;
         }
 
-        /* ===== FOOTER ===== */
+        /* ===== FOOTER (Centered) ===== */
         .footer {
-            margin-top: 8mm;
-            padding-top: 6px;
+            margin-top: 10mm;
+            padding-top: 6mm;
             border-top: 2px solid #dc2626;
             text-align: center;
         }
         
         .footer-brand {
-            font-size: 11pt;
+            font-size: 12pt;
             font-weight: bold;
             color: #dc2626;
-            margin-bottom: 3px;
+            margin-bottom: 2mm;
+            letter-spacing: 1px;
         }
         
         .footer-info {
             font-size: 7pt;
             color: #6b7280;
-            margin-bottom: 4px;
+            margin-bottom: 3mm;
+            line-height: 1.6;
         }
         
         .footer-disclaimer {
@@ -312,16 +395,19 @@
             color: #9ca3af;
             font-style: italic;
             background: #f9fafb;
-            padding: 4px 8px;
-            border-radius: 3px;
+            padding: 6px 12px;
+            border-radius: 6px;
             border: 1px dashed #e5e7eb;
             display: inline-block;
+            max-width: 80%;
+            line-height: 1.5;
         }
 
         /* ===== UTILITIES ===== */
         .text-center { text-align: center; }
-        .mb-2 { margin-bottom: 2mm; }
         .mb-4 { margin-bottom: 4mm; }
+        .mb-6 { margin-bottom: 6mm; }
+        .mt-4 { margin-top: 4mm; }
     </style>
 </head>
 <body>
@@ -354,190 +440,241 @@
     $lokalBoyaliCount = collect($ekspertiz)->filter(fn($v) => $v === 'LOKAL_BOYALI')->count();
     $degismisCount = collect($ekspertiz)->filter(fn($v) => $v === 'DEGISMIS')->count();
     $orijinalCount = 13 - $boyaliCount - $lokalBoyaliCount - $degismisCount;
+    $totalProblems = $boyaliCount + $lokalBoyaliCount + $degismisCount;
+    
+    if ($totalProblems == 0) {
+        $durumText = 'Mukemmel';
+        $durumClass = 'badge-green';
+    } elseif ($totalProblems <= 2) {
+        $durumText = 'Cok Iyi';
+        $durumClass = 'badge-blue';
+    } elseif ($totalProblems <= 4) {
+        $durumText = 'Iyi';
+        $durumClass = 'badge-yellow';
+    } else {
+        $durumText = 'Orta';
+        $durumClass = 'badge-red';
+    }
 @endphp
 
-    <!-- COMPACT HEADER -->
+<div class="page-container">
+    <!-- PROFESSIONAL HEADER WITH LOGO -->
     <div class="header">
-        <div class="header-grid">
-            <div class="header-cell header-left">
-                <div class="company-name">GMS GARAGE</div>
-                <div class="company-tagline">Profesyonel Arac Degerleme</div>
+        <div class="header-cell header-left">
+            <div class="logo-container">
+                <div class="logo-box">
+                    <span class="logo-text">GMS GARAGE</span>
+                </div>
             </div>
-            <div class="header-cell header-center">
-                <div class="vehicle-title">{{ $request->brand }} {{ $request->model }}</div>
-                <div class="vehicle-info">{{ $request->version ?? '' }}</div>
-            </div>
-            <div class="header-cell header-right">
-                <div class="report-number">#{{ str_pad($request->id, 4, '0', STR_PAD_LEFT) }}</div>
+            <div class="company-tagline">Profesyonel Arac Degerleme ve Ticaret Hizmetleri</div>
+        </div>
+        <div class="header-cell header-right">
+            <div class="report-info">
+                <div class="report-number">RAPOR #{{ str_pad($request->id, 5, '0', STR_PAD_LEFT) }}</div>
                 <div class="report-date">{{ $request->created_at->format('d.m.Y H:i') }}</div>
+                <div class="vehicle-title">{{ $request->brand }} {{ $request->model }} {{ $request->year }}</div>
             </div>
         </div>
     </div>
 
-    <!-- THREE COLUMN MAIN CONTENT -->
-    <div class="main-grid">
-        <!-- LEFT COLUMN: ARAÇ BİLGİLERİ -->
-        <div class="main-col col-left">
-            <div class="section-title">Arac Bilgileri</div>
-            
-            <div class="info-item">
-                <div class="info-label">Marka</div>
-                <div class="info-value">{{ $request->brand }}</div>
-            </div>
-            
-            <div class="info-item">
-                <div class="info-label">Model</div>
-                <div class="info-value">{{ $request->model }}</div>
-            </div>
-            
-            <div class="info-item">
-                <div class="info-label">Yil</div>
-                <div class="info-value">{{ $request->year }}</div>
-            </div>
-            
-            <div class="info-item">
-                <div class="info-label">Kilometre</div>
-                <div class="info-value-highlight">{{ number_format($request->mileage, 0, ',', '.') }} KM</div>
-            </div>
-            
-            <div class="info-item">
-                <div class="info-label">Govde Tipi</div>
-                <div class="info-value">{{ $govdeTipi ?: '-' }}</div>
-            </div>
-            
-            <div class="info-item">
-                <div class="info-label">Yakit</div>
-                <div class="info-value">{{ $request->fuel_type ?? '-' }}</div>
-            </div>
-            
-            <div class="info-item">
-                <div class="info-label">Vites</div>
-                <div class="info-value">{{ $request->transmission ?? '-' }}</div>
-            </div>
-            
-            <div class="info-item">
-                <div class="info-label">Renk</div>
-                <div class="info-value">{{ $renk ?: '-' }}</div>
-            </div>
-            
-            <div class="info-item">
-                <div class="info-label">Tramer</div>
-                <div class="info-value">
-                    @if($tramer === 'YOK')
-                        <span class="badge badge-green">Hasarsiz</span>
-                    @elseif($tramer === 'AGIR_HASAR')
-                        <span class="badge badge-red">Agir Hasar</span>
-                    @elseif($tramer === 'VAR')
-                        <span class="badge badge-yellow">Tramer Kayitli</span>
-                    @else
-                        <span class="badge badge-yellow">Bilinmiyor</span>
-                    @endif
-                    @if($tramerTutari)
-                        <br><span style="font-size:7pt; color:#6b7280;">({{ number_format($tramerTutari, 0, ',', '.') }} TL)</span>
-                    @endif
-                </div>
-            </div>
+    <!-- STATS CARDS (4 Columns - Equal Width) -->
+    <div class="stats-grid mb-6">
+        <div class="stat-card stat-card-green">
+            <div class="stat-number stat-number-green">{{ $orijinalCount }}</div>
+            <div class="stat-label">Orijinal</div>
         </div>
-
-        <!-- CENTER COLUMN: İLETİŞİM BİLGİLERİ -->
-        <div class="main-col col-center">
-            <div class="section-title">Iletisim</div>
-            
-            <div class="info-item">
-                <div class="info-label">Musteri</div>
-                <div class="info-value" style="font-size:10pt;">{{ $request->name }}</div>
-            </div>
-            
-            <div class="info-item">
-                <div class="info-label">Telefon</div>
-                <div class="info-value">{{ $request->phone }}</div>
-            </div>
-            
-            <div class="info-item">
-                <div class="info-label">E-posta</div>
-                <div class="info-value" style="font-size:8pt;">{{ $request->email ?? '-' }}</div>
-            </div>
-            
-            <div class="info-item">
-                <div class="info-label">Talep Tarihi</div>
-                <div class="info-value">{{ $request->created_at->format('d.m.Y H:i') }}</div>
-            </div>
-
-            @if($not)
-            <div class="note-box">
-                <div class="note-label">Musteri Notu</div>
-                <div class="note-text">{{ $not }}</div>
-            </div>
-            @endif
+        <div class="stat-card stat-card-blue">
+            <div class="stat-number stat-number-blue">{{ $boyaliCount }}</div>
+            <div class="stat-label">Boyali</div>
         </div>
-
-        <!-- RIGHT COLUMN: EKSPERTİZ ÖZETİ -->
-        <div class="main-col col-right">
-            <div class="section-title">Ekspertiz Ozeti</div>
-            
-            @if(!empty($ekspertiz))
-            <div class="stats-compact">
-                <div class="stat-item">
-                    <div class="stat-number green">{{ $orijinalCount }}</div>
-                    <div class="stat-label">Orijinal</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number blue">{{ $boyaliCount }}</div>
-                    <div class="stat-label">Boyali</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number yellow">{{ $lokalBoyaliCount }}</div>
-                    <div class="stat-label">Lokal</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number red">{{ $degismisCount }}</div>
-                    <div class="stat-label">Degismis</div>
-                </div>
-            </div>
-
-            <div style="margin-top:8px; padding:8px; background:#f9fafb; border-radius:4px;">
-                <div style="font-size:7pt; color:#6b7280; margin-bottom:4px; font-weight:bold;">GENEL DURUM</div>
-                @php
-                    $totalProblems = $boyaliCount + $lokalBoyaliCount + $degismisCount;
-                    if ($totalProblems == 0) {
-                        $durumText = 'Mukemmel Durum';
-                        $durumClass = 'badge-green';
-                    } elseif ($totalProblems <= 2) {
-                        $durumText = 'Cok Iyi';
-                        $durumClass = 'badge-blue';
-                    } elseif ($totalProblems <= 4) {
-                        $durumText = 'Iyi';
-                        $durumClass = 'badge-yellow';
-                    } else {
-                        $durumText = 'Orta';
-                        $durumClass = 'badge-red';
-                    }
-                @endphp
-                <span class="badge {{ $durumClass }}">{{ $durumText }}</span>
-                <div style="font-size:7pt; color:#6b7280; margin-top:4px;">
-                    {{ $totalProblems }}/13 parca islem gormus
-                </div>
-            </div>
-            @else
-            <div style="color:#9ca3af; font-style:italic; text-align:center; padding:20px 0; font-size:8pt;">
-                Ekspertiz bilgisi yok
-            </div>
-            @endif
+        <div class="stat-card stat-card-yellow">
+            <div class="stat-number stat-number-yellow">{{ $lokalBoyaliCount }}</div>
+            <div class="stat-label">Lokal Boyali</div>
+        </div>
+        <div class="stat-card stat-card-red">
+            <div class="stat-number stat-number-red">{{ $degismisCount }}</div>
+            <div class="stat-label">Degismis</div>
         </div>
     </div>
 
-    <!-- FULL WIDTH EKSPERTIZ TABLE -->
+    <!-- MAIN CONTENT GRID (3 Equal Columns) -->
+    <div class="grid mb-6">
+        <!-- ARAÇ BİLGİLERİ CARD -->
+        <div class="grid-col col-3">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="card-icon"></span>ARAC BILGILERI
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">Marka</div>
+                    <div class="info-value">{{ $request->brand }}</div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">Model</div>
+                    <div class="info-value">{{ $request->model }}</div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">Yil</div>
+                    <div class="info-value">{{ $request->year }}</div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">Kilometre</div>
+                    <div class="info-value-highlight">{{ number_format($request->mileage, 0, ',', '.') }} KM</div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">Govde</div>
+                    <div class="info-value">{{ $govdeTipi ?: '-' }}</div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">Yakit</div>
+                    <div class="info-value">{{ $request->fuel_type ?? '-' }}</div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">Vites</div>
+                    <div class="info-value">{{ $request->transmission ?? '-' }}</div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">Renk</div>
+                    <div class="info-value">{{ $renk ?: '-' }}</div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">Tramer</div>
+                    <div class="info-value">
+                        @if($tramer === 'YOK')
+                            <span class="badge badge-green">Hasarsiz</span>
+                        @elseif($tramer === 'AGIR_HASAR')
+                            <span class="badge badge-red">Agir Hasar</span>
+                        @elseif($tramer === 'VAR')
+                            <span class="badge badge-yellow">Tramer Kayitli</span>
+                        @else
+                            <span class="badge badge-yellow">Bilinmiyor</span>
+                        @endif
+                        @if($tramerTutari)
+                            <br><span style="font-size:7pt; color:#6b7280; margin-top:2px; display:inline-block;">({{ number_format($tramerTutari, 0, ',', '.') }} TL)</span>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- İLETİŞİM BİLGİLERİ CARD -->
+        <div class="grid-col col-3">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="card-icon"></span>ILETISIM BILGILERI
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">Musteri</div>
+                    <div class="info-value" style="font-size:10pt;">{{ $request->name }}</div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">Telefon</div>
+                    <div class="info-value">{{ $request->phone }}</div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">E-posta</div>
+                    <div class="info-value" style="font-size:8pt; word-break:break-all;">{{ $request->email ?? '-' }}</div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">Talep Tarihi</div>
+                    <div class="info-value">{{ $request->created_at->format('d.m.Y H:i') }}</div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">Versiyon</div>
+                    <div class="info-value" style="font-size:7.5pt; line-height:1.3;">{{ $request->version ?? '-' }}</div>
+                </div>
+
+                @if($not)
+                <div class="note-box">
+                    <div class="note-label">Musteri Notu</div>
+                    <div class="note-text">{{ $not }}</div>
+                </div>
+                @endif
+            </div>
+        </div>
+
+        <!-- EKSPERTİZ ÖZETİ CARD -->
+        <div class="grid-col col-3">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="card-icon"></span>EKSPERTIZ OZETI
+                    </div>
+                </div>
+                
+                @if(!empty($ekspertiz))
+                <div style="background:#f9fafb; border-radius:6px; padding:10px; text-align:center; margin-bottom:10px;">
+                    <div style="font-size:7pt; color:#6b7280; margin-bottom:6px; font-weight:bold; text-transform:uppercase;">Genel Durum</div>
+                    <span class="badge {{ $durumClass }}" style="font-size:9pt; padding:5px 12px;">{{ $durumText }}</span>
+                    <div style="font-size:7pt; color:#6b7280; margin-top:6px;">
+                        {{ $totalProblems }}/13 parca islem gormus
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-label">Orijinal Parcalar</div>
+                    <div class="info-value" style="color:#065f46;">{{ $orijinalCount }} Parca</div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">Boyali Parcalar</div>
+                    <div class="info-value" style="color:#1e40af;">{{ $boyaliCount }} Parca</div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">Lokal Boyali</div>
+                    <div class="info-value" style="color:#92400e;">{{ $lokalBoyaliCount }} Parca</div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">Degismis Parcalar</div>
+                    <div class="info-value" style="color:#991b1b;">{{ $degismisCount }} Parca</div>
+                </div>
+                @else
+                <div style="color:#9ca3af; font-style:italic; text-align:center; padding:20px 0; font-size:8pt;">
+                    Ekspertiz bilgisi girilmemis
+                </div>
+                @endif
+            </div>
+        </div>
+    </div>
+
+    <!-- DETAYLI EKSPERTİZ RAPORU (Full Width Symmetrical Table) -->
     @if(!empty($ekspertiz))
-    <div class="ekspertiz-section">
-        <div class="section-title">Detayli Ekspertiz Raporu</div>
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">
+                <span class="card-icon"></span>DETAYLI EKSPERTIZ RAPORU
+            </div>
+        </div>
         
         <table class="ekspertiz-table">
             <thead>
                 <tr>
-                    <th style="width:35%;">Parca</th>
-                    <th style="width:20%;">Durum</th>
-                    <th style="width:35%;">Parca</th>
-                    <th style="width:20%;">Durum</th>
+                    <th style="width:23%;">PARCA</th>
+                    <th style="width:15%;">DURUM</th>
+                    <th style="width:23%;">PARCA</th>
+                    <th style="width:15%;">DURUM</th>
+                    <th style="width:23%;">PARCA</th>
+                    <th style="width:15%;">DURUM</th>
                 </tr>
             </thead>
             <tbody>
@@ -559,17 +696,20 @@
                         };
                         $partsArray[] = compact('name', 'statusText', 'badgeClass');
                     }
-                    $chunks = array_chunk($partsArray, 2);
+                    // Create rows with 3 parts each
+                    $chunks = array_chunk($partsArray, 3);
                 @endphp
                 
                 @foreach($chunks as $chunk)
                     <tr>
                         @foreach($chunk as $part)
-                            <td>{{ $part['name'] }}</td>
+                            <td style="font-weight:600;">{{ $part['name'] }}</td>
                             <td><span class="badge {{ $part['badgeClass'] }}">{{ $part['statusText'] }}</span></td>
                         @endforeach
-                        @if(count($chunk) < 2)
-                            <td colspan="2"></td>
+                        @if(count($chunk) < 3)
+                            @for($i = count($chunk); $i < 3; $i++)
+                                <td colspan="2"></td>
+                            @endfor
                         @endif
                     </tr>
                 @endforeach
@@ -578,15 +718,18 @@
     </div>
     @endif
 
-    <!-- COMPACT FOOTER -->
+    <!-- CENTERED FOOTER -->
     <div class="footer">
         <div class="footer-brand">GMS GARAGE</div>
         <div class="footer-info">
-            Arac Degerleme ve Ticaret Hizmetleri | Rapor Tarihi: {{ now()->format('d.m.Y H:i') }}
+            Arac Degerleme ve Ticaret Hizmetleri<br>
+            Rapor Olusturma Tarihi: {{ now()->format('d.m.Y H:i') }}
         </div>
         <div class="footer-disclaimer">
-            Bu rapor bilgilendirme amaclidir. Kesin degerleme icin uzman incelemesi gerekir. Tum haklar GMS GARAGE'a aittir.
+            Bu rapor bilgilendirme amaclidir. Kesin degerleme ve karar icin profesyonel uzman incelemesi gerekmektedir. 
+            Raporun tum haklari GMS GARAGE'a aittir ve izinsiz kopyalanamaz.
         </div>
     </div>
+</div>
 </body>
 </html>
