@@ -581,8 +581,9 @@
         height: 12px;
         border-radius: 50%;
     }
-    .legend-boyali { background: #fbbf24; }
-    .legend-degismis { background: #dc2626; }
+    .legend-boyali { background: #3b82f6; } /* Mavi */
+    .legend-lokal-boyali { background: #fbbf24; } /* Sarı */
+    .legend-degismis { background: #dc2626; } /* Kırmızı */
 
     /* Tramer Row */
     .tramer-row {
@@ -888,6 +889,7 @@
                         </div>
                         <div class="car-legend">
                             <span class="legend-item"><span class="legend-dot legend-boyali"></span> Boyalı</span>
+                            <span class="legend-item"><span class="legend-dot legend-lokal-boyali"></span> Lokal Boyalı</span>
                             <span class="legend-item"><span class="legend-dot legend-degismis"></span> Değişmiş</span>
                         </div>
                     </div>

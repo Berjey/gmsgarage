@@ -157,6 +157,9 @@
         .status-green {
             background-color: #10b981;
         }
+        .status-blue {
+            background-color: #3b82f6;
+        }
         .status-yellow {
             background-color: #fbbf24;
         }
@@ -272,6 +275,7 @@
     ];
 
     $boyaliCount = collect($ekspertiz)->filter(fn($v) => $v === 'BOYALI')->count();
+    $lokalBoyaliCount = collect($ekspertiz)->filter(fn($v) => $v === 'LOKAL_BOYALI')->count();
     $degismisCount = collect($ekspertiz)->filter(fn($v) => $v === 'DEGISMIS')->count();
 @endphp
 
@@ -411,12 +415,16 @@
 
                 <div style="text-align:center; margin-bottom:15px;">
                     <div style="display:inline-block; text-align:center; margin:0 10px;">
-                        <div style="font-size:24px; font-weight:bold; color:#10b981;">{{ 13 - $boyaliCount - $degismisCount }}</div>
+                        <div style="font-size:24px; font-weight:bold; color:#10b981;">{{ 13 - $boyaliCount - $lokalBoyaliCount - $degismisCount }}</div>
                         <div style="font-size:9px; color:#6b7280;">Orijinal</div>
                     </div>
                     <div style="display:inline-block; text-align:center; margin:0 10px;">
-                        <div style="font-size:24px; font-weight:bold; color:#fbbf24;">{{ $boyaliCount }}</div>
+                        <div style="font-size:24px; font-weight:bold; color:#3b82f6;">{{ $boyaliCount }}</div>
                         <div style="font-size:9px; color:#6b7280;">Boyali</div>
+                    </div>
+                    <div style="display:inline-block; text-align:center; margin:0 10px;">
+                        <div style="font-size:24px; font-weight:bold; color:#fbbf24;">{{ $lokalBoyaliCount }}</div>
+                        <div style="font-size:9px; color:#6b7280;">Lokal Boyali</div>
                     </div>
                     <div style="display:inline-block; text-align:center; margin:0 10px;">
                         <div style="font-size:24px; font-weight:bold; color:#dc2626;">{{ $degismisCount }}</div>
@@ -437,11 +445,13 @@
                                 $status = $ekspertiz[$key] ?? 'ORIJINAL';
                                 $statusText = match($status) {
                                     'BOYALI' => 'Boyali',
+                                    'LOKAL_BOYALI' => 'Lokal Boyali',
                                     'DEGISMIS' => 'Degismis',
                                     default => 'Orijinal'
                                 };
                                 $statusClass = match($status) {
-                                    'BOYALI' => 'status-yellow',
+                                    'BOYALI' => 'status-blue',
+                                    'LOKAL_BOYALI' => 'status-yellow',
                                     'DEGISMIS' => 'status-red',
                                     default => 'status-green'
                                 };
