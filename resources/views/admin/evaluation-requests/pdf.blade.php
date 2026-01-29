@@ -6,7 +6,7 @@
     <title>Araç Değerleme Raporu - GMS GARAGE</title>
     <style>
         @page {
-            margin: 20mm 15mm;
+            margin: 18mm 12mm;
             size: A4 portrait;
         }
         
@@ -19,56 +19,57 @@
         body {
             font-family: DejaVu Sans, sans-serif;
             font-size: 10.5pt;
-            line-height: 1.6;
+            line-height: 1.55;
             color: #1f2937;
             background: #ffffff;
         }
 
         /* ===== CENTERED PAGE CONTAINER ===== */
         .page-wrapper {
-            max-width: 170mm;
+            max-width: 175mm;
             margin: 0 auto;
         }
 
         /* ===== PROFESSIONAL HEADER ===== */
         .report-header {
             text-align: center;
-            padding-bottom: 8mm;
-            margin-bottom: 10mm;
+            padding-bottom: 7mm;
+            margin-bottom: 9mm;
             border-bottom: 3px solid #dc2626;
         }
         
         .company-logo {
             display: inline-block;
             background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
-            padding: 12px 24px;
+            padding: 11px 22px;
             border-radius: 8px;
-            margin-bottom: 6mm;
+            margin-bottom: 5mm;
         }
         
         .logo-text {
-            font-size: 20pt;
+            font-size: 19pt;
             font-weight: bold;
             color: #ffffff;
-            letter-spacing: 3px;
+            letter-spacing: 2.8px;
         }
         
         .report-title {
-            font-size: 14pt;
+            font-size: 13.5pt;
             font-weight: bold;
             color: #1f2937;
-            margin-bottom: 3mm;
+            margin-bottom: 2.5mm;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.9px;
         }
         
         .report-meta {
-            font-size: 10pt;
+            font-size: 9.5pt;
             color: #6b7280;
+            line-height: 1.5;
         }
         
         .report-number {
-            font-size: 11pt;
+            font-size: 10.5pt;
             font-weight: bold;
             color: #dc2626;
             margin-top: 2mm;
@@ -79,13 +80,13 @@
             display: table;
             width: 100%;
             table-layout: fixed;
-            margin-bottom: 8mm;
+            margin-bottom: 7mm;
         }
         
         .card-wrapper {
             display: table-cell;
             vertical-align: top;
-            padding: 0 3mm;
+            padding: 0 2.5mm;
         }
         
         .card-wrapper:first-child {
@@ -100,26 +101,26 @@
             background: #ffffff;
             border: 1.5px solid #e5e7eb;
             border-radius: 8px;
-            padding: 12px;
+            padding: 14px;
             height: 100%;
             box-shadow: 0 1px 3px rgba(0,0,0,0.08);
         }
         
         .card-title {
-            font-size: 11pt;
+            font-size: 10.5pt;
             font-weight: bold;
             color: #dc2626;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            padding-bottom: 8px;
-            margin-bottom: 10px;
+            padding-bottom: 7px;
+            margin-bottom: 9px;
             border-bottom: 2px solid #f3f4f6;
         }
 
         /* ===== INFO ITEMS ===== */
         .info-row {
-            margin-bottom: 8px;
-            padding-bottom: 8px;
+            margin-bottom: 7px;
+            padding-bottom: 7px;
             border-bottom: 1px solid #f9fafb;
         }
         
@@ -135,18 +136,18 @@
             text-transform: uppercase;
             font-weight: bold;
             letter-spacing: 0.3px;
-            margin-bottom: 3px;
+            margin-bottom: 2.5px;
         }
         
         .info-value {
             font-size: 10.5pt;
             color: #1f2937;
             font-weight: 600;
-            line-height: 1.4;
+            line-height: 1.35;
         }
         
         .value-highlight {
-            font-size: 12pt;
+            font-size: 11.5pt;
             color: #dc2626;
             font-weight: bold;
         }
@@ -162,17 +163,17 @@
         .stat-box {
             display: table-cell;
             text-align: center;
-            padding: 10px 6px;
+            padding: 8px 5px;
             border-radius: 6px;
             border: 1px solid;
         }
         
         .stat-box:not(:last-child) {
-            padding-right: 3px;
+            padding-right: 2.5px;
         }
         
         .stat-box:not(:first-child) {
-            padding-left: 3px;
+            padding-left: 2.5px;
         }
         
         .stat-green {
@@ -196,7 +197,7 @@
         }
         
         .stat-num {
-            font-size: 18pt;
+            font-size: 17pt;
             font-weight: bold;
             line-height: 1;
             margin-bottom: 3px;
@@ -212,6 +213,7 @@
             text-transform: uppercase;
             font-weight: bold;
             color: #374151;
+            line-height: 1.2;
         }
 
         /* ===== UNIFORM BADGES ===== */
@@ -252,17 +254,17 @@
 
         /* ===== SINGLE MAIN TABLE (Symmetrical) ===== */
         .ekspertiz-section {
-            margin-bottom: 8mm;
+            margin-bottom: 7mm;
         }
         
         .section-title {
-            font-size: 11pt;
+            font-size: 10.5pt;
             font-weight: bold;
             color: #dc2626;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            padding-bottom: 6px;
-            margin-bottom: 8px;
+            padding-bottom: 5px;
+            margin-bottom: 7px;
             border-bottom: 2px solid #dc2626;
         }
         
@@ -280,9 +282,9 @@
         }
         
         .main-table th {
-            padding: 10px 12px;
+            padding: 9px 10px;
             text-align: left;
-            font-size: 9pt;
+            font-size: 8.5pt;
             font-weight: bold;
             color: #374151;
             text-transform: uppercase;
@@ -291,7 +293,7 @@
         }
         
         .main-table td {
-            padding: 10px 12px;
+            padding: 9px 10px;
             font-size: 10pt;
             border-bottom: 1px solid #f3f4f6;
             vertical-align: middle;
@@ -315,8 +317,8 @@
             background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
             border-left: 4px solid #f59e0b;
             border-radius: 6px;
-            padding: 10px 12px;
-            margin-top: 8px;
+            padding: 9px 11px;
+            margin-top: 7px;
         }
         
         .note-title {
@@ -325,36 +327,36 @@
             text-transform: uppercase;
             font-weight: bold;
             letter-spacing: 0.5px;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
         }
         
         .note-content {
             font-size: 9.5pt;
             color: #78350f;
-            line-height: 1.5;
+            line-height: 1.45;
         }
 
         /* ===== CENTERED FOOTER ===== */
         .report-footer {
-            margin-top: 10mm;
-            padding-top: 6mm;
+            margin-top: 9mm;
+            padding-top: 5.5mm;
             border-top: 2px solid #dc2626;
             text-align: center;
         }
         
         .footer-brand {
-            font-size: 13pt;
+            font-size: 12.5pt;
             font-weight: bold;
             color: #dc2626;
-            margin-bottom: 3mm;
-            letter-spacing: 1.5px;
+            margin-bottom: 2.5mm;
+            letter-spacing: 1.4px;
         }
         
         .footer-info {
             font-size: 8.5pt;
             color: #6b7280;
-            margin-bottom: 4mm;
-            line-height: 1.7;
+            margin-bottom: 3.5mm;
+            line-height: 1.65;
         }
         
         .footer-disclaimer {
@@ -362,12 +364,12 @@
             color: #9ca3af;
             font-style: italic;
             background: #f9fafb;
-            padding: 8px 15px;
+            padding: 7px 14px;
             border-radius: 6px;
             border: 1px dashed #d1d5db;
             display: inline-block;
             max-width: 85%;
-            line-height: 1.6;
+            line-height: 1.55;
         }
 
         /* ===== UTILITIES ===== */
@@ -483,7 +485,7 @@
                             <span class="status-badge badge-yellow">Bilinmiyor</span>
                         @endif
                         @if($tramerTutari)
-                            <br><span style="font-size:8pt; color:#6b7280; margin-top:3px; display:inline-block;">({{ number_format($tramerTutari, 0, ',', '.') }} TL)</span>
+                            <br><span style="font-size:8pt; color:#6b7280; margin-top:2.5px; display:inline-block;">({{ number_format($tramerTutari, 0, ',', '.') }} TL)</span>
                         @endif
                     </div>
                 </div>
@@ -517,7 +519,7 @@
                 
                 <div class="info-row">
                     <div class="info-label">Versiyon</div>
-                    <div class="info-value" style="font-size:9pt; line-height:1.4;">{{ $request->version ?? '-' }}</div>
+                    <div class="info-value" style="font-size:9pt; line-height:1.35;">{{ $request->version ?? '-' }}</div>
                 </div>
 
                 @if($not)
@@ -571,10 +573,10 @@
                     }
                 @endphp
 
-                <div style="background:#f9fafb; border:1px solid #e5e7eb; border-radius:6px; padding:12px; text-align:center;">
-                    <div style="font-size:8pt; color:#6b7280; margin-bottom:6px; font-weight:bold; text-transform:uppercase;">Genel Durum</div>
-                    <span class="status-badge {{ $durumBadge }}" style="font-size:10pt; padding:5px 14px;">{{ $durum }}</span>
-                    <div style="font-size:8.5pt; color:#6b7280; margin-top:8px; line-height:1.5;">
+                <div style="background:#f9fafb; border:1px solid #e5e7eb; border-radius:6px; padding:11px; text-align:center;">
+                    <div style="font-size:8pt; color:#6b7280; margin-bottom:5px; font-weight:bold; text-transform:uppercase;">Genel Durum</div>
+                    <span class="status-badge {{ $durumBadge }}" style="font-size:9.5pt; padding:4px 13px;">{{ $durum }}</span>
+                    <div style="font-size:8.5pt; color:#6b7280; margin-top:7px; line-height:1.45;">
                         {{ $totalProblems }}/13 parca<br>islem gormus
                     </div>
                 </div>
