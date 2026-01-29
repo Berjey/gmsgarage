@@ -42,7 +42,26 @@
 
 @push('styles')
 <style>
-    .car-part { transition: fill 0.2s ease; cursor: pointer; }
+    .car-part { 
+        transition: fill 0.2s ease, transform 0.2s ease; 
+        cursor: pointer; 
+    }
+    .car-part:hover { 
+        transform: scale(1.05); 
+        opacity: 0.9; 
+    }
+    
+    .info-card {
+        background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        transition: all 0.3s ease;
+    }
+    .info-card:hover {
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        transform: translateY(-2px);
+    }
+    
     @media print {
         .no-print { display: none !important; }
         .print-break { page-break-before: always; }
@@ -51,67 +70,89 @@
 @endpush
 
 @section('content')
-<div class="space-y-6" id="report-content">
-    <!-- Header Actions -->
-    <div class="flex items-center justify-between no-print">
+<div class="max-w-7xl mx-auto space-y-6" id="report-content">
+    
+    <!-- Header Actions - Basit ve Düzenli -->
+    <div class="flex items-center justify-between bg-white rounded-xl p-4 shadow-sm border border-gray-200 no-print">
         <a href="{{ route('admin.evaluation-requests.index') }}"
-           class="inline-flex items-center px-4 py-2 bg-white hover:bg-gray-50 text-gray-700 rounded-xl font-semibold transition-all border border-gray-200 shadow-sm">
-            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+           class="inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 hover:text-gray-900 transition-colors">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
             </svg>
             Geri Dön
         </a>
         <div class="flex items-center gap-2">
             <a href="{{ route('admin.evaluation-requests.pdf', $request->id) }}" 
-               class="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-semibold transition-all flex items-center gap-2 shadow-lg shadow-primary-500/20">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+               class="inline-flex items-center px-4 py-2 text-sm font-semibold bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors shadow-sm">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                 </svg>
                 PDF İndir
             </a>
-            <button onclick="window.print()" class="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-xl font-semibold transition-all flex items-center gap-2 shadow-lg">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
+            <button onclick="window.print()" class="inline-flex items-center px-4 py-2 text-sm font-semibold bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors shadow-sm">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
                 </svg>
                 Yazdır
             </button>
             @if(!$request->is_read)
             <form action="{{ route('admin.evaluation-requests.read', $request->id) }}" method="POST" class="inline">
                 @csrf
-                <button type="submit" class="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-semibold transition-all shadow-lg shadow-primary-500/20">Okundu İşaretle</button>
+                <button type="submit" class="inline-flex items-center px-4 py-2 text-sm font-semibold bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors shadow-sm">
+                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                    </svg>
+                    Okundu İşaretle
+                </button>
             </form>
             @endif
-            <button type="button" onclick="openEmailModal()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold transition-all flex items-center gap-2 shadow-lg shadow-blue-500/20">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+            <button type="button" onclick="openEmailModal()" class="inline-flex items-center px-4 py-2 text-sm font-semibold bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors shadow-sm">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                 </svg>
                 E-posta Gönder
             </button>
             <form action="{{ route('admin.evaluation-requests.destroy', $request->id) }}" method="POST" onsubmit="return confirm('Silmek istediğinize emin misiniz?')" class="inline">
                 @csrf
                 @method('DELETE')
-                <button type="submit" class="px-4 py-2 border border-red-300 text-red-600 hover:bg-red-50 rounded-xl font-semibold transition-all shadow-sm">Sil</button>
+                <button type="submit" class="inline-flex items-center px-4 py-2 text-sm font-semibold text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors border border-red-200">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                    </svg>
+                    Sil
+                </button>
             </form>
         </div>
     </div>
 
-    <!-- Report Header -->
-    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-        <div class="flex items-center justify-between">
-            <div>
-                <h1 class="text-2xl font-bold text-gray-900">Araç Değerleme Raporu</h1>
-                <p class="text-gray-500 mt-1">Talep No: #{{ $request->id }} | {{ $request->created_at->format('d.m.Y H:i') }}</p>
+    <!-- Report Header - Basit ve Professional -->
+    <div class="bg-white rounded-xl border-l-4 border-red-600 p-6 shadow-sm">
+        <div class="flex items-start justify-between">
+            <div class="flex-1">
+                <div class="flex items-center gap-3 mb-2">
+                    <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-900">Araç Değerleme Raporu</h1>
+                        <p class="text-sm text-gray-600 mt-0.5">Talep No: <span class="font-semibold text-red-600">#{{ $request->id }}</span> | {{ $request->created_at->format('d.m.Y H:i') }}</p>
+                    </div>
+                </div>
             </div>
-            <div class="text-right">
+            <div>
                 @if($request->is_read)
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
-                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                    <span class="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-bold bg-green-100 text-green-800 border border-green-200">
+                        <svg class="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                        </svg>
                         Okundu
                     </span>
                 @else
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
-                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path></svg>
-                        Yeni
+                    <span class="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-bold bg-yellow-100 text-yellow-800 border border-yellow-200">
+                        <svg class="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>
+                        </svg>
+                        Yeni Talep
                     </span>
                 @endif
             </div>
@@ -119,95 +160,113 @@
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <!-- Araç Bilgileri -->
-        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-            <h2 class="text-lg font-bold text-gray-900 border-b pb-3 mb-4">Araç Bilgileri</h2>
+        
+        <!-- Araç Bilgileri - Basit ve Temiz -->
+        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+            <div class="flex items-center gap-2 mb-4 pb-3 border-b border-gray-200">
+                <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                </svg>
+                <h2 class="text-lg font-bold text-gray-900">Araç Bilgileri</h2>
+            </div>
 
-            <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Marka</label>
-                    <p class="text-sm font-semibold text-gray-900">{{ $request->brand }}</p>
+            <div class="space-y-3">
+                <div class="flex justify-between py-2 border-b border-gray-100">
+                    <span class="text-sm font-medium text-gray-600">Marka</span>
+                    <span class="text-sm font-bold text-gray-900">{{ $request->brand }}</span>
                 </div>
-                <div>
-                    <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Model</label>
-                    <p class="text-sm font-semibold text-gray-900">{{ $request->model }}</p>
+                <div class="flex justify-between py-2 border-b border-gray-100">
+                    <span class="text-sm font-medium text-gray-600">Model</span>
+                    <span class="text-sm font-bold text-gray-900">{{ $request->model }}</span>
                 </div>
-                <div>
-                    <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Yıl</label>
-                    <p class="text-sm text-gray-900">{{ $request->year }}</p>
+                <div class="flex justify-between py-2 border-b border-gray-100">
+                    <span class="text-sm font-medium text-gray-600">Yıl</span>
+                    <span class="text-sm font-bold text-gray-900">{{ $request->year }}</span>
                 </div>
-                <div>
-                    <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Versiyon</label>
-                    <p class="text-sm text-gray-900">{{ $request->version ?? '-' }}</p>
+                <div class="flex justify-between py-2 border-b border-gray-100">
+                    <span class="text-sm font-medium text-gray-600">Versiyon</span>
+                    <span class="text-sm font-semibold text-gray-900">{{ $request->version ?? '-' }}</span>
                 </div>
-                <div>
-                    <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Kilometre</label>
-                    <p class="text-sm font-bold text-primary-600">{{ number_format($request->mileage, 0, ',', '.') }} KM</p>
+                <div class="flex justify-between py-2 border-b border-gray-100 bg-red-50 px-3 rounded-lg -mx-3">
+                    <span class="text-sm font-medium text-red-700">Kilometre</span>
+                    <span class="text-sm font-bold text-red-700">{{ number_format($request->mileage, 0, ',', '.') }} KM</span>
                 </div>
-                <div>
-                    <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Gövde Tipi</label>
-                    <p class="text-sm text-gray-900">{{ $govdeTipi ?: '-' }}</p>
+                <div class="flex justify-between py-2 border-b border-gray-100">
+                    <span class="text-sm font-medium text-gray-600">Gövde Tipi</span>
+                    <span class="text-sm font-semibold text-gray-900">{{ $govdeTipi ?: '-' }}</span>
                 </div>
-                <div>
-                    <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Yakıt Tipi</label>
-                    <p class="text-sm text-gray-900">{{ $request->fuel_type ?? '-' }}</p>
+                <div class="flex justify-between py-2 border-b border-gray-100">
+                    <span class="text-sm font-medium text-gray-600">Yakıt Tipi</span>
+                    <span class="text-sm font-semibold text-gray-900">{{ $request->fuel_type ?? '-' }}</span>
                 </div>
-                <div>
-                    <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Vites Tipi</label>
-                    <p class="text-sm text-gray-900">{{ $request->transmission ?? '-' }}</p>
+                <div class="flex justify-between py-2 border-b border-gray-100">
+                    <span class="text-sm font-medium text-gray-600">Vites Tipi</span>
+                    <span class="text-sm font-semibold text-gray-900">{{ $request->transmission ?? '-' }}</span>
                 </div>
-                <div>
-                    <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Renk</label>
-                    <p class="text-sm text-gray-900">{{ $renk ?: '-' }}</p>
+                <div class="flex justify-between py-2 border-b border-gray-100">
+                    <span class="text-sm font-medium text-gray-600">Renk</span>
+                    <span class="text-sm font-semibold text-gray-900">{{ $renk ?: '-' }}</span>
                 </div>
-                <div>
-                    <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Tramer Durumu</label>
-                    <p class="text-sm font-semibold {{ $tramer === 'YOK' ? 'text-green-600' : ($tramer === 'AGIR_HASAR' ? 'text-red-600' : 'text-yellow-600') }}">
+                <div class="flex justify-between py-2 {{ $tramer === 'YOK' ? 'bg-green-50' : ($tramer === 'AGIR_HASAR' ? 'bg-red-50' : 'bg-yellow-50') }} px-3 rounded-lg -mx-3">
+                    <span class="text-sm font-medium {{ $tramer === 'YOK' ? 'text-green-700' : ($tramer === 'AGIR_HASAR' ? 'text-red-700' : 'text-yellow-700') }}">Tramer Durumu</span>
+                    <span class="text-sm font-bold {{ $tramer === 'YOK' ? 'text-green-700' : ($tramer === 'AGIR_HASAR' ? 'text-red-700' : 'text-yellow-700') }}">
                         {{ $request->condition }}
                         @if($tramerTutari)
-                            <span class="text-gray-500 font-normal">({{ number_format($tramerTutari, 0, ',', '.') }} TL)</span>
+                            <span class="block text-xs font-medium mt-0.5">({{ number_format($tramerTutari, 0, ',', '.') }} TL)</span>
                         @endif
-                    </p>
+                    </span>
                 </div>
             </div>
         </div>
 
-        <!-- İletişim Bilgileri -->
-        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-            <h2 class="text-lg font-bold text-gray-900 border-b pb-3 mb-4">İletişim Bilgileri</h2>
+        <!-- İletişim Bilgileri - KORUNUYOR (Harika tasarım) -->
+        <div class="info-card rounded-2xl p-6">
+            <div class="flex items-center gap-3 mb-6 pb-4 border-b-2 border-blue-200">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600 to-blue-700 flex items-center justify-center shadow-lg shadow-blue-500/30">
+                    <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                    </svg>
+                </div>
+                <h2 class="text-xl font-black text-gray-900">İletişim Bilgileri</h2>
+            </div>
 
             <div class="space-y-4">
-                <div>
-                    <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Ad Soyad</label>
-                    <p class="text-lg font-bold text-gray-900">{{ $request->name }}</p>
+                <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-xl border-2 border-blue-300 shadow-md">
+                    <label class="block text-xs font-black text-blue-700 uppercase mb-2">Ad Soyad</label>
+                    <p class="text-xl font-black text-blue-900">{{ $request->name }}</p>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Telefon</label>
-                        <p class="text-sm font-semibold text-gray-900">{{ $request->phone }}</p>
+                    <div class="bg-gradient-to-br from-gray-50 to-gray-100 p-3 rounded-xl border-2 border-gray-300 shadow-sm">
+                        <label class="block text-xs font-black text-gray-700 uppercase mb-1.5">Telefon</label>
+                        <p class="text-sm font-bold text-gray-900">{{ $request->phone }}</p>
                     </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-500 uppercase mb-1">E-posta</label>
-                        <p class="text-sm text-gray-900">{{ $request->email ?? '-' }}</p>
+                    <div class="bg-gradient-to-br from-gray-50 to-gray-100 p-3 rounded-xl border-2 border-gray-300 shadow-sm">
+                        <label class="block text-xs font-black text-gray-700 uppercase mb-1.5">E-posta</label>
+                        <p class="text-sm font-semibold text-gray-900">{{ $request->email ?? '-' }}</p>
                     </div>
                 </div>
                 @if($not)
-                <div>
-                    <label class="block text-xs font-medium text-gray-500 uppercase mb-1">Not</label>
-                    <p class="text-sm text-gray-700 bg-gray-50 p-3 rounded-lg">{{ $not }}</p>
+                <div class="bg-gradient-to-br from-amber-50 to-amber-100 p-4 rounded-xl border-2 border-amber-300 shadow-md">
+                    <label class="block text-xs font-black text-amber-800 uppercase mb-2 flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                        </svg>
+                        Müşteri Notu
+                    </label>
+                    <p class="text-sm font-semibold text-amber-900">{{ $not }}</p>
                 </div>
                 @endif
             </div>
 
             <!-- İletişim Butonları -->
-            <div class="pt-4 mt-4 border-t flex gap-2 no-print">
-                <a href="tel:{{ preg_replace('/[^0-9+]/', '', $request->phone) }}" class="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-green-600 hover:bg-green-700 text-white rounded-xl font-bold transition-all">
+            <div class="pt-4 mt-4 border-t flex gap-3 no-print">
+                <a href="tel:{{ preg_replace('/[^0-9+]/', '', $request->phone) }}" class="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-xl font-bold transition-all shadow-lg shadow-green-600/30 hover:shadow-xl hover:shadow-green-600/40 hover:-translate-y-0.5">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
                     </svg>
                     Ara
                 </a>
-                <a href="https://wa.me/90{{ preg_replace('/[^0-9]/', '', $request->phone) }}" target="_blank" class="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-green-500 hover:bg-green-600 text-white rounded-xl font-bold transition-all">
+                <a href="https://wa.me/90{{ preg_replace('/[^0-9]/', '', $request->phone) }}" target="_blank" class="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white rounded-xl font-bold transition-all shadow-lg shadow-green-500/30 hover:shadow-xl hover:shadow-green-500/40 hover:-translate-y-0.5">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
                     </svg>
@@ -217,49 +276,43 @@
         </div>
     </div>
 
-    <!-- Ekspertiz Raporu -->
+    <!-- Ekspertiz Raporu - Basit ve Anlaşılır -->
     @if(!empty($ekspertiz))
-    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-        <h2 class="text-lg font-bold text-gray-900 border-b pb-3 mb-4">Ekspertiz Raporu</h2>
+    <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+        <div class="flex items-center gap-2 mb-6 pb-3 border-b border-gray-200">
+            <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+            </svg>
+            <h2 class="text-lg font-bold text-gray-900">Ekspertiz Raporu</h2>
+        </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <!-- Tablo -->
-            <div>
-                <table class="w-full text-sm">
-                    <thead>
-                        <tr class="border-b">
-                            <th class="text-left py-2 font-semibold text-gray-700">Parça</th>
-                            <th class="text-center py-2 font-semibold text-gray-700">Durum</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($partNames as $key => $name)
-                            @php
-                                $status = $ekspertiz[$key] ?? 'ORIJINAL';
-                                $statusText = match($status) {
-                                    'BOYALI' => 'Boyalı',
-                                    'LOKAL_BOYALI' => 'Lokal Boyalı',
-                                    'DEGISMIS' => 'Değişmiş',
-                                    default => 'Orijinal'
-                                };
-                                $statusClass = match($status) {
-                                    'BOYALI' => 'bg-blue-100 text-blue-800',
-                                    'LOKAL_BOYALI' => 'bg-yellow-100 text-yellow-800',
-                                    'DEGISMIS' => 'bg-red-100 text-red-800',
-                                    default => 'bg-green-100 text-green-800'
-                                };
-                            @endphp
-                            <tr class="border-b border-gray-100">
-                                <td class="py-2 text-gray-900">{{ $name }}</td>
-                                <td class="py-2 text-center">
-                                    <span class="inline-flex px-2 py-1 rounded text-xs font-medium {{ $statusClass }}">
-                                        {{ $statusText }}
-                                    </span>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+            
+            <!-- Tablo - Basit Liste -->
+            <div class="space-y-2">
+                @foreach($partNames as $key => $name)
+                    @php
+                        $status = $ekspertiz[$key] ?? 'ORIJINAL';
+                        $statusText = match($status) {
+                            'BOYALI' => 'Boyalı',
+                            'LOKAL_BOYALI' => 'Lokal Boyalı',
+                            'DEGISMIS' => 'Değişmiş',
+                            default => 'Orijinal'
+                        };
+                        $statusClass = match($status) {
+                            'BOYALI' => 'bg-blue-100 text-blue-800 border-blue-200',
+                            'LOKAL_BOYALI' => 'bg-yellow-100 text-yellow-800 border-yellow-200',
+                            'DEGISMIS' => 'bg-red-100 text-red-800 border-red-200',
+                            default => 'bg-gray-100 text-gray-700 border-gray-200'
+                        };
+                    @endphp
+                    <div class="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                        <span class="text-sm font-medium text-gray-900">{{ $name }}</span>
+                        <span class="inline-flex px-2.5 py-1 rounded-md text-xs font-bold border {{ $statusClass }}">
+                            {{ $statusText }}
+                        </span>
+                    </div>
+                @endforeach
             </div>
 
             <!-- Araç Görseli -->
@@ -309,20 +362,20 @@
                     </svg>
                 </div>
 
-                <!-- Legend -->
-                <div class="flex gap-6 mt-4 text-sm">
-                    <span class="flex items-center gap-2">
-                        <span class="w-4 h-4 rounded bg-blue-500"></span>
-                        Boyalı
-                    </span>
-                    <span class="flex items-center gap-2">
-                        <span class="w-4 h-4 rounded bg-yellow-400"></span>
-                        Lokal Boyalı
-                    </span>
-                    <span class="flex items-center gap-2">
-                        <span class="w-4 h-4 rounded bg-red-600"></span>
-                        Değişmiş
-                    </span>
+                <!-- Legend - Basit -->
+                <div class="flex gap-4 mt-6 text-sm justify-center">
+                    <div class="flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-sm bg-blue-500"></span>
+                        <span class="font-medium text-gray-700">Boyalı</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-sm bg-yellow-400"></span>
+                        <span class="font-medium text-gray-700">Lokal Boyalı</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-sm bg-red-600"></span>
+                        <span class="font-medium text-gray-700">Değişmiş</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -330,34 +383,36 @@
     @endif
 </div>
 
-<!-- Email Modal -->
+<!-- Email Modal - Basit ve Modern -->
 <div id="email-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <div class="px-6 py-5 border-b border-gray-200 flex items-center justify-between">
-            <h3 class="text-xl font-bold text-gray-900">E-posta Gönder</h3>
-            <button onclick="closeEmailModal()" class="text-gray-400 hover:text-gray-600">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+    <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+            <h3 class="text-lg font-bold text-gray-900">E-posta Gönder</h3>
+            <button onclick="closeEmailModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
             </button>
         </div>
         <form action="{{ route('admin.evaluation-requests.send-email', $request->id) }}" method="POST" class="p-6 space-y-4">
             @csrf
             <div>
-                <label class="block text-sm font-bold text-gray-700 mb-2">Alıcı</label>
-                <input type="text" value="{{ $request->name }} <{{ $request->email }}>" disabled class="w-full px-4 py-3 border border-gray-300 rounded-xl bg-gray-50">
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Alıcı</label>
+                <input type="text" value="{{ $request->name }} <{{ $request->email }}>" disabled class="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg bg-gray-50">
             </div>
             <div>
-                <label class="block text-sm font-bold text-gray-700 mb-2">Konu *</label>
-                <input type="text" name="subject" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500" placeholder="E-posta konusu">
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Konu *</label>
+                <input type="text" name="subject" required class="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500" placeholder="E-posta konusu">
             </div>
             <div>
-                <label class="block text-sm font-bold text-gray-700 mb-2">Mesaj *</label>
-                <textarea name="message" required rows="8" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500" placeholder="Mesajınızı buraya yazın..."></textarea>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Mesaj *</label>
+                <textarea name="message" required rows="6" class="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500" placeholder="Mesajınızı buraya yazın..."></textarea>
             </div>
-            <div class="flex gap-3 pt-4">
-                <button type="submit" class="flex-1 px-4 py-3 bg-primary-600 hover:bg-primary-700 text-white font-bold rounded-xl transition-all">
+            <div class="flex gap-3 pt-2">
+                <button type="submit" class="flex-1 px-4 py-2 text-sm bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-colors">
                     Gönder
                 </button>
-                <button type="button" onclick="closeEmailModal()" class="px-4 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold rounded-xl transition-all">
+                <button type="button" onclick="closeEmailModal()" class="px-6 py-2 text-sm bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold rounded-lg transition-colors">
                     İptal
                 </button>
             </div>
