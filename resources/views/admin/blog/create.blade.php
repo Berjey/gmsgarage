@@ -134,6 +134,27 @@
         </div>
     </div>
 
+    <!-- Validation Errors -->
+    @if ($errors->any())
+    <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-xl">
+        <div class="flex">
+            <div class="flex-shrink-0">
+                <svg class="h-5 w-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+            <div class="ml-3">
+                <h3 class="text-sm font-bold text-red-800">Lütfen aşağıdaki hataları düzeltin:</h3>
+                <ul class="mt-2 text-sm text-red-700 list-disc list-inside space-y-1">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        </div>
+    </div>
+    @endif
+
     <form action="{{ route('admin.blog.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
         @csrf
 
