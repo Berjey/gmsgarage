@@ -444,10 +444,26 @@
             const content = quill.root.innerHTML;
             contentInput.value = content; // İçeriği tekrar set et
             
-            // Boş içerik kontrolü
-            if (quill.getText().trim().length === 0) {
+            // DEBUG: Form değerlerini kontrol et
+            const formData = new FormData(form);
+            console.log('=== FORM GÖNDERİLİYOR ===');
+            console.log('Başlık:', formData.get('title'));
+            console.log('Kategori:', formData.get('category'));
+            console.log('Kısa Özet:', formData.get('excerpt'));
+            console.log('İçerik:', formData.get('content'));
+            console.log('İçerik uzunluğu:', formData.get('content')?.length || 0);
+            console.log('========================');
+            
+            // Eksik alanları kontrol et
+            const missingFields = [];
+            if (!formData.get('title')?.trim()) missingFields.push('Başlık');
+            if (!formData.get('category')?.trim()) missingFields.push('Kategori');
+            if (!formData.get('excerpt')?.trim()) missingFields.push('Kısa Özet');
+            if (!formData.get('content')?.trim() || quill.getText().trim().length === 0) missingFields.push('İçerik');
+            
+            if (missingFields.length > 0) {
                 e.preventDefault();
-                alert('Lütfen içerik girin!');
+                alert('EKSIK ALANLAR:\n\n• ' + missingFields.join('\n• ') + '\n\nLütfen tüm zorunlu alanları doldurun!');
                 return false;
             }
         });
