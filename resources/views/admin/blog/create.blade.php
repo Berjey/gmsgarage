@@ -414,15 +414,21 @@
         const form = document.querySelector('form');
         const contentInput = document.getElementById('content-input');
 
+        // Her değişiklikte içeriği kaydet
+        quill.on('text-change', function() {
+            contentInput.value = quill.root.innerHTML;
+        });
+
         form.addEventListener('submit', function(e) {
             const content = quill.root.innerHTML;
+            contentInput.value = content; // İçeriği tekrar set et
+            
             // Boş içerik kontrolü
             if (quill.getText().trim().length === 0) {
                 e.preventDefault();
                 alert('Lütfen içerik girin!');
                 return false;
             }
-            contentInput.value = content;
         });
 
         // Category Dropdown Handler
