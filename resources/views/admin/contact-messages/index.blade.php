@@ -13,6 +13,7 @@
         overflow: hidden;
     }
     
+    /* Light Mode Uyumlu Dropdown */
     .hero-custom-dropdown-panel {
         display: none;
         position: absolute;
@@ -22,6 +23,8 @@
         z-index: 50;
         background: white;
         margin-top: 0.5rem;
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
     }
     
     .hero-custom-dropdown-panel.open {
@@ -38,16 +41,18 @@
         padding: 0.75rem 1rem;
         cursor: pointer;
         transition: all 0.2s;
+        color: #374151;
+        font-weight: 500;
     }
 
     .hero-custom-dropdown-option:hover {
         background-color: #f9fafb;
-        color: #e11d48;
+        color: #dc2626;
     }
 
     .hero-custom-dropdown-option.selected {
-        background-color: #fff1f2;
-        color: #e11d48;
+        background-color: #fef2f2;
+        color: #dc2626;
         font-weight: 700;
     }
 </style>
@@ -94,15 +99,15 @@
                         </div>
                     </div>
 
-                    <!-- Dropdowns -->
+                    <!-- Dropdowns - Light Mode Optimized -->
                     <div class="relative hero-custom-dropdown" data-dropdown="filter-status">
                         <button type="button" 
-                                class="hero-custom-dropdown-trigger w-full flex items-center justify-between px-4 py-3 bg-white border border-gray-200 rounded-xl text-gray-700 font-medium hover:border-primary-500 transition-all"
+                                class="hero-custom-dropdown-trigger w-full flex items-center justify-between px-4 py-3 bg-white border border-gray-200 rounded-xl text-gray-800 font-semibold hover:bg-gray-50 hover:border-primary-500 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all shadow-sm"
                                 aria-expanded="false" aria-haspopup="listbox">
                             <span class="selected-text">{{ $filter === 'unread' ? 'Okunmamış' : ($filter === 'read' ? 'Okunmuş' : 'Tüm Mesajlar') }}</span>
-                            <svg class="arrow w-5 h-5 text-gray-400 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            <svg class="arrow w-5 h-5 text-gray-500 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </button>
-                        <div class="hero-custom-dropdown-panel rounded-xl shadow-xl border border-gray-100" role="listbox">
+                        <div class="hero-custom-dropdown-panel rounded-xl" role="listbox">
                             <div class="hero-custom-dropdown-option {{ $filter === 'all' ? 'selected' : '' }}" data-value="all" role="option">Tüm Mesajlar</div>
                             <div class="hero-custom-dropdown-option {{ $filter === 'unread' ? 'selected' : '' }}" data-value="unread" role="option">Okunmamış</div>
                             <div class="hero-custom-dropdown-option {{ $filter === 'read' ? 'selected' : '' }}" data-value="read" role="option">Okunmuş</div>
@@ -116,12 +121,12 @@
 
                     <div class="relative hero-custom-dropdown" data-dropdown="sort-order">
                         <button type="button" 
-                                class="hero-custom-dropdown-trigger w-full flex items-center justify-between px-4 py-3 bg-white border border-gray-200 rounded-xl text-gray-700 font-medium hover:border-primary-500 transition-all"
+                                class="hero-custom-dropdown-trigger w-full flex items-center justify-between px-4 py-3 bg-white border border-gray-200 rounded-xl text-gray-800 font-semibold hover:bg-gray-50 hover:border-primary-500 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all shadow-sm"
                                 aria-expanded="false" aria-haspopup="listbox">
                             <span class="selected-text">{{ request('sort') === 'oldest' ? 'Eskiden Yeniye' : 'Yeniden Eskiye' }}</span>
-                            <svg class="arrow w-5 h-5 text-gray-400 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            <svg class="arrow w-5 h-5 text-gray-500 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </button>
-                        <div class="hero-custom-dropdown-panel rounded-xl shadow-xl border border-gray-100" role="listbox">
+                        <div class="hero-custom-dropdown-panel rounded-xl" role="listbox">
                             <div class="hero-custom-dropdown-option {{ request('sort') !== 'oldest' ? 'selected' : '' }}" data-value="newest" role="option">Yeniden Eskiye</div>
                             <div class="hero-custom-dropdown-option {{ request('sort') === 'oldest' ? 'selected' : '' }}" data-value="oldest" role="option">Eskiden Yeniye</div>
                         </div>
