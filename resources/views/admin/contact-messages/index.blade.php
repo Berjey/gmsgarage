@@ -102,7 +102,8 @@
                     <!-- Dropdowns - Light Mode Optimized -->
                     <div class="relative hero-custom-dropdown" data-dropdown="filter-status">
                         <button type="button" 
-                                class="hero-custom-dropdown-trigger w-full flex items-center justify-between px-4 py-3 bg-white border border-gray-200 rounded-xl text-gray-800 font-semibold hover:bg-gray-50 hover:border-primary-500 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all shadow-sm"
+                                style="background-color: #ffffff !important;"
+                                class="hero-custom-dropdown-trigger w-full flex items-center justify-between px-4 py-3 border border-gray-200 rounded-xl text-gray-800 font-semibold hover:bg-gray-50 hover:border-primary-500 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all shadow-sm"
                                 aria-expanded="false" aria-haspopup="listbox">
                             <span class="selected-text">{{ $filter === 'unread' ? 'Okunmamış' : ($filter === 'read' ? 'Okunmuş' : 'Tüm Mesajlar') }}</span>
                             <svg class="arrow w-5 h-5 text-gray-500 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
@@ -121,7 +122,8 @@
 
                     <div class="relative hero-custom-dropdown" data-dropdown="sort-order">
                         <button type="button" 
-                                class="hero-custom-dropdown-trigger w-full flex items-center justify-between px-4 py-3 bg-white border border-gray-200 rounded-xl text-gray-800 font-semibold hover:bg-gray-50 hover:border-primary-500 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all shadow-sm"
+                                style="background-color: #ffffff !important;"
+                                class="hero-custom-dropdown-trigger w-full flex items-center justify-between px-4 py-3 border border-gray-200 rounded-xl text-gray-800 font-semibold hover:bg-gray-50 hover:border-primary-500 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all shadow-sm"
                                 aria-expanded="false" aria-haspopup="listbox">
                             <span class="selected-text">{{ request('sort') === 'oldest' ? 'Eskiden Yeniye' : 'Yeniden Eskiye' }}</span>
                             <svg class="arrow w-5 h-5 text-gray-500 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
