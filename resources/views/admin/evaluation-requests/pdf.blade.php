@@ -15,7 +15,7 @@
             box-sizing: border-box;
         }
         body {
-            font-family: Arial, Helvetica, sans-serif;
+            font-family: DejaVu Sans, Arial Unicode MS, Arial, Helvetica, sans-serif;
             font-size: 9.5pt;
             line-height: 1.4;
             color: #1f2937;
@@ -172,6 +172,34 @@
         .status-red {
             background-color: #dc2626;
         }
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 9pt;
+            font-weight: bold;
+            border: 1px solid;
+        }
+        .status-badge-blue {
+            background-color: #dbeafe;
+            color: #1e40af;
+            border-color: #93c5fd;
+        }
+        .status-badge-yellow {
+            background-color: #fef3c7;
+            color: #92400e;
+            border-color: #fde68a;
+        }
+        .status-badge-red {
+            background-color: #fee2e2;
+            color: #991b1b;
+            border-color: #fca5a5;
+        }
+        .status-badge-gray {
+            background-color: #f3f4f6;
+            color: #374151;
+            border-color: #d1d5db;
+        }
         .car-diagram {
             text-align: center;
             margin: 15px 0;
@@ -266,28 +294,20 @@
     $not = $messageData['not'] ?? '';
 
     $partNames = [
-        'sag_arka_camurluk' => 'Sag Arka Camurluk',
+        'sag_arka_camurluk' => 'Sağ Arka Çamurluk',
         'arka_kaput' => 'Arka Kaput',
-        'sol_arka_camurluk' => 'Sol Arka Camurluk',
-        'sag_arka_kapi' => 'Sag Arka Kapi',
-        'sag_on_kapi' => 'Sag On Kapi',
+        'sol_arka_camurluk' => 'Sol Arka Çamurluk',
+        'sag_arka_kapi' => 'Sağ Arka Kapı',
+        'sag_on_kapi' => 'Sağ Ön Kapı',
         'tavan' => 'Tavan',
-        'sol_arka_kapi' => 'Sol Arka Kapi',
-        'sol_on_kapi' => 'Sol On Kapi',
-        'sag_on_camurluk' => 'Sag On Camurluk',
+        'sol_arka_kapi' => 'Sol Arka Kapı',
+        'sol_on_kapi' => 'Sol Ön Kapı',
+        'sag_on_camurluk' => 'Sağ Ön Çamurluk',
         'motor_kaputu' => 'Motor Kaputu',
-        'sol_on_camurluk' => 'Sol On Camurluk',
-        'on_tampon' => 'On Tampon',
+        'sol_on_camurluk' => 'Sol Ön Çamurluk',
+        'on_tampon' => 'Ön Tampon',
         'arka_tampon' => 'Arka Tampon',
     ];
-    
-    // Turkce karakterleri Ingilizce karakterlere cevir
-    function tr2en($text) {
-        $tr = ['ç','Ç','ğ','Ğ','ı','İ','ö','Ö','ş','Ş','ü','Ü'];
-        $en = ['c','C','g','G','i','I','o','O','s','S','u','U'];
-        return str_replace($tr, $en, $text);
-    }
-
     $boyaliCount = collect($ekspertiz)->filter(fn($v) => $v === 'BOYALI')->count();
     $lokalBoyaliCount = collect($ekspertiz)->filter(fn($v) => $v === 'LOKAL_BOYALI')->count();
     $degismisCount = collect($ekspertiz)->filter(fn($v) => $v === 'DEGISMIS')->count();
@@ -464,18 +484,26 @@
                                     'DEGISMIS' => 'Değişmiş',
                                     default => 'Orijinal'
                                 };
-                                $statusClass = match($status) {
+                                $statusDotClass = match($status) {
                                     'BOYALI' => 'status-blue',
                                     'LOKAL_BOYALI' => 'status-yellow',
                                     'DEGISMIS' => 'status-red',
                                     default => 'status-green'
                                 };
+                                $statusBadgeClass = match($status) {
+                                    'BOYALI' => 'status-badge-blue',
+                                    'LOKAL_BOYALI' => 'status-badge-yellow',
+                                    'DEGISMIS' => 'status-badge-red',
+                                    default => 'status-badge-gray'
+                                };
                             @endphp
                             <tr>
                                 <td>{{ $name }}</td>
                                 <td>
-                                    <span class="status-dot {{ $statusClass }}"></span>
-                                    {{ $statusText }}
+                                    <span class="status-badge {{ $statusBadgeClass }}">
+                                        <span class="status-dot {{ $statusDotClass }}" style="display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:6px; vertical-align:middle;"></span>
+                                        {{ $statusText }}
+                                    </span>
                                 </td>
                             </tr>
                         @endforeach

@@ -321,7 +321,10 @@
                             <a href="{{ route('blog.show', $featured->slug) }}" class="featured-post-item block group" style="opacity: 0; animation: fadeInUp 0.5s ease-out {{ 0.3 + ($index * 0.1) }}s forwards;">
                                 <div class="flex gap-3">
                                     @if($featured->featured_image)
-                                        <img src="{{ $featured->featured_image }}" alt="{{ $featured->title }}" class="w-20 h-20 object-cover rounded-lg">
+                                        <img src="{{ str_starts_with($featured->featured_image, 'http') ? $featured->featured_image : asset($featured->featured_image) }}" 
+                                             alt="{{ $featured->title }}" 
+                                             class="w-20 h-20 object-cover rounded-lg"
+                                             onerror="this.onerror=null; this.src='{{ asset('images/light-mode-logo.png') }}';">
                                     @else
                                         <div class="w-20 h-20 bg-gradient-to-br from-primary-500 to-primary-700 rounded-lg flex items-center justify-center overflow-hidden">
                                             <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -354,7 +357,10 @@
                                 <a href="{{ route('blog.show', $post->slug) }}" class="block">
                                     @if($post->featured_image)
                                         <div class="relative h-48 overflow-hidden">
-                                            <img src="{{ $post->featured_image }}" alt="{{ $post->title }}" class="w-full h-full object-cover">
+                                            <img src="{{ str_starts_with($post->featured_image, 'http') ? $post->featured_image : asset($post->featured_image) }}" 
+                                                 alt="{{ $post->title }}" 
+                                                 class="w-full h-full object-cover"
+                                                 onerror="this.onerror=null; this.src='{{ asset('images/light-mode-logo.png') }}';">
                                             @if($post->is_featured)
                                                 <span class="absolute top-4 right-4 featured-badge text-white text-xs font-bold px-3 py-1 rounded-full">
                                                     Öne Çıkan

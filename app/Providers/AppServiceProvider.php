@@ -11,7 +11,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Helper dosyasını yükle
+        if (file_exists($file = __DIR__ . '/../Helpers/CategoryHelper.php')) {
+            require_once $file;
+        }
     }
 
     /**
@@ -19,6 +22,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        \Illuminate\Pagination\Paginator::defaultView('vendor.pagination.default');
+        \Illuminate\Pagination\Paginator::defaultSimpleView('vendor.pagination.default');
     }
 }

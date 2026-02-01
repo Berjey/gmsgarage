@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\VehicleController as AdminVehicleController;
 use App\Http\Controllers\Admin\BlogController as AdminBlogController;
+use App\Http\Controllers\Admin\BlogCategoryController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\PageController as AdminPageController;
 use App\Http\Controllers\Admin\UserController;
@@ -13,6 +14,7 @@ use App\Http\Controllers\Admin\EvaluationRequestController;
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\ContactSettingsController;
 use App\Http\Controllers\Admin\SitemapController;
+use App\Http\Controllers\Admin\MailSendController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -64,6 +66,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::put('/{id}', [AdminBlogController::class, 'update'])->name('update');
             Route::post('/{id}/toggle-featured', [AdminBlogController::class, 'toggleFeatured'])->name('toggle-featured');
             Route::delete('/{id}', [AdminBlogController::class, 'destroy'])->name('destroy');
+            
+            // Kategori yönetimi (AJAX)
+            Route::put('/category/{name}', [AdminBlogController::class, 'updateCategory'])->name('category.update');
+            Route::delete('/category/{name}', [AdminBlogController::class, 'deleteCategory'])->name('category.delete');
+            
+            // İçerik görseli yükleme (Quill Editor için)
+            Route::post('/upload-content-image', [AdminBlogController::class, 'uploadContentImage'])->name('upload-content-image');
         });
         
         // Site Ayarları
@@ -122,7 +131,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/{id}', [EvaluationRequestController::class, 'show'])->name('show');
             Route::get('/{id}/pdf', [EvaluationRequestController::class, 'downloadPdf'])->name('pdf');
             Route::post('/{id}/read', [EvaluationRequestController::class, 'markAsRead'])->name('read');
-            Route::post('/{id}/send-email', [EvaluationRequestController::class, 'sendEmail'])->name('send-email');
             Route::delete('/{id}', [EvaluationRequestController::class, 'destroy'])->name('destroy');
         });
         
@@ -139,5 +147,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::post('/generate', [SitemapController::class, 'generate'])->name('generate');
             Route::get('/preview', [SitemapController::class, 'preview'])->name('preview');
         });
+
+        // Mail Gönderim Paneli
+        Route::prefix('mail-send')->name('mail-send.')->group(function () {
+            Route::get('/', [MailSendController::class, 'index'])->name('index');
+            Route::post('/preview', [MailSendController::class, 'preview'])->name('preview');
+            Route::post('/send', [MailSendController::class, 'send'])->name('send');
+            Route::get('/logs', [MailSendController::class, 'logs'])->name('logs');
+        });
+        
     });
 });

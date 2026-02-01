@@ -34,10 +34,6 @@
         'on_tampon' => 'Ön Tampon',
         'arka_tampon' => 'Arka Tampon',
     ];
-
-    $hasBoyali = collect($ekspertiz)->contains('BOYALI');
-    $hasLokalBoyali = collect($ekspertiz)->contains('LOKAL_BOYALI');
-    $hasDegismis = collect($ekspertiz)->contains('DEGISMIS');
 @endphp
 
 @push('styles')
@@ -51,20 +47,131 @@
         opacity: 0.9; 
     }
     
-    .info-card {
-        background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
-        border: 1px solid #e5e7eb;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-        transition: all 0.3s ease;
-    }
-    .info-card:hover {
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        transform: translateY(-2px);
-    }
     
     @media print {
-        .no-print { display: none !important; }
-        .print-break { page-break-before: always; }
+        /* Admin panel layout elementlerini gizle */
+        body.admin-body > div > aside,
+        body.admin-body > div > div > header,
+        body.admin-body > div > div > main > div:not(#report-content),
+        .no-print,
+        button,
+        a[href],
+        form,
+        nav {
+            display: none !important;
+            visibility: hidden !important;
+        }
+        
+        /* Body ve main düzeni */
+        body.admin-body {
+            margin: 0 !important;
+            padding: 0 !important;
+            background: white !important;
+        }
+        
+        body.admin-body > div {
+            display: block !important;
+            flex-direction: column !important;
+        }
+        
+        body.admin-body > div > div {
+            display: block !important;
+            width: 100% !important;
+        }
+        
+        body.admin-body > div > div > main {
+            padding: 0 !important;
+            margin: 0 !important;
+            background: white !important;
+            overflow: visible !important;
+        }
+        
+        /* Sadece içeriği göster */
+        #report-content {
+            max-width: 100% !important;
+            margin: 0 !important;
+            padding: 20px !important;
+            width: 100% !important;
+        }
+        
+        /* Sayfa düzeni */
+        @page {
+            margin: 15mm;
+            size: A4 portrait;
+        }
+        
+        /* Kartları düzelt */
+        .bg-white,
+        .rounded-xl {
+            background: white !important;
+            border: 1px solid #e5e7eb !important;
+            box-shadow: none !important;
+            border-radius: 0 !important;
+            page-break-inside: avoid;
+            margin-bottom: 15px;
+            padding: 15px !important;
+        }
+        
+        /* Grid düzeni - yazdırma için tek sütun */
+        .grid {
+            display: block !important;
+        }
+        
+        .grid > * {
+            margin-bottom: 20px;
+            width: 100% !important;
+        }
+        
+        /* Renkleri koru ama arka planları temizle */
+        .text-red-600,
+        .text-red-700 {
+            color: #dc2626 !important;
+        }
+        
+        .bg-red-50,
+        .bg-green-50,
+        .bg-yellow-50,
+        .bg-blue-50,
+        .bg-amber-50 {
+            background: #f9fafb !important;
+            border: 1px solid #e5e7eb !important;
+        }
+        
+        /* SVG görselleri */
+        svg {
+            max-width: 100%;
+            height: auto;
+        }
+        
+        /* Print break */
+        .print-break {
+            page-break-before: always;
+        }
+        
+        /* Başlık stilleri */
+        h1, h2, h3 {
+            page-break-after: avoid;
+            color: #1f2937 !important;
+        }
+        
+        /* Tablo ve liste */
+        table, ul, ol {
+            page-break-inside: avoid;
+        }
+        
+        /* Linkleri normal metne çevir */
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        /* Gölgeleri kaldır */
+        .shadow-sm,
+        .shadow-md,
+        .shadow-lg,
+        .shadow-xl {
+            box-shadow: none !important;
+        }
     }
 </style>
 @endpush
@@ -133,8 +240,8 @@
                     <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                     </svg>
-                    <div>
-                        <h1 class="text-2xl font-bold text-gray-900">Araç Değerleme Raporu</h1>
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900">Araç Değerleme Raporu</h1>
                         <p class="text-sm text-gray-600 mt-0.5">Talep No: <span class="font-semibold text-red-600">#{{ $request->id }}</span> | {{ $request->created_at->format('d.m.Y H:i') }}</p>
                     </div>
                 </div>
@@ -219,55 +326,55 @@
             </div>
         </div>
 
-        <!-- İletişim Bilgileri - KORUNUYOR (Harika tasarım) -->
-        <div class="info-card rounded-2xl p-6">
-            <div class="flex items-center gap-3 mb-6 pb-4 border-b-2 border-blue-200">
-                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600 to-blue-700 flex items-center justify-center shadow-lg shadow-blue-500/30">
-                    <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+        <!-- İletişim Bilgileri - Sade ve Şık -->
+        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+            <div class="flex items-center gap-3 mb-6 pb-4 border-b border-gray-200">
+                <div class="w-10 h-10 rounded-lg bg-primary-600 flex items-center justify-center">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                     </svg>
                 </div>
-                <h2 class="text-xl font-black text-gray-900">İletişim Bilgileri</h2>
+                <h2 class="text-lg font-bold text-gray-900">İletişim Bilgileri</h2>
             </div>
 
             <div class="space-y-4">
-                <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-xl border-2 border-blue-300 shadow-md">
-                    <label class="block text-xs font-black text-blue-700 uppercase mb-2">Ad Soyad</label>
-                    <p class="text-xl font-black text-blue-900">{{ $request->name }}</p>
+                <div class="p-4 rounded-lg border border-gray-200 bg-gray-50">
+                    <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">Ad Soyad</label>
+                    <p class="text-lg font-semibold text-gray-900">{{ $request->name }}</p>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
-                    <div class="bg-gradient-to-br from-gray-50 to-gray-100 p-3 rounded-xl border-2 border-gray-300 shadow-sm">
-                        <label class="block text-xs font-black text-gray-700 uppercase mb-1.5">Telefon</label>
-                        <p class="text-sm font-bold text-gray-900">{{ $request->phone }}</p>
+                    <div class="p-3 rounded-lg border border-gray-200 bg-white">
+                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">Telefon</label>
+                        <p class="text-sm font-medium text-gray-900">{{ $request->phone }}</p>
                     </div>
-                    <div class="bg-gradient-to-br from-gray-50 to-gray-100 p-3 rounded-xl border-2 border-gray-300 shadow-sm">
-                        <label class="block text-xs font-black text-gray-700 uppercase mb-1.5">E-posta</label>
-                        <p class="text-sm font-semibold text-gray-900">{{ $request->email ?? '-' }}</p>
+                    <div class="p-3 rounded-lg border border-gray-200 bg-white">
+                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">E-posta</label>
+                        <p class="text-sm font-medium text-gray-900">{{ $request->email ?? '-' }}</p>
                     </div>
                 </div>
                 @if($not)
-                <div class="bg-gradient-to-br from-amber-50 to-amber-100 p-4 rounded-xl border-2 border-amber-300 shadow-md">
-                    <label class="block text-xs font-black text-amber-800 uppercase mb-2 flex items-center gap-2">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <div class="p-4 rounded-lg border border-amber-200 bg-amber-50">
+                    <label class="block text-xs font-semibold text-amber-700 uppercase tracking-wide mb-2 flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
                         </svg>
                         Müşteri Notu
                     </label>
-                    <p class="text-sm font-semibold text-amber-900">{{ $not }}</p>
+                    <p class="text-sm font-medium text-amber-900">{{ $not }}</p>
                 </div>
                 @endif
             </div>
 
             <!-- İletişim Butonları -->
-            <div class="pt-4 mt-4 border-t flex gap-3 no-print">
-                <a href="tel:{{ preg_replace('/[^0-9+]/', '', $request->phone) }}" class="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-xl font-bold transition-all shadow-lg shadow-green-600/30 hover:shadow-xl hover:shadow-green-600/40 hover:-translate-y-0.5">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="pt-4 mt-4 border-t border-gray-200 flex gap-3 no-print">
+                <a href="tel:{{ preg_replace('/[^0-9+]/', '', $request->phone) }}" class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-primary-600 hover:bg-primary-700 text-white rounded-lg font-semibold transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
                     </svg>
                     Ara
                 </a>
-                <a href="https://wa.me/90{{ preg_replace('/[^0-9]/', '', $request->phone) }}" target="_blank" class="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white rounded-xl font-bold transition-all shadow-lg shadow-green-500/30 hover:shadow-xl hover:shadow-green-500/40 hover:-translate-y-0.5">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <a href="https://wa.me/90{{ preg_replace('/[^0-9]/', '', $request->phone) }}" target="_blank" class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-green-500 hover:bg-green-600 text-white rounded-lg font-semibold transition-colors">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
                     </svg>
                     WhatsApp
@@ -290,29 +397,29 @@
             
             <!-- Tablo - Basit Liste -->
             <div class="space-y-2">
-                @foreach($partNames as $key => $name)
-                    @php
-                        $status = $ekspertiz[$key] ?? 'ORIJINAL';
-                        $statusText = match($status) {
-                            'BOYALI' => 'Boyalı',
+                        @foreach($partNames as $key => $name)
+                            @php
+                                $status = $ekspertiz[$key] ?? 'ORIJINAL';
+                                $statusText = match($status) {
+                                    'BOYALI' => 'Boyalı',
                             'LOKAL_BOYALI' => 'Lokal Boyalı',
-                            'DEGISMIS' => 'Değişmiş',
-                            default => 'Orijinal'
-                        };
-                        $statusClass = match($status) {
-                            'BOYALI' => 'bg-blue-100 text-blue-800 border-blue-200',
-                            'LOKAL_BOYALI' => 'bg-yellow-100 text-yellow-800 border-yellow-200',
-                            'DEGISMIS' => 'bg-red-100 text-red-800 border-red-200',
-                            default => 'bg-gray-100 text-gray-700 border-gray-200'
-                        };
-                    @endphp
+                                    'DEGISMIS' => 'Değişmiş',
+                                    default => 'Orijinal'
+                                };
+                                $statusClass = match($status) {
+                            'BOYALI' => 'bg-blue-100 text-blue-800 border-blue-300',
+                            'LOKAL_BOYALI' => 'bg-yellow-100 text-yellow-800 border-yellow-300',
+                            'DEGISMIS' => 'bg-red-100 text-red-800 border-red-300',
+                            default => 'bg-gray-100 text-gray-700 border-gray-300'
+                                };
+                            @endphp
                     <div class="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                         <span class="text-sm font-medium text-gray-900">{{ $name }}</span>
                         <span class="inline-flex px-2.5 py-1 rounded-md text-xs font-bold border {{ $statusClass }}">
-                            {{ $statusText }}
-                        </span>
+                                        {{ $statusText }}
+                                    </span>
                     </div>
-                @endforeach
+                        @endforeach
             </div>
 
             <!-- Araç Görseli -->
@@ -363,18 +470,22 @@
                 </div>
 
                 <!-- Legend - Basit -->
-                <div class="flex gap-4 mt-6 text-sm justify-center">
+                <div class="flex gap-4 mt-6 text-sm justify-center flex-wrap">
                     <div class="flex items-center gap-2">
-                        <span class="w-3 h-3 rounded-sm bg-blue-500"></span>
+                        <span class="w-3 h-3 rounded-sm bg-blue-100 border border-blue-300"></span>
                         <span class="font-medium text-gray-700">Boyalı</span>
                     </div>
                     <div class="flex items-center gap-2">
-                        <span class="w-3 h-3 rounded-sm bg-yellow-400"></span>
+                        <span class="w-3 h-3 rounded-sm bg-yellow-100 border border-yellow-300"></span>
                         <span class="font-medium text-gray-700">Lokal Boyalı</span>
                     </div>
                     <div class="flex items-center gap-2">
-                        <span class="w-3 h-3 rounded-sm bg-red-600"></span>
+                        <span class="w-3 h-3 rounded-sm bg-red-100 border border-red-300"></span>
                         <span class="font-medium text-gray-700">Değişmiş</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-sm bg-gray-100 border border-gray-300"></span>
+                        <span class="font-medium text-gray-700">Orijinal</span>
                     </div>
                 </div>
             </div>
@@ -383,52 +494,263 @@
     @endif
 </div>
 
-<!-- Email Modal - Basit ve Modern -->
+<!-- Email Template Modal - Hostinger Mail Gönderimi -->
 <div id="email-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-            <h3 class="text-lg font-bold text-gray-900">E-posta Gönder</h3>
-            <button onclick="closeEmailModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+        <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between bg-gradient-to-r from-red-600 to-red-700">
+            <div>
+                <h3 class="text-lg font-bold text-white">E-posta Gönder - Hostinger Webmail</h3>
+                <p class="text-xs text-red-100 mt-1">Mesajınızı yazın, HTML template otomatik hazırlanacak</p>
+            </div>
+            <button onclick="closeEmailModal()" class="text-white hover:text-red-200 transition-colors">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
                 </svg>
             </button>
         </div>
-        <form action="{{ route('admin.evaluation-requests.send-email', $request->id) }}" method="POST" class="p-6 space-y-4">
-            @csrf
-            <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-2">Alıcı</label>
-                <input type="text" value="{{ $request->name }} <{{ $request->email }}>" disabled class="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg bg-gray-50">
+        
+        <div class="p-6 space-y-4">
+            <!-- Mail Bilgileri -->
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <div class="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                    <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Alıcı</label>
+                    <p class="text-sm font-medium text-gray-900" id="recipient-email">{{ $request->email }}</p>
+                    <p class="text-xs text-gray-600" id="recipient-name">{{ $request->name }}</p>
+                </div>
+                <div class="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                    <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Konu</label>
+                    <input type="text" id="email-subject" value="Araç Değerleme Raporu - {{ $request->brand }} {{ $request->model }}" class="w-full text-sm font-medium text-gray-900 bg-transparent border-none p-0 focus:outline-none">
+                </div>
             </div>
+
+            <!-- Mesaj Yazma Alanı -->
             <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-2">Konu *</label>
-                <input type="text" name="subject" required class="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500" placeholder="E-posta konusu">
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Mesajınızı Yazın *</label>
+                <textarea id="email-message" rows="8" class="w-full px-4 py-3 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500" placeholder="Müşteriye göndermek istediğiniz mesajı buraya yazın...">Sayın {{ $request->name }},
+
+Araç değerleme talebiniz için teşekkür ederiz. Değerleme raporunuz hazırlanmıştır.
+
+Detaylı rapor için lütfen bizimle iletişime geçin.
+
+Saygılarımızla,
+GMSGARAGE</textarea>
             </div>
-            <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-2">Mesaj *</label>
-                <textarea name="message" required rows="6" class="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500" placeholder="Mesajınızı buraya yazın..."></textarea>
+
+            <!-- HTML Preview (Görsel Önizleme) -->
+            <div class="mt-4">
+                <label class="block text-sm font-semibold text-gray-700 mb-2">E-posta Önizleme (Görsel)</label>
+                <div class="bg-gray-50 border border-gray-300 rounded-lg overflow-hidden" style="max-height: 400px; overflow-y: auto;">
+                    <iframe id="email-preview" class="w-full" style="min-height: 400px; border: none;" srcdoc=""></iframe>
+                </div>
             </div>
-            <div class="flex gap-3 pt-2">
-                <button type="submit" class="flex-1 px-4 py-2 text-sm bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-colors">
-                    Gönder
+
+            <!-- Bilgi Kutusu -->
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <div class="flex items-start gap-3">
+                    <svg class="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <div>
+                        <h4 class="text-sm font-semibold text-blue-900 mb-1">ÖNEMLİ: Hostinger'da HTML Modunda Yapıştırın!</h4>
+                        <ol class="text-xs text-blue-700 space-y-1 list-decimal list-inside">
+                            <li>Mesajınızı yukarıdaki alana yazın</li>
+                            <li>"Hostinger Webmail'e Git ve Gönder" butonuna tıklayın</li>
+                            <li>HTML template otomatik kopyalanacak</li>
+                            <li>Hostinger webmail'de yeni mail oluşturun</li>
+                            <li>Alıcı ve konuyu yapıştırın</li>
+                            <li><strong>Mail editöründe "HTML" veya "Kod" butonuna tıklayın</strong></li>
+                            <li><strong>HTML modunda template'i yapıştırın (Ctrl+V)</strong></li>
+                            <li><strong>Tekrar "HTML" butonuna tıklayarak normal görünüme dönün</strong></li>
+                            <li>Maili gönderin</li>
+                        </ol>
+                        <p class="text-xs text-red-600 font-semibold mt-2">⚠️ HTML modunda yapıştırmazsanız, müşteri HTML kodlarını görecektir!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex gap-3 pt-2 border-t border-gray-200">
+                <button onclick="prepareAndSendEmail()" class="flex-1 px-6 py-2.5 text-sm font-semibold bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors shadow-sm flex items-center justify-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                    </svg>
+                    Hostinger Webmail'e Git ve Gönder
                 </button>
-                <button type="button" onclick="closeEmailModal()" class="px-6 py-2 text-sm bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold rounded-lg transition-colors">
-                    İptal
+                <button type="button" onclick="closeEmailModal()" class="px-6 py-2.5 text-sm bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold rounded-lg transition-colors">
+                    Kapat
                 </button>
             </div>
-        </form>
+        </div>
     </div>
 </div>
 
 @push('scripts')
 <script>
+    // Müşteri ve araç bilgileri
+    const customerData = {
+        name: '{{ $request->name }}',
+        email: '{{ $request->email }}',
+        brand: '{{ $request->brand }}',
+        model: '{{ $request->model }}',
+        year: '{{ $request->year }}',
+        mileage: '{{ number_format($request->mileage, 0, ',', '.') }}',
+        @php
+            $messageData = json_decode($request->message, true) ?? [];
+            $renk = $messageData['renk'] ?? '';
+            $tramer = $messageData['tramer'] ?? 'YOK';
+        @endphp
+        color: '{{ $renk }}',
+        condition: '{{ $request->condition }}',
+        hasColor: {{ $renk ? 'true' : 'false' }},
+        hasTramer: {{ $tramer !== 'YOK' ? 'true' : 'false' }}
+    };
+
     function openEmailModal() {
         document.getElementById('email-modal').classList.remove('hidden');
+        updateEmailPreview();
     }
     
     function closeEmailModal() {
         document.getElementById('email-modal').classList.add('hidden');
     }
+    
+    function updateEmailPreview() {
+        const message = document.getElementById('email-message').value;
+        const preview = document.getElementById('email-preview');
+        
+        // HTML template'i hazırla
+        const htmlTemplate = generateHtmlTemplate(message);
+        
+        // Önizlemeyi göster (iframe kullanarak HTML kodlarını gizle)
+        // DOCTYPE ve HTML tag'leri ekle önizleme için
+        const fullHtml = `<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-posta Önizleme</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #f5f5f5;">
+${htmlTemplate}
+</body>
+</html>`;
+        
+        preview.srcdoc = fullHtml;
+    }
+    
+    function generateHtmlTemplate(message) {
+        // Mesajı HTML formatına çevir (satır sonlarını <br> yap ve HTML karakterlerini escape et)
+        const escapeHtml = (text) => {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        };
+        
+        // Mesajı satır satır böl ve her satırı <p> veya <br> ile işle
+        const lines = message.split('\n').filter(line => line.trim() !== '');
+        let htmlMessage = '';
+        
+        if (lines.length > 0) {
+            htmlMessage = lines.map(line => {
+                const escapedLine = escapeHtml(line.trim());
+                return `<p style="color: #4b5563; font-size: 15px; line-height: 1.6; margin: 0 0 10px 0;">${escapedLine}</p>`;
+            }).join('');
+        }
+        
+        // Email client'lar için optimize edilmiş HTML (DOCTYPE ve HTML tag'leri olmadan, sadece body içeriği)
+        const html = `<table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f5f5f5; padding: 20px; font-family: Arial, Helvetica, sans-serif;">
+    <tr>
+        <td align="center">
+            <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); max-width: 600px;">
+                <!-- Header -->
+                <tr>
+                    <td style="background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%); padding: 30px; text-align: center;">
+                        <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: bold; font-family: Arial, Helvetica, sans-serif;">GMSGARAGE</h1>
+                        <p style="color: #fecaca; margin: 5px 0 0 0; font-size: 14px; font-family: Arial, Helvetica, sans-serif;">Araç Değerleme Hizmeti</p>
+                    </td>
+                </tr>
+                
+                <!-- Content -->
+                <tr>
+                    <td style="padding: 40px 30px;">
+                        <p style="color: #1f2937; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0; font-family: Arial, Helvetica, sans-serif;">
+                            Sayın <strong>${escapeHtml(customerData.name)}</strong>,
+                        </p>
+                        
+                        <div style="color: #4b5563; font-size: 15px; line-height: 1.6; margin: 0 0 20px 0; font-family: Arial, Helvetica, sans-serif;">
+                            ${htmlMessage}
+                        </div>
+                        
+                        <div style="background-color: #f9fafb; border-left: 4px solid #dc2626; padding: 20px; margin: 30px 0; border-radius: 4px;">
+                            <p style="color: #1f2937; font-size: 14px; font-weight: bold; margin: 0 0 10px 0; font-family: Arial, Helvetica, sans-serif;">Değerleme Talebi Bilgileri:</p>
+                            <p style="color: #4b5563; font-size: 14px; margin: 5px 0; font-family: Arial, Helvetica, sans-serif;"><strong>Marka:</strong> ${escapeHtml(customerData.brand)}</p>
+                            <p style="color: #4b5563; font-size: 14px; margin: 5px 0; font-family: Arial, Helvetica, sans-serif;"><strong>Model:</strong> ${escapeHtml(customerData.model)}</p>
+                            <p style="color: #4b5563; font-size: 14px; margin: 5px 0; font-family: Arial, Helvetica, sans-serif;"><strong>Yıl:</strong> ${escapeHtml(customerData.year)}</p>
+                            <p style="color: #4b5563; font-size: 14px; margin: 5px 0; font-family: Arial, Helvetica, sans-serif;"><strong>Kilometre:</strong> ${escapeHtml(customerData.mileage)} KM</p>
+                            ${customerData.hasColor ? `<p style="color: #4b5563; font-size: 14px; margin: 5px 0; font-family: Arial, Helvetica, sans-serif;"><strong>Renk:</strong> ${escapeHtml(customerData.color)}</p>` : ''}
+                            ${customerData.hasTramer ? `<p style="color: #4b5563; font-size: 14px; margin: 5px 0; font-family: Arial, Helvetica, sans-serif;"><strong>Tramer Durumu:</strong> ${escapeHtml(customerData.condition)}</p>` : ''}
+                        </div>
+                        
+                        <p style="color: #4b5563; font-size: 15px; line-height: 1.6; margin: 20px 0 0 0; font-family: Arial, Helvetica, sans-serif;">
+                            Sorularınız için bizimle iletişime geçebilirsiniz.
+                        </p>
+                    </td>
+                </tr>
+                
+                <!-- Footer -->
+                <tr>
+                    <td style="background-color: #f9fafb; padding: 20px 30px; text-align: center; border-top: 1px solid #e5e7eb;">
+                        <p style="color: #6b7280; font-size: 12px; margin: 0 0 10px 0; font-family: Arial, Helvetica, sans-serif;">
+                            <strong>GMSGARAGE</strong><br>
+                            Premium Oto Galeri
+                        </p>
+                        <p style="color: #9ca3af; font-size: 11px; margin: 0; font-family: Arial, Helvetica, sans-serif;">
+                            Bu e-posta otomatik olarak gönderilmiştir. Lütfen bu e-postaya yanıt vermeyin.
+                        </p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>`;
+        
+        return html;
+    }
+    
+    function prepareAndSendEmail() {
+        const message = document.getElementById('email-message').value.trim();
+        const subject = document.getElementById('email-subject').value.trim();
+        
+        if (!message) {
+            alert('Lütfen mesajınızı yazın!');
+            return;
+        }
+        
+        // HTML template'i hazırla
+        const htmlTemplate = generateHtmlTemplate(message);
+        
+        // HTML template'i clipboard'a kopyala
+        navigator.clipboard.writeText(htmlTemplate).then(() => {
+            // Başarı mesajı göster
+            alert('HTML template kopyalandı! Hostinger webmail açılıyor...');
+            
+            // Hostinger webmail'e yönlendir
+            window.open('https://webmail.hostinger.com', '_blank');
+            
+            // Modal'ı kapat
+            closeEmailModal();
+        }).catch(err => {
+            console.error('Kopyalama hatası:', err);
+            alert('HTML template kopyalanamadı. Lütfen manuel olarak kopyalayın.');
+        });
+    }
+    
+    // Mesaj değiştiğinde önizlemeyi güncelle
+    document.addEventListener('DOMContentLoaded', function() {
+        const messageTextarea = document.getElementById('email-message');
+        if (messageTextarea) {
+            messageTextarea.addEventListener('input', updateEmailPreview);
+        }
+    });
 </script>
 @endpush
 @endsection

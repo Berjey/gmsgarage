@@ -71,20 +71,107 @@
         transform: rotate(180deg);
     }
 
-    .hero-custom-dropdown-panel {
+    /* Admin Panel - Light Mode Dropdown (Tüm global stilleri override eder) */
+    .admin-body .admin-dropdown .hero-custom-dropdown-trigger,
+    .admin-body .admin-dropdown-trigger,
+    .admin-body .hero-custom-dropdown-trigger,
+    .admin-body.dark .hero-custom-dropdown-trigger {
+        background: #ffffff !important;
+        background-color: #ffffff !important;
+        background-image: none !important;
+        border: 1px solid #e5e7eb !important;
+        border-color: #e5e7eb !important;
+        border-width: 1px !important;
+        color: #1f2937 !important;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+        ring: none !important;
+        ring-width: 0 !important;
+        ring-color: transparent !important;
+    }
+    
+    .admin-body .admin-dropdown .hero-custom-dropdown-trigger::before,
+    .admin-body .admin-dropdown-trigger::before,
+    .admin-body .hero-custom-dropdown-trigger::before,
+    .admin-body.dark .hero-custom-dropdown-trigger::before {
+        display: none !important;
+        background: none !important;
+        content: none !important;
+    }
+    
+    .admin-body .admin-dropdown .hero-custom-dropdown-trigger:hover,
+    .admin-body .admin-dropdown-trigger:hover,
+    .admin-body .hero-custom-dropdown-trigger:hover,
+    .admin-body.dark .hero-custom-dropdown-trigger:hover {
+        background: #f9fafb !important;
+        background-color: #f9fafb !important;
+        background-image: none !important;
+        border-color: #dc2626 !important;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06) !important;
+    }
+    
+    .admin-body .admin-dropdown .hero-custom-dropdown-trigger:hover::before,
+    .admin-body .admin-dropdown-trigger:hover::before,
+    .admin-body .hero-custom-dropdown-trigger:hover::before,
+    .admin-body.dark .hero-custom-dropdown-trigger:hover::before {
+        display: none !important;
+    }
+    
+    .admin-body .admin-dropdown .hero-custom-dropdown-trigger.open,
+    .admin-body .admin-dropdown-trigger.open,
+    .admin-body .hero-custom-dropdown-trigger.open,
+    .admin-body.dark .hero-custom-dropdown-trigger.open {
+        background: #ffffff !important;
+        background-color: #ffffff !important;
+        background-image: none !important;
+        border-color: #dc2626 !important;
+        box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+        ring: none !important;
+        ring-width: 0 !important;
+    }
+    
+    .admin-body .admin-dropdown .hero-custom-dropdown-trigger .selected-text,
+    .admin-body .admin-dropdown-trigger .selected-text,
+    .admin-body .hero-custom-dropdown-trigger .selected-text,
+    .admin-body.dark .hero-custom-dropdown-trigger .selected-text {
+        color: #1f2937 !important;
+        text-shadow: none !important;
+    }
+    
+    .admin-body .admin-dropdown .hero-custom-dropdown-trigger .arrow,
+    .admin-body .admin-dropdown-trigger .arrow,
+    .admin-body .hero-custom-dropdown-trigger .arrow,
+    .admin-body.dark .hero-custom-dropdown-trigger .arrow {
+        color: #6b7280 !important;
+        filter: none !important;
+        transform: none !important;
+    }
+    
+    .admin-body .admin-dropdown .hero-custom-dropdown-trigger.open .arrow,
+    .admin-body .admin-dropdown-trigger.open .arrow,
+    .admin-body .hero-custom-dropdown-trigger.open .arrow,
+    .admin-body.dark .hero-custom-dropdown-trigger.open .arrow {
+        color: #6b7280 !important;
+        filter: none !important;
+        transform: rotate(180deg) !important;
+    }
+    
+    .admin-body .hero-custom-dropdown-panel {
         display: none;
         position: absolute;
         top: 100%;
         left: 0;
         right: 0;
         z-index: 50;
-        background: white;
+        background: #ffffff !important;
         margin-top: 0.5rem;
         max-height: 300px;
         overflow-y: auto;
+        border: 1px solid #e5e7eb !important;
+        border-radius: 0.75rem;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04) !important;
     }
     
-    .hero-custom-dropdown-panel.open {
+    .admin-body .hero-custom-dropdown-panel.open {
         display: block;
         animation: dropdownFade 0.2s ease-out;
     }
@@ -94,20 +181,23 @@
         to { opacity: 1; transform: translateY(0); }
     }
 
-    .hero-custom-dropdown-option {
+    .admin-body .hero-custom-dropdown-option {
         padding: 0.75rem 1rem;
         cursor: pointer;
         transition: all 0.2s;
+        color: #374151 !important;
+        font-weight: 500;
+        background: transparent !important;
     }
 
-    .hero-custom-dropdown-option:hover {
-        background-color: #f9fafb;
-        color: #e11d48;
+    .admin-body .hero-custom-dropdown-option:hover {
+        background-color: #f9fafb !important;
+        color: #dc2626 !important;
     }
 
-    .hero-custom-dropdown-option.selected {
-        background-color: #fff1f2;
-        color: #e11d48;
+    .admin-body .hero-custom-dropdown-option.selected {
+        background-color: #fef2f2 !important;
+        color: #dc2626 !important;
         font-weight: 700;
     }
     
@@ -192,33 +282,40 @@
                         <label class="block text-sm font-bold text-gray-700 mb-2">
                             Kategori <span class="text-red-500">*</span>
                         </label>
-                        <div class="relative hero-custom-dropdown" data-dropdown="category">
+                        <div class="relative hero-custom-dropdown admin-dropdown" data-dropdown="category">
                             <button type="button" 
-                                    class="hero-custom-dropdown-trigger w-full flex items-center justify-between px-4 py-3 bg-white border border-gray-200 rounded-xl text-gray-900 font-medium hover:border-primary-500 transition-all"
+                                    class="hero-custom-dropdown-trigger admin-dropdown-trigger w-full flex items-center justify-between px-4 py-3 bg-white border border-gray-200 rounded-xl text-gray-900 font-medium hover:border-primary-500 transition-all"
                                     aria-expanded="false" aria-haspopup="listbox">
-                                <span class="selected-text text-gray-500">Kategori Seçin</span>
+                                <span class="selected-text {{ isset($selectedCategory) && $selectedCategory ? 'text-gray-900' : 'text-gray-500' }}">{{ isset($selectedCategory) && $selectedCategory ? $selectedCategory : 'Kategori Seçin' }}</span>
                                 <svg class="arrow w-5 h-5 text-gray-400 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                             </button>
                             <div class="hero-custom-dropdown-panel rounded-xl shadow-xl border border-gray-100" role="listbox">
                                 @foreach($categories as $cat)
                                 <div class="hero-custom-dropdown-option {{ old('category') === $cat ? 'selected' : '' }}" data-value="{{ $cat }}" role="option">{{ $cat }}</div>
                                 @endforeach
-                                <div class="p-3 border-t-2 border-gray-200 bg-gray-50" id="new-category-input">
-                                    <label class="block text-xs font-bold text-gray-600 mb-2">YENİ KATEGORİ EKLE</label>
+                                <div class="p-3 border-t-2 border-gray-200 bg-gradient-to-r from-primary-50 to-purple-50" id="new-category-input">
+                                    <label class="block text-xs font-bold text-gray-700 mb-2 flex items-center gap-2">
+                                        <svg class="w-4 h-4 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                                        YENİ KATEGORİ EKLE
+                                    </label>
                                     <div class="flex gap-2">
                                         <input type="text" 
                                                id="new-category-field"
-                                               placeholder="Yeni kategori adı..."
-                                               class="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500">
+                                               placeholder="Yeni kategori adı girin..."
+                                               maxlength="50"
+                                               class="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
+                                               onkeypress="if(event.key === 'Enter') { event.preventDefault(); addNewCategory(); }">
                                         <button type="button" 
                                                 onclick="addNewCategory()"
-                                                class="px-4 py-2 bg-primary-600 text-white text-sm font-bold rounded-lg hover:bg-primary-700 transition-all">
+                                                class="px-4 py-2 bg-primary-600 text-white text-sm font-bold rounded-lg hover:bg-primary-700 transition-all shadow-sm hover:shadow-md flex items-center gap-1">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                                             Ekle
                                         </button>
                                     </div>
+                                    <p class="mt-1 text-xs text-gray-500">Enter tuşuna basarak da ekleyebilirsiniz</p>
                                 </div>
                             </div>
-                            <input type="hidden" name="category" id="category-input" value="{{ old('category') }}" required class="hero-custom-dropdown-native">
+                            <input type="hidden" name="category" id="category-input" value="{{ old('category', $selectedCategory ?? '') }}" required class="hero-custom-dropdown-native">
                         </div>
                         @error('category')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -259,7 +356,7 @@
         <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
             <div class="px-6 py-4 bg-gray-50/50 border-b border-gray-100">
                 <h2 class="text-lg font-bold text-gray-900">Öne Çıkan Görsel</h2>
-                <p class="text-sm text-gray-500 mt-0.5">Blog yazısının kapak görselini ekleyin</p>
+                <p class="text-sm text-gray-500 mt-0.5">Blog yazısının kapak görselini ekleyin (1200x675px - 16:9 oranında otomatik ayarlanır)</p>
             </div>
             <div class="p-6">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -271,9 +368,13 @@
                                    name="featured_image" 
                                    id="image-upload"
                                    accept="image/*"
-                                   class="block w-full text-sm text-gray-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-bold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100 transition-all border border-gray-200 rounded-xl">
+                                   class="block w-full text-sm text-gray-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-bold file:bg-white file:text-gray-700 hover:file:bg-gray-50 file:border file:border-gray-300 transition-all border border-gray-200 rounded-xl bg-white">
                         </div>
-                        <p class="mt-2 text-xs text-gray-500">PNG, JPG, GIF - Maksimum 5MB</p>
+                        <p class="mt-2 text-xs text-gray-500">
+                            PNG, JPG, GIF - Maksimum 5MB
+                            <br>
+                            <span class="text-primary-600 font-semibold">✓ Görsel otomatik olarak 1200x675px (16:9) boyutuna getirilir ve optimize edilir.</span>
+                        </p>
                     </div>
 
                     <!-- URL ile Görsel -->
@@ -416,18 +517,71 @@
             theme: 'snow',
             placeholder: 'Blog yazınızı buraya yazın...',
             modules: {
-                toolbar: [
-                    [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-                    [{ 'font': [] }],
-                    ['bold', 'italic', 'underline', 'strike'],
-                    [{ 'color': [] }, { 'background': [] }],
-                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                    [{ 'indent': '-1'}, { 'indent': '+1' }],
-                    [{ 'align': [] }],
-                    ['blockquote', 'code-block'],
-                    ['link', 'image', 'video'],
-                    ['clean']
-                ]
+                toolbar: {
+                    container: [
+                        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                        [{ 'font': [] }],
+                        ['bold', 'italic', 'underline', 'strike'],
+                        [{ 'color': [] }, { 'background': [] }],
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        [{ 'indent': '-1'}, { 'indent': '+1' }],
+                        [{ 'align': [] }],
+                        ['blockquote', 'code-block'],
+                        ['link', 'image', 'video'],
+                        ['clean']
+                    ],
+                    handlers: {
+                        'image': function() {
+                            const input = document.createElement('input');
+                            input.setAttribute('type', 'file');
+                            input.setAttribute('accept', 'image/*');
+                            input.click();
+                            
+                            input.onchange = function() {
+                                const file = input.files[0];
+                                if (file) {
+                                    // Dosya boyutu kontrolü (5MB)
+                                    if (file.size > 5 * 1024 * 1024) {
+                                        alert('Görsel boyutu 5MB\'dan büyük olamaz.');
+                                        return;
+                                    }
+                                    
+                                    // Yükleme göstergesi
+                                    const range = quill.getSelection(true);
+                                    quill.insertText(range.index, 'Görsel yükleniyor...', 'user');
+                                    
+                                    const formData = new FormData();
+                                    formData.append('image', file);
+                                    
+                                    fetch('{{ route('admin.blog.upload-content-image') }}', {
+                                        method: 'POST',
+                                        headers: {
+                                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                        },
+                                        body: formData
+                                    })
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        if (data.success) {
+                                            // Yükleme mesajını sil
+                                            quill.deleteText(range.index, 20);
+                                            // Görseli ekle
+                                            quill.insertEmbed(range.index, 'image', data.url, 'user');
+                                        } else {
+                                            alert('Görsel yüklenirken bir hata oluştu.');
+                                            quill.deleteText(range.index, 20);
+                                        }
+                                    })
+                                    .catch(error => {
+                                        console.error('Error:', error);
+                                        alert('Görsel yüklenirken bir hata oluştu.');
+                                        quill.deleteText(range.index, 20);
+                                    });
+                                }
+                            };
+                        }
+                    }
+                }
             }
         });
 
@@ -523,7 +677,19 @@
         const newCategory = input.value.trim();
         
         if (!newCategory) {
-            alert('Lütfen kategori adı girin!');
+            // Daha kullanıcı dostu hata mesajı
+            input.focus();
+            input.style.borderColor = '#ef4444';
+            setTimeout(() => {
+                input.style.borderColor = '';
+            }, 2000);
+            return;
+        }
+        
+        // Kategori adının uzunluğunu kontrol et
+        if (newCategory.length > 50) {
+            alert('Kategori adı en fazla 50 karakter olabilir!');
+            input.focus();
             return;
         }
         
@@ -533,12 +699,33 @@
         const selectedText = categoryDropdown.querySelector('.selected-text');
         const newCategoryInput = document.getElementById('new-category-input');
         
+        // Aynı kategori zaten var mı kontrol et
+        const existingOptions = categoryDropdown.querySelectorAll('.hero-custom-dropdown-option[data-value]');
+        for (let opt of existingOptions) {
+            if (opt.dataset.value.toLowerCase() === newCategory.toLowerCase()) {
+                // Kategori zaten varsa, onu seç
+                opt.click();
+                input.value = '';
+                input.style.borderColor = '#10b981';
+                setTimeout(() => {
+                    input.style.borderColor = '';
+                }, 1000);
+                return;
+            }
+        }
+        
         // Create new option
         const newOption = document.createElement('div');
         newOption.className = 'hero-custom-dropdown-option selected';
         newOption.setAttribute('data-value', newCategory);
         newOption.setAttribute('role', 'option');
         newOption.textContent = newCategory;
+        
+        // Yeni kategori için özel stil (yeşil nokta ile)
+        const indicator = document.createElement('span');
+        indicator.className = 'inline-block w-2 h-2 bg-green-500 rounded-full mr-2';
+        indicator.title = 'Yeni kategori';
+        newOption.insertBefore(indicator, newOption.firstChild);
         
         // Remove selected class from all existing options
         categoryDropdown.querySelectorAll('.hero-custom-dropdown-option').forEach(o => {
@@ -569,9 +756,15 @@
         selectedText.classList.remove('text-gray-500');
         selectedText.classList.add('text-gray-900');
         
-        // Clear input and close dropdown
+        // Başarı mesajı için input rengini değiştir
+        input.style.borderColor = '#10b981';
         input.value = '';
-        panel.classList.remove('open');
+        
+        // Dropdown'u kapatma (kullanıcı görebilsin)
+        setTimeout(() => {
+            input.style.borderColor = '';
+            panel.classList.remove('open');
+        }, 1500);
     }
 
     // Allow Enter key to add category

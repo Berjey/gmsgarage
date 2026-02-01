@@ -84,4 +84,32 @@ return [
         'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | IMAP Configuration
+    |--------------------------------------------------------------------------
+    */
+    'imap' => [
+        'host' => env('IMAP_HOST', 'imap.hostinger.com'),
+        'port' => env('IMAP_PORT', 993),
+        'username' => env('IMAP_USER'),
+        'password' => env('IMAP_PASSWORD'),
+        'sent_folder' => env('IMAP_SENT_FOLDER', 'Sent'),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Brand Configuration
+    |--------------------------------------------------------------------------
+    */
+    'brand' => [
+        'name' => env('BRAND_NAME', 'GMSGARAGE'),
+        'tagline' => env('BRAND_TAGLINE', 'Premium Oto Galeri'),
+        'website' => env('BRAND_WEBSITE', 'https://gmsgarage.com'),
+        'phone' => env('BRAND_PHONE', ''),
+        'address' => env('BRAND_ADDRESS', ''),
+        'logo_url' => env('LOGO_URL', ''),
+        'primary_color' => env('PRIMARY_COLOR', '#dc2626'),
+    ],
+
 ];
