@@ -499,8 +499,8 @@
     <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
         <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between bg-gradient-to-r from-red-600 to-red-700">
             <div>
-                <h3 class="text-lg font-bold text-white">E-posta Gönder - Hostinger Webmail</h3>
-                <p class="text-xs text-red-100 mt-1">Mesajınızı yazın, HTML template otomatik hazırlanacak</p>
+                <h3 class="text-lg font-bold text-white">E-posta Gönder - Otomatik Gönderim</h3>
+                <p class="text-xs text-red-100 mt-1">Mesajınızı yazın, otomatik olarak müşteriye gönderilecektir</p>
             </div>
             <button onclick="closeEmailModal()" class="text-white hover:text-red-200 transition-colors">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
@@ -512,14 +512,14 @@
         <div class="p-6 space-y-4">
             <!-- Mail Bilgileri -->
             <div class="grid grid-cols-2 gap-4 mb-4">
-                <div class="bg-gray-50 p-3 rounded-lg border border-gray-200">
-                    <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Alıcı</label>
-                    <p class="text-sm font-medium text-gray-900" id="recipient-email">{{ $request->email }}</p>
-                    <p class="text-xs text-gray-600" id="recipient-name">{{ $request->name }}</p>
+                <div class="bg-white p-3 rounded-lg border-2 border-gray-300">
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-2">Alıcı E-posta <span class="text-red-500">*</span></label>
+                    <input type="email" id="recipient-email" value="{{ $request->email }}" class="w-full text-sm font-medium text-gray-900 bg-white border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500" placeholder="ornek@email.com">
+                    <p class="text-xs text-gray-500 mt-1" id="recipient-name">{{ $request->name }}</p>
                 </div>
-                <div class="bg-gray-50 p-3 rounded-lg border border-gray-200">
-                    <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Konu</label>
-                    <input type="text" id="email-subject" value="Araç Değerleme Raporu - {{ $request->brand }} {{ $request->model }}" class="w-full text-sm font-medium text-gray-900 bg-transparent border-none p-0 focus:outline-none">
+                <div class="bg-white p-3 rounded-lg border-2 border-gray-300">
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-2">Konu <span class="text-red-500">*</span></label>
+                    <input type="text" id="email-subject" value="Araç Değerleme Raporu - {{ $request->brand }} {{ $request->model }}" class="w-full text-sm font-medium text-gray-900 bg-white border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500">
                 </div>
             </div>
 
@@ -545,35 +545,32 @@ GMSGARAGE</textarea>
             </div>
 
             <!-- Bilgi Kutusu -->
-            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <div class="bg-green-50 border border-green-200 rounded-lg p-4">
                 <div class="flex items-start gap-3">
-                    <svg class="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    <svg class="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
                     <div>
-                        <h4 class="text-sm font-semibold text-blue-900 mb-1">ÖNEMLİ: Hostinger'da HTML Modunda Yapıştırın!</h4>
-                        <ol class="text-xs text-blue-700 space-y-1 list-decimal list-inside">
-                            <li>Mesajınızı yukarıdaki alana yazın</li>
-                            <li>"Hostinger Webmail'e Git ve Gönder" butonuna tıklayın</li>
-                            <li>HTML template otomatik kopyalanacak</li>
-                            <li>Hostinger webmail'de yeni mail oluşturun</li>
-                            <li>Alıcı ve konuyu yapıştırın</li>
-                            <li><strong>Mail editöründe "HTML" veya "Kod" butonuna tıklayın</strong></li>
-                            <li><strong>HTML modunda template'i yapıştırın (Ctrl+V)</strong></li>
-                            <li><strong>Tekrar "HTML" butonuna tıklayarak normal görünüme dönün</strong></li>
-                            <li>Maili gönderin</li>
-                        </ol>
-                        <p class="text-xs text-red-600 font-semibold mt-2">⚠️ HTML modunda yapıştırmazsanız, müşteri HTML kodlarını görecektir!</p>
+                        <h4 class="text-sm font-semibold text-green-900 mb-1">✅ Otomatik Mail Gönderimi</h4>
+                        <ul class="text-xs text-green-700 space-y-1">
+                            <li>• Alıcı email'i düzenleyebilirsiniz (gerekirse)</li>
+                            <li>• "E-posta Gönder" butonuna tıklayın</li>
+                            <li>• Mail otomatik olarak gönderilecek</li>
+                            <li>• Hostinger giden kutusuna kaydedilecek</li>
+                        </ul>
                     </div>
                 </div>
             </div>
 
+            <!-- Success/Error Messages -->
+            <div id="email-alert" class="hidden rounded-lg p-4"></div>
+
             <div class="flex gap-3 pt-2 border-t border-gray-200">
-                <button onclick="prepareAndSendEmail()" class="flex-1 px-6 py-2.5 text-sm font-semibold bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors shadow-sm flex items-center justify-center gap-2">
+                <button type="button" id="send-email-btn" onclick="sendEmailAjax()" class="flex-1 px-6 py-2.5 text-sm font-semibold bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors shadow-sm flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                     </svg>
-                    Hostinger Webmail'e Git ve Gönder
+                    <span id="send-btn-text">E-posta Gönder</span>
                 </button>
                 <button type="button" onclick="closeEmailModal()" class="px-6 py-2.5 text-sm bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold rounded-lg transition-colors">
                     Kapat
@@ -716,32 +713,102 @@ ${htmlTemplate}
         return html;
     }
     
-    function prepareAndSendEmail() {
-        const message = document.getElementById('email-message').value.trim();
+    async function sendEmailAjax() {
+        const recipientEmail = document.getElementById('recipient-email').value.trim();
         const subject = document.getElementById('email-subject').value.trim();
+        const message = document.getElementById('email-message').value.trim();
+        const sendBtn = document.getElementById('send-email-btn');
+        const sendBtnText = document.getElementById('send-btn-text');
+        const alertBox = document.getElementById('email-alert');
         
-        if (!message) {
-            alert('Lütfen mesajınızı yazın!');
+        // Validasyon
+        if (!recipientEmail) {
+            showAlert('error', 'Lütfen alıcı e-posta adresini girin!');
             return;
         }
         
-        // HTML template'i hazırla
-        const htmlTemplate = generateHtmlTemplate(message);
+        if (!subject) {
+            showAlert('error', 'Lütfen e-posta konusunu girin!');
+            return;
+        }
         
-        // HTML template'i clipboard'a kopyala
-        navigator.clipboard.writeText(htmlTemplate).then(() => {
-            // Başarı mesajı göster
-            alert('HTML template kopyalandı! Hostinger webmail açılıyor...');
+        if (!message) {
+            showAlert('error', 'Lütfen mesajınızı yazın!');
+            return;
+        }
+        
+        // Email format kontrolü
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(recipientEmail)) {
+            showAlert('error', 'Geçerli bir e-posta adresi girin!');
+            return;
+        }
+        
+        // Butonu disable et ve loading göster
+        sendBtn.disabled = true;
+        sendBtnText.innerHTML = '<svg class="animate-spin h-4 w-4 inline mr-2" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Gönderiliyor...';
+        
+        try {
+            const response = await fetch('{{ route("admin.evaluation-requests.sendEmail", $request->id) }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    recipient_email: recipientEmail,
+                    subject: subject,
+                    message: message
+                })
+            });
             
-            // Hostinger webmail'e yönlendir
-            window.open('https://webmail.hostinger.com', '_blank');
+            const data = await response.json();
             
-            // Modal'ı kapat
-            closeEmailModal();
-        }).catch(err => {
-            console.error('Kopyalama hatası:', err);
-            alert('HTML template kopyalanamadı. Lütfen manuel olarak kopyalayın.');
-        });
+            if (response.ok && data.success) {
+                showAlert('success', '✅ ' + data.message);
+                
+                // 2 saniye sonra modal'ı kapat
+                setTimeout(() => {
+                    closeEmailModal();
+                    // Sayfayı yenile (mail gönderim kaydını görmek için)
+                    location.reload();
+                }, 2000);
+            } else {
+                showAlert('error', '❌ ' + (data.message || 'E-posta gönderilirken bir hata oluştu.'));
+                sendBtn.disabled = false;
+                sendBtnText.textContent = 'E-posta Gönder';
+            }
+        } catch (error) {
+            console.error('AJAX hatası:', error);
+            showAlert('error', '❌ Bir hata oluştu. Lütfen tekrar deneyin.');
+            sendBtn.disabled = false;
+            sendBtnText.textContent = 'E-posta Gönder';
+        }
+    }
+    
+    function showAlert(type, message) {
+        const alertBox = document.getElementById('email-alert');
+        alertBox.classList.remove('hidden', 'bg-green-50', 'border-green-200', 'text-green-800', 'bg-red-50', 'border-red-200', 'text-red-800');
+        
+        if (type === 'success') {
+            alertBox.classList.add('bg-green-50', 'border', 'border-green-200', 'text-green-800');
+        } else {
+            alertBox.classList.add('bg-red-50', 'border', 'border-red-200', 'text-red-800');
+        }
+        
+        alertBox.innerHTML = `
+            <div class="flex items-start gap-3">
+                <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                    ${type === 'success' 
+                        ? '<path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>'
+                        : '<path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>'
+                    }
+                </svg>
+                <p class="text-sm font-medium">${message}</p>
+            </div>
+        `;
+        alertBox.classList.remove('hidden');
     }
     
     // Mesaj değiştiğinde önizlemeyi güncelle
