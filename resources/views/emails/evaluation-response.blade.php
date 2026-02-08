@@ -25,9 +25,9 @@
                                 Sayın <strong>{{ $evaluationRequest->name }}</strong>,
                             </p>
                             
-                            <div style="color: #4b5563; font-size: 15px; line-height: 1.6; margin: 0 0 20px 0;">
-                                {!! $messageContent !!}
-                            </div>
+                            <p style="color: #4b5563; font-size: 15px; line-height: 1.6; margin: 0 0 20px 0;">
+                                {{ $messageContent }}
+                            </p>
                             
                             <div style="background-color: #f9fafb; border-left: 4px solid #dc2626; padding: 20px; margin: 30px 0; border-radius: 4px;">
                                 <p style="color: #1f2937; font-size: 14px; font-weight: bold; margin: 0 0 10px 0;">Değerleme Talebi Bilgileri:</p>

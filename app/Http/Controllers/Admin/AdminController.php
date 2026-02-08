@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\ContactMessage;
 use App\Models\VehicleRequest;
 use App\Models\EvaluationRequest;
+use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {

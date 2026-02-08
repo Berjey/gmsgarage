@@ -71,14 +71,6 @@
             @endif
         </a>
 
-        <a href="{{ route('admin.mailbox.index') }}" 
-           class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-primary-50 hover:text-primary-600 transition-colors {{ request()->routeIs('admin.mailbox.*') ? 'bg-primary-50 text-primary-600 font-semibold' : '' }}">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
-            </svg>
-            <span>Mail Kutusu</span>
-        </a>
-
         <a href="{{ route('admin.vehicle-requests.index') }}" 
            class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-primary-50 hover:text-primary-600 transition-colors {{ request()->routeIs('admin.vehicle-requests.*') ? 'bg-primary-50 text-primary-600 font-semibold' : '' }}">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -105,18 +97,6 @@
             @if($unreadCount > 0)
                 <span class="ml-auto bg-red-500 text-white text-xs font-semibold px-2 py-1 rounded-full">{{ $unreadCount }}</span>
             @endif
-        </a>
-
-        <div class="pt-4 border-t border-gray-200">
-            <p class="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">E-posta</p>
-        </div>
-
-        <a href="{{ route('admin.mail-send.index') }}" 
-           class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-primary-50 hover:text-primary-600 transition-colors {{ request()->routeIs('admin.mail-send.*') ? 'bg-primary-50 text-primary-600 font-semibold' : '' }}">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-            </svg>
-            <span>E-posta Gönder</span>
         </a>
 
         <div class="pt-4 border-t border-gray-200">

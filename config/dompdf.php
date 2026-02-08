@@ -176,11 +176,10 @@ return [
          * The default font family
          *
          * Used if no suitable fonts can be found. This must exist in the font folder.
-         * DejaVu Sans supports Turkish characters.
          *
          * @var string
          */
-        'default_font' => 'DejaVu Sans',
+        'default_font' => 'serif',
 
         /**
          * Image DPI setting

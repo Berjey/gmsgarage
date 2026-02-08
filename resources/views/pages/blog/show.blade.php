@@ -388,10 +388,7 @@
 <!-- Hero Image -->
 @if($post->featured_image)
 <section class="relative h-96 overflow-hidden" style="opacity: 0; animation: fadeIn 0.8s ease-out 0.1s forwards;">
-    <img src="{{ str_starts_with($post->featured_image, 'http') ? $post->featured_image : asset($post->featured_image) }}" 
-         alt="{{ $post->title }}" 
-         class="w-full h-full object-cover"
-         onerror="this.onerror=null; this.src='{{ asset('images/light-mode-logo.png') }}';">
+    <img src="{{ $post->featured_image }}" alt="{{ $post->title }}" class="w-full h-full object-cover">
     <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
     @if($post->is_featured)
         <span class="absolute top-6 right-6 bg-gradient-to-r from-primary-600 to-primary-700 text-white text-sm font-bold px-4 py-2 rounded-full shadow-lg">
@@ -496,10 +493,7 @@
                         @foreach($relatedPosts as $related)
                             <a href="{{ route('blog.show', $related->slug) }}" class="related-post-card block bg-white dark:bg-[#252525] rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden">
                                 @if($related->featured_image)
-                                    <img src="{{ str_starts_with($related->featured_image, 'http') ? $related->featured_image : asset($related->featured_image) }}" 
-                                         alt="{{ $related->title }}" 
-                                         class="w-full h-40 object-cover"
-                                         onerror="this.onerror=null; this.src='{{ asset('images/light-mode-logo.png') }}';">
+                                    <img src="{{ $related->featured_image }}" alt="{{ $related->title }}" class="w-full h-40 object-cover">
                                 @else
                                     <div class="w-full h-40 bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center">
                                         <svg class="w-12 h-12 text-white opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -533,10 +527,7 @@
                             <a href="{{ route('blog.show', $recent->slug) }}" class="recent-post-item block group">
                                 <div class="flex gap-3">
                                     @if($recent->featured_image)
-                                        <img src="{{ str_starts_with($recent->featured_image, 'http') ? $recent->featured_image : asset($recent->featured_image) }}" 
-                                             alt="{{ $recent->title }}" 
-                                             class="w-20 h-20 object-cover rounded-lg"
-                                             onerror="this.onerror=null; this.src='{{ asset('images/light-mode-logo.png') }}';">
+                                        <img src="{{ $recent->featured_image }}" alt="{{ $recent->title }}" class="w-20 h-20 object-cover rounded-lg">
                                     @else
                                         <div class="w-20 h-20 bg-gradient-to-br from-primary-500 to-primary-700 rounded-lg flex items-center justify-center">
                                             <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">

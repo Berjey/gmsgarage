@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <title>Araç Değerleme Raporu #{{ $request->id }}</title>
     <style>
         @page {
-            margin: 18mm 12mm 25mm 12mm;
+            margin: 20mm 15mm;
         }
         * {
             margin: 0;
@@ -15,19 +14,15 @@
             box-sizing: border-box;
         }
         body {
-            font-family: DejaVu Sans, Arial Unicode MS, Arial, Helvetica, sans-serif;
-            font-size: 9.5pt;
-            line-height: 1.4;
+            font-family: DejaVu Sans, sans-serif;
+            font-size: 11px;
+            line-height: 1.5;
             color: #1f2937;
-        }
-        .page-container {
-            max-width: 175mm;
-            margin: 0 auto;
         }
         .header {
             border-bottom: 3px solid #dc2626;
-            padding-bottom: 8px;
-            margin-bottom: 10px;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
         }
         .header-content {
             display: table;
@@ -43,35 +38,35 @@
             vertical-align: middle;
         }
         .company-name {
-            font-size: 18pt;
+            font-size: 24px;
             font-weight: bold;
             color: #dc2626;
             margin-bottom: 2px;
         }
         .company-slogan {
-            font-size: 9pt;
+            font-size: 10px;
             color: #6b7280;
         }
         .report-title {
-            font-size: 14pt;
+            font-size: 18px;
             font-weight: bold;
             color: #1f2937;
         }
         .report-meta {
-            font-size: 9pt;
+            font-size: 10px;
             color: #6b7280;
-            margin-top: 2px;
+            margin-top: 5px;
         }
         .section {
-            margin-bottom: 12px;
+            margin-bottom: 20px;
         }
         .section-title {
-            font-size: 12pt;
+            font-size: 14px;
             font-weight: bold;
             color: #dc2626;
             border-bottom: 2px solid #fecaca;
-            padding-bottom: 4px;
-            margin-bottom: 6px;
+            padding-bottom: 5px;
+            margin-bottom: 12px;
         }
         .info-grid {
             display: table;
@@ -82,40 +77,40 @@
         }
         .info-cell {
             display: table-cell;
-            padding: 5px 0;
+            padding: 8px 0;
             border-bottom: 1px solid #f3f4f6;
             vertical-align: top;
         }
         .info-cell:first-child {
             width: 50%;
-            padding-right: 12px;
+            padding-right: 10px;
         }
         .info-cell:last-child {
             width: 50%;
-            padding-left: 12px;
+            padding-left: 10px;
         }
         .info-label {
-            font-size: 8pt;
+            font-size: 9px;
             color: #6b7280;
             text-transform: uppercase;
             font-weight: bold;
             margin-bottom: 2px;
         }
         .info-value {
-            font-size: 10pt;
+            font-size: 12px;
             color: #1f2937;
             font-weight: 600;
         }
         .info-value-lg {
-            font-size: 11.5pt;
+            font-size: 14px;
             font-weight: bold;
             color: #dc2626;
         }
         .badge {
             display: inline-block;
-            padding: 4px 9px;
+            padding: 3px 8px;
             border-radius: 4px;
-            font-size: 10pt;
+            font-size: 10px;
             font-weight: bold;
         }
         .badge-green {
@@ -133,21 +128,20 @@
         .ekspertiz-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 6px;
+            margin-top: 10px;
         }
         .ekspertiz-table th {
             background-color: #f3f4f6;
-            padding: 6px 8px;
+            padding: 8px;
             text-align: left;
-            font-size: 9pt;
+            font-size: 10px;
             font-weight: bold;
             border-bottom: 2px solid #e5e7eb;
         }
         .ekspertiz-table td {
-            padding: 5px 8px;
+            padding: 6px 8px;
             border-bottom: 1px solid #f3f4f6;
-            font-size: 9.5pt;
-            vertical-align: middle;
+            font-size: 11px;
         }
         .ekspertiz-table tr:nth-child(even) {
             background-color: #f9fafb;
@@ -163,42 +157,11 @@
         .status-green {
             background-color: #10b981;
         }
-        .status-blue {
-            background-color: #3b82f6;
-        }
         .status-yellow {
             background-color: #fbbf24;
         }
         .status-red {
             background-color: #dc2626;
-        }
-        .status-badge {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 4px;
-            font-size: 9pt;
-            font-weight: bold;
-            border: 1px solid;
-        }
-        .status-badge-blue {
-            background-color: #dbeafe;
-            color: #1e40af;
-            border-color: #93c5fd;
-        }
-        .status-badge-yellow {
-            background-color: #fef3c7;
-            color: #92400e;
-            border-color: #fde68a;
-        }
-        .status-badge-red {
-            background-color: #fee2e2;
-            color: #991b1b;
-            border-color: #fca5a5;
-        }
-        .status-badge-gray {
-            background-color: #f3f4f6;
-            color: #374151;
-            border-color: #d1d5db;
         }
         .car-diagram {
             text-align: center;
@@ -234,51 +197,50 @@
             vertical-align: top;
         }
         .column-left {
-            width: 52%;
-            padding-right: 14px;
+            width: 55%;
+            padding-right: 15px;
         }
         .column-right {
-            width: 48%;
-            padding-left: 14px;
+            width: 45%;
+            padding-left: 15px;
         }
         .footer {
             position: fixed;
-            bottom: 5mm;
-            left: 12mm;
-            right: 12mm;
+            bottom: -10mm;
+            left: 0;
+            right: 0;
+            height: 20mm;
             border-top: 1px solid #e5e7eb;
             padding-top: 5px;
-            font-size: 9pt;
+            font-size: 9px;
             color: #6b7280;
             text-align: center;
-            line-height: 1.6;
         }
         .note-box {
             background-color: #f3f4f6;
-            padding: 8px;
+            padding: 10px;
             border-radius: 4px;
-            margin-top: 8px;
+            margin-top: 10px;
         }
         .note-box p {
-            font-size: 9pt;
+            font-size: 11px;
             color: #4b5563;
-            line-height: 1.4;
         }
         .summary-box {
             background: linear-gradient(135deg, #fef2f2, #fff);
             border: 1px solid #fecaca;
             border-radius: 6px;
-            padding: 10px;
-            margin-bottom: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
         }
         .summary-title {
-            font-size: 13pt;
+            font-size: 16px;
             font-weight: bold;
             color: #1f2937;
-            margin-bottom: 3px;
+            margin-bottom: 5px;
         }
         .summary-subtitle {
-            font-size: 9.5pt;
+            font-size: 12px;
             color: #6b7280;
         }
     </style>
@@ -289,37 +251,37 @@
     $ekspertiz = $messageData['ekspertiz'] ?? [];
     $tramer = $messageData['tramer'] ?? 'YOK';
     $tramerTutari = $messageData['tramer_tutari'] ?? null;
+    $sehir = $messageData['sehir'] ?? '';
     $renk = $messageData['renk'] ?? '';
     $govdeTipi = $messageData['govde_tipi'] ?? '';
     $not = $messageData['not'] ?? '';
 
     $partNames = [
-        'sag_arka_camurluk' => 'Sağ Arka Çamurluk',
+        'sag_arka_camurluk' => 'Sag Arka Camurluk',
         'arka_kaput' => 'Arka Kaput',
-        'sol_arka_camurluk' => 'Sol Arka Çamurluk',
-        'sag_arka_kapi' => 'Sağ Arka Kapı',
-        'sag_on_kapi' => 'Sağ Ön Kapı',
+        'sol_arka_camurluk' => 'Sol Arka Camurluk',
+        'sag_arka_kapi' => 'Sag Arka Kapi',
+        'sag_on_kapi' => 'Sag On Kapi',
         'tavan' => 'Tavan',
-        'sol_arka_kapi' => 'Sol Arka Kapı',
-        'sol_on_kapi' => 'Sol Ön Kapı',
-        'sag_on_camurluk' => 'Sağ Ön Çamurluk',
+        'sol_arka_kapi' => 'Sol Arka Kapi',
+        'sol_on_kapi' => 'Sol On Kapi',
+        'sag_on_camurluk' => 'Sag On Camurluk',
         'motor_kaputu' => 'Motor Kaputu',
-        'sol_on_camurluk' => 'Sol Ön Çamurluk',
-        'on_tampon' => 'Ön Tampon',
+        'sol_on_camurluk' => 'Sol On Camurluk',
+        'on_tampon' => 'On Tampon',
         'arka_tampon' => 'Arka Tampon',
     ];
+
     $boyaliCount = collect($ekspertiz)->filter(fn($v) => $v === 'BOYALI')->count();
-    $lokalBoyaliCount = collect($ekspertiz)->filter(fn($v) => $v === 'LOKAL_BOYALI')->count();
     $degismisCount = collect($ekspertiz)->filter(fn($v) => $v === 'DEGISMIS')->count();
 @endphp
 
-<div class="page-container">
     <!-- Header -->
     <div class="header">
         <div class="header-content">
             <div class="header-left">
                 <div class="company-name">GMS GARAGE</div>
-                <div class="company-slogan">Araç Değerlendirme Raporu</div>
+                <div class="company-slogan">Arac Degerleme Raporu</div>
             </div>
             <div class="header-right">
                 <div class="report-title">RAPOR #{{ $request->id }}</div>
@@ -339,7 +301,7 @@
         <div class="column column-left">
             <!-- Araç Bilgileri -->
             <div class="section">
-                <div class="section-title">Araç Bilgileri</div>
+                <div class="section-title">Arac Bilgileri</div>
                 <div class="info-grid">
                     <div class="info-row">
                         <div class="info-cell">
@@ -353,7 +315,7 @@
                     </div>
                     <div class="info-row">
                         <div class="info-cell">
-                            <div class="info-label">Yıl</div>
+                            <div class="info-label">Yil</div>
                             <div class="info-value">{{ $request->year }}</div>
                         </div>
                         <div class="info-cell">
@@ -367,13 +329,13 @@
                             <div class="info-value-lg">{{ number_format($request->mileage, 0, ',', '.') }} KM</div>
                         </div>
                         <div class="info-cell">
-                            <div class="info-label">Gövde Tipi</div>
+                            <div class="info-label">Govde Tipi</div>
                             <div class="info-value">{{ $govdeTipi ?: '-' }}</div>
                         </div>
                     </div>
                     <div class="info-row">
                         <div class="info-cell">
-                            <div class="info-label">Yakıt Tipi</div>
+                            <div class="info-label">Yakit Tipi</div>
                             <div class="info-value">{{ $request->fuel_type ?? '-' }}</div>
                         </div>
                         <div class="info-cell">
@@ -390,11 +352,11 @@
                             <div class="info-label">Tramer Durumu</div>
                             <div class="info-value">
                                 @if($tramer === 'YOK')
-                                    <span class="badge badge-green">Hasarsız</span>
+                                    <span class="badge badge-green">Hasarsiz</span>
                                 @elseif($tramer === 'AGIR_HASAR')
-                                    <span class="badge badge-red">Ağır Hasar Kayıtlı</span>
+                                    <span class="badge badge-red">Agir Hasar Kayitli</span>
                                 @elseif($tramer === 'VAR')
-                                    <span class="badge badge-yellow">Tramer Kayıtlı</span>
+                                    <span class="badge badge-yellow">Tramer Kayitli</span>
                                 @else
                                     <span class="badge badge-yellow">Bilinmiyor</span>
                                 @endif
@@ -409,33 +371,33 @@
 
             <!-- İletişim Bilgileri -->
             <div class="section">
-                <div class="section-title">İletişim Bilgileri</div>
+                <div class="section-title">Iletisim Bilgileri</div>
                 <div class="info-grid">
                     <div class="info-row">
                         <div class="info-cell">
                             <div class="info-label">Ad Soyad</div>
-                            <div class="info-value">{{ $request->name }}</div>
+                            <div class="info-value" style="font-size:14px;">{{ $request->name }}</div>
                         </div>
                         <div class="info-cell">
-                            <div class="info-label">Telefon</div>
-                            <div class="info-value">{{ $request->phone }}</div>
+                            <div class="info-label">Sehir</div>
+                            <div class="info-value">{{ $sehir ?: '-' }}</div>
                         </div>
                     </div>
                     <div class="info-row">
                         <div class="info-cell">
-                            <div class="info-label">E-posta</div>
-                            <div class="info-value">{{ $request->email ?? '-' }}</div>
+                            <div class="info-label">Telefon</div>
+                            <div class="info-value">{{ $request->phone }}</div>
                         </div>
                         <div class="info-cell">
-                            <div class="info-label">Talep Tarihi</div>
-                            <div class="info-value">{{ $request->created_at->format('d.m.Y H:i') }}</div>
+                            <div class="info-label">E-posta</div>
+                            <div class="info-value">{{ $request->email ?? '-' }}</div>
                         </div>
                     </div>
                 </div>
 
                 @if($not)
                 <div class="note-box">
-                    <div class="info-label" style="margin-bottom:3px;">Müşteri Notu</div>
+                    <div class="info-label" style="margin-bottom:5px;">Musteri Notu</div>
                     <p>{{ $not }}</p>
                 </div>
                 @endif
@@ -446,31 +408,27 @@
             <!-- Ekspertiz Özeti -->
             @if(!empty($ekspertiz))
             <div class="section">
-                <div class="section-title">Ekspertiz Özeti</div>
+                <div class="section-title">Ekspertiz Ozeti</div>
 
-                <div style="text-align:center; margin-bottom:8px;">
-                    <div style="display:inline-block; text-align:center; margin:0 6px;">
-                        <div style="font-size:16px; font-weight:bold; color:#10b981;">{{ 13 - $boyaliCount - $lokalBoyaliCount - $degismisCount }}</div>
-                        <div style="font-size:8px; color:#6b7280;">Orijinal</div>
+                <div style="text-align:center; margin-bottom:15px;">
+                    <div style="display:inline-block; text-align:center; margin:0 10px;">
+                        <div style="font-size:24px; font-weight:bold; color:#10b981;">{{ 13 - $boyaliCount - $degismisCount }}</div>
+                        <div style="font-size:9px; color:#6b7280;">Orijinal</div>
                     </div>
-                    <div style="display:inline-block; text-align:center; margin:0 6px;">
-                        <div style="font-size:16px; font-weight:bold; color:#3b82f6;">{{ $boyaliCount }}</div>
-                        <div style="font-size:8px; color:#6b7280;">Boyalı</div>
+                    <div style="display:inline-block; text-align:center; margin:0 10px;">
+                        <div style="font-size:24px; font-weight:bold; color:#fbbf24;">{{ $boyaliCount }}</div>
+                        <div style="font-size:9px; color:#6b7280;">Boyali</div>
                     </div>
-                    <div style="display:inline-block; text-align:center; margin:0 6px;">
-                        <div style="font-size:16px; font-weight:bold; color:#fbbf24;">{{ $lokalBoyaliCount }}</div>
-                        <div style="font-size:8px; color:#6b7280;">Lokal Boyalı</div>
-                    </div>
-                    <div style="display:inline-block; text-align:center; margin:0 6px;">
-                        <div style="font-size:16px; font-weight:bold; color:#dc2626;">{{ $degismisCount }}</div>
-                        <div style="font-size:8px; color:#6b7280;">Değişmiş</div>
+                    <div style="display:inline-block; text-align:center; margin:0 10px;">
+                        <div style="font-size:24px; font-weight:bold; color:#dc2626;">{{ $degismisCount }}</div>
+                        <div style="font-size:9px; color:#6b7280;">Degismis</div>
                     </div>
                 </div>
 
                 <table class="ekspertiz-table">
                     <thead>
                         <tr>
-                            <th>Parça</th>
+                            <th>Parca</th>
                             <th>Durum</th>
                         </tr>
                     </thead>
@@ -479,31 +437,21 @@
                             @php
                                 $status = $ekspertiz[$key] ?? 'ORIJINAL';
                                 $statusText = match($status) {
-                                    'BOYALI' => 'Boyalı',
-                                    'LOKAL_BOYALI' => 'Lokal Boyalı',
-                                    'DEGISMIS' => 'Değişmiş',
+                                    'BOYALI' => 'Boyali',
+                                    'DEGISMIS' => 'Degismis',
                                     default => 'Orijinal'
                                 };
-                                $statusDotClass = match($status) {
-                                    'BOYALI' => 'status-blue',
-                                    'LOKAL_BOYALI' => 'status-yellow',
+                                $statusClass = match($status) {
+                                    'BOYALI' => 'status-yellow',
                                     'DEGISMIS' => 'status-red',
                                     default => 'status-green'
-                                };
-                                $statusBadgeClass = match($status) {
-                                    'BOYALI' => 'status-badge-blue',
-                                    'LOKAL_BOYALI' => 'status-badge-yellow',
-                                    'DEGISMIS' => 'status-badge-red',
-                                    default => 'status-badge-gray'
                                 };
                             @endphp
                             <tr>
                                 <td>{{ $name }}</td>
                                 <td>
-                                    <span class="status-badge {{ $statusBadgeClass }}">
-                                        <span class="status-dot {{ $statusDotClass }}" style="display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:6px; vertical-align:middle;"></span>
-                                        {{ $statusText }}
-                                    </span>
+                                    <span class="status-dot {{ $statusClass }}"></span>
+                                    {{ $statusText }}
                                 </td>
                             </tr>
                         @endforeach
@@ -518,12 +466,11 @@
             @endif
         </div>
     </div>
-</div>
 
     <!-- Footer -->
     <div class="footer">
-        <p>GMS GARAGE - Araç Değerleme Raporu | Oluşturulma Tarihi: {{ now()->format('d.m.Y H:i') }}</p>
-        <p>Bu rapor bilgilendirme amaçlıdır. Kesin değerleme için uzman incelemesi gerekmektedir.</p>
+        <p>GMS GARAGE - Arac Degerleme Raporu | Olusturulma Tarihi: {{ now()->format('d.m.Y H:i') }}</p>
+        <p>Bu rapor bilgilendirme amaclidir. Kesin degerleme icin uzman incelemesi gerekmektedir.</p>
     </div>
 </body>
 </html>

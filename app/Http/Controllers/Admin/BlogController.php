@@ -7,7 +7,6 @@ use App\Models\BlogPost;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\DB;
 
 class BlogController extends Controller
 {
@@ -66,30 +65,15 @@ class BlogController extends Controller
             ->orderBy('category', 'asc')
             ->pluck('category');
 
-        // Kategori istatistikleri (kategori yönetimi için)
-        $categoryStats = BlogPost::select('category', DB::raw('count(*) as post_count'))
-            ->whereNotNull('category')
-            ->where('category', '!=', '')
-            ->groupBy('category')
-            ->orderBy('category', 'asc')
-            ->get()
-            ->map(function ($item) {
-                return [
-                    'name' => $item->category,
-                    'post_count' => $item->post_count,
-                ];
-            });
-
-        return view('admin.blog.index', compact('posts', 'categories', 'categoryStats'));
+        return view('admin.blog.index', compact('posts', 'categories'));
     }
 
     /**
      * Yeni blog yazısı formu
      */
-    public function create(Request $request)
+    public function create()
     {
-        // Sabit kategoriler
-        $defaultCategories = [
+        $categories = [
             'Araç Alım Satım Rehberi',
             'Sürücü Rehberi',
             'Otomobil Dünyası',
@@ -98,23 +82,7 @@ class BlogController extends Controller
             'Dünden Bugüne',
         ];
 
-        // Veritabanından mevcut kategorileri çek
-        $dbCategories = BlogPost::select('category')
-            ->whereNotNull('category')
-            ->where('category', '!=', '')
-            ->distinct()
-            ->orderBy('category', 'asc')
-            ->pluck('category')
-            ->toArray();
-
-        // Kategorileri birleştir ve benzersiz yap
-        $categories = array_unique(array_merge($defaultCategories, $dbCategories));
-        sort($categories);
-
-        // URL'den gelen kategori parametresini al
-        $selectedCategory = $request->get('category');
-
-        return view('admin.blog.create', compact('categories', 'selectedCategory'));
+        return view('admin.blog.create', compact('categories'));
     }
 
     /**
@@ -177,40 +145,12 @@ class BlogController extends Controller
             $validated['author'] = 'GMSGARAGE';
         }
 
-        // Görsel yükleme ve resize
+        // Görsel yükleme
         if ($request->hasFile('featured_image')) {
             $image = $request->file('featured_image');
-            $imageName = time() . '_' . Str::random(10) . '.jpg';
-            
-            if (class_exists(\Intervention\Image\ImageManager::class)) {
-                try {
-                    // Intervention Image ile resize
-                    $manager = new \Intervention\Image\ImageManager(new \Intervention\Image\Drivers\Gd\Driver());
-                    $img = $manager->read($image->getRealPath());
-                    
-                    // Web sitesine uygun boyutlar: 1200x675 (16:9 aspect ratio)
-                    $img->cover(1200, 675);
-                    
-                    // Kalite ayarı
-                    $img->toJpeg(85);
-                    
-                    // Storage'a kaydet
-                    $imagePath = 'blog/' . $imageName;
-                    Storage::disk('public')->put($imagePath, (string) $img->encode());
-                    
-                    $validated['featured_image'] = asset('storage/' . $imagePath);
-                } catch (\Exception $e) {
-                    // Hata durumunda normal yükleme yap
-                    $imageName = time() . '_' . Str::random(10) . '.' . $image->getClientOriginalExtension();
-                    $imagePath = $image->storeAs('blog', $imageName, 'public');
-                    $validated['featured_image'] = asset('storage/' . $imagePath);
-                }
-            } else {
-                // Intervention Image yüklü değilse, normal yükleme yap
-                $imageName = time() . '_' . Str::random(10) . '.' . $image->getClientOriginalExtension();
-                $imagePath = $image->storeAs('blog', $imageName, 'public');
-                $validated['featured_image'] = asset('storage/' . $imagePath);
-            }
+            $imageName = time() . '_' . Str::random(10) . '.' . $image->getClientOriginalExtension();
+            $imagePath = $image->storeAs('blog', $imageName, 'public');
+            $validated['featured_image'] = Storage::url($imagePath);
         } elseif ($request->filled('featured_image_url')) {
             $validated['featured_image'] = $request->featured_image_url;
         }
@@ -227,8 +167,7 @@ class BlogController extends Controller
     {
         $post = BlogPost::findOrFail($id);
         
-        // Sabit kategoriler
-        $defaultCategories = [
+        $categories = [
             'Araç Alım Satım Rehberi',
             'Sürücü Rehberi',
             'Otomobil Dünyası',
@@ -236,19 +175,6 @@ class BlogController extends Controller
             'Araç Bakımı ve Onarımı',
             'Dünden Bugüne',
         ];
-
-        // Veritabanından mevcut kategorileri çek
-        $dbCategories = BlogPost::select('category')
-            ->whereNotNull('category')
-            ->where('category', '!=', '')
-            ->distinct()
-            ->orderBy('category', 'asc')
-            ->pluck('category')
-            ->toArray();
-
-        // Kategorileri birleştir ve benzersiz yap
-        $categories = array_unique(array_merge($defaultCategories, $dbCategories));
-        sort($categories);
 
         return view('admin.blog.edit', compact('post', 'categories'));
     }
@@ -314,46 +240,17 @@ class BlogController extends Controller
             $validated['meta_description'] = $validated['excerpt'] ?? Str::limit(strip_tags($validated['content']), 160);
         }
 
-        // Görsel yükleme ve resize
+        // Görsel yükleme
         if ($request->hasFile('featured_image')) {
             // Eski görseli sil (eğer storage'da ise)
             if ($post->featured_image && str_starts_with($post->featured_image, '/storage/')) {
                 $oldPath = str_replace('/storage/', '', $post->featured_image);
                 Storage::disk('public')->delete($oldPath);
             }
-            
             $image = $request->file('featured_image');
-            $imageName = time() . '_' . Str::random(10) . '.jpg';
-            
-            if (class_exists(\Intervention\Image\ImageManager::class)) {
-                try {
-                    // Intervention Image ile resize
-                    $manager = new \Intervention\Image\ImageManager(new \Intervention\Image\Drivers\Gd\Driver());
-                    $img = $manager->read($image->getRealPath());
-                    
-                    // Web sitesine uygun boyutlar: 1200x675 (16:9 aspect ratio)
-                    $img->cover(1200, 675);
-                    
-                    // Kalite ayarı
-                    $img->toJpeg(85);
-                    
-                    // Storage'a kaydet
-                    $imagePath = 'blog/' . $imageName;
-                    Storage::disk('public')->put($imagePath, (string) $img->encode());
-                    
-                    $validated['featured_image'] = asset('storage/' . $imagePath);
-                } catch (\Exception $e) {
-                    // Hata durumunda normal yükleme yap
-                    $imageName = time() . '_' . Str::random(10) . '.' . $image->getClientOriginalExtension();
-                    $imagePath = $image->storeAs('blog', $imageName, 'public');
-                    $validated['featured_image'] = asset('storage/' . $imagePath);
-                }
-            } else {
-                // Intervention Image yüklü değilse, normal yükleme yap
-                $imageName = time() . '_' . Str::random(10) . '.' . $image->getClientOriginalExtension();
-                $imagePath = $image->storeAs('blog', $imageName, 'public');
-                $validated['featured_image'] = asset('storage/' . $imagePath);
-            }
+            $imageName = time() . '_' . Str::random(10) . '.' . $image->getClientOriginalExtension();
+            $imagePath = $image->storeAs('blog', $imageName, 'public');
+            $validated['featured_image'] = Storage::url($imagePath);
         } elseif ($request->filled('featured_image_url')) {
             $validated['featured_image'] = $request->featured_image_url;
         }
@@ -387,155 +284,6 @@ class BlogController extends Controller
             'success' => true,
             'is_featured' => $post->is_featured,
             'message' => $post->is_featured ? 'Yazı öne çıkarıldı.' : 'Yazı öne çıkandan kaldırıldı.'
-        ]);
-    }
-
-    /**
-     * Kategori güncelle (AJAX)
-     */
-    public function updateCategory(Request $request, $oldName)
-    {
-        $oldName = urldecode($oldName);
-        
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'image' => 'nullable|image|max:2048',
-        ]);
-
-        $newName = trim($validated['name']);
-
-        if ($oldName === $newName && !$request->hasFile('image')) {
-            return response()->json(['success' => false, 'message' => 'Kategori adı değişmedi.']);
-        }
-
-        // Kategori adı değişiyorsa kontrol et
-        if ($oldName !== $newName) {
-            $exists = BlogPost::where('category', $newName)
-                ->where('category', '!=', $oldName)
-                ->exists();
-
-            if ($exists) {
-                return response()->json(['success' => false, 'message' => 'Bu kategori adı zaten kullanılıyor.']);
-            }
-
-            $affected = BlogPost::where('category', $oldName)
-                ->update(['category' => $newName]);
-        }
-
-        // Kategori görseli yükle
-        $categoryImagePath = null;
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = 'category_' . Str::slug($newName ?: $oldName) . '_' . time() . '.jpg';
-            
-            if (class_exists(\Intervention\Image\ImageManager::class)) {
-                try {
-                    $manager = new \Intervention\Image\ImageManager(new \Intervention\Image\Drivers\Gd\Driver());
-                    $img = $manager->read($image->getRealPath());
-                    $img->cover(800, 450); // 16:9 aspect ratio
-                    $img->toJpeg(85);
-                    
-                    $imagePath = 'blog/categories/' . $imageName;
-                    Storage::disk('public')->put($imagePath, (string) $img->encode());
-                    $categoryImagePath = asset('storage/' . $imagePath);
-                } catch (\Exception $e) {
-                    $imageName = 'category_' . Str::slug($newName ?: $oldName) . '_' . time() . '.' . $image->getClientOriginalExtension();
-                    $imagePath = $image->storeAs('blog/categories', $imageName, 'public');
-                    $categoryImagePath = asset('storage/' . $imagePath);
-                }
-            } else {
-                $imageName = 'category_' . Str::slug($newName ?: $oldName) . '_' . time() . '.' . $image->getClientOriginalExtension();
-                $imagePath = $image->storeAs('blog/categories', $imageName, 'public');
-                $categoryImagePath = asset('storage/' . $imagePath);
-            }
-        }
-
-        return response()->json([
-            'success' => true,
-            'message' => isset($affected) ? "Kategori güncellendi. ({$affected} yazı güncellendi)" : "Kategori güncellendi.",
-            'image_url' => $categoryImagePath
-        ]);
-    }
-
-    /**
-     * Quill Editor için görsel yükleme (AJAX)
-     */
-    public function uploadContentImage(Request $request)
-    {
-        $request->validate([
-            'image' => 'required|image|max:5120', // 5MB max
-        ]);
-
-        $image = $request->file('image');
-        $imageName = 'content_' . time() . '_' . Str::random(10) . '.jpg';
-        
-        if (class_exists(\Intervention\Image\ImageManager::class)) {
-            try {
-                $manager = new \Intervention\Image\ImageManager(new \Intervention\Image\Drivers\Gd\Driver());
-                $img = $manager->read($image->getRealPath());
-                
-                // İçerik görselleri için maksimum genişlik 1200px, yükseklik orantılı
-                $img->scale(width: 1200);
-                
-                $img->toJpeg(85);
-                
-                $imagePath = 'blog/content/' . $imageName;
-                Storage::disk('public')->put($imagePath, (string) $img->encode());
-                
-                return response()->json([
-                    'success' => true,
-                    'url' => asset('storage/' . $imagePath)
-                ]);
-            } catch (\Exception $e) {
-                $imageName = 'content_' . time() . '_' . Str::random(10) . '.' . $image->getClientOriginalExtension();
-                $imagePath = $image->storeAs('blog/content', $imageName, 'public');
-                return response()->json([
-                    'success' => true,
-                    'url' => asset('storage/' . $imagePath)
-                ]);
-            }
-        } else {
-            $imageName = 'content_' . time() . '_' . Str::random(10) . '.' . $image->getClientOriginalExtension();
-            $imagePath = $image->storeAs('blog/content', $imageName, 'public');
-            return response()->json([
-                'success' => true,
-                'url' => asset('storage/' . $imagePath)
-            ]);
-        }
-    }
-
-    /**
-     * Kategori sil (AJAX)
-     */
-    public function deleteCategory(Request $request, $name)
-    {
-        $name = urldecode($name);
-        
-        $postCount = BlogPost::where('category', $name)->count();
-
-        if ($postCount > 0) {
-            $validated = $request->validate([
-                'new_category' => 'required|string|max:255',
-            ]);
-
-            $newCategory = trim($validated['new_category']);
-
-            if ($name === $newCategory) {
-                return response()->json(['success' => false, 'message' => 'Yeni kategori mevcut kategoriyle aynı olamaz.']);
-            }
-
-            $affected = BlogPost::where('category', $name)
-                ->update(['category' => $newCategory]);
-
-            return response()->json([
-                'success' => true,
-                'message' => "Kategori silindi ve {$affected} yazı taşındı."
-            ]);
-        }
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Kategori silindi.'
         ]);
     }
 }

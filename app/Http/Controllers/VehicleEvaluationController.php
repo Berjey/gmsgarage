@@ -3,12 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\EvaluationRequest;
-use App\Models\CarBrand;
-use App\Models\CarModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Str;
 
 class VehicleEvaluationController extends Controller
 {
@@ -92,17 +89,7 @@ class VehicleEvaluationController extends Controller
             ]);
         }
         
-        // Veritabanından modelleri getir
-        $brand = \App\Models\CarBrand::where('name', $marka)
-            ->orWhere('slug', \Illuminate\Support\Str::slug($marka))
-            ->first();
-        
-        if (!$brand) {
-            // Fallback: eski static data
-            $models = \App\Data\VehicleModels::getModels($marka);
-        } else {
-            $models = $brand->activeModels()->pluck('name')->toArray();
-        }
+        $models = \App\Data\VehicleModels::getModels($marka);
         
         return response()->json([
             'success' => true,
@@ -175,36 +162,12 @@ class VehicleEvaluationController extends Controller
      */
     public function getArabamBrands()
     {
-        // Önce veritabanından dene
-        $dbBrands = \App\Models\CarBrand::where('is_active', true)
-            ->orderBy('order')
-            ->get();
-        
-        if ($dbBrands->isNotEmpty()) {
-            $formattedBrands = [];
-            foreach ($dbBrands as $brand) {
-                $formattedBrands[] = [
-                    'Id' => $brand->arabam_id ?? $brand->id,
-                    'Name' => $brand->name,
-                    'Value' => $brand->arabam_id ?? $brand->id
-                ];
-            }
-            
-            return response()->json([
-                'success' => true,
-                'data' => [
-                    'Items' => $formattedBrands,
-                    'SelectedItem' => null
-                ]
-            ]);
-        }
-        
-        // Cache for 24 hours - fallback to API
+        // Cache for 24 hours
         $brands = Cache::remember('arabam_brands', 60 * 60 * 24, function () {
             try {
                 $response = Http::timeout(10)
                     ->withOptions([
-                        'verify' => false,
+                        'verify' => false, // SSL doğrulamasını geliştirme ortamında devre dışı bırak
                     ])
                     ->withHeaders([
                         'Accept' => 'application/json',
@@ -235,6 +198,7 @@ class VehicleEvaluationController extends Controller
             \Log::info('Fallback: CarBrands kullanılıyor');
             $staticBrands = \App\Data\CarBrands::all();
             
+            // Arabam.com formatına dönüştür
             $formattedBrands = [];
             foreach ($staticBrands as $index => $brandName) {
                 $formattedBrands[] = [
@@ -362,6 +326,7 @@ class VehicleEvaluationController extends Controller
                 'soyad' => 'required|string|max:255',
                 'telefon' => 'required|string|max:20',
                 'email' => 'required|email|max:255',
+                'sehir' => 'required|string|max:255',
                 'not' => 'nullable|string|max:1000',
                 'kvkk_onay' => 'required|accepted',
             ], [
@@ -370,10 +335,11 @@ class VehicleEvaluationController extends Controller
                 'kilometre.required' => 'Kilometre alanı zorunludur.',
                 'tramer.required' => 'Tramer bilgisi zorunludur.',
                 'ad.required' => 'Ad alanı zorunludur.',
-                'soyad.required' => 'Soyadı alanı zorunludur.',
+                'soyad.required' => 'Soyad alanı zorunludur.',
                 'telefon.required' => 'Telefon alanı zorunludur.',
                 'email.required' => 'E-posta alanı zorunludur.',
                 'email.email' => 'Geçerli bir e-posta adresi girin.',
+                'sehir.required' => 'Şehir alanı zorunludur.',
                 'kvkk_onay.required' => 'KVKK onayı zorunludur.',
             ]);
 
@@ -422,6 +388,7 @@ class VehicleEvaluationController extends Controller
                     'tramer' => $request->tramer,
                     'tramer_tutari' => $tramerTutari,
                     'ekspertiz' => $ekspertiz,
+                    'sehir' => $request->sehir,
                     'not' => $request->not,
                 ], JSON_UNESCAPED_UNICODE),
             ]);

@@ -13,125 +13,21 @@
         overflow: hidden;
     }
     
-    /* Admin Panel - Light Mode Dropdown (Tüm global stilleri override eder) */
-    /* Dark mode ve light mode stillerini devre dışı bırak */
-    /* En yüksek specificity için admin-dropdown class'ı kullan */
-    .admin-body .admin-dropdown .hero-custom-dropdown-trigger,
-    .admin-body .admin-dropdown-trigger,
-    .admin-body .hero-custom-dropdown-trigger,
-    .admin-body.dark .hero-custom-dropdown-trigger {
-        /* Arka plan - sadece beyaz, gradient yok */
-        background: #ffffff !important;
-        background-color: #ffffff !important;
-        background-image: none !important;
-        /* Border - açık gri */
-        border: 1px solid #e5e7eb !important;
-        border-color: #e5e7eb !important;
-        border-width: 1px !important;
-        /* Metin rengi */
-        color: #1f2937 !important;
-        /* Basit gölge */
-        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
-        /* Ring efektini kaldır */
-        ring: none !important;
-        ring-width: 0 !important;
-        ring-color: transparent !important;
-    }
-    
-    /* Before pseudo element'i kaldır */
-    .admin-body .admin-dropdown .hero-custom-dropdown-trigger::before,
-    .admin-body .admin-dropdown-trigger::before,
-    .admin-body .hero-custom-dropdown-trigger::before,
-    .admin-body.dark .hero-custom-dropdown-trigger::before {
-        display: none !important;
-        background: none !important;
-        content: none !important;
-    }
-    
-    /* Hover durumu */
-    .admin-body .admin-dropdown .hero-custom-dropdown-trigger:hover,
-    .admin-body .admin-dropdown-trigger:hover,
-    .admin-body .hero-custom-dropdown-trigger:hover,
-    .admin-body.dark .hero-custom-dropdown-trigger:hover {
-        background: #f9fafb !important;
-        background-color: #f9fafb !important;
-        background-image: none !important;
-        border-color: #dc2626 !important;
-        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06) !important;
-    }
-    
-    /* Hover before efektini kaldır */
-    .admin-body .admin-dropdown .hero-custom-dropdown-trigger:hover::before,
-    .admin-body .admin-dropdown-trigger:hover::before,
-    .admin-body .hero-custom-dropdown-trigger:hover::before,
-    .admin-body.dark .hero-custom-dropdown-trigger:hover::before {
-        display: none !important;
-    }
-    
-    /* Açık durumu */
-    .admin-body .admin-dropdown .hero-custom-dropdown-trigger.open,
-    .admin-body .admin-dropdown-trigger.open,
-    .admin-body .hero-custom-dropdown-trigger.open,
-    .admin-body.dark .hero-custom-dropdown-trigger.open {
-        background: #ffffff !important;
-        background-color: #ffffff !important;
-        background-image: none !important;
-        border-color: #dc2626 !important;
-        box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
-        ring: none !important;
-        ring-width: 0 !important;
-    }
-    
-    /* Metin stilleri */
-    .admin-body .admin-dropdown .hero-custom-dropdown-trigger .selected-text,
-    .admin-body .admin-dropdown-trigger .selected-text,
-    .admin-body .hero-custom-dropdown-trigger .selected-text,
-    .admin-body.dark .hero-custom-dropdown-trigger .selected-text {
-        color: #1f2937 !important;
-        text-shadow: none !important;
-    }
-    
-    .admin-body .admin-dropdown .hero-custom-dropdown-trigger .selected-text.placeholder,
-    .admin-body .admin-dropdown-trigger .selected-text.placeholder,
-    .admin-body .hero-custom-dropdown-trigger .selected-text.placeholder,
-    .admin-body.dark .hero-custom-dropdown-trigger .selected-text.placeholder {
-        color: #6b7280 !important;
-    }
-    
-    /* Ok ikonu */
-    .admin-body .admin-dropdown .hero-custom-dropdown-trigger .arrow,
-    .admin-body .admin-dropdown-trigger .arrow,
-    .admin-body .hero-custom-dropdown-trigger .arrow,
-    .admin-body.dark .hero-custom-dropdown-trigger .arrow {
-        color: #6b7280 !important;
-        filter: none !important;
-        transform: none !important;
-    }
-    
-    .admin-body .admin-dropdown .hero-custom-dropdown-trigger.open .arrow,
-    .admin-body .admin-dropdown-trigger.open .arrow,
-    .admin-body .hero-custom-dropdown-trigger.open .arrow,
-    .admin-body.dark .hero-custom-dropdown-trigger.open .arrow {
-        color: #6b7280 !important;
-        filter: none !important;
-        transform: rotate(180deg) !important;
-    }
-    
-    .admin-body .hero-custom-dropdown-panel {
+    /* Light Mode Uyumlu Dropdown */
+    .hero-custom-dropdown-panel {
         display: none;
         position: absolute;
         top: 100%;
         left: 0;
         right: 0;
         z-index: 50;
-        background: #ffffff !important;
+        background: white;
         margin-top: 0.5rem;
-        border: 1px solid #e5e7eb !important;
-        border-radius: 0.75rem;
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04) !important;
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
     }
     
-    .admin-body .hero-custom-dropdown-panel.open {
+    .hero-custom-dropdown-panel.open {
         display: block;
         animation: dropdownFade 0.2s ease-out;
     }
@@ -141,23 +37,22 @@
         to { opacity: 1; transform: translateY(0); }
     }
 
-    .admin-body .hero-custom-dropdown-option {
+    .hero-custom-dropdown-option {
         padding: 0.75rem 1rem;
         cursor: pointer;
         transition: all 0.2s;
-        color: #374151 !important;
+        color: #374151;
         font-weight: 500;
-        background: transparent !important;
     }
 
-    .admin-body .hero-custom-dropdown-option:hover {
-        background-color: #f9fafb !important;
-        color: #dc2626 !important;
+    .hero-custom-dropdown-option:hover {
+        background-color: #f9fafb;
+        color: #dc2626;
     }
 
-    .admin-body .hero-custom-dropdown-option.selected {
-        background-color: #fef2f2 !important;
-        color: #dc2626 !important;
+    .hero-custom-dropdown-option.selected {
+        background-color: #fef2f2;
+        color: #dc2626;
         font-weight: 700;
     }
 </style>
@@ -205,9 +100,10 @@
                     </div>
 
                     <!-- Dropdowns - Light Mode Optimized -->
-                    <div class="relative hero-custom-dropdown admin-dropdown" data-dropdown="filter-status">
+                    <div class="relative hero-custom-dropdown" data-dropdown="filter-status">
                         <button type="button" 
-                                class="hero-custom-dropdown-trigger admin-dropdown-trigger w-full flex items-center justify-between px-4 py-3 border border-gray-200 rounded-xl text-gray-800 font-semibold hover:bg-gray-50 hover:border-primary-500 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all shadow-sm"
+                                style="background-color: #ffffff !important;"
+                                class="hero-custom-dropdown-trigger w-full flex items-center justify-between px-4 py-3 border border-gray-200 rounded-xl text-gray-800 font-semibold hover:bg-gray-50 hover:border-primary-500 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all shadow-sm"
                                 aria-expanded="false" aria-haspopup="listbox">
                             <span class="selected-text">{{ $filter === 'unread' ? 'Okunmamış' : ($filter === 'read' ? 'Okunmuş' : 'Tüm Mesajlar') }}</span>
                             <svg class="arrow w-5 h-5 text-gray-500 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
@@ -224,9 +120,10 @@
                         </select>
                     </div>
 
-                    <div class="relative hero-custom-dropdown admin-dropdown" data-dropdown="sort-order">
+                    <div class="relative hero-custom-dropdown" data-dropdown="sort-order">
                         <button type="button" 
-                                class="hero-custom-dropdown-trigger admin-dropdown-trigger w-full flex items-center justify-between px-4 py-3 border border-gray-200 rounded-xl text-gray-800 font-semibold hover:bg-gray-50 hover:border-primary-500 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all shadow-sm"
+                                style="background-color: #ffffff !important;"
+                                class="hero-custom-dropdown-trigger w-full flex items-center justify-between px-4 py-3 border border-gray-200 rounded-xl text-gray-800 font-semibold hover:bg-gray-50 hover:border-primary-500 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all shadow-sm"
                                 aria-expanded="false" aria-haspopup="listbox">
                             <span class="selected-text">{{ request('sort') === 'oldest' ? 'Eskiden Yeniye' : 'Yeniden Eskiye' }}</span>
                             <svg class="arrow w-5 h-5 text-gray-500 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
