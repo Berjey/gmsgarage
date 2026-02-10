@@ -11,7 +11,6 @@ use App\Http\Controllers\Admin\ContactMessageController;
 use App\Http\Controllers\Admin\VehicleRequestController;
 use App\Http\Controllers\Admin\EvaluationRequestController;
 use App\Http\Controllers\Admin\MediaController;
-use App\Http\Controllers\Admin\ContactSettingsController;
 use App\Http\Controllers\Admin\SitemapController;
 use Illuminate\Support\Facades\Route;
 
@@ -70,12 +69,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::prefix('settings')->name('settings.')->group(function () {
             Route::get('/', [SettingController::class, 'index'])->name('index');
             Route::put('/', [SettingController::class, 'update'])->name('update');
-        });
-        
-        // İletişim Sayfası Ayarları
-        Route::prefix('contact-settings')->name('contact-settings.')->group(function () {
-            Route::get('/', [ContactSettingsController::class, 'index'])->name('index');
-            Route::put('/', [ContactSettingsController::class, 'update'])->name('update');
         });
         
         // Sayfa Yönetimi

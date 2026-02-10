@@ -13,7 +13,6 @@
         overflow: hidden;
     }
     
-    /* Light Mode Uyumlu Dropdown */
     .hero-custom-dropdown-panel {
         display: none;
         position: absolute;
@@ -23,8 +22,6 @@
         z-index: 50;
         background: white;
         margin-top: 0.5rem;
-        border: 1px solid #e5e7eb;
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
     }
     
     .hero-custom-dropdown-panel.open {
@@ -41,18 +38,16 @@
         padding: 0.75rem 1rem;
         cursor: pointer;
         transition: all 0.2s;
-        color: #374151;
-        font-weight: 500;
     }
 
     .hero-custom-dropdown-option:hover {
         background-color: #f9fafb;
-        color: #dc2626;
+        color: #e11d48;
     }
 
     .hero-custom-dropdown-option.selected {
-        background-color: #fef2f2;
-        color: #dc2626;
+        background-color: #fff1f2;
+        color: #e11d48;
         font-weight: 700;
     }
 </style>
@@ -67,12 +62,6 @@
             <p class="mt-1 text-sm text-gray-500 font-medium tracking-wide uppercase">GELEN MESAJLARIN YÖNETİMİ</p>
         </div>
         <div class="flex items-center gap-3">
-            <button type="button"
-                    onclick="openDeleteAllModal()"
-                    class="inline-flex items-center px-5 py-2.5 bg-red-600 text-white font-bold rounded-xl hover:bg-red-700 transition-all shadow-lg shadow-red-500/25 group">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                Tümünü Sil
-            </button>
             <a href="{{ \App\Models\Setting::get('contact_mail_hostinger_link', 'https://mail.hostinger.com/v2/mailboxes/INBOX') }}" 
                target="_blank"
                class="inline-flex items-center px-5 py-2.5 bg-white text-gray-700 font-bold rounded-xl border border-gray-200 hover:bg-gray-50 hover:text-primary-600 transition-all shadow-sm group">
@@ -81,6 +70,14 @@
             </a>
         </div>
     </div>
+
+    <!-- Stats Cards -->
+    @include('admin.components.stats-cards', [
+        'totalCount' => $totalCount,
+        'unreadCount' => $unreadCount,
+        'readCount' => $readCount,
+        'activeFilter' => $filter
+    ])
 
     <!-- Toolbar & Filters -->
     <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
@@ -99,16 +96,15 @@
                         </div>
                     </div>
 
-                    <!-- Dropdowns - Light Mode Optimized -->
+                    <!-- Dropdowns -->
                     <div class="relative hero-custom-dropdown" data-dropdown="filter-status">
                         <button type="button" 
-                                style="background-color: #ffffff !important;"
-                                class="hero-custom-dropdown-trigger w-full flex items-center justify-between px-4 py-3 border border-gray-200 rounded-xl text-gray-800 font-semibold hover:bg-gray-50 hover:border-primary-500 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all shadow-sm"
+                                class="hero-custom-dropdown-trigger w-full flex items-center justify-between px-4 py-3 bg-white border border-gray-200 rounded-xl text-gray-700 font-medium hover:border-primary-500 transition-all"
                                 aria-expanded="false" aria-haspopup="listbox">
                             <span class="selected-text">{{ $filter === 'unread' ? 'Okunmamış' : ($filter === 'read' ? 'Okunmuş' : 'Tüm Mesajlar') }}</span>
-                            <svg class="arrow w-5 h-5 text-gray-500 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            <svg class="arrow w-5 h-5 text-gray-400 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </button>
-                        <div class="hero-custom-dropdown-panel rounded-xl" role="listbox">
+                        <div class="hero-custom-dropdown-panel rounded-xl shadow-xl border border-gray-100" role="listbox">
                             <div class="hero-custom-dropdown-option {{ $filter === 'all' ? 'selected' : '' }}" data-value="all" role="option">Tüm Mesajlar</div>
                             <div class="hero-custom-dropdown-option {{ $filter === 'unread' ? 'selected' : '' }}" data-value="unread" role="option">Okunmamış</div>
                             <div class="hero-custom-dropdown-option {{ $filter === 'read' ? 'selected' : '' }}" data-value="read" role="option">Okunmuş</div>
@@ -122,13 +118,12 @@
 
                     <div class="relative hero-custom-dropdown" data-dropdown="sort-order">
                         <button type="button" 
-                                style="background-color: #ffffff !important;"
-                                class="hero-custom-dropdown-trigger w-full flex items-center justify-between px-4 py-3 border border-gray-200 rounded-xl text-gray-800 font-semibold hover:bg-gray-50 hover:border-primary-500 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all shadow-sm"
+                                class="hero-custom-dropdown-trigger w-full flex items-center justify-between px-4 py-3 bg-white border border-gray-200 rounded-xl text-gray-700 font-medium hover:border-primary-500 transition-all"
                                 aria-expanded="false" aria-haspopup="listbox">
                             <span class="selected-text">{{ request('sort') === 'oldest' ? 'Eskiden Yeniye' : 'Yeniden Eskiye' }}</span>
-                            <svg class="arrow w-5 h-5 text-gray-500 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            <svg class="arrow w-5 h-5 text-gray-400 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </button>
-                        <div class="hero-custom-dropdown-panel rounded-xl" role="listbox">
+                        <div class="hero-custom-dropdown-panel rounded-xl shadow-xl border border-gray-100" role="listbox">
                             <div class="hero-custom-dropdown-option {{ request('sort') !== 'oldest' ? 'selected' : '' }}" data-value="newest" role="option">Yeniden Eskiye</div>
                             <div class="hero-custom-dropdown-option {{ request('sort') === 'oldest' ? 'selected' : '' }}" data-value="oldest" role="option">Eskiden Yeniye</div>
                         </div>
@@ -155,12 +150,16 @@
         <!-- Table Area -->
         <div class="overflow-x-auto">
             @if($messages->count() > 0)
+            <form id="bulk-action-form" method="POST" action="{{ route('admin.contact-messages.bulk-action') }}">
+                @csrf
                 <table class="w-full">
                     <thead class="bg-gray-50/50">
                         <tr>
+                            <th class="px-6 py-4 text-left">
+                                <input type="checkbox" id="select-all" class="w-5 h-5 rounded border-gray-300 text-primary-600 focus:ring-primary-500/20 transition-all">
+                            </th>
                             <th class="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-widest">GÖNDEREN</th>
                             <th class="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-widest">KONU / ÖNİZLEME</th>
-                            <th class="px-6 py-4 text-center text-xs font-bold text-gray-400 uppercase tracking-widest">TARİH</th>
                             <th class="px-6 py-4 text-center text-xs font-bold text-gray-400 uppercase tracking-widest">DURUM</th>
                             <th class="px-6 py-4 text-right text-xs font-bold text-gray-400 uppercase tracking-widest">İŞLEMLER</th>
                         </tr>
@@ -169,6 +168,9 @@
                         @foreach($messages as $message)
                         <tr class="group hover:bg-gray-50 transition-all cursor-pointer {{ !$message->is_read ? 'bg-primary-50/10' : '' }}"
                             onclick="window.location.href='{{ route('admin.contact-messages.show', $message->id) }}'">
+                            <td class="px-6 py-5" onclick="event.stopPropagation()">
+                                <input type="checkbox" name="ids[]" value="{{ $message->id }}" class="message-checkbox w-5 h-5 rounded border-gray-300 text-primary-600 focus:ring-primary-500/20 transition-all">
+                            </td>
                             <td class="px-6 py-5">
                                 <div class="font-bold text-gray-900 group-hover:text-primary-600 transition-colors">{{ $message->name }}</div>
                                 <div class="text-sm text-gray-500 font-medium">{{ $message->email }}</div>
@@ -176,10 +178,6 @@
                             <td class="px-6 py-5">
                                 <div class="font-bold text-gray-800 line-clamp-1 max-w-md">{{ $message->subject ?? 'Konu Yok' }}</div>
                                 <div class="text-sm text-gray-400 font-medium line-clamp-1 max-w-md italic">{{ $message->message }}</div>
-                            </td>
-                            <td class="px-6 py-5 text-center">
-                                <div class="text-sm font-semibold text-gray-700">{{ $message->created_at->format('d.m.Y') }}</div>
-                                <div class="text-xs text-gray-500">{{ $message->created_at->format('H:i') }}</div>
                             </td>
                             <td class="px-6 py-5 text-center" onclick="event.stopPropagation()">
                                 @include('admin.components.message-badge', ['isRead' => $message->is_read])
@@ -203,6 +201,19 @@
                         @endforeach
                     </tbody>
                 </table>
+
+                <!-- Bulk Actions -->
+                <div id="bulk-actions-bar" class="hidden fixed bottom-8 left-1/2 -translate-x-1/2 bg-white/90 backdrop-blur px-8 py-4 rounded-2xl shadow-2xl border border-primary-100 items-center gap-6 z-50 animate-bounce-subtle">
+                    <span id="selected-count" class="text-sm font-bold text-primary-600 uppercase tracking-widest">0 SEÇİLDİ</span>
+                    <div class="h-8 w-px bg-gray-200"></div>
+                    <div class="flex items-center gap-2">
+                        <input type="hidden" name="action" id="bulk-action-type" value="">
+                        <button type="button" onclick="setBulkAction('mark_read')" class="px-4 py-2 text-sm font-bold text-gray-700 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition-all shadow-sm">Okundu Yap</button>
+                        <button type="button" onclick="setBulkAction('mark_unread')" class="px-4 py-2 text-sm font-bold text-gray-700 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition-all shadow-sm">Okunmamış Yap</button>
+                        <button type="button" onclick="setBulkAction('delete')" class="px-4 py-2 text-sm font-bold text-white bg-red-600 rounded-xl hover:bg-red-700 transition-all shadow-lg shadow-red-500/25">Sil</button>
+                    </div>
+                </div>
+            </form>
             @else
             <div class="text-center py-20 bg-gray-50/20">
                 <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -239,14 +250,6 @@
     'title' => 'Mesajı Sil',
     'message' => 'Bu mesajı silmek istediğinize emin misiniz? Bu işlem geri alınamaz.',
     'confirmText' => 'Sil',
-    'cancelText' => 'Vazgeç'
-])
-
-@include('admin.components.confirm-modal', [
-    'id' => 'delete-all-modal',
-    'title' => 'Tüm Mesajları Sil',
-    'message' => 'Tüm iletişim mesajlarını silmek istediğinize emin misiniz? Bu işlem geri alınamaz ve tüm mesajlar kalıcı olarak silinecektir.',
-    'confirmText' => 'Tümünü Sil',
     'cancelText' => 'Vazgeç'
 ])
 
@@ -297,16 +300,36 @@
                 p.closest('.hero-custom-dropdown').querySelector('.hero-custom-dropdown-trigger').setAttribute('aria-expanded', 'false');
             });
         });
+
+        // Bulk Selection
+        const checkboxes = document.querySelectorAll('.message-checkbox');
+        const bulkBar = document.getElementById('bulk-actions-bar');
+        const countSpan = document.getElementById('selected-count');
+
+        const updateBulkBar = () => {
+            const count = [...checkboxes].filter(cb => cb.checked).length;
+            bulkBar.classList.toggle('hidden', count === 0);
+            bulkBar.classList.toggle('flex', count > 0);
+            countSpan.textContent = `${count} SEÇİLDİ`;
+        };
+
+        document.getElementById('select-all')?.addEventListener('change', e => {
+            checkboxes.forEach(cb => cb.checked = e.target.checked);
+            updateBulkBar();
+        });
+
+        checkboxes.forEach(cb => cb.addEventListener('change', updateBulkBar));
     });
+
+    function setBulkAction(action) {
+        if (action === 'delete' && !confirm('Seçili tüm mesajları silmek istediğinize emin misiniz?')) return;
+        document.getElementById('bulk-action-type').value = action;
+        document.getElementById('bulk-action-form').submit();
+    }
 
     function openDeleteModal(id, url) {
         document.getElementById('confirm-form-delete-modal').action = url;
         document.getElementById('delete-modal').classList.remove('hidden');
-    }
-
-    function openDeleteAllModal() {
-        document.getElementById('confirm-form-delete-all-modal').action = '{{ route('admin.contact-messages.destroy-all') }}';
-        document.getElementById('delete-all-modal').classList.remove('hidden');
     }
 </script>
 @endpush
