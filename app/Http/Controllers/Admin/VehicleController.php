@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Vehicle;
+use App\Models\CarBrand;
+use App\Models\CarModel;
 use App\Data\CarBrands;
 use App\Data\VehicleFeatures;
 use Illuminate\Http\Request;
@@ -300,5 +302,67 @@ class VehicleController extends Controller
         $vehicle->delete();
 
         return redirect()->route('admin.vehicles.index')->with('success', 'Araç başarıyla silindi.');
+    }
+
+    /**
+     * Get brands from database (API endpoint for vehicle form)
+     */
+    public function getBrands()
+    {
+        $brands = CarBrand::where('is_active', true)
+            ->orderBy('order')
+            ->orderBy('name')
+            ->get(['id', 'name', 'arabam_id']);
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'Items' => $brands->map(function($brand) {
+                    return [
+                        'Id' => $brand->id,
+                        'Name' => $brand->name,
+                        'Value' => $brand->id,
+                        'ArabamId' => $brand->arabam_id
+                    ];
+                })->toArray(),
+                'SelectedItem' => null
+            ]
+        ]);
+    }
+
+    /**
+     * Get models for a brand from database (API endpoint for vehicle form)
+     */
+    public function getModels(Request $request)
+    {
+        $brandId = $request->get('brandId');
+
+        if (!$brandId) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Brand ID gerekli'
+            ], 400);
+        }
+
+        $models = CarModel::where('car_brand_id', $brandId)
+            ->where('is_active', true)
+            ->orderBy('order')
+            ->orderBy('name')
+            ->get(['id', 'name', 'arabam_id']);
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'Items' => $models->map(function($model) {
+                    return [
+                        'Id' => $model->id,
+                        'Name' => $model->name,
+                        'Value' => $model->id,
+                        'ArabamId' => $model->arabam_id
+                    ];
+                })->toArray(),
+                'SelectedItem' => null
+            ]
+        ]);
     }
 }

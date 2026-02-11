@@ -745,39 +745,35 @@ $(document).ready(function() {
         versionId: null
     };
     
-    // Load Brands (API + Fallback)
+    // Load Brands (Database)
     loadBrands();
     
     function loadBrands() {
-        const staticBrands = @json(\App\Data\CarBrands::all());
-        
         $.ajax({
-            url: '/api/arabam/brands',
+            url: '{{ route("admin.vehicles.api.brands") }}',
             method: 'GET',
             timeout: 5000,
             success: function(response) {
                 if (response.success && response.data && response.data.Items) {
                     $('#brandSelect').empty().append('<option value="">Marka Seçiniz</option>');
                     response.data.Items.forEach(function(brand) {
-                        $('#brandSelect').append($('<option></option>').attr('value', brand.Name).attr('data-id', brand.Id).text(brand.Name));
+                        // value'ya ID, data-name'e Name koy
+                        $('#brandSelect').append($('<option></option>')
+                            .attr('value', brand.Id)
+                            .attr('data-name', brand.Name)
+                            .attr('data-arabam-id', brand.ArabamId || '')
+                            .text(brand.Name));
                     });
-                    console.log('✅ Markalar API\'den yüklendi:', response.data.Items.length);
+                    console.log('✅ Markalar veritabanından yüklendi:', response.data.Items.length);
                 } else {
-                    loadStaticBrands();
+                    $('#brandSelect').empty().append('<option value="">Marka yüklenemedi</option>');
                 }
             },
-            error: function() {
-                console.warn('⚠️ API başarısız, statik markalar yükleniyor');
-                loadStaticBrands();
+            error: function(xhr, status, error) {
+                console.error('❌ Marka yükleme hatası:', error);
+                $('#brandSelect').empty().append('<option value="">Hata oluştu</option>');
             }
         });
-        
-        function loadStaticBrands() {
-            $('#brandSelect').empty().append('<option value="">Marka Seçiniz</option>');
-            staticBrands.forEach(function(brand, index) {
-                $('#brandSelect').append($('<option></option>').attr('value', brand).attr('data-id', index + 1).text(brand));
-            });
-        }
     }
     
     // Load Years (after brand selection)
@@ -803,8 +799,8 @@ $(document).ready(function() {
     
     // 1. MARKA SEÇİMİ → YIL DROPDOWN AKTİF
     $('#brandSelect').on('change', function() {
-        cascadeData.brandId = $(this).find(':selected').data('id');
-        const brandName = $(this).val();
+        cascadeData.brandId = $(this).val(); // value artık ID
+        const brandName = $(this).find(':selected').data('name') || $(this).find(':selected').text();
         
         console.log('🔍 [1/7] Marka seçildi:', { brandId: cascadeData.brandId, brandName });
         
@@ -826,29 +822,32 @@ $(document).ready(function() {
         resetCascadeFrom('model');
         
         if (cascadeData.year && cascadeData.brandId) {
+            // Veritabanından model yükle (yıl filtrelemesi olmadan, tüm modeller gelir)
             loadModels(cascadeData.brandId, cascadeData.year);
         }
     });
     
     // 3. MODEL SEÇİMİ → GÖVDE TİPİ YÜKLE
     $('#modelSelect').on('change', function() {
-        cascadeData.modelId = $(this).find(':selected').data('id');
-        const modelName = $(this).val();
+        cascadeData.modelId = $(this).val(); // value artık ID (database ID)
+        const modelName = $(this).find(':selected').data('name') || $(this).find(':selected').text();
+        const arabamId = $('#brandSelect option:selected').data('arabam-id');
         
-        console.log('🔍 [3/7] Model seçildi:', { modelId: cascadeData.modelId, modelName });
+        console.log('🔍 [3/7] Model seçildi:', { modelId: cascadeData.modelId, modelName, arabamId });
         
         // Reset sonraki alanlar
         resetCascadeFrom('bodyType');
         
-        if (cascadeData.modelId) {
-            loadBodyTypes(cascadeData.brandId, cascadeData.year, cascadeData.modelId);
+        if (cascadeData.modelId && arabamId) {
+            // Arabam.com API'sine arabam_id ile gövde tipi iste
+            loadBodyTypes(arabamId, cascadeData.year, cascadeData.modelId);
         }
     });
     
     // 4. GÖVDE TİPİ SEÇİMİ → YAKIT TİPİ YÜKLE
     $('#bodyTypeSelect').on('change', function() {
-        cascadeData.bodyTypeId = $(this).find(':selected').data('id');
-        const bodyTypeName = $(this).val();
+        cascadeData.bodyTypeId = $(this).val(); // value artık ID
+        const bodyTypeName = $(this).find(':selected').data('name') || $(this).find(':selected').text();
         
         console.log('🔍 [4/7] Gövde tipi seçildi:', { bodyTypeId: cascadeData.bodyTypeId, bodyTypeName });
         
@@ -862,8 +861,8 @@ $(document).ready(function() {
     
     // 5. YAKIT TİPİ SEÇİMİ → VİTES TİPİ YÜKLE
     $('#fuelTypeSelect').on('change', function() {
-        cascadeData.fuelTypeId = $(this).find(':selected').data('id');
-        const fuelTypeName = $(this).val();
+        cascadeData.fuelTypeId = $(this).val(); // value artık ID
+        const fuelTypeName = $(this).find(':selected').data('name') || $(this).find(':selected').text();
         
         console.log('🔍 [5/7] Yakıt tipi seçildi:', { fuelTypeId: cascadeData.fuelTypeId, fuelTypeName });
         
@@ -877,8 +876,8 @@ $(document).ready(function() {
     
     // 6. VİTES TİPİ SEÇİMİ → VERSİYON YÜKLE
     $('#transmissionSelect').on('change', function() {
-        cascadeData.transmissionId = $(this).find(':selected').data('id');
-        const transmissionName = $(this).val();
+        cascadeData.transmissionId = $(this).val(); // value artık ID
+        const transmissionName = $(this).find(':selected').data('name') || $(this).find(':selected').text();
         
         console.log('🔍 [6/7] Vites tipi seçildi:', { transmissionId: cascadeData.transmissionId, transmissionName });
         
@@ -892,8 +891,8 @@ $(document).ready(function() {
     
     // 7. VERSİYON SEÇİMİ → RENK YÜKLE (Opsiyonel)
     $('#versionSelect').on('change', function() {
-        cascadeData.versionId = $(this).find(':selected').data('id');
-        const versionName = $(this).val();
+        cascadeData.versionId = $(this).val(); // value artık ID
+        const versionName = $(this).find(':selected').data('name') || $(this).find(':selected').text();
         
         console.log('🔍 [7/7] Versiyon seçildi:', { versionId: cascadeData.versionId, versionName });
         
@@ -946,48 +945,57 @@ $(document).ready(function() {
     // CASCADE LOAD FUNCTIONS (Web sitesindeki gibi API çağrıları)
     // ============================================================
     
-    // Load Models (step 20)
+    // Load Models (from database)
     function loadModels(brandId, year) {
         $('#modelSelect').prop('disabled', false).empty().append('<option value="">Yükleniyor...</option>');
         
         $.ajax({
-            url: '/api/arabam/step',
+            url: '{{ route("admin.vehicles.api.models") }}',
             method: 'GET',
-            data: { step: '20', brandId: brandId, modelYear: year },
+            data: { brandId: brandId },
             success: function(response) {
                 if (response.success && response.data && response.data.Items) {
                     populateSelect('#modelSelect', response.data.Items, 'Model Seçiniz');
-                    console.log(`✅ ${response.data.Items.length} model yüklendi`);
+                    console.log(`✅ ${response.data.Items.length} model veritabanından yüklendi`);
                     
                     // Auto-select if only 1 option
                     if (response.data.Items.length === 1) {
-                        $('#modelSelect').val(response.data.Items[0].Name).trigger('change');
+                        $('#modelSelect').val(response.data.Items[0].Id).trigger('change');
                     }
                 } else {
                     $('#modelSelect').empty().append('<option value="">Model bulunamadı</option>');
                 }
             },
-            error: function() {
+            error: function(xhr, status, error) {
+                console.error('❌ Model yükleme hatası:', error);
                 $('#modelSelect').empty().append('<option value="">Hata oluştu</option>');
             }
         });
     }
     
-    // Load Body Types (step 30)
-    function loadBodyTypes(brandId, year, modelId) {
+    // Load Body Types (step 30) - Arabam.com API
+    function loadBodyTypes(arabamBrandId, year, modelId) {
         $('#bodyTypeSelect').prop('disabled', false).empty().append('<option value="">Yükleniyor...</option>');
+        
+        // Model'in arabam_id'sini al
+        const modelArabamId = $('#modelSelect option:selected').data('arabam-id');
         
         $.ajax({
             url: '/api/arabam/step',
             method: 'GET',
-            data: { step: '30', brandId: brandId, modelYear: year, modelGroupId: modelId },
+            data: { 
+                step: '30', 
+                brandId: arabamBrandId, 
+                modelYear: year, 
+                modelGroupId: modelArabamId || modelId 
+            },
             success: function(response) {
                 if (response.success && response.data && response.data.Items) {
                     populateSelect('#bodyTypeSelect', response.data.Items, 'Gövde Tipi Seçiniz');
                     console.log(`✅ ${response.data.Items.length} gövde tipi yüklendi`);
                     
                     if (response.data.Items.length === 1) {
-                        $('#bodyTypeSelect').val(response.data.Items[0].Name).trigger('change');
+                        $('#bodyTypeSelect').val(response.data.Items[0].Id).trigger('change');
                     }
                 } else {
                     $('#bodyTypeSelect').empty().append('<option value="">Gövde tipi bulunamadı</option>');
@@ -1107,12 +1115,17 @@ $(document).ready(function() {
     function populateSelect(selector, items, placeholder) {
         $(selector).empty().append(`<option value="">${placeholder}</option>`);
         items.forEach(function(item) {
-            $(selector).append(
-                $('<option></option>')
-                    .attr('value', item.Name)
-                    .attr('data-id', item.Id)
-                    .text(item.Name)
-            );
+            const option = $('<option></option>')
+                .attr('value', item.Id) // value artık ID
+                .attr('data-name', item.Name) // data-name'de Name
+                .text(item.Name);
+            
+            // Eğer ArabamId varsa ekle
+            if (item.ArabamId) {
+                option.attr('data-arabam-id', item.ArabamId);
+            }
+            
+            $(selector).append(option);
         });
     }
     
@@ -1266,17 +1279,56 @@ $(document).ready(function() {
         if ($('#manualBrandToggle').is(':checked')) {
             const manualBrand = $('#manualBrandInput').val();
             $('#brandSelect').append($('<option></option>').attr('value', manualBrand).attr('selected', true).text(manualBrand));
+        } else {
+            // Normal seçim: value'da ID var, data-name'de Name var
+            // Backend'e Name göndermek için hidden input oluştur
+            const selectedBrand = $('#brandSelect option:selected');
+            if (selectedBrand.val()) {
+                const brandName = selectedBrand.data('name') || selectedBrand.text();
+                $('#brandSelect').after('<input type="hidden" name="brand" value="' + brandName + '">');
+                $('#brandSelect').prop('disabled', true);
+            }
         }
         
         if ($('#manualModelToggle').is(':checked')) {
             const manualModel = $('#manualModelInput').val();
             $('#modelSelect').append($('<option></option>').attr('value', manualModel).attr('selected', true).text(manualModel));
+        } else {
+            // Normal seçim: value'da ID var, data-name'de Name var
+            const selectedModel = $('#modelSelect option:selected');
+            if (selectedModel.val()) {
+                const modelName = selectedModel.data('name') || selectedModel.text();
+                $('#modelSelect').after('<input type="hidden" name="model" value="' + modelName + '">');
+                $('#modelSelect').prop('disabled', true);
+            }
         }
         
         if ($('#manualVersionToggle').is(':checked')) {
             const manualVersion = $('#manualVersionInput').val();
             $('#versionSelect').append($('<option></option>').attr('value', manualVersion).attr('selected', true).text(manualVersion));
+        } else {
+            // Normal seçim
+            const selectedVersion = $('#versionSelect option:selected');
+            if (selectedVersion.val()) {
+                const versionName = selectedVersion.data('name') || selectedVersion.text();
+                $('#versionSelect').after('<input type="hidden" name="package_version" value="' + versionName + '">');
+                $('#versionSelect').prop('disabled', true);
+            }
         }
+        
+        // Diğer seçimleri de hidden input olarak ekle
+        ['body_type', 'fuel_type', 'transmission', 'color'].forEach(function(fieldName) {
+            const selectId = fieldName === 'body_type' ? '#bodyTypeSelect' : 
+                            fieldName === 'fuel_type' ? '#fuelTypeSelect' : 
+                            fieldName === 'transmission' ? '#transmissionSelect' : 
+                            '#colorSelect';
+            const selected = $(selectId + ' option:selected');
+            if (selected.val()) {
+                const fieldValue = selected.data('name') || selected.text();
+                $(selectId).after('<input type="hidden" name="' + fieldName + '" value="' + fieldValue + '">');
+                $(selectId).prop('disabled', true);
+            }
+        });
         
         const action = $('#formAction').val();
         console.log('📤 Form submit action:', action);

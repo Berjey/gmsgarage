@@ -52,6 +52,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/{id}/edit', [AdminVehicleController::class, 'edit'])->name('edit');
             Route::put('/{id}', [AdminVehicleController::class, 'update'])->name('update');
             Route::delete('/{id}', [AdminVehicleController::class, 'destroy'])->name('destroy');
+            
+            // API endpoints for vehicle form
+            Route::get('/api/brands', [AdminVehicleController::class, 'getBrands'])->name('api.brands');
+            Route::get('/api/models', [AdminVehicleController::class, 'getModels'])->name('api.models');
         });
         
         // Blog Yönetimi
