@@ -385,53 +385,140 @@
                 <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Araç Özellikleri</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="space-y-4">
+                        <!-- Marka -->
+                        @if($vehicle->brand)
                         <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
                             <span class="text-gray-600 dark:text-gray-300 font-medium">Marka</span>
-                            <span class="font-bold text-gray-900 dark:text-gray-100 text-right">{{ $vehicle->brand ?? '-' }}</span>
+                            <span class="font-bold text-gray-900 dark:text-gray-100 text-right">{{ $vehicle->brand }}</span>
                         </div>
+                        @endif
+                        
+                        <!-- Paket / Versiyon -->
+                        @if($vehicle->package_version)
                         <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
-                            <span class="text-gray-600 dark:text-gray-300 font-medium">Paket</span>
-                            <span class="font-bold text-gray-900 dark:text-gray-100 text-right">{{ $subtitle ?? '-' }}</span>
+                            <span class="text-gray-600 dark:text-gray-300 font-medium">Paket / Versiyon</span>
+                            <span class="font-bold text-gray-900 dark:text-gray-100 text-right">{{ $vehicle->package_version }}</span>
                         </div>
+                        @endif
+                        
+                        <!-- Motor Gücü -->
+                        @if($vehicle->horse_power)
                         <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
                             <span class="text-gray-600 dark:text-gray-300 font-medium">Motor Gücü</span>
-                            <span class="font-bold text-gray-900 dark:text-gray-100 text-right">{{ $vehicle->horse_power ?? '-' }} {{ $vehicle->horse_power ? 'HP' : '' }}</span>
+                            <span class="font-bold text-gray-900 dark:text-gray-100 text-right">{{ $vehicle->horse_power }} HP</span>
                         </div>
+                        @endif
+                        
+                        <!-- Tork -->
+                        @if($vehicle->torque)
+                        <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
+                            <span class="text-gray-600 dark:text-gray-300 font-medium">Tork</span>
+                            <span class="font-bold text-gray-900 dark:text-gray-100 text-right">{{ $vehicle->torque }} Nm</span>
+                        </div>
+                        @endif
+                        
+                        <!-- Renk -->
+                        @if($vehicle->color)
                         <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
                             <span class="text-gray-600 dark:text-gray-300 font-medium">Renk</span>
-                            <span class="font-bold text-gray-900 dark:text-gray-100 text-right">{{ $vehicle->color ?? '-' }}</span>
+                            <span class="font-bold text-gray-900 dark:text-gray-100 text-right">
+                                {{ $vehicle->color }}
+                                @if($vehicle->color_type) ({{ $vehicle->color_type }}) @endif
+                            </span>
                         </div>
+                        @endif
+                        
+                        <!-- Kapı Sayısı -->
+                        @if($vehicle->door_count)
+                        <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
+                            <span class="text-gray-600 dark:text-gray-300 font-medium">Kapı Sayısı</span>
+                            <span class="font-bold text-gray-900 dark:text-gray-100 text-right">{{ $vehicle->door_count }} Kapı</span>
+                        </div>
+                        @endif
                     </div>
                     <div class="space-y-4">
+                        <!-- Model -->
+                        @if($vehicle->model)
                         <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
                             <span class="text-gray-600 dark:text-gray-300 font-medium">Model</span>
-                            <span class="font-bold text-gray-900 dark:text-gray-100 text-right">{{ $vehicle->model ?? '-' }}</span>
+                            <span class="font-bold text-gray-900 dark:text-gray-100 text-right">{{ $vehicle->model }}</span>
                         </div>
+                        @endif
+                        
+                        <!-- Motor Hacmi -->
+                        @if($vehicle->engine_size)
                         <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
                             <span class="text-gray-600 dark:text-gray-300 font-medium">Motor Hacmi</span>
                             <span class="font-bold text-gray-900 dark:text-gray-100 text-right">
-                                @if($vehicle->engine_size)
-                                    @php
-                                        $engineSize = (float) $vehicle->engine_size;
-                                        if ($engineSize >= 1000) {
-                                            echo number_format($engineSize / 1000, 1, ',', '.') . ' L';
-                                        } else {
-                                            echo number_format($engineSize, 0, ',', '.') . ' cc';
-                                        }
-                                    @endphp
-                                @else
-                                    -
+                                @php
+                                    $engineSize = (float) $vehicle->engine_size;
+                                    if ($engineSize >= 1000) {
+                                        echo number_format($engineSize / 1000, 1, ',', '.') . ' L';
+                                    } else {
+                                        echo number_format($engineSize, 0, ',', '.') . ' cc';
+                                    }
+                                @endphp
+                            </span>
+                        </div>
+                        @endif
+                        
+                        <!-- Çekiş -->
+                        @if($vehicle->drive_type)
+                        <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
+                            <span class="text-gray-600 dark:text-gray-300 font-medium">Çekiş</span>
+                            <span class="font-bold text-gray-900 dark:text-gray-100 text-right">{{ $vehicle->drive_type }}</span>
+                        </div>
+                        @endif
+                        
+                        <!-- Koltuk Sayısı -->
+                        @if($vehicle->seat_count)
+                        <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
+                            <span class="text-gray-600 dark:text-gray-300 font-medium">Koltuk Sayısı</span>
+                            <span class="font-bold text-gray-900 dark:text-gray-100 text-right">{{ $vehicle->seat_count }} Kişilik</span>
+                        </div>
+                        @endif
+                        
+                        <!-- Garanti -->
+                        @if($vehicle->has_warranty)
+                        <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
+                            <span class="text-gray-600 dark:text-gray-300 font-medium">Garanti</span>
+                            <span class="font-bold text-green-600 dark:text-green-400 text-right">
+                                Var
+                                @if($vehicle->warranty_end_date) 
+                                    ({{ \Carbon\Carbon::parse($vehicle->warranty_end_date)->format('d.m.Y') }}'e kadar)
                                 @endif
                             </span>
                         </div>
+                        @endif
+                        
+                        <!-- Tramer (Opsiyonel - sadece doluysa) -->
+                        @if($vehicle->tramer_status && $vehicle->tramer_status !== 'Bilinmiyor')
                         <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
-                            <span class="text-gray-600 dark:text-gray-300 font-medium">Çekiş</span>
-                            <span class="font-bold text-gray-900 dark:text-gray-100 text-right">Önden Çekiş</span>
+                            <span class="text-gray-600 dark:text-gray-300 font-medium">Tramer Kaydı</span>
+                            <span class="font-bold {{ $vehicle->tramer_status === 'Yok' ? 'text-green-600 dark:text-green-400' : 'text-amber-600 dark:text-amber-400' }} text-right">
+                                {{ $vehicle->tramer_status }}
+                                @if($vehicle->tramer_amount && $vehicle->tramer_status === 'Var')
+                                    ({{ number_format($vehicle->tramer_amount, 0, ',', '.') }} ₺)
+                                @endif
+                            </span>
                         </div>
+                        @endif
+                        
+                        <!-- Kaçıncı Sahip -->
+                        @if($vehicle->owner_number)
                         <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
-                            <span class="text-gray-600 dark:text-gray-300 font-medium">Garanti</span>
-                            <span class="font-bold text-gray-900 dark:text-gray-100 text-right">Var</span>
+                            <span class="text-gray-600 dark:text-gray-300 font-medium">Kaçıncı Sahip</span>
+                            <span class="font-bold text-gray-900 dark:text-gray-100 text-right">{{ $vehicle->owner_number }}. Sahip</span>
                         </div>
+                        @endif
+                        
+                        <!-- Muayene Tarihi -->
+                        @if($vehicle->inspection_date)
+                        <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
+                            <span class="text-gray-600 dark:text-gray-300 font-medium">Muayene Tarihi</span>
+                            <span class="font-bold text-gray-900 dark:text-gray-100 text-right">{{ \Carbon\Carbon::parse($vehicle->inspection_date)->format('d.m.Y') }}</span>
+                        </div>
+                        @endif
                     </div>
                 </div>
             </div>

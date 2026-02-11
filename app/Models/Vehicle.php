@@ -11,37 +11,79 @@ class Vehicle extends Model
     use HasFactory;
 
     protected $fillable = [
+        // Temel Bilgiler
         'title',
         'slug',
         'brand',
         'model',
+        'package_version',
         'year',
         'price',
         'kilometer',
+        
+        // Teknik Özellikler
         'fuel_type',
         'transmission',
+        'drive_type',
         'body_type',
         'color',
+        'color_type',
         'engine_size',
         'horse_power',
+        'torque',
+        'door_count',
+        'seat_count',
+        
+        // Donanımlar & Açıklama
         'description',
         'features',
+        
+        // Hasar & Geçmiş
+        'tramer_status',
+        'tramer_amount',
+        'painted_parts',
+        'replaced_parts',
+        'owner_number',
+        'inspection_date',
+        'has_warranty',
+        'warranty_end_date',
+        
+        // Medya
         'image',
         'images',
+        'images_meta',
+        
+        // Durum
         'is_featured',
         'is_active',
+        
+        // Entegrasyon
         'sahibinden_url',
         'sahibinden_id',
+        'source',
+        'external_id',
     ];
 
     protected $casts = [
         'images' => 'array',
         'features' => 'array',
+        'painted_parts' => 'array',
+        'replaced_parts' => 'array',
+        'images_meta' => 'array',
         'is_featured' => 'boolean',
         'is_active' => 'boolean',
+        'has_warranty' => 'boolean',
         'price' => 'decimal:2',
+        'tramer_amount' => 'decimal:2',
         'kilometer' => 'integer',
         'year' => 'integer',
+        'horse_power' => 'integer',
+        'torque' => 'integer',
+        'door_count' => 'integer',
+        'seat_count' => 'integer',
+        'owner_number' => 'integer',
+        'inspection_date' => 'date',
+        'warranty_end_date' => 'date',
     ];
 
     /**
