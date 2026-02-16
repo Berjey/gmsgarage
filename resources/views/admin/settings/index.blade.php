@@ -17,26 +17,35 @@
             <button type="button" 
                     data-tab="general"
                     onclick="switchTab('general')"
-                    class="tab-button active flex-1 min-w-[200px] px-6 py-4 text-sm font-semibold transition-colors bg-red-600 text-white border-b-2 border-red-600">
+                    class="tab-button active flex-1 min-w-[180px] px-5 py-4 text-sm font-semibold transition-colors bg-red-600 text-white border-b-2 border-red-600">
                 <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                 </svg>
-                Genel Ayarlar
+                Genel
+            </button>
+            <button type="button" 
+                    data-tab="seo"
+                    onclick="switchTab('seo')"
+                    class="tab-button flex-1 min-w-[180px] px-5 py-4 text-sm font-semibold transition-colors border-l border-gray-200 bg-white text-gray-700 hover:bg-gray-50">
+                <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                </svg>
+                SEO & Kod
             </button>
             <button type="button" 
                     data-tab="contact"
                     onclick="switchTab('contact')"
-                    class="tab-button flex-1 min-w-[200px] px-6 py-4 text-sm font-semibold transition-colors border-l border-gray-200 bg-white text-gray-700 hover:bg-gray-50">
+                    class="tab-button flex-1 min-w-[180px] px-5 py-4 text-sm font-semibold transition-colors border-l border-gray-200 bg-white text-gray-700 hover:bg-gray-50">
                 <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                 </svg>
-                İletişim Bilgileri
+                İletişim
             </button>
             <button type="button" 
                     data-tab="social"
                     onclick="switchTab('social')"
-                    class="tab-button flex-1 min-w-[200px] px-6 py-4 text-sm font-semibold transition-colors border-l border-gray-200 bg-white text-gray-700 hover:bg-gray-50">
+                    class="tab-button flex-1 min-w-[180px] px-5 py-4 text-sm font-semibold transition-colors border-l border-gray-200 bg-white text-gray-700 hover:bg-gray-50">
                 <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
                 </svg>
@@ -45,11 +54,11 @@
             <button type="button" 
                     data-tab="footer"
                     onclick="switchTab('footer')"
-                    class="tab-button flex-1 min-w-[200px] px-6 py-4 text-sm font-semibold transition-colors border-l border-gray-200 bg-white text-gray-700 hover:bg-gray-50">
+                    class="tab-button flex-1 min-w-[180px] px-5 py-4 text-sm font-semibold transition-colors border-l border-gray-200 bg-white text-gray-700 hover:bg-gray-50">
                 <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                 </svg>
-                Footer Yönetimi
+                Footer
             </button>
         </div>
 
@@ -91,74 +100,156 @@
                               placeholder="Site açıklaması (Google'da görünecek)">{{ $settings['site_description'] ?? '' }}</textarea>
                 </div>
 
-                <!-- Logo ve Favicon Yönetimi -->
+                <!-- Bakım Modu -->
                 <div class="border-t pt-6 mt-6">
                     <h3 class="text-lg font-bold text-gray-900 mb-4">
                         <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
                         </svg>
-                        Logo ve Görsel Yönetimi
+                        Bakım Modu Yönetimi
                     </h3>
 
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <!-- Site Logosu -->
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Site Logosu</label>
-                            <div class="space-y-3">
-                                @if(isset($settings['site_logo']) && $settings['site_logo'])
-                                    <div class="relative inline-block">
-                                        <img src="{{ Storage::url($settings['site_logo']) }}" 
-                                             alt="Site Logo" 
-                                             class="h-16 w-auto border border-gray-300 rounded-lg p-2 bg-white">
-                                        <button type="button" 
-                                                onclick="document.getElementById('remove_logo').value = '1'; this.closest('div').remove();"
-                                                class="absolute -top-2 -right-2 bg-red-600 text-white rounded-full p-1 hover:bg-red-700 transition-colors">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                            </svg>
-                                        </button>
+                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+                        <div class="flex items-start gap-4">
+                            <!-- Switch -->
+                            <div class="flex-shrink-0">
+                                <label class="flex items-center cursor-pointer">
+                                    <div class="relative">
+                                        <input type="checkbox" 
+                                               name="maintenance_mode" 
+                                               value="1"
+                                               {{ ($settings['maintenance_mode'] ?? '0') == '1' ? 'checked' : '' }}
+                                               class="sr-only peer"
+                                               onchange="toggleMaintenanceInfo(this.checked)">
+                                        <div class="w-14 h-8 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-red-600"></div>
                                     </div>
-                                    <input type="hidden" id="remove_logo" name="remove_logo" value="0">
-                                @endif
-                                
-                                <input type="file" 
-                                       name="site_logo" 
-                                       accept="image/png,image/jpeg,image/svg+xml,image/webp"
-                                       class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100">
-                                <p class="text-xs text-gray-500">
-                                    PNG, JPG, SVG veya WebP formatında. Önerilen boyut: 200x50px
+                                    <span class="ml-3 text-sm font-medium text-gray-900">
+                                        Bakım Modu <span id="maintenanceStatus" class="text-xs {{ ($settings['maintenance_mode'] ?? '0') == '1' ? 'text-red-600' : 'text-gray-500' }}">({{ ($settings['maintenance_mode'] ?? '0') == '1' ? 'Aktif' : 'Kapalı' }})</span>
+                                    </span>
+                                </label>
+                            </div>
+
+                            <!-- Info -->
+                            <div class="flex-1">
+                                <p class="text-sm text-yellow-800 mb-3">
+                                    <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    Bakım modu aktif olduğunda, sadece admin kullanıcıları siteye erişebilir. Diğer ziyaretçiler bakım mesajını görür.
                                 </p>
+
+                                <!-- Bakım Mesajı -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Bakım Mesajı</label>
+                                    <textarea name="maintenance_message" 
+                                              rows="4"
+                                              class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
+                                              placeholder="Site bakım çalışmaları nedeniyle geçici olarak hizmet dışıdır. En kısa sürede tekrar hizmetinizdeyiz.">{{ $settings['maintenance_message'] ?? 'Site bakım çalışmaları nedeniyle geçici olarak hizmet dışıdır. En kısa sürede tekrar hizmetinizdeyiz.' }}</textarea>
+                                    <p class="mt-1 text-xs text-gray-500">
+                                        Ziyaretçilerin göreceği bakım sayfası mesajı
+                                    </p>
+                                </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
 
-                        <!-- Favicon -->
+            <!-- Tab Content: SEO & Kod Yönetimi -->
+            <div id="tab-seo" class="tab-content p-6 space-y-6 hidden">
+                
+                <h3 class="text-lg font-bold text-gray-900 mb-4">SEO ve Analitik Yönetimi</h3>
+                
+                <!-- Google Analytics & GTM -->
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-6">
+                    <h4 class="font-semibold text-gray-900 mb-4 flex items-center">
+                        <svg class="w-5 h-5 inline-block mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                        Google Analytics & Tag Manager
+                    </h4>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Favicon</label>
-                            <div class="space-y-3">
-                                @if(isset($settings['site_favicon']) && $settings['site_favicon'])
-                                    <div class="relative inline-block">
-                                        <img src="{{ Storage::url($settings['site_favicon']) }}" 
-                                             alt="Favicon" 
-                                             class="h-16 w-16 border border-gray-300 rounded-lg p-2 bg-white">
-                                        <button type="button" 
-                                                onclick="document.getElementById('remove_favicon').value = '1'; this.closest('div').remove();"
-                                                class="absolute -top-2 -right-2 bg-red-600 text-white rounded-full p-1 hover:bg-red-700 transition-colors">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                            </svg>
-                                        </button>
-                                    </div>
-                                    <input type="hidden" id="remove_favicon" name="remove_favicon" value="0">
-                                @endif
-                                
-                                <input type="file" 
-                                       name="site_favicon" 
-                                       accept="image/x-icon,image/png,image/svg+xml"
-                                       class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100">
-                                <p class="text-xs text-gray-500">
-                                    ICO, PNG veya SVG formatında. Önerilen boyut: 32x32px veya 64x64px
-                                </p>
-                            </div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Google Analytics ID</label>
+                            <input type="text" 
+                                   name="google_analytics_id" 
+                                   value="{{ $settings['google_analytics_id'] ?? '' }}"
+                                   class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors font-mono text-sm"
+                                   placeholder="G-XXXXXXXXXX veya UA-XXXXXXXXX-X">
+                            <p class="mt-1 text-xs text-gray-500">
+                                Google Analytics 4 veya Universal Analytics ID'nizi girin
+                            </p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Google Tag Manager ID</label>
+                            <input type="text" 
+                                   name="google_tag_manager_id" 
+                                   value="{{ $settings['google_tag_manager_id'] ?? '' }}"
+                                   class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors font-mono text-sm"
+                                   placeholder="GTM-XXXXXXX">
+                            <p class="mt-1 text-xs text-gray-500">
+                                Google Tag Manager Container ID'nizi girin
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Header Özel Kod -->
+                <div class="bg-purple-50 border border-purple-200 rounded-lg p-6">
+                    <h4 class="font-semibold text-gray-900 mb-4 flex items-center">
+                        <svg class="w-5 h-5 inline-block mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                        </svg>
+                        Header Özel Kod Alanı
+                    </h4>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            <code class="text-xs bg-gray-100 px-2 py-1 rounded">&lt;head&gt;</code> etiketleri arasına eklenecek kodlar
+                        </label>
+                        <textarea name="custom_head_code" 
+                                  rows="8"
+                                  class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors font-mono text-sm"
+                                  placeholder="<!-- Facebook Pixel, Meta Tags, Verification Codes vb. -->">{{ $settings['custom_head_code'] ?? '' }}</textarea>
+                        <div class="mt-2 p-3 bg-white border border-purple-100 rounded text-xs text-gray-600">
+                            <strong>Kullanım Alanları:</strong>
+                            <ul class="list-disc list-inside mt-1 space-y-1">
+                                <li>Facebook Pixel, LinkedIn Insight Tag</li>
+                                <li>Google/Bing Site Verification</li>
+                                <li>Custom CSS veya Meta Tags</li>
+                                <li>Heatmap/Analytics araçları (Hotjar, Clarity vb.)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer Özel Kod -->
+                <div class="bg-green-50 border border-green-200 rounded-lg p-6">
+                    <h4 class="font-semibold text-gray-900 mb-4 flex items-center">
+                        <svg class="w-5 h-5 inline-block mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                        </svg>
+                        Footer Özel Kod Alanı
+                    </h4>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            <code class="text-xs bg-gray-100 px-2 py-1 rounded">&lt;/body&gt;</code> etiketi öncesine eklenecek kodlar
+                        </label>
+                        <textarea name="custom_footer_code" 
+                                  rows="8"
+                                  class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors font-mono text-sm"
+                                  placeholder="<!-- Chatbot, Analytics, Custom JavaScript vb. -->">{{ $settings['custom_footer_code'] ?? '' }}</textarea>
+                        <div class="mt-2 p-3 bg-white border border-green-100 rounded text-xs text-gray-600">
+                            <strong>Kullanım Alanları:</strong>
+                            <ul class="list-disc list-inside mt-1 space-y-1">
+                                <li>Chatbot scriptleri (Tawk.to, Intercom, Tidio vb.)</li>
+                                <li>Performance Tracking kodları</li>
+                                <li>Custom JavaScript kodları</li>
+                                <li>A/B Testing araçları (Google Optimize vb.)</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -528,6 +619,22 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+// Bakım modu toggle
+function toggleMaintenanceInfo(isActive) {
+    const statusEl = document.getElementById('maintenanceStatus');
+    if (statusEl) {
+        if (isActive) {
+            statusEl.textContent = '(Aktif)';
+            statusEl.classList.remove('text-gray-500');
+            statusEl.classList.add('text-red-600');
+        } else {
+            statusEl.textContent = '(Kapalı)';
+            statusEl.classList.remove('text-red-600');
+            statusEl.classList.add('text-gray-500');
+        }
+    }
+}
 
 // Tab switching fonksiyonu
 function switchTab(tabName) {
