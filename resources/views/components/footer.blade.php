@@ -16,7 +16,7 @@
                     <div class="text-4xl md:text-5xl font-bold text-white" style="display:none;">GMSGARAGE</div>
                 </a>
                 <p class="text-gray-300 mb-4 text-lg leading-relaxed">
-                    {{ $settings['footer_description'] ?? 'AI destekli araç değerleme ve güvenli alışveriş deneyimi. Premium ikinci el araçlar için güvenilir adresiniz.' }}
+                    {{ $settings['footer_about_text'] ?? 'AI destekli araç değerleme ve güvenli alışveriş deneyimi. Premium ikinci el araçlar için güvenilir adresiniz.' }}
                 </p>
                 <div class="flex items-center gap-2 text-sm text-gray-400 mb-6">
                     <svg class="w-5 h-5 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
