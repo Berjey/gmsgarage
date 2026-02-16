@@ -14,7 +14,8 @@ class AuthController extends Controller
      */
     public function showLoginForm()
     {
-        if (Auth::check() && Auth::user()->isAdmin()) {
+        // Eğer kullanıcı zaten giriş yapmışsa ve yetkili bir role sahipse dashboard'a yönlendir
+        if (Auth::check() && Auth::user()->role && in_array(Auth::user()->role, ['admin', 'manager', 'editor'])) {
             return redirect()->route('admin.dashboard');
         }
         
@@ -41,11 +42,12 @@ class AuthController extends Controller
         if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
 
-            // Admin kontrolü
-            if (!Auth::user()->isAdmin()) {
+            // Role kontrolü - Admin, Manager veya Editor olmalı
+            $user = Auth::user();
+            if (!$user->role || !in_array($user->role, ['admin', 'manager', 'editor'])) {
                 Auth::logout();
                 return back()->withErrors([
-                    'email' => 'Bu hesap admin yetkisine sahip değil.',
+                    'email' => 'Bu hesap admin paneline erişim yetkisine sahip değil.',
                 ])->withInput();
             }
 

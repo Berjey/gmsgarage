@@ -35,14 +35,15 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8|confirmed',
-            'is_admin' => 'boolean',
+            'role' => 'required|in:admin,manager,editor',
         ]);
 
         User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'is_admin' => $request->has('is_admin') ? true : false,
+            'role' => $request->role,
+            'is_admin' => $request->role === 'admin' ? true : false,
         ]);
 
         return redirect()->route('admin.users.index')
@@ -69,7 +70,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $id,
             'password' => 'nullable|string|min:8|confirmed',
-            'is_admin' => 'boolean',
+            'role' => 'required|in:admin,manager,editor',
         ]);
 
         $user->name = $request->name;
@@ -77,7 +78,8 @@ class UserController extends Controller
         if ($request->filled('password')) {
             $user->password = Hash::make($request->password);
         }
-        $user->is_admin = $request->has('is_admin') ? true : false;
+        $user->role = $request->role;
+        $user->is_admin = $request->role === 'admin' ? true : false;
         $user->save();
 
         return redirect()->route('admin.users.index')

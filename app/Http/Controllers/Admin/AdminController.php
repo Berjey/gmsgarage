@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\ContactMessage;
 use App\Models\VehicleRequest;
 use App\Models\EvaluationRequest;
+use App\Models\Customer;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -33,6 +34,12 @@ class AdminController extends Controller
             // Kullanıcı İstatistikleri
             'total_users' => User::count(),
             'total_admins' => User::where('is_admin', true)->count(),
+            
+            // Müşteri İstatistikleri (CRM)
+            'total_customers' => Customer::count(),
+            'today_customers' => Customer::whereDate('created_at', today())->count(),
+            'this_week_customers' => Customer::whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])->count(),
+            'this_month_customers' => Customer::whereMonth('created_at', now()->month)->count(),
             
             // Mesaj İstatistikleri
             'unread_messages' => ContactMessage::where('is_read', false)->count(),

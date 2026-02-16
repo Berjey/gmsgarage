@@ -49,11 +49,17 @@
                         {{ $user->email }}
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        @if($user->is_admin)
-                            <span class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">Yönetici</span>
-                        @else
-                            <span class="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">Kullanıcı</span>
-                        @endif
+                        @php
+                            $badgeColors = [
+                                'admin' => 'bg-red-100 text-red-800',
+                                'manager' => 'bg-blue-100 text-blue-800',
+                                'editor' => 'bg-green-100 text-green-800',
+                            ];
+                            $badgeColor = $badgeColors[$user->role] ?? 'bg-gray-100 text-gray-800';
+                        @endphp
+                        <span class="px-2 py-1 text-xs font-semibold rounded-full {{ $badgeColor }}">
+                            {{ $user->role_name }}
+                        </span>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {{ $user->created_at->format('d.m.Y') }}
@@ -65,7 +71,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                 </svg>
                             </a>
-                            <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Silmek istediğinize emin misiniz?')">
+                            <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="inline-block" onsubmit="return confirmDelete(this, '{{ $user->name }} kullanıcısını')">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="p-2.5 text-red-600 bg-red-50 rounded-xl hover:bg-red-600 hover:text-white transition-all shadow-sm {{ auth()->id() == $user->id ? 'opacity-50 cursor-not-allowed' : '' }}" {{ auth()->id() == $user->id ? 'disabled' : '' }} title="Sil">

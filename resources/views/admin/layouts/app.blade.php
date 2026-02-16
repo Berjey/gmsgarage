@@ -11,6 +11,12 @@
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
+    <!-- Animate.css for SweetAlert animations -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    
     <style>
         /* Admin Panel Ferah Layout */
         /* xl: 1400px */
@@ -112,7 +118,7 @@
         <!-- Main Content -->
         <div class="flex-1 flex flex-col overflow-hidden">
             <!-- Top Navigation -->
-            @include('admin.layouts.header')
+            @include('admin.layouts.navbar')
             
             <!-- Page Content -->
             <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-6 lg:p-8">
@@ -146,5 +152,8 @@
     </div>
     
     @stack('scripts')
+    
+    <!-- Admin Confirm Modal Script -->
+    <script src="{{ asset('js/admin-confirm.js') }}"></script>
 </body>
 </html>

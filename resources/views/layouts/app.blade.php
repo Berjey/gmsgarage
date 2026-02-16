@@ -38,7 +38,7 @@
     
     @stack('meta')
     
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/legal-modal.js'])
     
     @stack('styles')
     
@@ -72,6 +72,131 @@
         </svg>
         <span class="absolute -top-2 -right-2 w-4 h-4 bg-red-500 rounded-full animate-pulse"></span>
     </a>
+    @endif
+    
+    <!-- Kampanya Pop-up Modal -->
+    @if(!empty($settings['popup_status']) && $settings['popup_status'] == '1')
+    <div id="campaignPopup" class="hidden fixed inset-0 z-[100] overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <!-- Backdrop - Blur Effect -->
+        <div class="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm transition-opacity" onclick="closeCampaignPopup()"></div>
+        
+        <!-- Modal Container -->
+        <div class="flex min-h-full items-center justify-center p-4">
+            <!-- Modal Content -->
+            <div class="relative transform overflow-hidden rounded-2xl bg-white shadow-2xl transition-all w-full max-w-lg">
+                
+                <!-- Close Button -->
+                <button type="button" 
+                        onclick="closeCampaignPopup()"
+                        class="absolute top-4 right-4 z-10 bg-white hover:bg-gray-100 text-gray-600 hover:text-gray-900 rounded-full p-2 shadow-lg transition-all duration-200 hover:scale-110">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+                
+                <!-- Image (if exists) -->
+                @if(!empty($settings['popup_image']))
+                <div class="w-full">
+                    <img src="{{ asset('storage/' . $settings['popup_image']) }}" 
+                         alt="{{ $settings['popup_title'] ?? 'Kampanya' }}"
+                         class="w-full h-auto object-cover">
+                </div>
+                @endif
+                
+                <!-- Text Content -->
+                <div class="p-8 text-center">
+                    @if(!empty($settings['popup_title']))
+                    <h3 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
+                        {{ $settings['popup_title'] }}
+                    </h3>
+                    @endif
+                    
+                    @if(!empty($settings['popup_text']))
+                    <p class="text-base text-gray-600 mb-6 leading-relaxed">
+                        {{ $settings['popup_text'] }}
+                    </p>
+                    @endif
+                    
+                    <!-- Action Button -->
+                    @if(!empty($settings['popup_link']))
+                    <a href="{{ $settings['popup_link'] }}" 
+                       class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-red-600 hover:bg-red-700 text-white font-bold text-lg rounded-xl transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl">
+                        {{ $settings['popup_button_text'] ?? 'Detayları İncele' }}
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                        </svg>
+                    </a>
+                    @endif
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <!-- Pop-up Cookie Control Script -->
+    <script>
+        // Cookie helper functions
+        function setCookie(name, value, days) {
+            const expires = new Date();
+            expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+            document.cookie = name + '=' + value + ';expires=' + expires.toUTCString() + ';path=/';
+        }
+
+        function getCookie(name) {
+            const nameEQ = name + "=";
+            const ca = document.cookie.split(';');
+            for(let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
+
+        // Pop-up control
+        function closeCampaignPopup() {
+            const popup = document.getElementById('campaignPopup');
+            if (popup) {
+                popup.classList.add('hidden');
+                
+                // Set cookie based on frequency
+                const frequency = '{{ $settings["popup_display_frequency"] ?? "daily" }}';
+                
+                if (frequency === 'always') {
+                    // Don't set cookie, will show every time
+                } else if (frequency === 'daily') {
+                    setCookie('gms_campaign_popup_seen', '1', 1); // 1 day
+                } else if (frequency === 'once') {
+                    setCookie('gms_campaign_popup_seen', '1', 365); // 1 year (permanent)
+                }
+            }
+        }
+
+        // Show popup on page load if not seen
+        document.addEventListener('DOMContentLoaded', function() {
+            const frequency = '{{ $settings["popup_display_frequency"] ?? "daily" }}';
+            const hasSeenPopup = getCookie('gms_campaign_popup_seen');
+            
+            // Show popup if:
+            // - frequency is 'always' (test mode), OR
+            // - user hasn't seen it yet (no cookie)
+            if (frequency === 'always' || !hasSeenPopup) {
+                setTimeout(function() {
+                    const popup = document.getElementById('campaignPopup');
+                    if (popup) {
+                        popup.classList.remove('hidden');
+                    }
+                }, 1000); // Show after 1 second delay
+            }
+        });
+
+        // Close on ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeCampaignPopup();
+            }
+        });
+    </script>
     @endif
     
     @stack('scripts')

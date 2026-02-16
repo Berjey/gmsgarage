@@ -170,16 +170,29 @@
                                 @if($index > 0)
                                     <span class="text-gray-600">|</span>
                                 @endif
-                                <a href="{{ Str::startsWith($link['url'], 'http') ? $link['url'] : route('page.show', $link['url']) }}" class="text-gray-400 hover:text-white transition-colors">{{ $link['label'] }}</a>
+                                <a href="{{ Str::startsWith($link['url'], 'http') ? $link['url'] : route('legal.show', $link['url']) }}" class="text-gray-400 hover:text-white transition-colors">{{ $link['label'] }}</a>
                             @endif
                         @endforeach
                     @else
-                        {{-- Fallback: Varsayılan linkler --}}
-                        <a href="{{ route('kvkk') }}" class="text-gray-400 hover:text-white transition-colors">KVKK</a>
-                        <span class="text-gray-600">|</span>
-                        <a href="{{ route('privacy') }}" class="text-gray-400 hover:text-white transition-colors">Gizlilik Politikası</a>
-                        <span class="text-gray-600">|</span>
-                        <a href="{{ route('terms') }}" class="text-gray-400 hover:text-white transition-colors">Kullanım Şartları</a>
+                        {{-- Dinamik Yasal Sayfalar (Veritabanından) --}}
+                        @php
+                            $legalPages = \App\Models\LegalPage::getActive();
+                        @endphp
+                        @if($legalPages->count() > 0)
+                            @foreach($legalPages as $page)
+                                <a href="{{ route('legal.show', $page->slug) }}" class="text-gray-400 hover:text-white transition-colors">{{ $page->title }}</a>
+                                @if(!$loop->last)
+                                    <span class="text-gray-600">|</span>
+                                @endif
+                            @endforeach
+                        @else
+                            {{-- Final Fallback --}}
+                            <a href="/sayfa/kvkk-aydinlatma-metni" class="text-gray-400 hover:text-white transition-colors">KVKK</a>
+                            <span class="text-gray-600">|</span>
+                            <a href="/sayfa/gizlilik-politikasi" class="text-gray-400 hover:text-white transition-colors">Gizlilik Politikası</a>
+                            <span class="text-gray-600">|</span>
+                            <a href="/sayfa/kullanim-sartlari" class="text-gray-400 hover:text-white transition-colors">Kullanım Şartları</a>
+                        @endif
                     @endif
                 </div>
             </div>

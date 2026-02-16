@@ -15,6 +15,7 @@ class User extends Authenticatable
         'email',
         'password',
         'is_admin',
+        'role',
     ];
 
     protected $hidden = [
@@ -32,10 +33,68 @@ class User extends Authenticatable
     }
 
     /**
-     * Admin kontrolü
+     * Admin kontrolü (eski sistem uyumluluğu için)
      */
     public function isAdmin(): bool
     {
-        return (bool) $this->is_admin;
+        return $this->role === 'admin' || (bool) $this->is_admin;
+    }
+
+    /**
+     * Manager kontrolü
+     */
+    public function isManager(): bool
+    {
+        return $this->role === 'manager';
+    }
+
+    /**
+     * Editor kontrolü
+     */
+    public function isEditor(): bool
+    {
+        return $this->role === 'editor';
+    }
+
+    /**
+     * Belirli bir role sahip mi?
+     */
+    public function hasRole(string $role): bool
+    {
+        return $this->role === $role;
+    }
+
+    /**
+     * Belirli rollerden birine sahip mi?
+     */
+    public function hasAnyRole(array $roles): bool
+    {
+        return in_array($this->role, $roles);
+    }
+
+    /**
+     * Role badge rengi
+     */
+    public function getRoleBadgeColorAttribute(): string
+    {
+        return match($this->role) {
+            'admin' => 'red',
+            'manager' => 'blue',
+            'editor' => 'green',
+            default => 'gray'
+        };
+    }
+
+    /**
+     * Role Türkçe ismi
+     */
+    public function getRoleNameAttribute(): string
+    {
+        return match($this->role) {
+            'admin' => 'Süper Yönetici',
+            'manager' => 'Galeri Yöneticisi',
+            'editor' => 'İçerik Editörü',
+            default => 'Bilinmeyen'
+        };
     }
 }

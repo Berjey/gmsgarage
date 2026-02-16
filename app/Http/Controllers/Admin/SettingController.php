@@ -57,11 +57,25 @@ class SettingController extends Controller
             'footer_about_text' => 'nullable|string|max:1000',
             'footer_copyright' => 'nullable|string|max:500',
             'footer_bottom_links' => 'nullable|array',
+            
+            // Pop-up Kampanya
+            'popup_status' => 'nullable|in:1',
+            'popup_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'popup_title' => 'nullable|string|max:255',
+            'popup_text' => 'nullable|string|max:1000',
+            'popup_link' => 'nullable|url|max:500',
+            'popup_button_text' => 'nullable|string|max:100',
+            'popup_display_frequency' => 'nullable|in:always,daily,once',
         ]);
 
         // Bakım modu checkbox'ı işle (checkbox gönderilmezse 0 yap)
         if (!$request->has('maintenance_mode')) {
             Setting::set('maintenance_mode', '0');
+        }
+        
+        // Pop-up status checkbox'ı işle
+        if (!$request->has('popup_status')) {
+            Setting::set('popup_status', '0');
         }
 
         // OG Image Upload (Eğer yeni resim yüklendiyse)
@@ -76,9 +90,22 @@ class SettingController extends Controller
             $imagePath = $request->file('og_image')->store('settings/og-images', 'public');
             Setting::set('og_image', $imagePath);
         }
+        
+        // Pop-up Image Upload (Eğer yeni resim yüklendiyse)
+        if ($request->hasFile('popup_image')) {
+            // Eski resmi sil (eğer varsa)
+            $oldPopupImage = Setting::get('popup_image');
+            if ($oldPopupImage && \Storage::exists('public/' . $oldPopupImage)) {
+                \Storage::delete('public/' . $oldPopupImage);
+            }
+            
+            // Yeni resmi kaydet
+            $popupImagePath = $request->file('popup_image')->store('settings/popup-images', 'public');
+            Setting::set('popup_image', $popupImagePath);
+        }
 
         // Tüm request verilerini işle
-        $data = $request->except(['_token', '_method', 'og_image']); // og_image'i exclude et (yukarıda işledik)
+        $data = $request->except(['_token', '_method', 'og_image', 'popup_image']); // Resimleri exclude et (yukarıda işledik)
         
         foreach ($data as $key => $value) {
             // Array değerleri JSON olarak kaydet (footer_bottom_links gibi)

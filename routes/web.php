@@ -6,6 +6,7 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\VehicleEvaluationController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\SitemapController;
+use App\Http\Controllers\LegalPageController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,13 +25,14 @@ Route::get('/hakkimizda', [PageController::class, 'about'])->name('about');
 Route::get('/iletisim', [PageController::class, 'contact'])->name('contact');
 Route::post('/iletisim', [PageController::class, 'contactSubmit'])->name('contact.submit');
 
-// KVKK ve Yasal Sayfalar (dinamik)
-Route::get('/page/{slug}', [PageController::class, 'show'])->name('page.show');
+// Yasal Sayfalar (Merkezi Sistem)
+Route::get('/sayfa/{slug}', [LegalPageController::class, 'show'])->name('legal.show');
+Route::get('/api/legal/{slug}', [LegalPageController::class, 'getContent'])->name('legal.content');
 
-// Eski static route'lar (geriye uyumluluk için)
-Route::get('/kvkk', [PageController::class, 'kvkk'])->name('kvkk');
-Route::get('/gizlilik-politikasi', [PageController::class, 'privacy'])->name('privacy');
-Route::get('/kullanim-sartlari', [PageController::class, 'terms'])->name('terms');
+// Geriye uyumluluk için redirect'ler
+Route::redirect('/kvkk', '/sayfa/kvkk-aydinlatma-metni');
+Route::redirect('/gizlilik-politikasi', '/sayfa/gizlilik-politikasi');
+Route::redirect('/kullanim-sartlari', '/sayfa/kullanim-sartlari');
 
 // Araç İsteği
 Route::get('/aracimi-bulamiyorum', [PageController::class, 'vehicleRequest'])->name('vehicle-request.index');

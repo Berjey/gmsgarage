@@ -24,12 +24,14 @@ class AdminMiddleware
         }
 
         $user = Auth::user();
-        if (!$user || !$user->isAdmin()) {
+        
+        // Role kontrolü - Admin, Manager veya Editor olmalı
+        if (!$user || !in_array($user->role, ['admin', 'manager', 'editor'])) {
             if ($request->expectsJson()) {
                 return response()->json(['message' => 'Bu sayfaya erişim yetkiniz yok.'], 403);
             }
             Auth::logout();
-            return redirect()->route('admin.login')->with('error', 'Bu sayfaya erişim yetkiniz yok.');
+            return redirect()->route('admin.login')->with('error', 'Admin paneline erişim yetkiniz yok.');
         }
 
         return $next($request);

@@ -6,6 +6,7 @@ use App\Models\ContactMessage;
 use App\Models\VehicleRequest;
 use App\Models\Setting;
 use App\Models\Page;
+use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Cache;
@@ -59,6 +60,7 @@ class PageController extends Controller
             'phone' => ['nullable', 'string', 'regex:/^[0-9]{0,11}$/', 'max:11'],
             'subject' => 'nullable|string|max:255',
             'message' => 'required|string|min:10|max:1000',
+            'kvkk_consent' => 'required|accepted',
         ], [
             'name.required' => 'Ad Soyad alanı zorunludur.',
             'name.min' => 'Ad Soyad en az 2 karakter olmalıdır.',
@@ -69,15 +71,27 @@ class PageController extends Controller
             'message.required' => 'Mesaj alanı zorunludur.',
             'message.min' => 'Mesaj en az 10 karakter olmalıdır.',
             'message.max' => 'Mesaj en fazla 1000 karakter olabilir.',
+            'kvkk_consent.required' => 'KVKK Aydınlatma Metnini kabul etmelisiniz.',
+            'kvkk_consent.accepted' => 'KVKK Aydınlatma Metnini kabul etmelisiniz.',
         ]);
 
-        // Save to database
+        // Save contact message to database
         $contactMessage = ContactMessage::create([
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
             'subject' => $request->subject ?? 'İletişim Formu',
             'message' => $request->message,
+        ]);
+
+        // Save or update customer (CRM)
+        Customer::findOrCreateFromRequest([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'source' => 'contact_form',
+            'kvkk_consent' => true,
+            'ip_address' => $request->ip(),
         ]);
 
         // Send email to configured recipient

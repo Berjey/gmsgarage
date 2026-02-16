@@ -1,6 +1,7 @@
 @extends('admin.layouts.app')
 
 @section('title', 'Site Ayarları')
+@section('page-title', 'Site Ayarları')
 
 @push('styles')
 <style>
@@ -111,6 +112,15 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                 </svg>
                 Footer
+            </button>
+            <button type="button" 
+                    data-tab="popup"
+                    onclick="switchTab('popup')"
+                    class="tab-button flex-1 min-w-[180px] px-5 py-4 text-sm font-semibold transition-colors border-l border-gray-200 bg-white text-gray-700 hover:bg-gray-50">
+                <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path>
+                </svg>
+                Duyuru & Kampanya
             </button>
         </div>
 
@@ -599,6 +609,161 @@
                         Henüz link eklenmedi. "Yeni Link Ekle" butonuna tıklayarak başlayın.
                     </p>
                 </div>
+            </div>
+
+            <!-- Tab Content: Duyuru & Kampanya Pop-up -->
+            <div id="tab-popup" class="tab-content p-6 space-y-6 hidden">
+                
+                <h3 class="text-lg font-bold text-gray-900 mb-4">🎉 Duyuru & Kampanya Yönetimi (Pop-up)</h3>
+                <p class="text-sm text-gray-600 mb-6">Site ziyaretçilerine gösterilecek kampanya veya duyuru pop-up'ını buradan yönetin.</p>
+
+                <!-- Pop-up Aktif/Pasif -->
+                <div class="bg-gradient-to-r from-red-50 to-orange-50 border border-red-200 rounded-xl p-6">
+                    <div class="flex items-start justify-between">
+                        <div class="flex-1">
+                            <label class="flex items-center gap-3 cursor-pointer">
+                                <span class="text-base font-bold text-gray-900">Pop-up Durumu</span>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" 
+                                           name="popup_status" 
+                                           value="1" 
+                                           id="popup_status"
+                                           {{ !empty($settings['popup_status']) && $settings['popup_status'] == '1' ? 'checked' : '' }}>
+                                    <span class="toggle-slider"></span>
+                                </div>
+                            </label>
+                            <p class="text-sm text-gray-600 mt-2">
+                                ✅ Aktif olduğunda pop-up web sitesinde gösterilir.<br>
+                                ❌ Kapalı olduğunda hiç görünmez.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pop-up Görseli -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-900 mb-2">
+                        📸 Kampanya Görseli (Opsiyonel)
+                    </label>
+                    <p class="text-xs text-gray-500 mb-3">Gösterişli bir görsel yükleyin. Boş bırakırsanız sadece metin gösterilir.</p>
+                    
+                    <div class="flex items-start gap-4">
+                        <div class="flex-1">
+                            <input type="file" 
+                                   name="popup_image" 
+                                   id="popup_image"
+                                   accept="image/jpeg,image/png,image/jpg,image/webp"
+                                   class="block w-full text-sm text-gray-700 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100">
+                            <p class="text-xs text-gray-500 mt-1">Önerilen: 800x600px, Max: 2MB, Format: JPG, PNG, WebP</p>
+                        </div>
+                        
+                        @if(!empty($settings['popup_image']))
+                        <div class="flex-shrink-0">
+                            <img src="{{ asset('storage/' . $settings['popup_image']) }}" 
+                                 alt="Mevcut Görsel" 
+                                 class="w-32 h-24 object-cover rounded-lg border-2 border-gray-200 shadow-sm">
+                        </div>
+                        @endif
+                    </div>
+                </div>
+
+                <!-- Pop-up Başlık -->
+                <div>
+                    <label for="popup_title" class="block text-sm font-semibold text-gray-900 mb-2">
+                        ✨ Duyuru Başlığı
+                    </label>
+                    <input type="text" 
+                           name="popup_title" 
+                           id="popup_title"
+                           value="{{ $settings['popup_title'] ?? '' }}"
+                           placeholder="Örn: Yaz Kampanyası Başladı! %50 İndirim"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 text-base">
+                    <p class="text-xs text-gray-500 mt-1">Dikkat çekici ve kısa bir başlık yazın (Max 255 karakter)</p>
+                </div>
+
+                <!-- Pop-up Açıklama -->
+                <div>
+                    <label for="popup_text" class="block text-sm font-semibold text-gray-900 mb-2">
+                        📝 Açıklama Metni
+                    </label>
+                    <textarea name="popup_text" 
+                              id="popup_text"
+                              rows="4"
+                              placeholder="Örn: Tüm araçlarda geçerli özel fırsatlar! Detayları görmek için tıklayın."
+                              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 text-base">{{ $settings['popup_text'] ?? '' }}</textarea>
+                    <p class="text-xs text-gray-500 mt-1">Kısa ve net bir açıklama yapın (Max 1000 karakter)</p>
+                </div>
+
+                <!-- Yönlendirme Linki -->
+                <div>
+                    <label for="popup_link" class="block text-sm font-semibold text-gray-900 mb-2">
+                        🔗 Yönlendirme Linki
+                    </label>
+                    <input type="url" 
+                           name="popup_link" 
+                           id="popup_link"
+                           value="{{ $settings['popup_link'] ?? '' }}"
+                           placeholder="https://gmsgarage.com/araclar"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 text-base">
+                    <p class="text-xs text-gray-500 mt-1">Kullanıcı butona tıkladığında gideceği tam URL (Örn: {{ url('/araclar') }})</p>
+                </div>
+
+                <!-- Buton Metni -->
+                <div>
+                    <label for="popup_button_text" class="block text-sm font-semibold text-gray-900 mb-2">
+                        🎯 Buton Metni
+                    </label>
+                    <input type="text" 
+                           name="popup_button_text" 
+                           id="popup_button_text"
+                           value="{{ $settings['popup_button_text'] ?? 'Detayları İncele' }}"
+                           placeholder="Fırsatları İncele"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 text-base">
+                    <p class="text-xs text-gray-500 mt-1">Butonda görünecek metin (Örn: "Fırsatları Gör", "Hemen İncele")</p>
+                </div>
+
+                <!-- Gösterim Sıklığı -->
+                <div>
+                    <label for="popup_display_frequency" class="block text-sm font-semibold text-gray-900 mb-2">
+                        ⏰ Gösterim Sıklığı
+                    </label>
+                    <select name="popup_display_frequency" 
+                            id="popup_display_frequency"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 text-base bg-white">
+                        <option value="always" {{ ($settings['popup_display_frequency'] ?? 'daily') == 'always' ? 'selected' : '' }}>
+                            🔄 Her Sayfa Yüklenişinde (Test İçin)
+                        </option>
+                        <option value="daily" {{ ($settings['popup_display_frequency'] ?? 'daily') == 'daily' ? 'selected' : '' }}>
+                            📅 Günde 1 Kez (Önerilen)
+                        </option>
+                        <option value="once" {{ ($settings['popup_display_frequency'] ?? 'daily') == 'once' ? 'selected' : '' }}>
+                            ⭐ Sadece 1 Kez (Hayat Boyu)
+                        </option>
+                    </select>
+                    <div class="mt-3 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                        <p class="text-sm text-blue-800">
+                            <strong>💡 İpucu:</strong><br>
+                            • <strong>Her Sayfa Yüklenişinde:</strong> Pop-up her zaman açılır (test için ideal).<br>
+                            • <strong>Günde 1 Kez:</strong> Kullanıcı günde bir kez görür (24 saat cookie).<br>
+                            • <strong>Sadece 1 Kez:</strong> Kullanıcı bir kez görür, bir daha hiç görmez (kalıcı cookie).
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Önizleme Butonu -->
+                <div class="bg-gray-50 border border-gray-300 rounded-xl p-6">
+                    <h4 class="text-base font-bold text-gray-900 mb-3">🔍 Önizleme & Test</h4>
+                    <p class="text-sm text-gray-600 mb-4">Değişiklikleri kaydet ettikten sonra, web sitesinde pop-up'ı görebilirsin.</p>
+                    <a href="{{ route('home') }}" 
+                       target="_blank"
+                       class="inline-flex items-center gap-2 px-6 py-3 bg-white border-2 border-red-600 text-red-600 font-semibold rounded-lg hover:bg-red-50 transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                        </svg>
+                        Siteyi Aç ve Test Et
+                    </a>
+                </div>
+
             </div>
 
             <!-- Sticky Save Button -->
