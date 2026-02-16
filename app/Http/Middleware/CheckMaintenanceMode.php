@@ -23,8 +23,8 @@ class CheckMaintenanceMode
             return $next($request);
         }
 
-        // Bakım modu kontrolü (cache ile optimize)
-        $maintenanceMode = Cache::remember('maintenance_mode', 60, function () {
+        // Bakım modu kontrolü (10 saniye cache - hızlı güncelleme için)
+        $maintenanceMode = Cache::remember('maintenance_mode', 10, function () {
             return Setting::get('maintenance_mode', '0');
         });
 
@@ -32,8 +32,8 @@ class CheckMaintenanceMode
         if ($maintenanceMode == '1') {
             // Kullanıcı admin mi kontrol et
             if (!Auth::check() || !Auth::user()->isAdmin()) {
-                // Bakım mesajını al
-                $maintenanceMessage = Cache::remember('maintenance_message', 60, function () {
+                // Bakım mesajını al (10 saniye cache)
+                $maintenanceMessage = Cache::remember('maintenance_message', 10, function () {
                     return Setting::get('maintenance_message', 'Site bakım çalışmaları nedeniyle geçici olarak hizmet dışıdır. En kısa sürede tekrar hizmetinizdeyiz.');
                 });
 

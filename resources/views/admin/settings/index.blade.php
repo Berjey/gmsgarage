@@ -2,6 +2,67 @@
 
 @section('title', 'Site Ayarları')
 
+@push('styles')
+<style>
+    /* iOS Style Toggle Switch - Modern Design */
+    .toggle-switch input[type="checkbox"] {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+    
+    .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 32px;
+    }
+    
+    .toggle-slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #d1d5db; /* gray-300 */
+        transition: all 0.3s ease;
+        border-radius: 34px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .toggle-slider:before {
+        position: absolute;
+        content: "";
+        height: 24px;
+        width: 24px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: all 0.3s ease;
+        border-radius: 50%;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    
+    .toggle-switch input:checked + .toggle-slider {
+        background-color: #dc2626; /* red-600 */
+    }
+    
+    .toggle-switch input:checked + .toggle-slider:before {
+        transform: translateX(28px);
+    }
+    
+    .toggle-switch:hover .toggle-slider {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+    
+    .toggle-switch input:focus + .toggle-slider {
+        box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.2);
+    }
+</style>
+@endpush
+
 @section('content')
 <div class="container mx-auto px-4 py-6" id="settingsPage">
 
@@ -82,53 +143,80 @@
 
                 <!-- Bakım Modu -->
                 <div class="border-t pt-6 mt-6">
-                    <h3 class="text-lg font-bold text-gray-900 mb-4">
-                        <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
-                        </svg>
-                        Bakım Modu Yönetimi
-                    </h3>
-
-                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
-                        <div class="flex items-start gap-4">
-                            <!-- Switch -->
-                            <div class="flex-shrink-0">
-                                <label class="flex items-center cursor-pointer">
-                                    <div class="relative">
-                                        <input type="checkbox" 
-                                               name="maintenance_mode" 
-                                               value="1"
-                                               {{ ($settings['maintenance_mode'] ?? '0') == '1' ? 'checked' : '' }}
-                                               class="sr-only peer"
-                                               onchange="toggleMaintenanceInfo(this.checked)">
-                                        <div class="w-14 h-8 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-red-600"></div>
-                                    </div>
-                                    <span class="ml-3 text-sm font-medium text-gray-900">
-                                        Bakım Modu <span id="maintenanceStatus" class="text-xs {{ ($settings['maintenance_mode'] ?? '0') == '1' ? 'text-red-600' : 'text-gray-500' }}">({{ ($settings['maintenance_mode'] ?? '0') == '1' ? 'Aktif' : 'Kapalı' }})</span>
-                                    </span>
-                                </label>
-                            </div>
-
-                            <!-- Info -->
-                            <div class="flex-1">
-                                <p class="text-sm text-yellow-800 mb-3">
-                                    <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    <div class="bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
+                        <!-- Header -->
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="flex items-center">
+                                <div class="bg-gradient-to-br from-red-500 to-red-600 rounded-xl p-3 shadow-lg mr-4">
+                                    <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
                                     </svg>
-                                    Bakım modu aktif olduğunda, sadece admin kullanıcıları siteye erişebilir. Diğer ziyaretçiler bakım mesajını görür.
-                                </p>
-
-                                <!-- Bakım Mesajı -->
+                                </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Bakım Mesajı</label>
-                                    <textarea name="maintenance_message" 
-                                              rows="4"
-                                              class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
-                                              placeholder="Site bakım çalışmaları nedeniyle geçici olarak hizmet dışıdır. En kısa sürede tekrar hizmetinizdeyiz.">{{ $settings['maintenance_message'] ?? 'Site bakım çalışmaları nedeniyle geçici olarak hizmet dışıdır. En kısa sürede tekrar hizmetinizdeyiz.' }}</textarea>
-                                    <p class="mt-1 text-xs text-gray-500">
-                                        Ziyaretçilerin göreceği bakım sayfası mesajı
+                                    <h4 class="text-lg font-bold text-gray-900">Bakım Modu</h4>
+                                    <p class="text-sm text-gray-500">Site erişim kontrolü ve yönetimi</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Modern iOS Toggle Switch -->
+                            <div class="flex items-center space-x-4">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" 
+                                           id="maintenanceToggle"
+                                           name="maintenance_mode" 
+                                           value="1"
+                                           {{ ($settings['maintenance_mode'] ?? '0') == '1' ? 'checked' : '' }}
+                                           onchange="toggleMaintenanceStatus(this.checked)">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                                <div class="text-left">
+                                    <span id="maintenanceStatusText" class="block text-base font-bold transition-colors duration-300 {{ ($settings['maintenance_mode'] ?? '0') == '1' ? 'text-red-600' : 'text-gray-700' }}">
+                                        {{ ($settings['maintenance_mode'] ?? '0') == '1' ? 'AKTİF - Site Erişime Kapalı' : 'PASİF - Site Erişime Açık' }}
+                                    </span>
+                                    <span id="maintenanceSubtext" class="block text-xs font-medium transition-colors duration-300 {{ ($settings['maintenance_mode'] ?? '0') == '1' ? 'text-red-500' : 'text-gray-500' }}">
+                                        {{ ($settings['maintenance_mode'] ?? '0') == '1' ? 'Sadece admin erişebilir' : 'Herkes erişebilir' }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Status Alert Box -->
+                        <div id="maintenanceAlert" class="{{ ($settings['maintenance_mode'] ?? '0') == '1' ? 'bg-red-50 border-red-300' : 'bg-blue-50 border-blue-300' }} border-2 rounded-xl p-4 mb-5 transition-all duration-300">
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0">
+                                    <svg id="maintenanceAlertIcon" class="{{ ($settings['maintenance_mode'] ?? '0') == '1' ? 'text-red-600' : 'text-blue-600' }} w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ ($settings['maintenance_mode'] ?? '0') == '1' ? 'M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z' : 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z' }}"></path>
+                                    </svg>
+                                </div>
+                                <div class="ml-3 flex-1">
+                                    <h5 id="maintenanceAlertTitle" class="{{ ($settings['maintenance_mode'] ?? '0') == '1' ? 'text-red-900' : 'text-blue-900' }} text-sm font-bold mb-1">
+                                        {{ ($settings['maintenance_mode'] ?? '0') == '1' ? '⚠️ Uyarı: Bakım Modu Aktif' : 'ℹ️ Bilgi' }}
+                                    </h5>
+                                    <p id="maintenanceAlertText" class="{{ ($settings['maintenance_mode'] ?? '0') == '1' ? 'text-red-800' : 'text-blue-800' }} text-sm">
+                                        {{ ($settings['maintenance_mode'] ?? '0') == '1' ? 'Site şu anda ziyaretçilere KAPALI. Sadece admin kullanıcıları erişebilir. Test etmek için gizli sekme kullanın.' : 'Bakım modu kapalı. Tüm ziyaretçiler siteye normal şekilde erişebilir.' }}
                                     </p>
                                 </div>
+                            </div>
+                        </div>
+
+                        <!-- Maintenance Message -->
+                        <div class="bg-white rounded-lg p-5 border border-gray-200 shadow-sm">
+                            <label class="block text-sm font-bold text-gray-900 mb-3 flex items-center">
+                                <svg class="w-5 h-5 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path>
+                                </svg>
+                                Ziyaretçilere Gösterilecek Mesaj
+                            </label>
+                            <textarea name="maintenance_message" 
+                                      rows="4"
+                                      class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all resize-none hover:border-gray-400"
+                                      placeholder="Örn: Sistemimiz şu anda bakımdadır. En kısa sürede hizmetinizdeyiz.">{{ $settings['maintenance_message'] ?? 'Site bakım çalışmaları nedeniyle geçici olarak hizmet dışıdır. En kısa sürede tekrar hizmetinizdeyiz.' }}</textarea>
+                            <div class="mt-2 flex items-center text-xs text-gray-500">
+                                <svg class="w-4 h-4 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                </svg>
+                                Bu mesaj bakım sayfasında ziyaretçilere gösterilecektir
                             </div>
                         </div>
                     </div>
@@ -197,8 +285,102 @@
                             </svg>
                             Google Analytics 4 ID'nizi girin (Örn: G-XXXXXXXXXX). Boş bırakırsanız Analytics devre dışı kalır.
                         </p>
-                        <div class="mt-3 p-3 bg-white border border-blue-100 rounded text-xs text-gray-600">
-                            <strong>💡 Not:</strong> Google Tag Manager (GTM) kullanmak isterseniz, aşağıdaki "Header Özel Kod" alanına GTM script'ini ekleyebilirsiniz.
+                    </div>
+                </div>
+
+                <!-- Sosyal Medya Paylaşım Ayarları (Open Graph) -->
+                <div class="bg-purple-50 border border-purple-200 rounded-lg p-6">
+                    <h4 class="font-semibold text-gray-900 mb-4 flex items-center">
+                        <svg class="w-5 h-5 inline-block mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path>
+                        </svg>
+                        Sosyal Medya Paylaşım Ayarları (Open Graph)
+                    </h4>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Paylaşım Başlığı (OG Title)</label>
+                            <input type="text" 
+                                   name="og_title" 
+                                   value="{{ $settings['og_title'] ?? '' }}"
+                                   class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
+                                   placeholder="Boş bırakılırsa Site Başlığı kullanılır">
+                            <p class="mt-1 text-xs text-gray-500">
+                                WhatsApp, Facebook, Twitter'da paylaşıldığında görünecek başlık
+                            </p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Varsayılan Paylaşım Resmi (OG Image)</label>
+                            @if(!empty($settings['og_image']))
+                            <div class="mb-3">
+                                <img src="{{ asset('storage/' . $settings['og_image']) }}" 
+                                     alt="OG Image" 
+                                     class="w-full max-w-md h-48 object-cover rounded-lg border border-gray-300">
+                            </div>
+                            @endif
+                            <input type="file" 
+                                   name="og_image" 
+                                   accept="image/jpeg,image/png,image/jpg,image/webp"
+                                   class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors">
+                            <p class="mt-1 text-xs text-gray-500">
+                                <svg class="w-4 h-4 inline-block mr-1 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                WhatsApp/sosyal medyada paylaşıldığında görünecek görsel. Önerilen: 1200x630px (JPG/PNG)
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Arama Motoru ve Sitemap -->
+                <div class="bg-green-50 border border-green-200 rounded-lg p-6">
+                    <h4 class="font-semibold text-gray-900 mb-4 flex items-center">
+                        <svg class="w-5 h-5 inline-block mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                        Arama Motoru ve Sitemap Durumu
+                    </h4>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Arama Motoru İndeksleme</label>
+                            <select name="robots_index" 
+                                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors">
+                                <option value="index,follow" {{ ($settings['robots_index'] ?? 'index,follow') == 'index,follow' ? 'selected' : '' }}>
+                                    ✅ İzin Ver (index, follow) - Google'da görünsün
+                                </option>
+                                <option value="noindex,nofollow" {{ ($settings['robots_index'] ?? '') == 'noindex,nofollow' ? 'selected' : '' }}>
+                                    🚫 Engelle (noindex, nofollow) - Google'da görünmesin
+                                </option>
+                            </select>
+                            <p class="mt-1 text-xs text-gray-500">
+                                <svg class="w-4 h-4 inline-block mr-1 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                Site yayında değilse "Engelle" seçin. Yayına alınca "İzin Ver" yapın.
+                            </p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Sitemap URL (Bilgi Amaçlı)</label>
+                            <div class="flex gap-2">
+                                <input type="text" 
+                                       value="{{ url('sitemap.xml') }}"
+                                       readonly
+                                       class="flex-1 px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-lg text-gray-600 font-mono text-sm cursor-not-allowed">
+                                <button type="button"
+                                        onclick="navigator.clipboard.writeText('{{ url('sitemap.xml') }}'); Swal.fire({title: '<span style=\"color: #111827; font-weight: 500; font-size: 1.125rem;\">Kopyalandı!</span>', html: '<p style=\"color: #6B7280; font-size: 0.875rem; margin-top: 0.5rem;\">Sitemap URL kopyalandı.</p>', icon: 'success', confirmButtonColor: '#059669', confirmButtonText: 'Tamam', customClass: {popup: 'swal-custom-popup', confirmButton: 'swal-custom-confirm'}, buttonsStyling: false, timer: 2000, showConfirmButton: false});"
+                                        class="px-4 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                    </svg>
+                                    Kopyala
+                                </button>
+                            </div>
+                            <p class="mt-1 text-xs text-gray-500">
+                                Bu linki Google Search Console'a ekleyerek sitenizin Google'da daha iyi indekslenmesini sağlayabilirsiniz.
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -509,19 +691,68 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Bakım modu toggle
-function toggleMaintenanceInfo(isActive) {
-    const statusEl = document.getElementById('maintenanceStatus');
-    if (statusEl) {
-        if (isActive) {
-            statusEl.textContent = '(Aktif)';
-            statusEl.classList.remove('text-gray-500');
-            statusEl.classList.add('text-red-600');
-        } else {
-            statusEl.textContent = '(Kapalı)';
-            statusEl.classList.remove('text-red-600');
-            statusEl.classList.add('text-gray-500');
-        }
+// Bakım modu toggle - Modern iOS Style
+function toggleMaintenanceStatus(isActive) {
+    // Status Text
+    const statusTextEl = document.getElementById('maintenanceStatusText');
+    const subtextEl = document.getElementById('maintenanceSubtext');
+    
+    // Alert Box
+    const alertBox = document.getElementById('maintenanceAlert');
+    const alertIcon = document.getElementById('maintenanceAlertIcon');
+    const alertTitle = document.getElementById('maintenanceAlertTitle');
+    const alertText = document.getElementById('maintenanceAlertText');
+    
+    if (isActive) {
+        // Status güncelle - AKTİF
+        statusTextEl.textContent = 'AKTİF - Site Erişime Kapalı';
+        statusTextEl.classList.remove('text-gray-700');
+        statusTextEl.classList.add('text-red-600');
+        
+        subtextEl.textContent = 'Sadece admin erişebilir';
+        subtextEl.classList.remove('text-gray-500');
+        subtextEl.classList.add('text-red-500');
+        
+        // Alert box'ı kırmızıya çevir
+        alertBox.classList.remove('bg-blue-50', 'border-blue-300');
+        alertBox.classList.add('bg-red-50', 'border-red-300');
+        
+        alertIcon.classList.remove('text-blue-600');
+        alertIcon.classList.add('text-red-600');
+        alertIcon.querySelector('path').setAttribute('d', 'M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z');
+        
+        alertTitle.textContent = '⚠️ Uyarı: Bakım Modu Aktif';
+        alertTitle.classList.remove('text-blue-900');
+        alertTitle.classList.add('text-red-900');
+        
+        alertText.textContent = 'Site şu anda ziyaretçilere KAPALI. Sadece admin kullanıcıları erişebilir. Test etmek için gizli sekme kullanın.';
+        alertText.classList.remove('text-blue-800');
+        alertText.classList.add('text-red-800');
+    } else {
+        // Status güncelle - PASİF
+        statusTextEl.textContent = 'PASİF - Site Erişime Açık';
+        statusTextEl.classList.remove('text-red-600');
+        statusTextEl.classList.add('text-gray-700');
+        
+        subtextEl.textContent = 'Herkes erişebilir';
+        subtextEl.classList.remove('text-red-500');
+        subtextEl.classList.add('text-gray-500');
+        
+        // Alert box'ı maviye çevir
+        alertBox.classList.remove('bg-red-50', 'border-red-300');
+        alertBox.classList.add('bg-blue-50', 'border-blue-300');
+        
+        alertIcon.classList.remove('text-red-600');
+        alertIcon.classList.add('text-blue-600');
+        alertIcon.querySelector('path').setAttribute('d', 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z');
+        
+        alertTitle.textContent = 'ℹ️ Bilgi';
+        alertTitle.classList.remove('text-red-900');
+        alertTitle.classList.add('text-blue-900');
+        
+        alertText.textContent = 'Bakım modu kapalı. Tüm ziyaretçiler siteye normal şekilde erişebilir.';
+        alertText.classList.remove('text-blue-800');
+        alertText.classList.add('text-blue-800');
     }
 }
 
@@ -561,19 +792,41 @@ function addFooterLink() {
 // Footer link silme
 function removeFooterLink(index) {
     Swal.fire({
-        title: 'Emin misiniz?',
-        text: 'Bu link silinecek!',
+        title: '<span style="color: #111827; font-weight: 500; font-size: 1.125rem;">Linki Sil</span>',
+        html: '<p style="color: #6B7280; font-size: 0.875rem; margin-top: 0.5rem;">Bu linki silmek istediğinize emin misiniz? Bu işlem geri alınamaz.</p>',
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonColor: '#E32222',
+        confirmButtonColor: '#DC2626',
         cancelButtonColor: '#6B7280',
-        confirmButtonText: 'Evet, Sil',
-        cancelButtonText: 'İptal'
+        confirmButtonText: 'Sil',
+        cancelButtonText: 'Vazgeç',
+        customClass: {
+            popup: 'swal-custom-popup',
+            title: 'swal-custom-title',
+            htmlContainer: 'swal-custom-html',
+            confirmButton: 'swal-custom-confirm',
+            cancelButton: 'swal-custom-cancel',
+            actions: 'swal-custom-actions'
+        },
+        buttonsStyling: false,
+        reverseButtons: true
     }).then((result) => {
         if (result.isConfirmed) {
             footerLinks.splice(index, 1);
             renderFooterLinks();
-            Swal.fire('Silindi!', 'Link kaldırıldı.', 'success');
+            Swal.fire({
+                title: '<span style="color: #111827; font-weight: 500; font-size: 1.125rem;">Silindi!</span>',
+                html: '<p style="color: #6B7280; font-size: 0.875rem; margin-top: 0.5rem;">Link başarıyla kaldırıldı.</p>',
+                icon: 'success',
+                confirmButtonColor: '#059669',
+                confirmButtonText: 'Tamam',
+                customClass: {
+                    popup: 'swal-custom-popup',
+                    confirmButton: 'swal-custom-confirm'
+                },
+                buttonsStyling: false,
+                timer: 2000
+            });
         }
     });
 }
@@ -599,9 +852,16 @@ function openContentModal(index) {
     const link = footerLinks[index];
     if (!link.label || !link.url) {
         Swal.fire({
+            title: '<span style="color: #111827; font-weight: 500; font-size: 1.125rem;">Geçersiz Link</span>',
+            html: '<p style="color: #6B7280; font-size: 0.875rem; margin-top: 0.5rem;">Lütfen önce başlığı girin ve URL oluşsun.</p>',
             icon: 'warning',
-            title: 'Geçersiz Link',
-            text: 'Lütfen önce başlığı girin ve URL oluşsun.'
+            confirmButtonColor: '#DC2626',
+            confirmButtonText: 'Tamam',
+            customClass: {
+                popup: 'swal-custom-popup',
+                confirmButton: 'swal-custom-confirm'
+            },
+            buttonsStyling: false
         });
         return;
     }
@@ -659,17 +919,31 @@ function saveModalContent() {
     .then(data => {
         closeContentModal();
         Swal.fire({
+            title: '<span style="color: #111827; font-weight: 500; font-size: 1.125rem;">Başarılı!</span>',
+            html: '<p style="color: #6B7280; font-size: 0.875rem; margin-top: 0.5rem;">Sayfa içeriği kaydedildi.</p>',
             icon: 'success',
-            title: 'Başarılı!',
-            text: 'Sayfa içeriği kaydedildi.',
+            confirmButtonColor: '#059669',
+            confirmButtonText: 'Tamam',
+            customClass: {
+                popup: 'swal-custom-popup',
+                confirmButton: 'swal-custom-confirm'
+            },
+            buttonsStyling: false,
             timer: 2000
         });
     })
     .catch(() => {
         Swal.fire({
+            title: '<span style="color: #111827; font-weight: 500; font-size: 1.125rem;">Hata!</span>',
+            html: '<p style="color: #6B7280; font-size: 0.875rem; margin-top: 0.5rem;">İçerik kaydedilemedi. Lütfen tekrar deneyin.</p>',
             icon: 'error',
-            title: 'Hata!',
-            text: 'İçerik kaydedilemedi.'
+            confirmButtonColor: '#DC2626',
+            confirmButtonText: 'Tamam',
+            customClass: {
+                popup: 'swal-custom-popup',
+                confirmButton: 'swal-custom-confirm'
+            },
+            buttonsStyling: false
         });
     });
 }
@@ -728,4 +1002,92 @@ function renderFooterLinks() {
     `).join('');
 }
 </script>
+
+<style>
+/* SweetAlert Özel Stiller - İletişim Mesajları Modalıyla Tutarlı */
+.swal-custom-popup {
+    border: 1px solid #E5E7EB !important;
+    border-radius: 0.5rem !important;
+    padding: 0 !important;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+}
+
+.swal2-popup.swal-custom-popup .swal2-icon {
+    margin: 1.5rem auto 1rem auto !important;
+    border-width: 3px !important;
+}
+
+.swal2-popup.swal-custom-popup .swal2-icon.swal2-warning {
+    border-color: #FEE2E2 !important;
+    color: #DC2626 !important;
+    background-color: #FEE2E2 !important;
+}
+
+.swal2-popup.swal-custom-popup .swal2-icon.swal2-success {
+    border-color: #D1FAE5 !important;
+    color: #059669 !important;
+}
+
+.swal-custom-title {
+    padding: 0 1.5rem !important;
+    margin: 0 !important;
+}
+
+.swal-custom-html {
+    padding: 0 1.5rem 1.5rem 1.5rem !important;
+    margin: 0 !important;
+}
+
+.swal-custom-actions {
+    background-color: #F9FAFB !important;
+    padding: 0.75rem 1.5rem !important;
+    margin: 0 !important;
+    border-top: 1px solid #E5E7EB !important;
+    flex-direction: row-reverse !important;
+    gap: 0.75rem !important;
+}
+
+.swal-custom-confirm {
+    background-color: #DC2626 !important;
+    color: white !important;
+    padding: 0.5rem 1rem !important;
+    border-radius: 0.375rem !important;
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+    border: none !important;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+    transition: background-color 0.2s !important;
+    margin: 0 !important;
+}
+
+.swal-custom-confirm:hover {
+    background-color: #B91C1C !important;
+}
+
+.swal-custom-cancel {
+    background-color: white !important;
+    color: #374151 !important;
+    padding: 0.5rem 1rem !important;
+    border-radius: 0.375rem !important;
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+    border: 1px solid #D1D5DB !important;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+    transition: background-color 0.2s !important;
+    margin: 0 !important;
+}
+
+.swal-custom-cancel:hover {
+    background-color: #F9FAFB !important;
+}
+
+/* Success popup için yeşil buton */
+.swal2-popup.swal-custom-popup .swal2-confirm.swal-custom-confirm[style*="059669"] {
+    background-color: #059669 !important;
+}
+
+.swal2-popup.swal-custom-popup .swal2-confirm.swal-custom-confirm[style*="059669"]:hover {
+    background-color: #047857 !important;
+}
+</style>
 @endpush

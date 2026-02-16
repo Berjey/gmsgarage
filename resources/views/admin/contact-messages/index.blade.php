@@ -54,35 +54,34 @@
 @endpush
 
 @section('content')
-<div class="max-w-7xl mx-auto space-y-6">
-    <!-- Header Area -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+    <!-- Header -->
+    <div class="p-6 border-b border-gray-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-            <h1 class="text-3xl font-bold text-gray-900">İletişim Mesajları</h1>
-            <p class="mt-1 text-sm text-gray-500 font-medium tracking-wide uppercase">GELEN MESAJLARIN YÖNETİMİ</p>
+            <h2 class="text-xl font-bold text-gray-900">İletişim Mesajları</h2>
+            <p class="text-sm text-gray-600 mt-1">Gelen mesajların yönetimi</p>
         </div>
-        <div class="flex items-center gap-3">
-            <a href="{{ \App\Models\Setting::get('contact_mail_hostinger_link', 'https://mail.hostinger.com/v2/mailboxes/INBOX') }}" 
-               target="_blank"
-               class="inline-flex items-center px-5 py-2.5 bg-white text-gray-700 font-bold rounded-xl border border-gray-200 hover:bg-gray-50 hover:text-primary-600 transition-all shadow-sm group">
-                <svg class="w-5 h-5 mr-2 text-gray-400 group-hover:text-primary-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                Mail Paneline Git
-            </a>
-        </div>
+        <a href="{{ \App\Models\Setting::get('contact_mail_hostinger_link', 'https://mail.hostinger.com/v2/mailboxes/INBOX') }}" 
+           target="_blank"
+           class="inline-flex items-center px-6 py-3 bg-primary-600 text-white font-bold rounded-xl hover:bg-primary-700 transition-all shadow-lg shadow-primary-500/25 gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+            Mail Paneline Git
+        </a>
     </div>
 
     <!-- Stats Cards -->
-    @include('admin.components.stats-cards', [
-        'totalCount' => $totalCount,
-        'unreadCount' => $unreadCount,
-        'readCount' => $readCount,
-        'activeFilter' => $filter
-    ])
+    <div class="p-6 border-b border-gray-200">
+        @include('admin.components.stats-cards', [
+            'totalCount' => $totalCount,
+            'unreadCount' => $unreadCount,
+            'readCount' => $readCount,
+            'activeFilter' => $filter
+        ])
+    </div>
 
     <!-- Toolbar & Filters -->
-    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-        <div class="p-6 bg-gray-50/30 border-b border-gray-50">
-            <form id="filter-form" method="GET" action="{{ route('admin.contact-messages.index') }}" class="space-y-4">
+    <div class="p-6 border-b border-gray-200 bg-gray-50/30">
+        <form id="filter-form" method="GET" action="{{ route('admin.contact-messages.index') }}" class="space-y-4">
                 <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
                     <!-- [PATCH #4.2] Search Input -->
                     <div class="lg:col-span-2">
@@ -140,15 +139,15 @@
                         Sıfırla
                     </a>
                     <button type="submit" 
-                            class="px-8 py-2.5 bg-primary-600 text-white font-bold rounded-xl hover:bg-primary-700 transition-all shadow-lg shadow-primary-500/25">
+                            class="px-8 py-2.5 bg-gray-800 text-white font-bold rounded-xl hover:bg-gray-900 transition-all shadow-lg shadow-gray-500/25">
                         Filtrele
                     </button>
                 </div>
-            </form>
-        </div>
+        </form>
+    </div>
 
-        <!-- Table Area -->
-        <div class="overflow-x-auto">
+    <!-- Table Area -->
+    <div class="overflow-x-auto">
             @if($messages->count() > 0)
             <form id="bulk-action-form" method="POST" action="{{ route('admin.contact-messages.bulk-action') }}">
                 @csrf
@@ -185,7 +184,7 @@
                             <td class="px-6 py-5 text-right" onclick="event.stopPropagation()">
                                 <div class="flex items-center justify-end gap-2">
                                     <a href="{{ route('admin.contact-messages.show', $message->id) }}" 
-                                       class="p-2.5 text-blue-600 bg-blue-50 rounded-xl hover:bg-blue-600 hover:text-white transition-all shadow-sm"
+                                       class="p-2.5 text-primary-600 bg-primary-50 rounded-xl hover:bg-primary-600 hover:text-white transition-all shadow-sm"
                                        title="Görüntüle">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zM2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                                     </a>
@@ -215,34 +214,33 @@
                 </div>
             </form>
             @else
-            <div class="text-center py-20 bg-gray-50/20">
-                <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div class="text-center py-24">
+                <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
                     <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
                 </div>
-                <h3 class="text-xl font-bold text-gray-900 mb-2">Henüz Mesaj Yok</h3>
-                <p class="text-gray-500 font-medium">İletişim formundan gelen mesajlar burada listelenecektir.</p>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Henüz mesaj yok</h3>
+                <p class="text-gray-600">İletişim formundan gelen mesajlar burada görünecektir.</p>
             </div>
             @endif
         </div>
 
-        <!-- Pagination -->
-        @if($messages->hasPages())
-        <div class="px-6 py-5 bg-gray-50/30 border-t border-gray-50 flex items-center justify-between">
-            <div class="text-sm font-bold text-gray-500 uppercase tracking-widest">
-                {{ $messages->firstItem() }}-{{ $messages->lastItem() }} / {{ $messages->total() }} MESAJ
-            </div>
-            <div class="flex items-center gap-4 font-bold">
-                <select onchange="window.location.href='{{ request()->fullUrlWithQuery(['per_page' => '__PER_PAGE__', 'page' => 1]) }}'.replace('__PER_PAGE__', this.value)"
-                        class="bg-white border border-gray-200 rounded-xl px-3 py-1.5 focus:ring-primary-500/20 transition-all">
-                    <option value="25" {{ request('per_page', 25) == 25 ? 'selected' : '' }}>25</option>
-                    <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>50</option>
-                    <option value="100" {{ request('per_page') == 100 ? 'selected' : '' }}>100</option>
-                </select>
-                {{ $messages->links() }}
-            </div>
+    <!-- Pagination -->
+    @if($messages->hasPages())
+    <div class="px-6 py-5 bg-gray-50/30 border-t border-gray-200 flex items-center justify-between">
+        <div class="text-sm font-medium text-gray-600">
+            {{ $messages->firstItem() }}-{{ $messages->lastItem() }} / {{ $messages->total() }} mesaj gösteriliyor
         </div>
-        @endif
+        <div class="flex items-center gap-4">
+            <select onchange="window.location.href='{{ request()->fullUrlWithQuery(['per_page' => '__PER_PAGE__', 'page' => 1]) }}'.replace('__PER_PAGE__', this.value)"
+                    class="bg-white border border-gray-200 rounded-xl px-3 py-2 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all text-sm font-medium">
+                <option value="25" {{ request('per_page', 25) == 25 ? 'selected' : '' }}>25</option>
+                <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>50</option>
+                <option value="100" {{ request('per_page') == 100 ? 'selected' : '' }}>100</option>
+            </select>
+            {{ $messages->links() }}
+        </div>
     </div>
+    @endif
 </div>
 
 @include('admin.components.confirm-modal', [

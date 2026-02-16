@@ -37,6 +37,9 @@ class SettingController extends Controller
             
             // SEO & Kod Yönetimi
             'google_analytics_id' => 'nullable|string|max:50',
+            'og_title' => 'nullable|string|max:255',
+            'og_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'robots_index' => 'nullable|string',
             
             // İletişim
             'contact_phone' => 'nullable|string|max:50',
@@ -61,8 +64,21 @@ class SettingController extends Controller
             Setting::set('maintenance_mode', '0');
         }
 
+        // OG Image Upload (Eğer yeni resim yüklendiyse)
+        if ($request->hasFile('og_image')) {
+            // Eski resmi sil (eğer varsa)
+            $oldImage = Setting::get('og_image');
+            if ($oldImage && \Storage::exists('public/' . $oldImage)) {
+                \Storage::delete('public/' . $oldImage);
+            }
+            
+            // Yeni resmi kaydet
+            $imagePath = $request->file('og_image')->store('settings/og-images', 'public');
+            Setting::set('og_image', $imagePath);
+        }
+
         // Tüm request verilerini işle
-        $data = $request->except(['_token', '_method']);
+        $data = $request->except(['_token', '_method', 'og_image']); // og_image'i exclude et (yukarıda işledik)
         
         foreach ($data as $key => $value) {
             // Array değerleri JSON olarak kaydet (footer_bottom_links gibi)
@@ -79,12 +95,16 @@ class SettingController extends Controller
             Setting::set($key, $value);
         }
         
-        // Cache'i temizle ki değişiklikler anında yansısın
+        // Cache'i tamamen temizle ki değişiklikler anında yansısın
         Cache::forget('app.settings');
         Cache::forget('maintenance_mode');
         Cache::forget('maintenance_message');
         
+        // Tüm cache'leri temizle (özellikle bakım modu için kritik)
+        \Artisan::call('cache:clear');
+        \Artisan::call('view:clear');
+        
         return redirect()->route('admin.settings.index')
-            ->with('success', 'Ayarlar başarıyla güncellendi. Değişiklikler anında yansıtıldı.');
+            ->with('success', 'Ayarlar başarıyla güncellendi. Cache temizlendi, değişiklikler anında aktif.');
     }
 }

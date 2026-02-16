@@ -1,4 +1,4 @@
-<aside class="w-64 bg-white border-r border-gray-200 flex flex-col">
+<aside class="w-64 bg-white border-r border-gray-200 flex flex-col relative z-50">
     <!-- Logo -->
     <div class="p-6 border-b border-gray-200 flex justify-center">
         <a href="{{ route('admin.dashboard') }}" class="block">
@@ -154,7 +154,7 @@
     </nav>
 
     <!-- User Info - Modern Design -->
-    <div class="p-4 border-t border-gray-200 bg-gray-50">
+    <div class="p-4 border-t border-gray-200 bg-gray-50 relative z-50">
         @auth
         <!-- User Profile Card -->
         <div class="bg-white rounded-xl p-4 mb-3 border border-gray-200 shadow-sm">

@@ -23,8 +23,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // Tüm view'larda $settings değişkenini kullanılabilir yap
-        // Cache ile performans optimize et (5 dakika - daha sık güncelleme için)
-        $settings = Cache::remember('app.settings', 300, function () {
+        // Cache ile performans optimize et (1 dakika - bakım modu için hızlı güncelleme)
+        $settings = Cache::remember('app.settings', 60, function () {
             return Setting::pluck('value', 'key')->toArray();
         });
         

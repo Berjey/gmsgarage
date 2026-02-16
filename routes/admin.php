@@ -105,6 +105,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         // İletişim Mesajları
         Route::prefix('contact-messages')->name('contact-messages.')->group(function () {
             Route::get('/', [ContactMessageController::class, 'index'])->name('index');
+            Route::post('/bulk-action', [ContactMessageController::class, 'bulkAction'])->name('bulk-action');
             Route::delete('/destroy-all', [ContactMessageController::class, 'destroyAll'])->name('destroy-all');
             Route::get('/{id}', [ContactMessageController::class, 'show'])->name('show');
             Route::post('/{id}/read', [ContactMessageController::class, 'markAsRead'])->name('read');

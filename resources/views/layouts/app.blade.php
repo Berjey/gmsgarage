@@ -10,21 +10,31 @@
     <meta name="author" content="{{ $settings['site_title'] ?? 'GMSGARAGE' }}">
     <link rel="canonical" href="@yield('canonical', url()->current())">
     
+    <!-- Robots Meta Tag (Arama Motoru İndeksleme) -->
+    <meta name="robots" content="{{ $settings['robots_index'] ?? 'index,follow' }}">
+    
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="@yield('og_type', 'website')">
     <meta property="og:url" content="@yield('og_url', url()->current())">
-    <meta property="og:title" content="@yield('og_title', ($settings['site_title'] ?? 'GMSGARAGE') . ' - Premium Oto Galeri')">
+    <meta property="og:title" content="@yield('og_title', ($settings['og_title'] ?? $settings['site_title'] ?? 'GMSGARAGE') . ' - Premium Oto Galeri')">
     <meta property="og:description" content="@yield('og_description', $settings['site_description'] ?? 'GMSGARAGE - Premium ikinci el araçlar, garantili ve bakımlı araçlar. En iyi fiyat garantisi.')">
-    <meta property="og:image" content="@yield('og_image', asset('images/light-mode-logo.png'))">
+    @php
+        $defaultOgImage = !empty($settings['og_image']) 
+            ? asset('storage/' . $settings['og_image']) 
+            : asset('images/light-mode-logo.png');
+    @endphp
+    <meta property="og:image" content="@yield('og_image', $defaultOgImage)">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
     <meta property="og:locale" content="tr_TR">
     <meta property="og:site_name" content="{{ $settings['site_title'] ?? 'GMSGARAGE' }}">
     
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="@yield('og_url', url()->current())">
-    <meta name="twitter:title" content="@yield('og_title', ($settings['site_title'] ?? 'GMSGARAGE') . ' - Premium Oto Galeri')">
+    <meta name="twitter:title" content="@yield('og_title', ($settings['og_title'] ?? $settings['site_title'] ?? 'GMSGARAGE') . ' - Premium Oto Galeri')">
     <meta name="twitter:description" content="@yield('og_description', $settings['site_description'] ?? 'GMSGARAGE - Premium ikinci el araçlar, garantili ve bakımlı araçlar. En iyi fiyat garantisi.')">
-    <meta name="twitter:image" content="@yield('og_image', asset('images/light-mode-logo.png'))">
+    <meta name="twitter:image" content="@yield('og_image', $defaultOgImage)">
     
     @stack('meta')
     

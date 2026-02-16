@@ -335,9 +335,9 @@
                     </div>
                     
                     <!-- Google Maps -->
-                    @if($settings['google_maps_embed'] ?? null)
+                    @if($settings['contact_google_maps_embed'] ?? null)
                     <div class="bg-white dark:bg-[#252525] rounded-xl shadow-lg dark:shadow-xl dark:border dark:border-gray-800 overflow-hidden transition-colors duration-200">
-                        {!! $settings['google_maps_embed'] !!}
+                        {!! $settings['contact_google_maps_embed'] !!}
                     </div>
                     @endif
                 </div>
