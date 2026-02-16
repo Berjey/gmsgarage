@@ -189,30 +189,104 @@ class="container mx-auto px-4 py-6">
                 
                 <h3 class="text-lg font-bold text-gray-900 mb-4">Genel Site Bilgileri</h3>
                 
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Site Başlığı</label>
-                    <input type="text" 
-                           name="site_title" 
-                           value="{{ $settings['site_title'] ?? 'GMSGARAGE' }}"
-                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                           placeholder="Örn: GMSGARAGE">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Site Başlığı</label>
+                        <input type="text" 
+                               name="site_title" 
+                               value="{{ $settings['site_title'] ?? 'GMSGARAGE' }}"
+                               class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
+                               placeholder="Örn: GMSGARAGE">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Anahtar Kelimeler (SEO)</label>
+                        <input type="text" 
+                               name="site_keywords" 
+                               value="{{ $settings['site_keywords'] ?? '' }}"
+                               class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
+                               placeholder="Örn: araba, satılık araç, oto galeri">
+                    </div>
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Site Açıklaması (SEO)</label>
                     <textarea name="site_description" 
                               rows="3"
-                              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                              class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
                               placeholder="Site açıklaması (Google'da görünecek)">{{ $settings['site_description'] ?? '' }}</textarea>
                 </div>
 
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Anahtar Kelimeler (SEO)</label>
-                    <input type="text" 
-                           name="site_keywords" 
-                           value="{{ $settings['site_keywords'] ?? '' }}"
-                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                           placeholder="Örn: araba, satılık araç, oto galeri">
+                <!-- Logo ve Favicon Yönetimi -->
+                <div class="border-t pt-6 mt-6">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">
+                        <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                        Logo ve Görsel Yönetimi
+                    </h3>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Site Logosu -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Site Logosu</label>
+                            <div class="space-y-3">
+                                @if(isset($settings['site_logo']) && $settings['site_logo'])
+                                    <div class="relative inline-block">
+                                        <img src="{{ Storage::url($settings['site_logo']) }}" 
+                                             alt="Site Logo" 
+                                             class="h-16 w-auto border border-gray-300 rounded-lg p-2 bg-white">
+                                        <button type="button" 
+                                                onclick="document.getElementById('remove_logo').value = '1'; this.closest('div').remove();"
+                                                class="absolute -top-2 -right-2 bg-red-600 text-white rounded-full p-1 hover:bg-red-700 transition-colors">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <input type="hidden" id="remove_logo" name="remove_logo" value="0">
+                                @endif
+                                
+                                <input type="file" 
+                                       name="site_logo" 
+                                       accept="image/png,image/jpeg,image/svg+xml,image/webp"
+                                       class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100">
+                                <p class="text-xs text-gray-500">
+                                    PNG, JPG, SVG veya WebP formatında. Önerilen boyut: 200x50px
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Favicon -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Favicon</label>
+                            <div class="space-y-3">
+                                @if(isset($settings['site_favicon']) && $settings['site_favicon'])
+                                    <div class="relative inline-block">
+                                        <img src="{{ Storage::url($settings['site_favicon']) }}" 
+                                             alt="Favicon" 
+                                             class="h-16 w-16 border border-gray-300 rounded-lg p-2 bg-white">
+                                        <button type="button" 
+                                                onclick="document.getElementById('remove_favicon').value = '1'; this.closest('div').remove();"
+                                                class="absolute -top-2 -right-2 bg-red-600 text-white rounded-full p-1 hover:bg-red-700 transition-colors">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <input type="hidden" id="remove_favicon" name="remove_favicon" value="0">
+                                @endif
+                                
+                                <input type="file" 
+                                       name="site_favicon" 
+                                       accept="image/x-icon,image/png,image/svg+xml"
+                                       class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100">
+                                <p class="text-xs text-gray-500">
+                                    ICO, PNG veya SVG formatında. Önerilen boyut: 32x32px veya 64x64px
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -419,14 +493,42 @@ class="container mx-auto px-4 py-6">
                  x-transition:enter-end="opacity-100"
                  class="p-6 space-y-6">
                 
-                <h3 class="text-lg font-bold text-gray-900 mb-4">Footer Metni</h3>
+                <h3 class="text-lg font-bold text-gray-900 mb-4">Footer İçeriği</h3>
                 
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Copyright Metni</label>
-                    <textarea name="footer_copyright" 
-                              rows="2"
-                              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                              placeholder="© 2026 GMSGARAGE. Tüm hakları saklıdır.">{{ $settings['footer_copyright'] ?? '© 2026 GMSGARAGE. Tüm hakları saklıdır.' }}</textarea>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Footer Hakkında Metni -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path>
+                            </svg>
+                            Footer Hakkında Metni
+                        </label>
+                        <textarea name="footer_about_text" 
+                                  rows="5"
+                                  class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
+                                  placeholder="Footer'da logo altında görünecek kısa açıklama metni...">{{ $settings['footer_about_text'] ?? '' }}</textarea>
+                        <p class="mt-1 text-xs text-gray-500">
+                            Bu metin web sitesi footer'ında logonun altında görünecektir. Şirketiniz hakkında kısa bir açıklama yazabilirsiniz.
+                        </p>
+                    </div>
+
+                    <!-- Copyright Metni -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            Copyright Metni
+                        </label>
+                        <textarea name="footer_copyright" 
+                                  rows="3"
+                                  class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
+                                  placeholder="© 2026 GMSGARAGE. Tüm hakları saklıdır.">{{ $settings['footer_copyright'] ?? '© 2026 GMSGARAGE. Tüm hakları saklıdır.' }}</textarea>
+                        <p class="mt-1 text-xs text-gray-500">
+                            Footer'ın en altında görünecek telif hakkı metni.
+                        </p>
+                    </div>
                 </div>
 
                 <div class="border-t pt-6">
