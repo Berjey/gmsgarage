@@ -3,129 +3,7 @@
 @section('title', 'Site Ayarları')
 
 @section('content')
-<div x-data="{
-    activeTab: 'general',
-    footerLinks: {{ json_encode(json_decode($settings['footer_bottom_links'] ?? '[]', true)) }},
-    showModal: false,
-    currentSlug: '',
-    modalTitle: '',
-    editorInstance: null,
-    
-    addLink() {
-        this.footerLinks.push({ label: '', url: '' });
-    },
-    
-    removeLink(index) {
-        Swal.fire({
-            title: 'Emin misiniz?',
-            text: 'Bu link silinecek!',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#E32222',
-            cancelButtonColor: '#6B7280',
-            confirmButtonText: 'Evet, Sil',
-            cancelButtonText: 'İptal'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                this.footerLinks.splice(index, 1);
-                Swal.fire('Silindi!', 'Link kaldırıldı.', 'success');
-            }
-        });
-    },
-    
-    updateUrl(index) {
-        let label = this.footerLinks[index].label;
-        if (!label) return;
-        let slug = label.toLowerCase()
-            .replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ş/g, 's')
-            .replace(/ı/g, 'i').replace(/ö/g, 'o').replace(/ç/g, 'c')
-            .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-        this.footerLinks[index].url = slug;
-    },
-    
-    openContentModal(index) {
-        let link = this.footerLinks[index];
-        if (!link.label || !link.url) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Geçersiz Link',
-                text: 'Lütfen önce başlığı girin ve URL oluşsun.'
-            });
-            return;
-        }
-        
-        this.currentSlug = link.url;
-        this.modalTitle = link.label;
-        this.showModal = true;
-        
-        // Mevcut içeriği yükle
-        fetch('/admin/api/pages/get-by-slug?slug=' + encodeURIComponent(this.currentSlug))
-            .then(res => res.json())
-            .then(data => {
-                if (this.editorInstance && data.content) {
-                    this.editorInstance.setData(data.content);
-                }
-            })
-            .catch(() => {
-                if (this.editorInstance) {
-                    this.editorInstance.setData('');
-                }
-            });
-    },
-    
-    saveModalContent() {
-        if (!this.editorInstance) return;
-        
-        let content = this.editorInstance.getData();
-        let csrf = document.querySelector('meta[name=csrf-token]').content;
-        
-        fetch('/admin/api/pages/store-or-update', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': csrf
-            },
-            body: JSON.stringify({
-                slug: this.currentSlug,
-                title: this.modalTitle,
-                content: content
-            })
-        })
-        .then(res => res.json())
-        .then(data => {
-            this.showModal = false;
-            Swal.fire({
-                icon: 'success',
-                title: 'Başarılı!',
-                text: 'Sayfa içeriği kaydedildi.',
-                timer: 2000
-            });
-        })
-        .catch(() => {
-            Swal.fire({
-                icon: 'error',
-                title: 'Hata!',
-                text: 'İçerik kaydedilemedi.'
-            });
-        });
-    },
-    
-    closeModal() {
-        this.showModal = false;
-        if (this.editorInstance) {
-            this.editorInstance.setData('');
-        }
-    }
-}" 
-x-init="
-    CKEDITOR.replace('contentEditor', {
-        height: 400,
-        language: 'tr',
-        removePlugins: 'exportpdf'
-    });
-    editorInstance = CKEDITOR.instances.contentEditor;
-"
-class="container mx-auto px-4 py-6">
+<div class="container mx-auto px-4 py-6" id="settingsPage">
 
     <!-- Page Header -->
     <div class="mb-6">
@@ -135,11 +13,11 @@ class="container mx-auto px-4 py-6">
 
     <!-- Tabs Navigation -->
     <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden mb-20">
-        <div class="flex border-b border-gray-200 overflow-x-auto">
+        <div class="flex border-b border-gray-200 overflow-x-auto" id="tabButtons">
             <button type="button" 
-                    @click="activeTab = 'general'"
-                    :class="activeTab === 'general' ? 'bg-red-600 text-white border-b-2 border-red-600' : 'bg-white text-gray-700 hover:bg-gray-50'"
-                    class="flex-1 min-w-[200px] px-6 py-4 text-sm font-semibold transition-colors">
+                    data-tab="general"
+                    onclick="switchTab('general')"
+                    class="tab-button active flex-1 min-w-[200px] px-6 py-4 text-sm font-semibold transition-colors bg-red-600 text-white border-b-2 border-red-600">
                 <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
@@ -147,27 +25,27 @@ class="container mx-auto px-4 py-6">
                 Genel Ayarlar
             </button>
             <button type="button" 
-                    @click="activeTab = 'contact'"
-                    :class="activeTab === 'contact' ? 'bg-red-600 text-white border-b-2 border-red-600' : 'bg-white text-gray-700 hover:bg-gray-50'"
-                    class="flex-1 min-w-[200px] px-6 py-4 text-sm font-semibold transition-colors border-l border-gray-200">
+                    data-tab="contact"
+                    onclick="switchTab('contact')"
+                    class="tab-button flex-1 min-w-[200px] px-6 py-4 text-sm font-semibold transition-colors border-l border-gray-200 bg-white text-gray-700 hover:bg-gray-50">
                 <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                 </svg>
                 İletişim Bilgileri
             </button>
             <button type="button" 
-                    @click="activeTab = 'social'"
-                    :class="activeTab === 'social' ? 'bg-red-600 text-white border-b-2 border-red-600' : 'bg-white text-gray-700 hover:bg-gray-50'"
-                    class="flex-1 min-w-[200px] px-6 py-4 text-sm font-semibold transition-colors border-l border-gray-200">
+                    data-tab="social"
+                    onclick="switchTab('social')"
+                    class="tab-button flex-1 min-w-[200px] px-6 py-4 text-sm font-semibold transition-colors border-l border-gray-200 bg-white text-gray-700 hover:bg-gray-50">
                 <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
                 </svg>
                 Sosyal Medya
             </button>
             <button type="button" 
-                    @click="activeTab = 'footer'"
-                    :class="activeTab === 'footer' ? 'bg-red-600 text-white border-b-2 border-red-600' : 'bg-white text-gray-700 hover:bg-gray-50'"
-                    class="flex-1 min-w-[200px] px-6 py-4 text-sm font-semibold transition-colors border-l border-gray-200">
+                    data-tab="footer"
+                    onclick="switchTab('footer')"
+                    class="tab-button flex-1 min-w-[200px] px-6 py-4 text-sm font-semibold transition-colors border-l border-gray-200 bg-white text-gray-700 hover:bg-gray-50">
                 <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                 </svg>
@@ -181,11 +59,7 @@ class="container mx-auto px-4 py-6">
             @method('PUT')
 
             <!-- Tab Content: Genel Ayarlar -->
-            <div x-show="activeTab === 'general'" 
-                 x-transition:enter="transition ease-out duration-200"
-                 x-transition:enter-start="opacity-0"
-                 x-transition:enter-end="opacity-100"
-                 class="p-6 space-y-6">
+            <div id="tab-general" class="tab-content p-6 space-y-6">
                 
                 <h3 class="text-lg font-bold text-gray-900 mb-4">Genel Site Bilgileri</h3>
                 
@@ -291,11 +165,7 @@ class="container mx-auto px-4 py-6">
             </div>
 
             <!-- Tab Content: İletişim Bilgileri -->
-            <div x-show="activeTab === 'contact'" 
-                 x-transition:enter="transition ease-out duration-200"
-                 x-transition:enter-start="opacity-0"
-                 x-transition:enter-end="opacity-100"
-                 class="p-6 space-y-6">
+            <div id="tab-contact" class="tab-content p-6 space-y-6 hidden">
                 
                 <h3 class="text-lg font-bold text-gray-900 mb-4">İletişim Bilgileri</h3>
                 
@@ -396,11 +266,7 @@ class="container mx-auto px-4 py-6">
             </div>
 
             <!-- Tab Content: Sosyal Medya -->
-            <div x-show="activeTab === 'social'" 
-                 x-transition:enter="transition ease-out duration-200"
-                 x-transition:enter-start="opacity-0"
-                 x-transition:enter-end="opacity-100"
-                 class="p-6 space-y-6">
+            <div id="tab-social" class="tab-content p-6 space-y-6 hidden">
                 
                 <h3 class="text-lg font-bold text-gray-900 mb-4">Sosyal Medya Hesapları</h3>
                 
@@ -487,11 +353,7 @@ class="container mx-auto px-4 py-6">
             </div>
 
             <!-- Tab Content: Footer Yönetimi -->
-            <div x-show="activeTab === 'footer'" 
-                 x-transition:enter="transition ease-out duration-200"
-                 x-transition:enter-start="opacity-0"
-                 x-transition:enter-end="opacity-100"
-                 class="p-6 space-y-6">
+            <div id="tab-footer" class="tab-content p-6 space-y-6 hidden">
                 
                 <h3 class="text-lg font-bold text-gray-900 mb-4">Footer İçeriği</h3>
                 
@@ -535,7 +397,7 @@ class="container mx-auto px-4 py-6">
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="text-lg font-bold text-gray-900">Yasal Linkler ve Sayfa İçerikleri</h3>
                         <button type="button" 
-                                @click="addLink()"
+                                onclick="addFooterLink()"
                                 class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center gap-2">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
@@ -544,59 +406,18 @@ class="container mx-auto px-4 py-6">
                         </button>
                     </div>
 
-                    <div class="space-y-3">
-                        <template x-for="(link, index) in footerLinks" :key="index">
-                            <div class="flex gap-3 items-center bg-gray-50 p-4 rounded-lg border border-gray-200">
-                                <div class="flex-1">
-                                    <input type="text" 
-                                           x-model="link.label"
-                                           @input="updateUrl(index)"
-                                           :name="'footer_bottom_links[' + index + '][label]'"
-                                           placeholder="Başlık (Örn: KVKK)"
-                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm">
-                                </div>
-                                
-                                <div class="flex-1">
-                                    <input type="text" 
-                                           x-model="link.url"
-                                           :name="'footer_bottom_links[' + index + '][url]'"
-                                           readonly
-                                           placeholder="URL (otomatik oluşur)"
-                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 text-sm cursor-not-allowed">
-                                </div>
-                                
-                                <button type="button" 
-                                        @click="openContentModal(index)"
-                                        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 whitespace-nowrap text-sm">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                                    </svg>
-                                    İçeriği Düzenle
-                                </button>
-                                
-                                <button type="button" 
-                                        @click="removeLink(index)"
-                                        class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center gap-2 text-sm">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                                    </svg>
-                                    Sil
-                                </button>
-                            </div>
-                        </template>
-
-                        <p x-show="footerLinks.length === 0" class="text-center text-gray-500 py-8">
-                            Henüz link eklenmedi. "Yeni Link Ekle" butonuna tıklayarak başlayın.
-                        </p>
+                    <div id="footerLinksContainer" class="space-y-3">
+                        <!-- Footer links buraya dinamik olarak eklenecek -->
                     </div>
+
+                    <p id="emptyLinksMessage" class="text-center text-gray-500 py-8 hidden">
+                        Henüz link eklenmedi. "Yeni Link Ekle" butonuna tıklayarak başlayın.
+                    </p>
                 </div>
             </div>
 
             <!-- Sticky Save Button -->
-            <div class="fixed bottom-0 left-0 right-0 bg-white border-t-2 border-red-600 shadow-2xl z-40 px-6 py-4 transform transition-all duration-300"
-                 :class="window.scrollY > 200 ? 'translate-y-0' : 'translate-y-full'"
-                 x-data="{ scrollY: 0 }"
-                 @scroll.window="scrollY = window.scrollY">
+            <div id="stickySaveButton" class="fixed bottom-0 left-0 right-0 bg-white border-t-2 border-red-600 shadow-2xl z-40 px-6 py-4 transform transition-all duration-300 translate-y-full">
                 <div class="container mx-auto flex items-center justify-between">
                     <div class="flex items-center gap-3">
                         <div class="flex items-center gap-2 text-gray-700">
@@ -630,25 +451,15 @@ class="container mx-auto px-4 py-6">
     </div>
 
     <!-- Modal: İçerik Düzenleme -->
-    <div x-show="showModal" 
-         x-transition:enter="transition ease-out duration-300"
-         x-transition:enter-start="opacity-0"
-         x-transition:enter-end="opacity-100"
-         x-transition:leave="transition ease-in duration-200"
-         x-transition:leave-start="opacity-100"
-         x-transition:leave-end="opacity-0"
-         class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
-         style="display: none;"
-         @click.self="closeModal()">
+    <div id="contentModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 hidden">
         
-        <div class="bg-white rounded-lg shadow-2xl w-full max-w-5xl max-h-[90vh] flex flex-col"
-             @click.stop>
+        <div class="bg-white rounded-lg shadow-2xl w-full max-w-5xl max-h-[90vh] flex flex-col" onclick="event.stopPropagation()">
             
             <!-- Modal Header -->
             <div class="flex items-center justify-between p-6 border-b border-gray-200">
-                <h3 class="text-xl font-bold text-gray-900" x-text="modalTitle + ' - İçerik Düzenleme'"></h3>
+                <h3 id="modalTitle" class="text-xl font-bold text-gray-900"></h3>
                 <button type="button" 
-                        @click="closeModal()"
+                        onclick="closeContentModal()"
                         class="text-gray-400 hover:text-gray-600 transition-colors">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -664,12 +475,12 @@ class="container mx-auto px-4 py-6">
             <!-- Modal Footer -->
             <div class="flex items-center justify-end gap-3 p-6 border-t border-gray-200 bg-gray-50">
                 <button type="button" 
-                        @click="closeModal()"
+                        onclick="closeContentModal()"
                         class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors">
                     İptal
                 </button>
                 <button type="button" 
-                        @click="saveModalContent()"
+                        onclick="saveModalContent()"
                         class="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center gap-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path>
@@ -685,4 +496,247 @@ class="container mx-auto px-4 py-6">
 @push('scripts')
 <!-- CKEditor 4 (Standard-All) -->
 <script src="https://cdn.ckeditor.com/4.22.1/standard-all/ckeditor.js"></script>
+
+<script>
+// Global değişkenler
+let footerLinks = {!! json_encode(json_decode($settings['footer_bottom_links'] ?? '[]', true)) !!};
+let editorInstance = null;
+let currentLinkIndex = null;
+let currentSlug = '';
+let modalTitle = '';
+
+// Sayfa yüklendiğinde
+document.addEventListener('DOMContentLoaded', function() {
+    // CKEditor'ü başlat
+    CKEDITOR.replace('contentEditor', {
+        height: 400,
+        language: 'tr',
+        removePlugins: 'exportpdf'
+    });
+    editorInstance = CKEDITOR.instances.contentEditor;
+    
+    // Footer linklerini render et
+    renderFooterLinks();
+    
+    // Sticky save button için scroll event
+    window.addEventListener('scroll', handleStickyButton);
+    
+    // Modal kapatma (backdrop click)
+    document.getElementById('contentModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeContentModal();
+        }
+    });
+});
+
+// Tab switching fonksiyonu
+function switchTab(tabName) {
+    // Tüm tab buttonları üzerinde dön
+    const buttons = document.querySelectorAll('.tab-button');
+    buttons.forEach(btn => {
+        if (btn.dataset.tab === tabName) {
+            btn.classList.remove('bg-white', 'text-gray-700', 'hover:bg-gray-50');
+            btn.classList.add('bg-red-600', 'text-white', 'border-b-2', 'border-red-600');
+        } else {
+            btn.classList.remove('bg-red-600', 'text-white', 'border-b-2', 'border-red-600');
+            btn.classList.add('bg-white', 'text-gray-700', 'hover:bg-gray-50');
+        }
+    });
+    
+    // Tüm tab içeriklerini gizle
+    const contents = document.querySelectorAll('.tab-content');
+    contents.forEach(content => {
+        content.classList.add('hidden');
+    });
+    
+    // Seçili tab içeriğini göster
+    const activeContent = document.getElementById('tab-' + tabName);
+    if (activeContent) {
+        activeContent.classList.remove('hidden');
+    }
+}
+
+// Sticky save button handler
+function handleStickyButton() {
+    const stickyButton = document.getElementById('stickySaveButton');
+    if (window.scrollY > 200) {
+        stickyButton.classList.remove('translate-y-full');
+        stickyButton.classList.add('translate-y-0');
+    } else {
+        stickyButton.classList.remove('translate-y-0');
+        stickyButton.classList.add('translate-y-full');
+    }
+}
+
+// Footer link ekleme
+function addFooterLink() {
+    footerLinks.push({ label: '', url: '' });
+    renderFooterLinks();
+}
+
+// Footer link silme
+function removeFooterLink(index) {
+    Swal.fire({
+        title: 'Emin misiniz?',
+        text: 'Bu link silinecek!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#E32222',
+        cancelButtonColor: '#6B7280',
+        confirmButtonText: 'Evet, Sil',
+        cancelButtonText: 'İptal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            footerLinks.splice(index, 1);
+            renderFooterLinks();
+            Swal.fire('Silindi!', 'Link kaldırıldı.', 'success');
+        }
+    });
+}
+
+// URL slug oluşturma
+function updateUrl(index, label) {
+    if (!label) return;
+    const slug = label.toLowerCase()
+        .replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ş/g, 's')
+        .replace(/ı/g, 'i').replace(/ö/g, 'o').replace(/ç/g, 'c')
+        .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    footerLinks[index].url = slug;
+    renderFooterLinks();
+}
+
+// Modal açma
+function openContentModal(index) {
+    const link = footerLinks[index];
+    if (!link.label || !link.url) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Geçersiz Link',
+            text: 'Lütfen önce başlığı girin ve URL oluşsun.'
+        });
+        return;
+    }
+    
+    currentLinkIndex = index;
+    currentSlug = link.url;
+    modalTitle = link.label;
+    
+    document.getElementById('modalTitle').textContent = modalTitle + ' - İçerik Düzenleme';
+    document.getElementById('contentModal').classList.remove('hidden');
+    
+    // Mevcut içeriği yükle
+    fetch('/admin/api/pages/get-by-slug?slug=' + encodeURIComponent(currentSlug))
+        .then(res => res.json())
+        .then(data => {
+            if (editorInstance && data.content) {
+                editorInstance.setData(data.content);
+            }
+        })
+        .catch(() => {
+            if (editorInstance) {
+                editorInstance.setData('');
+            }
+        });
+}
+
+// Modal kapatma
+function closeContentModal() {
+    document.getElementById('contentModal').classList.add('hidden');
+    if (editorInstance) {
+        editorInstance.setData('');
+    }
+}
+
+// Modal içerik kaydetme
+function saveModalContent() {
+    if (!editorInstance) return;
+    
+    const content = editorInstance.getData();
+    const csrf = document.querySelector('meta[name=csrf-token]').content;
+    
+    fetch('/admin/api/pages/store-or-update', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrf
+        },
+        body: JSON.stringify({
+            slug: currentSlug,
+            title: modalTitle,
+            content: content
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        closeContentModal();
+        Swal.fire({
+            icon: 'success',
+            title: 'Başarılı!',
+            text: 'Sayfa içeriği kaydedildi.',
+            timer: 2000
+        });
+    })
+    .catch(() => {
+        Swal.fire({
+            icon: 'error',
+            title: 'Hata!',
+            text: 'İçerik kaydedilemedi.'
+        });
+    });
+}
+
+// Footer linklerini render etme
+function renderFooterLinks() {
+    const container = document.getElementById('footerLinksContainer');
+    const emptyMessage = document.getElementById('emptyLinksMessage');
+    
+    if (footerLinks.length === 0) {
+        container.innerHTML = '';
+        emptyMessage.classList.remove('hidden');
+        return;
+    }
+    
+    emptyMessage.classList.add('hidden');
+    
+    container.innerHTML = footerLinks.map((link, index) => `
+        <div class="flex gap-3 items-center bg-gray-50 p-4 rounded-lg border border-gray-200">
+            <div class="flex-1">
+                <input type="text" 
+                       value="${link.label || ''}"
+                       name="footer_bottom_links[${index}][label]"
+                       oninput="footerLinks[${index}].label = this.value; updateUrl(${index}, this.value)"
+                       placeholder="Başlık (Örn: KVKK)"
+                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm">
+            </div>
+            
+            <div class="flex-1">
+                <input type="text" 
+                       value="${link.url || ''}"
+                       name="footer_bottom_links[${index}][url]"
+                       readonly
+                       placeholder="URL (otomatik oluşur)"
+                       class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 text-sm cursor-not-allowed">
+            </div>
+            
+            <button type="button" 
+                    onclick="openContentModal(${index})"
+                    class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 whitespace-nowrap text-sm">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                </svg>
+                İçeriği Düzenle
+            </button>
+            
+            <button type="button" 
+                    onclick="removeFooterLink(${index})"
+                    class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center gap-2 text-sm">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                </svg>
+                Sil
+            </button>
+        </div>
+    `).join('');
+}
+</script>
 @endpush
