@@ -32,16 +32,7 @@
     
     @stack('styles')
     
-    <!-- Google Tag Manager -->
-    @if(!empty($settings['google_tag_manager_id']))
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','{{ $settings['google_tag_manager_id'] }}');</script>
-    @endif
-    
-    <!-- Google Analytics -->
+    <!-- Google Analytics (GA4) -->
     @if(!empty($settings['google_analytics_id']))
     <script async src="https://www.googletagmanager.com/gtag/js?id={{ $settings['google_analytics_id'] }}"></script>
     <script>
@@ -51,19 +42,8 @@
         gtag('config', '{{ $settings['google_analytics_id'] }}');
     </script>
     @endif
-    
-    <!-- Custom Head Code -->
-    @if(!empty($settings['custom_head_code']))
-        {!! $settings['custom_head_code'] !!}
-    @endif
 </head>
 <body class="bg-gray-50 dark:bg-[#1e1e1e] transition-colors duration-200">
-    <!-- Google Tag Manager (noscript) -->
-    @if(!empty($settings['google_tag_manager_id']))
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ $settings['google_tag_manager_id'] }}"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    @endif
-    
     @include('components.header')
     
     <main>
@@ -85,10 +65,5 @@
     @endif
     
     @stack('scripts')
-    
-    <!-- Custom Footer Code -->
-    @if(!empty($settings['custom_footer_code']))
-        {!! $settings['custom_footer_code'] !!}
-    @endif
 </body>
 </html>

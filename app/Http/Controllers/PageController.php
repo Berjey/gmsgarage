@@ -5,11 +5,32 @@ namespace App\Http\Controllers;
 use App\Models\ContactMessage;
 use App\Models\VehicleRequest;
 use App\Models\Setting;
+use App\Models\Page;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Cache;
 
 class PageController extends Controller
 {
+    /**
+     * Dinamik sayfa görüntüleme (yasal sayfalar için)
+     */
+    public function show($slug)
+    {
+        // Cache ile performans (5 dakika)
+        $page = Cache::remember("page.{$slug}", 300, function () use ($slug) {
+            return Page::where('slug', $slug)
+                ->where('is_active', true)
+                ->first();
+        });
+
+        if (!$page) {
+            abort(404, 'Sayfa bulunamadı');
+        }
+
+        return view('pages.show', compact('page'));
+    }
+
     public function about()
     {
         return view('pages.about');

@@ -40,16 +40,7 @@
                 <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                 </svg>
-                İletişim
-            </button>
-            <button type="button" 
-                    data-tab="social"
-                    onclick="switchTab('social')"
-                    class="tab-button flex-1 min-w-[180px] px-5 py-4 text-sm font-semibold transition-colors border-l border-gray-200 bg-white text-gray-700 hover:bg-gray-50">
-                <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                </svg>
-                Sosyal Medya
+                İletişim & Sosyal Medya
             </button>
             <button type="button" 
                     data-tab="footer"
@@ -184,99 +175,34 @@
                     </div>
                 </div>
                 
-                <!-- Google Analytics & GTM -->
+                <!-- Google Analytics -->
                 <div class="bg-blue-50 border border-blue-200 rounded-lg p-6">
                     <h4 class="font-semibold text-gray-900 mb-4 flex items-center">
                         <svg class="w-5 h-5 inline-block mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                         </svg>
-                        Google Analytics & Tag Manager
-                    </h4>
-                    
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Google Analytics ID</label>
-                            <input type="text" 
-                                   name="google_analytics_id" 
-                                   value="{{ $settings['google_analytics_id'] ?? '' }}"
-                                   class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors font-mono text-sm"
-                                   placeholder="G-XXXXXXXXXX veya UA-XXXXXXXXX-X">
-                            <p class="mt-1 text-xs text-gray-500">
-                                Google Analytics 4 veya Universal Analytics ID'nizi girin
-                            </p>
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Google Tag Manager ID</label>
-                            <input type="text" 
-                                   name="google_tag_manager_id" 
-                                   value="{{ $settings['google_tag_manager_id'] ?? '' }}"
-                                   class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors font-mono text-sm"
-                                   placeholder="GTM-XXXXXXX">
-                            <p class="mt-1 text-xs text-gray-500">
-                                Google Tag Manager Container ID'nizi girin
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Header Özel Kod -->
-                <div class="bg-purple-50 border border-purple-200 rounded-lg p-6">
-                    <h4 class="font-semibold text-gray-900 mb-4 flex items-center">
-                        <svg class="w-5 h-5 inline-block mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
-                        </svg>
-                        Header Özel Kod Alanı
+                        Google Analytics (GA4)
                     </h4>
                     
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
-                            <code class="text-xs bg-gray-100 px-2 py-1 rounded">&lt;head&gt;</code> etiketleri arasına eklenecek kodlar
-                        </label>
-                        <textarea name="custom_head_code" 
-                                  rows="8"
-                                  class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors font-mono text-sm"
-                                  placeholder="<!-- Facebook Pixel, Meta Tags, Verification Codes vb. -->">{{ $settings['custom_head_code'] ?? '' }}</textarea>
-                        <div class="mt-2 p-3 bg-white border border-purple-100 rounded text-xs text-gray-600">
-                            <strong>Kullanım Alanları:</strong>
-                            <ul class="list-disc list-inside mt-1 space-y-1">
-                                <li>Facebook Pixel, LinkedIn Insight Tag</li>
-                                <li>Google/Bing Site Verification</li>
-                                <li>Custom CSS veya Meta Tags</li>
-                                <li>Heatmap/Analytics araçları (Hotjar, Clarity vb.)</li>
-                            </ul>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Google Analytics ID</label>
+                        <input type="text" 
+                               name="google_analytics_id" 
+                               value="{{ $settings['google_analytics_id'] ?? '' }}"
+                               class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors font-mono text-sm"
+                               placeholder="G-XXXXXXXXXX">
+                        <p class="mt-1 text-xs text-gray-500">
+                            <svg class="w-4 h-4 inline-block mr-1 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            Google Analytics 4 ID'nizi girin (Örn: G-XXXXXXXXXX). Boş bırakırsanız Analytics devre dışı kalır.
+                        </p>
+                        <div class="mt-3 p-3 bg-white border border-blue-100 rounded text-xs text-gray-600">
+                            <strong>💡 Not:</strong> Google Tag Manager (GTM) kullanmak isterseniz, aşağıdaki "Header Özel Kod" alanına GTM script'ini ekleyebilirsiniz.
                         </div>
                     </div>
                 </div>
 
-                <!-- Footer Özel Kod -->
-                <div class="bg-green-50 border border-green-200 rounded-lg p-6">
-                    <h4 class="font-semibold text-gray-900 mb-4 flex items-center">
-                        <svg class="w-5 h-5 inline-block mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
-                        </svg>
-                        Footer Özel Kod Alanı
-                    </h4>
-                    
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
-                            <code class="text-xs bg-gray-100 px-2 py-1 rounded">&lt;/body&gt;</code> etiketi öncesine eklenecek kodlar
-                        </label>
-                        <textarea name="custom_footer_code" 
-                                  rows="8"
-                                  class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors font-mono text-sm"
-                                  placeholder="<!-- Chatbot, Analytics, Custom JavaScript vb. -->">{{ $settings['custom_footer_code'] ?? '' }}</textarea>
-                        <div class="mt-2 p-3 bg-white border border-green-100 rounded text-xs text-gray-600">
-                            <strong>Kullanım Alanları:</strong>
-                            <ul class="list-disc list-inside mt-1 space-y-1">
-                                <li>Chatbot scriptleri (Tawk.to, Intercom, Tidio vb.)</li>
-                                <li>Performance Tracking kodları</li>
-                                <li>Custom JavaScript kodları</li>
-                                <li>A/B Testing araçları (Google Optimize vb.)</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <!-- Tab Content: İletişim Bilgileri -->
@@ -369,101 +295,63 @@
                         </div>
                     </div>
 
-                    <!-- Map Preview -->
-                    <div x-show="$el.closest('form').querySelector('[name=contact_google_maps_embed]').value.trim() !== ''" 
-                         class="mt-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Önizleme</label>
-                        <div class="w-full h-64 border border-gray-300 rounded-lg overflow-hidden bg-gray-50" 
-                             x-html="$el.closest('form').querySelector('[name=contact_google_maps_embed]').value">
+                </div>
+
+                <!-- Sosyal Medya Hesapları -->
+                <div class="border-t pt-6 mt-6">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">
+                        <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                        Sosyal Medya Hesapları
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                <svg class="w-4 h-4 inline-block mr-1" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                                </svg>
+                                Instagram Kullanıcı Adı
+                            </label>
+                            <input type="text" 
+                                   name="social_instagram" 
+                                   value="{{ $settings['social_instagram'] ?? '' }}"
+                                   class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
+                                   placeholder="gmsgarage.official">
+                            <p class="mt-1 text-xs text-gray-500">Sadece kullanıcı adını yazın (@ olmadan)</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                <svg class="w-4 h-4 inline-block mr-1" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                                </svg>
+                                Facebook Kullanıcı Adı
+                            </label>
+                            <input type="text" 
+                                   name="social_facebook" 
+                                   value="{{ $settings['social_facebook'] ?? '' }}"
+                                   class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
+                                   placeholder="gmsgarage.official">
+                            <p class="mt-1 text-xs text-gray-500">Sadece kullanıcı adını yazın</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                <svg class="w-4 h-4 inline-block mr-1" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                                </svg>
+                                YouTube Kullanıcı Adı
+                            </label>
+                            <input type="text" 
+                                   name="social_youtube" 
+                                   value="{{ $settings['social_youtube'] ?? '' }}"
+                                   class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
+                                   placeholder="@gmsgarage">
+                            <p class="mt-1 text-xs text-gray-500">@ ile birlikte veya sadece kullanıcı adını yazın</p>
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <!-- Tab Content: Sosyal Medya -->
-            <div id="tab-social" class="tab-content p-6 space-y-6 hidden">
-                
-                <h3 class="text-lg font-bold text-gray-900 mb-4">Sosyal Medya Hesapları</h3>
-                
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
-                            <svg class="w-4 h-4 inline-block mr-1" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                            </svg>
-                            Instagram
-                        </label>
-                        <input type="url" 
-                               name="social_instagram" 
-                               value="{{ $settings['social_instagram'] ?? '' }}"
-                               class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
-                               placeholder="https://instagram.com/gmsgarage">
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
-                            <svg class="w-4 h-4 inline-block mr-1" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                            </svg>
-                            Facebook
-                        </label>
-                        <input type="url" 
-                               name="social_facebook" 
-                               value="{{ $settings['social_facebook'] ?? '' }}"
-                               class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
-                               placeholder="https://facebook.com/gmsgarage">
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
-                            <svg class="w-4 h-4 inline-block mr-1" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
-                            </svg>
-                            Twitter (X)
-                        </label>
-                        <input type="url" 
-                               name="social_twitter" 
-                               value="{{ $settings['social_twitter'] ?? '' }}"
-                               class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
-                               placeholder="https://twitter.com/gmsgarage">
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
-                            <svg class="w-4 h-4 inline-block mr-1" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                            </svg>
-                            YouTube
-                        </label>
-                        <input type="url" 
-                               name="social_youtube" 
-                               value="{{ $settings['social_youtube'] ?? '' }}"
-                               class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
-                               placeholder="https://youtube.com/@gmsgarage">
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
-                            <svg class="w-4 h-4 inline-block mr-1" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                            </svg>
-                            LinkedIn
-                        </label>
-                        <input type="url" 
-                               name="social_linkedin" 
-                               value="{{ $settings['social_linkedin'] ?? '' }}"
-                               class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
-                               placeholder="https://linkedin.com/company/gmsgarage">
-                    </div>
-                </div>
-
-                <div class="mt-6 p-4 bg-gray-50 border border-gray-200 rounded-lg">
-                    <p class="text-sm text-gray-700">
-                        <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                        <strong>Not:</strong> Sosyal medya hesaplarınızın tam URL'lerini girin. Boş bırakılan alanlar web sitesinde görünmeyecektir.
-                    </p>
                 </div>
             </div>
 
@@ -532,27 +420,7 @@
             </div>
 
             <!-- Sticky Save Button -->
-            <div id="stickySaveButton" class="fixed bottom-0 left-0 right-0 bg-white border-t-2 border-red-600 shadow-2xl z-40 px-6 py-4 transform transition-all duration-300 translate-y-full">
-                <div class="container mx-auto flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                        <div class="flex items-center gap-2 text-gray-700">
-                            <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                            <span class="text-sm font-medium">Değişikliklerinizi kaydetmeyi unutmayın</span>
-                        </div>
-                    </div>
-                    <button type="submit" 
-                            class="px-8 py-3 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition-all transform hover:scale-105 flex items-center gap-2 shadow-lg">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path>
-                        </svg>
-                        Ayarları Kaydet
-                    </button>
-                </div>
-            </div>
-
-            <!-- Regular Save Button (Visible when sticky is hidden) -->
+            <!-- Save Button -->
             <div class="bg-gray-50 px-6 py-4 border-t border-gray-200 flex justify-end">
                 <button type="submit" 
                         class="px-8 py-3 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition-colors flex items-center gap-2">
@@ -633,9 +501,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Footer linklerini render et
     renderFooterLinks();
     
-    // Sticky save button için scroll event
-    window.addEventListener('scroll', handleStickyButton);
-    
     // Modal kapatma (backdrop click)
     document.getElementById('contentModal').addEventListener('click', function(e) {
         if (e.target === this) {
@@ -687,18 +552,6 @@ function switchTab(tabName) {
     }
 }
 
-// Sticky save button handler
-function handleStickyButton() {
-    const stickyButton = document.getElementById('stickySaveButton');
-    if (window.scrollY > 200) {
-        stickyButton.classList.remove('translate-y-full');
-        stickyButton.classList.add('translate-y-0');
-    } else {
-        stickyButton.classList.remove('translate-y-0');
-        stickyButton.classList.add('translate-y-full');
-    }
-}
-
 // Footer link ekleme
 function addFooterLink() {
     footerLinks.push({ label: '', url: '' });
@@ -733,7 +586,12 @@ function updateUrl(index, label) {
         .replace(/ı/g, 'i').replace(/ö/g, 'o').replace(/ç/g, 'c')
         .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
     footerLinks[index].url = slug;
-    renderFooterLinks();
+    
+    // Sadece URL input'unu güncelle, tüm sayfayı render etme
+    const urlInput = document.querySelector(`input[name="footer_bottom_links[${index}][url]"]`);
+    if (urlInput) {
+        urlInput.value = slug;
+    }
 }
 
 // Modal açma

@@ -37,9 +37,6 @@ class SettingController extends Controller
             
             // SEO & Kod Yönetimi
             'google_analytics_id' => 'nullable|string|max:50',
-            'google_tag_manager_id' => 'nullable|string|max:50',
-            'custom_head_code' => 'nullable|string|max:10000',
-            'custom_footer_code' => 'nullable|string|max:10000',
             
             // İletişim
             'contact_phone' => 'nullable|string|max:50',
@@ -48,12 +45,10 @@ class SettingController extends Controller
             'contact_address' => 'nullable|string|max:500',
             'contact_google_maps_embed' => 'nullable|string|max:5000',
             
-            // Sosyal Medya
-            'social_instagram' => 'nullable|url|max:255',
-            'social_facebook' => 'nullable|url|max:255',
-            'social_twitter' => 'nullable|url|max:255',
-            'social_youtube' => 'nullable|url|max:255',
-            'social_linkedin' => 'nullable|url|max:255',
+            // Sosyal Medya (İletişim'e taşındı - sadece kullanıcı adı)
+            'social_instagram' => 'nullable|string|max:100',
+            'social_facebook' => 'nullable|string|max:100',
+            'social_youtube' => 'nullable|string|max:100',
             
             // Footer
             'footer_about_text' => 'nullable|string|max:1000',
@@ -86,6 +81,8 @@ class SettingController extends Controller
         
         // Cache'i temizle ki değişiklikler anında yansısın
         Cache::forget('app.settings');
+        Cache::forget('maintenance_mode');
+        Cache::forget('maintenance_message');
         
         return redirect()->route('admin.settings.index')
             ->with('success', 'Ayarlar başarıyla güncellendi. Değişiklikler anında yansıtıldı.');

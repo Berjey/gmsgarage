@@ -23,13 +23,11 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // Tüm view'larda $settings değişkenini kullanılabilir yap
-        View::composer('*', function ($view) {
-            // Cache ile performans optimize et (1 saat)
-            $settings = Cache::remember('app.settings', 3600, function () {
-                return Setting::pluck('value', 'key')->toArray();
-            });
-            
-            $view->with('settings', $settings);
+        // Cache ile performans optimize et (5 dakika - daha sık güncelleme için)
+        $settings = Cache::remember('app.settings', 300, function () {
+            return Setting::pluck('value', 'key')->toArray();
         });
+        
+        View::share('settings', $settings);
     }
 }

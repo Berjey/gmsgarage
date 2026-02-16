@@ -8,6 +8,9 @@
     
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
     <style>
         /* Admin Panel Ferah Layout */
         /* xl: 1400px */

@@ -86,6 +86,9 @@ class PageController extends Controller
             $page->slug = Str::slug($page->title);
         }
         $page->save();
+        
+        // Cache'i temizle
+        \Illuminate\Support\Facades\Cache::forget("page.{$page->slug}");
 
         return redirect()->route('admin.pages.index')
             ->with('success', 'Sayfa başarıyla güncellendi.');
@@ -97,6 +100,10 @@ class PageController extends Controller
     public function destroy($id)
     {
         $page = Page::findOrFail($id);
+        
+        // Cache'i temizle
+        \Illuminate\Support\Facades\Cache::forget("page.{$page->slug}");
+        
         $page->delete();
 
         return redirect()->route('admin.pages.index')
@@ -160,6 +167,10 @@ class PageController extends Controller
                 'is_active' => true,
             ]
         );
+        
+        // Cache'i temizle ki değişiklikler anında yansısın
+        \Illuminate\Support\Facades\Cache::forget("page.{$cleanSlug}");
+        \Illuminate\Support\Facades\Cache::forget('app.settings');
         
         return response()->json([
             'success' => true,

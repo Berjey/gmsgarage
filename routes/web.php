@@ -24,7 +24,10 @@ Route::get('/hakkimizda', [PageController::class, 'about'])->name('about');
 Route::get('/iletisim', [PageController::class, 'contact'])->name('contact');
 Route::post('/iletisim', [PageController::class, 'contactSubmit'])->name('contact.submit');
 
-// KVKK ve Yasal Sayfalar
+// KVKK ve Yasal Sayfalar (dinamik)
+Route::get('/page/{slug}', [PageController::class, 'show'])->name('page.show');
+
+// Eski static route'lar (geriye uyumluluk için)
 Route::get('/kvkk', [PageController::class, 'kvkk'])->name('kvkk');
 Route::get('/gizlilik-politikasi', [PageController::class, 'privacy'])->name('privacy');
 Route::get('/kullanim-sartlari', [PageController::class, 'terms'])->name('terms');
