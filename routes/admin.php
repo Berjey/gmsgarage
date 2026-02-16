@@ -75,6 +75,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::put('/', [SettingController::class, 'update'])->name('update');
         });
         
+        // API Endpoints (AJAX için)
+        Route::prefix('api')->name('api.')->group(function () {
+            // Page API (Settings modal için)
+            Route::get('/pages/get-by-slug', [AdminPageController::class, 'getBySlug'])->name('pages.get-by-slug');
+            Route::post('/pages/store-or-update', [AdminPageController::class, 'storeOrUpdate'])->name('pages.store-or-update');
+        });
+        
         // Sayfa Yönetimi
         Route::prefix('pages')->name('pages.')->group(function () {
             Route::get('/', [AdminPageController::class, 'index'])->name('index');

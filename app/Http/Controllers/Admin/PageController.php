@@ -102,4 +102,73 @@ class PageController extends Controller
         return redirect()->route('admin.pages.index')
             ->with('success', 'Sayfa başarıyla silindi.');
     }
+
+    /**
+     * API: Get page content by slug
+     * Used by settings page modal
+     */
+    public function getBySlug(Request $request)
+    {
+        $slug = $request->query('slug');
+        
+        if (!$slug) {
+            return response()->json(['error' => 'Slug parameter is required'], 400);
+        }
+        
+        // Slug'dan /kurumsal/ prefix'ini temizle
+        $cleanSlug = str_replace('/kurumsal/', '', $slug);
+        $cleanSlug = trim($cleanSlug, '/');
+        
+        $page = Page::where('slug', $cleanSlug)->first();
+        
+        if (!$page) {
+            return response()->json([
+                'content' => '',
+                'title' => '',
+                'message' => 'Sayfa henüz oluşturulmamış'
+            ]);
+        }
+        
+        return response()->json([
+            'content' => $page->content ?? '',
+            'title' => $page->title,
+            'slug' => $page->slug
+        ]);
+    }
+
+    /**
+     * API: Store or update page content
+     * Used by settings page modal
+     */
+    public function storeOrUpdate(Request $request)
+    {
+        $request->validate([
+            'slug' => 'required|string|max:255',
+            'title' => 'required|string|max:255',
+            'content' => 'nullable|string',
+        ]);
+        
+        // Slug'dan /kurumsal/ prefix'ini temizle
+        $cleanSlug = str_replace('/kurumsal/', '', $request->slug);
+        $cleanSlug = trim($cleanSlug, '/');
+        
+        $page = Page::updateOrCreate(
+            ['slug' => $cleanSlug],
+            [
+                'title' => $request->title,
+                'content' => $request->content,
+                'is_active' => true,
+            ]
+        );
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Sayfa içeriği başarıyla kaydedildi',
+            'page' => [
+                'id' => $page->id,
+                'title' => $page->title,
+                'slug' => $page->slug,
+            ]
+        ]);
+    }
 }

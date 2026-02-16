@@ -6,8 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Vehicle;
 use App\Models\CarBrand;
 use App\Models\CarModel;
-use App\Data\CarBrands;
-use App\Data\VehicleFeatures;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
@@ -53,7 +51,7 @@ class VehicleController extends Controller
      */
     public function create()
     {
-        $brands = CarBrands::all();
+        $brands = CarBrand::orderBy('name')->get();
         return view('admin.vehicles.create', compact('brands'));
     }
 
@@ -180,7 +178,7 @@ class VehicleController extends Controller
     public function edit($id)
     {
         $vehicle = Vehicle::findOrFail($id);
-        $brands = CarBrands::all();
+        $brands = CarBrand::orderBy('name')->get();
         return view('admin.vehicles.edit', compact('vehicle', 'brands'));
     }
 

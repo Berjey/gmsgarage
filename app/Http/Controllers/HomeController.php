@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Vehicle;
-use App\Data\CarBrands;
+use App\Models\CarBrand;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -15,8 +15,8 @@ class HomeController extends Controller
             ->limit(6)
             ->get();
 
-        // Türkiye'deki tüm markaları al
-        $brands = CarBrands::all();
+        // Türkiye'deki tüm markaları al (veritabanından)
+        $brands = CarBrand::orderBy('name')->get();
         
         // Veritabanından body type'ları al
         $bodyTypes = Vehicle::active()->distinct()->pluck('body_type')->filter()->sort()->values();

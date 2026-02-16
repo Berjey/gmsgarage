@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Vehicle;
-use App\Data\CarBrands;
-use App\Data\TurkishCities;
+use App\Models\CarBrand;
 use Illuminate\Http\Request;
 
 class VehicleController extends Controller
@@ -132,8 +131,10 @@ class VehicleController extends Controller
         $vehicles = $query->paginate(12);
 
         // Filtreler için veriler
-        $brands = CarBrands::all();
-        $cities = TurkishCities::all();
+        $brands = CarBrand::orderBy('name')->get();
+        
+        // Türk şehirleri (başlıca büyük şehirler)
+        $cities = ['İstanbul', 'Ankara', 'İzmir', 'Bursa', 'Antalya', 'Adana', 'Konya', 'Gaziantep', 'Mersin', 'Kayseri'];
         
         // Model yılları
         $currentYear = (int) date('Y');

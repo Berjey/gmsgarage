@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\EvaluationRequest;
+use App\Models\CarBrand;
+use App\Models\CarModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
@@ -89,7 +91,17 @@ class VehicleEvaluationController extends Controller
             ]);
         }
         
-        $models = \App\Data\VehicleModels::getModels($marka);
+        // Veritabanından marka ve modellerini al
+        $brand = CarBrand::where('name', $marka)->first();
+        
+        if ($brand) {
+            $models = CarModel::where('brand_id', $brand->id)
+                ->orderBy('name')
+                ->pluck('name')
+                ->toArray();
+        } else {
+            $models = [];
+        }
         
         return response()->json([
             'success' => true,
@@ -99,6 +111,7 @@ class VehicleEvaluationController extends Controller
     
     /**
      * Get vehicle options for hybrid system
+     * TODO: Arabam.com API entegrasyonu eklenebilir
      */
     public function getVehicleOptions(Request $request)
     {
@@ -112,18 +125,17 @@ class VehicleEvaluationController extends Controller
             ]);
         }
         
-        $options = \App\Data\VehicleOptions::getOptions($marka, $model);
-        
-        if ($options) {
-            return response()->json([
-                'success' => true,
-                'options' => $options
-            ]);
-        }
+        // Şimdilik boş yapı döndür - kullanıcı manuel girebilir
+        $options = [
+            'paket' => [],
+            'motor' => [],
+            'sanzuman' => ['Manuel', 'Otomatik', 'Yarı Otomatik'],
+            'yakit' => ['Benzin', 'Dizel', 'LPG', 'Hibrit', 'Elektrik']
+        ];
         
         return response()->json([
-            'success' => false,
-            'message' => 'Veri bulunamadı'
+            'success' => true,
+            'options' => $options
         ]);
     }
     
@@ -142,18 +154,11 @@ class VehicleEvaluationController extends Controller
             ]);
         }
         
-        $options = \App\Data\VehicleOptions::getOptions($marka, $model);
-        
-        if ($options && isset($options['model_tipi']) && is_array($options['model_tipi'])) {
-            return response()->json([
-                'success' => true,
-                'versions' => $options['model_tipi']
-            ]);
-        }
-        
+        // TODO: Arabam.com API entegrasyonu eklenebilir
+        // Şimdilik boş array döndür
         return response()->json([
-            'success' => false,
-            'message' => 'Versiyon bulunamadı'
+            'success' => true,
+            'versions' => []
         ]);
     }
     
@@ -193,18 +198,18 @@ class VehicleEvaluationController extends Controller
             }
         });
 
-        // Eğer arabam.com API'den veri alınamadıysa, static markaları kullan
+        // Eğer arabam.com API'den veri alınamadıysa, veritabanından markaları kullan
         if (!$brands) {
-            \Log::info('Fallback: CarBrands kullanılıyor');
-            $staticBrands = \App\Data\CarBrands::all();
+            \Log::info('Fallback: Veritabanından markalar çekiliyor');
+            $dbBrands = CarBrand::orderBy('name')->get();
             
             // Arabam.com formatına dönüştür
             $formattedBrands = [];
-            foreach ($staticBrands as $index => $brandName) {
+            foreach ($dbBrands as $brand) {
                 $formattedBrands[] = [
-                    'Id' => $index + 1,
-                    'Name' => $brandName,
-                    'Value' => $index + 1
+                    'Id' => $brand->id,
+                    'Name' => $brand->name,
+                    'Value' => $brand->id
                 ];
             }
             
