@@ -4,26 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'GMSGARAGE - Premium Oto Galeri')</title>
-    <meta name="description" content="@yield('description', 'GMSGARAGE - Premium ikinci el araçlar, garantili ve bakımlı araçlar. En iyi fiyat garantisi.')">
-    <meta name="keywords" content="@yield('keywords', 'ikinci el araç, oto galeri, garantili araç, premium araç, GMSGARAGE')">
-    <meta name="author" content="GMSGARAGE">
+    <title>@yield('title', ($settings['site_title'] ?? 'GMSGARAGE') . ' - Premium Oto Galeri')</title>
+    <meta name="description" content="@yield('description', $settings['site_description'] ?? 'GMSGARAGE - Premium ikinci el araçlar, garantili ve bakımlı araçlar. En iyi fiyat garantisi.')">
+    <meta name="keywords" content="@yield('keywords', $settings['site_keywords'] ?? 'ikinci el araç, oto galeri, garantili araç, premium araç, GMSGARAGE')">
+    <meta name="author" content="{{ $settings['site_title'] ?? 'GMSGARAGE' }}">
     <link rel="canonical" href="@yield('canonical', url()->current())">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="@yield('og_type', 'website')">
     <meta property="og:url" content="@yield('og_url', url()->current())">
-    <meta property="og:title" content="@yield('og_title', 'GMSGARAGE - Premium Oto Galeri')">
-    <meta property="og:description" content="@yield('og_description', 'GMSGARAGE - Premium ikinci el araçlar, garantili ve bakımlı araçlar. En iyi fiyat garantisi.')">
+    <meta property="og:title" content="@yield('og_title', ($settings['site_title'] ?? 'GMSGARAGE') . ' - Premium Oto Galeri')">
+    <meta property="og:description" content="@yield('og_description', $settings['site_description'] ?? 'GMSGARAGE - Premium ikinci el araçlar, garantili ve bakımlı araçlar. En iyi fiyat garantisi.')">
     <meta property="og:image" content="@yield('og_image', asset('images/light-mode-logo.png'))">
     <meta property="og:locale" content="tr_TR">
-    <meta property="og:site_name" content="GMSGARAGE">
+    <meta property="og:site_name" content="{{ $settings['site_title'] ?? 'GMSGARAGE' }}">
     
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="@yield('og_url', url()->current())">
-    <meta name="twitter:title" content="@yield('og_title', 'GMSGARAGE - Premium Oto Galeri')">
-    <meta name="twitter:description" content="@yield('og_description', 'GMSGARAGE - Premium ikinci el araçlar, garantili ve bakımlı araçlar. En iyi fiyat garantisi.')">
+    <meta name="twitter:title" content="@yield('og_title', ($settings['site_title'] ?? 'GMSGARAGE') . ' - Premium Oto Galeri')">
+    <meta name="twitter:description" content="@yield('og_description', $settings['site_description'] ?? 'GMSGARAGE - Premium ikinci el araçlar, garantili ve bakımlı araçlar. En iyi fiyat garantisi.')">
     <meta name="twitter:image" content="@yield('og_image', asset('images/light-mode-logo.png'))">
     
     @stack('meta')
@@ -31,8 +31,39 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     
     @stack('styles')
+    
+    <!-- Google Tag Manager -->
+    @if(!empty($settings['google_tag_manager_id']))
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','{{ $settings['google_tag_manager_id'] }}');</script>
+    @endif
+    
+    <!-- Google Analytics -->
+    @if(!empty($settings['google_analytics_id']))
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ $settings['google_analytics_id'] }}"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', '{{ $settings['google_analytics_id'] }}');
+    </script>
+    @endif
+    
+    <!-- Custom Head Code -->
+    @if(!empty($settings['custom_head_code']))
+        {!! $settings['custom_head_code'] !!}
+    @endif
 </head>
 <body class="bg-gray-50 dark:bg-[#1e1e1e] transition-colors duration-200">
+    <!-- Google Tag Manager (noscript) -->
+    @if(!empty($settings['google_tag_manager_id']))
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ $settings['google_tag_manager_id'] }}"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    @endif
+    
     @include('components.header')
     
     <main>
@@ -42,7 +73,8 @@
     @include('components.footer')
     
     <!-- WhatsApp Sabit Butonu - Modern Design -->
-    <a href="https://wa.me/905551234567?text=Merhaba, araçlarınız hakkında bilgi almak istiyorum." 
+    @if(!empty($settings['contact_whatsapp']))
+    <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $settings['contact_whatsapp']) }}?text=Merhaba, araçlarınız hakkında bilgi almak istiyorum." 
        target="_blank" 
        class="fixed bottom-6 right-6 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white p-4 rounded-full shadow-2xl z-50 transition-all duration-500 hover:scale-110 hover:rotate-12 group">
         <svg class="w-6 h-6 transition-transform duration-300 group-hover:scale-110" fill="currentColor" viewBox="0 0 24 24">
@@ -50,7 +82,13 @@
         </svg>
         <span class="absolute -top-2 -right-2 w-4 h-4 bg-red-500 rounded-full animate-pulse"></span>
     </a>
+    @endif
     
     @stack('scripts')
+    
+    <!-- Custom Footer Code -->
+    @if(!empty($settings['custom_footer_code']))
+        {!! $settings['custom_footer_code'] !!}
+    @endif
 </body>
 </html>
