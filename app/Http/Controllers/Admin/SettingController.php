@@ -35,6 +35,7 @@ class SettingController extends Controller
             'contact_email' => 'nullable|email|max:255',
             'contact_whatsapp' => 'nullable|string|max:50',
             'contact_address' => 'nullable|string|max:500',
+            'contact_google_maps_embed' => 'nullable|string|max:5000',
             'social_instagram' => 'nullable|url|max:255',
             'social_facebook' => 'nullable|url|max:255',
             'social_twitter' => 'nullable|url|max:255',
