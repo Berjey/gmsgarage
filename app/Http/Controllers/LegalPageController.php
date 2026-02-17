@@ -28,7 +28,7 @@ class LegalPageController extends Controller
             'title' => $page->title,
             'content' => $page->content,
             'version' => $page->version,
-            'is_required' => $page->is_required,
+            'is_required' => true, // Modal'da her zaman scroll zorunlu
         ]);
     }
 }

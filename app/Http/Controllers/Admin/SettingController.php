@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
+use App\Models\LegalPage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 
 class SettingController extends Controller
 {
@@ -18,7 +20,10 @@ class SettingController extends Controller
         // Bu yüzden key-value array olarak gönd eriyoruz
         $settings = Setting::pluck('value', 'key')->toArray();
         
-        return view('admin.settings.index', compact('settings'));
+        // Footer sekmesi için legal pages'leri de gönder
+        $legalPages = LegalPage::orderBy('title')->get();
+        
+        return view('admin.settings.index', compact('settings', 'legalPages'));
     }
 
     /**
@@ -133,5 +138,63 @@ class SettingController extends Controller
         
         return redirect()->route('admin.settings.index')
             ->with('success', 'Ayarlar başarıyla güncellendi. Cache temizlendi, değişiklikler anında aktif.');
+    }
+    
+    /**
+     * Yeni yasal sayfa ekle (Footer sekmesinden)
+     */
+    public function addLegalPage(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+        ]);
+        
+        // Slug oluştur
+        $slug = Str::slug($request->title);
+        
+        // Aynı slug varsa sayı ekle
+        $originalSlug = $slug;
+        $count = 1;
+        while (LegalPage::where('slug', $slug)->exists()) {
+            $slug = $originalSlug . '-' . $count;
+            $count++;
+        }
+        
+        // Yeni sayfa oluştur
+        $page = LegalPage::create([
+            'title' => $request->title,
+            'slug' => $slug,
+            'content' => '<p>İçerik henüz eklenmedi. Lütfen düzenleyin.</p>',
+            'is_active' => true,
+            'is_required_in_forms' => false,
+            'version' => 1,
+        ]);
+        
+        // Cache temizle
+        Cache::forget('app.settings');
+        \Artisan::call('cache:clear');
+        
+        // Footer sayfasında kal, listede göster
+        return redirect()->route('admin.settings.index')
+            ->with('success', "'{$page->title}' sayfası başarıyla eklendi. İçeriği düzenlemek için 'İçeriği Düzenle' butonuna tıklayın.");
+    }
+    
+    /**
+     * Yasal sayfayı sil (Hard Delete - Kalıcı)
+     */
+    public function deleteLegalPage($id)
+    {
+        $page = LegalPage::findOrFail($id);
+        $pageTitle = $page->title;
+        
+        // Hard delete (veritabanından tamamen sil)
+        $page->delete();
+        
+        // Cache temizle
+        Cache::forget('app.settings');
+        \Artisan::call('cache:clear');
+        
+        return redirect()->route('admin.settings.index')
+            ->with('success', "'{$pageTitle}' sayfası kalıcı olarak silindi. Bu işlem geri alınamaz.");
     }
 }

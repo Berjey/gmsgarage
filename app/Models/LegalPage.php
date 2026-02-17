@@ -14,21 +14,40 @@ class LegalPage extends Model
         'slug',
         'content',
         'is_active',
-        'is_required',
+        'is_required_in_forms',
         'version',
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
-        'is_required' => 'boolean',
+        'is_required_in_forms' => 'boolean',
     ];
 
     /**
-     * Get active legal pages
+     * Get active legal pages (Automatically displayed in footer)
      */
     public static function getActive()
     {
         return self::where('is_active', true)->orderBy('title')->get();
+    }
+
+    /**
+     * Get footer pages - Basit: Aktif olan tüm sayfalar footer'da görünür
+     */
+    public static function getFooterPages()
+    {
+        return self::where('is_active', true)->orderBy('title')->get();
+    }
+
+    /**
+     * Get pages required in forms (checkbox olarak gösterilecekler)
+     */
+    public static function getFormPages()
+    {
+        return self::where('is_active', true)
+            ->where('is_required_in_forms', true)
+            ->orderBy('title')
+            ->get();
     }
 
     /**

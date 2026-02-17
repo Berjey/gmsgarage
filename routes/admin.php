@@ -58,6 +58,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::prefix('settings')->name('settings.')->group(function () {
                 Route::get('/', [SettingController::class, 'index'])->name('index');
                 Route::put('/', [SettingController::class, 'update'])->name('update');
+                
+                // Footer'dan Yasal Sayfa Yönetimi
+                Route::post('/add-legal-page', [SettingController::class, 'addLegalPage'])->name('add-legal-page');
+                Route::delete('/delete-legal-page/{id}', [SettingController::class, 'deleteLegalPage'])->name('delete-legal-page');
             });
             
             // Yasal Sayfalar Yönetimi
@@ -155,6 +159,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
                 Route::put('/{id}', [AdminBlogController::class, 'update'])->name('update');
                 Route::post('/{id}/toggle-featured', [AdminBlogController::class, 'toggleFeatured'])->name('toggle-featured');
                 Route::delete('/{id}', [AdminBlogController::class, 'destroy'])->name('destroy');
+            });
+            // Footer Ayarları API
+            Route::prefix('api/pages')->name('api.pages.')->group(function () {
+                Route::get('/get-by-slug', [AdminLegalPageController::class, 'getBySlug'])->name('get-by-slug');
+                Route::post('/store-or-update', [AdminLegalPageController::class, 'storeOrUpdate'])->name('store-or-update');
             });
         });
     });

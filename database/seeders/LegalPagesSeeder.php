@@ -4,14 +4,10 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\LegalPage;
-use Illuminate\Support\Str;
 
 class LegalPagesSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
-    public function run(): void
+    public function run()
     {
         $legalPages = [
             [
@@ -19,7 +15,7 @@ class LegalPagesSeeder extends Seeder
                 'slug' => 'kvkk-aydinlatma-metni',
                 'content' => $this->getKvkkContent(),
                 'is_active' => true,
-                'is_required' => true,
+                'is_required_in_forms' => true,
                 'version' => 1,
             ],
             [
@@ -27,7 +23,7 @@ class LegalPagesSeeder extends Seeder
                 'slug' => 'gizlilik-politikasi',
                 'content' => $this->getPrivacyPolicyContent(),
                 'is_active' => true,
-                'is_required' => true,
+                'is_required_in_forms' => false,
                 'version' => 1,
             ],
             [
@@ -35,7 +31,7 @@ class LegalPagesSeeder extends Seeder
                 'slug' => 'kullanim-sartlari',
                 'content' => $this->getTermsContent(),
                 'is_active' => true,
-                'is_required' => true,
+                'is_required_in_forms' => false,
                 'version' => 1,
             ],
             [
@@ -43,7 +39,15 @@ class LegalPagesSeeder extends Seeder
                 'slug' => 'cerez-politikasi',
                 'content' => $this->getCookiePolicyContent(),
                 'is_active' => true,
-                'is_required' => false,
+                'is_required_in_forms' => false,
+                'version' => 1,
+            ],
+            [
+                'title' => 'İptal ve İade Koşulları',
+                'slug' => 'iptal-iade-kosullari',
+                'content' => $this->getRefundPolicyContent(),
+                'is_active' => true,
+                'is_required_in_forms' => false,
                 'version' => 1,
             ],
         ];
@@ -54,884 +58,672 @@ class LegalPagesSeeder extends Seeder
                 $page
             );
         }
-
-        $this->command->info('✅ Yasal sayfalar başarıyla güncellendi!');
     }
 
     private function getKvkkContent()
     {
         return <<<'EOT'
-<div style="max-width: 100%; font-family: system-ui, -apple-system, sans-serif; color: #374151; line-height: 1.8;">
+<h2>1. VERİ SORUMLUSU</h2>
 
-<h2 style="color: #dc2626; font-size: 1.75rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #dc2626; padding-bottom: 0.5rem;">1. VERİ SORUMLUSU</h2>
+<p>6698 sayılı Kişisel Verilerin Korunması Kanunu ("KVKK") uyarınca, <strong>GMS Garage Otomotiv</strong> (bundan böyle "GMS Garage" veya "Şirket" olarak anılacaktır) olarak kişisel verileriniz veri sorumlusu sıfatıyla tarafımızca aşağıda açıklanan kapsamda işlenebilecektir.</p>
 
-<p style="margin-bottom: 1rem;">6698 sayılı Kişisel Verilerin Korunması Kanunu ("KVKK") uyarınca, <strong>GMS Garage Otomotiv</strong> (bundan böyle "GMS Garage" veya "Şirket" olarak anılacaktır) olarak kişisel verileriniz veri sorumlusu sıfatıyla tarafımızca aşağıda açıklanan kapsamda işlenebilecektir.</p>
-
-<p style="margin-bottom: 1rem;"><strong>İletişim Bilgilerimiz:</strong></p>
-<ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
-    <li style="margin-bottom: 0.5rem;">E-posta: info@gmsgarage.com</li>
-    <li style="margin-bottom: 0.5rem;">Telefon: +90 XXX XXX XX XX</li>
-    <li style="margin-bottom: 0.5rem;">Adres: [Şirket Adresi]</li>
+<p><strong>İletişim Bilgilerimiz:</strong></p>
+<ul>
+    <li>E-posta: info@gmsgarage.com</li>
+    <li>Telefon: +90 XXX XXX XX XX</li>
+    <li>Adres: [Şirket Adresi]</li>
 </ul>
 
-<h2 style="color: #dc2626; font-size: 1.75rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #dc2626; padding-bottom: 0.5rem;">2. KİŞİSEL VERİLERİNİZİN İŞLENME AMACI</h2>
+<h2>2. KİŞİSEL VERİLERİNİZİN İŞLENME AMACI</h2>
 
-<p style="margin-bottom: 1rem;">Toplanan kişisel verileriniz aşağıdaki amaçlarla işlenmektedir:</p>
+<p>Toplanan kişisel verileriniz aşağıdaki amaçlarla işlenmektedir:</p>
 
-<ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
-    <li style="margin-bottom: 0.5rem;"><strong>Araç Alım-Satım Süreçlerinin Yürütülmesi:</strong> Araç alım, satım, değerleme ve danışmanlık hizmetlerinin sunulması</li>
-    <li style="margin-bottom: 0.5rem;"><strong>Müşteri İlişkileri Yönetimi:</strong> Müşteri memnuniyetinin sağlanması, talep ve şikayetlerin yönetimi</li>
-    <li style="margin-bottom: 0.5rem;"><strong>İletişim Faaliyetleri:</strong> Sizinle iletişime geçilmesi, bilgilendirme mesajları gönderilmesi</li>
-    <li style="margin-bottom: 0.5rem;"><strong>Pazarlama ve Tanıtım:</strong> Ürün ve hizmetlerimiz hakkında bilgilendirme, kampanya duyuruları (açık rızanız dahilinde)</li>
-    <li style="margin-bottom: 0.5rem;"><strong>Hukuki Yükümlülüklerin Yerine Getirilmesi:</strong> Yasal düzenlemelerin gerektirdiği bilgi ve belgelerin hazırlanması</li>
-    <li style="margin-bottom: 0.5rem;"><strong>Güvenlik ve İstatistiksel Analiz:</strong> Web sitesi güvenliğinin sağlanması, kullanıcı deneyiminin iyileştirilmesi</li>
-    <li style="margin-bottom: 0.5rem;"><strong>CRM ve Veri Tabanı Yönetimi:</strong> Müşteri portföyünün yönetilmesi, veri tabanının güncellenmesi</li>
+<ul>
+    <li><strong>Araç Alım-Satım Süreçlerinin Yürütülmesi:</strong> Araç alım, satım, değerleme ve danışmanlık hizmetlerinin sunulması</li>
+    <li><strong>Müşteri İlişkileri Yönetimi:</strong> Müşteri memnuniyetinin sağlanması, talep ve şikayetlerin yönetimi</li>
+    <li><strong>İletişim Faaliyetleri:</strong> Sizinle iletişime geçilmesi, bilgilendirme mesajları gönderilmesi</li>
+    <li><strong>Pazarlama ve Tanıtım:</strong> Ürün ve hizmetlerimiz hakkında bilgilendirme, kampanya duyuruları (açık rızanız dahilinde)</li>
+    <li><strong>Hukuki Yükümlülüklerin Yerine Getirilmesi:</strong> Yasal düzenlemelerin gerektirdiği bilgi ve belgelerin hazırlanması</li>
+    <li><strong>Güvenlik ve İstatistiksel Analiz:</strong> Web sitesi güvenliğinin sağlanması, kullanıcı deneyiminin iyileştirilmesi</li>
 </ul>
 
-<h2 style="color: #dc2626; font-size: 1.75rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #dc2626; padding-bottom: 0.5rem;">3. KİŞİSEL VERİLERİN TOPLANMA YÖNTEMİ VE HUKUKİ SEBEPLERİ</h2>
+<h2>3. KİŞİSEL VERİLERİN TOPLANMA YÖNTEMİ</h2>
 
-<p style="margin-bottom: 1rem;">Kişisel verileriniz aşağıdaki yöntemlerle toplanmaktadır:</p>
+<p>Kişisel verileriniz aşağıdaki yöntemlerle toplanmaktadır:</p>
 
-<ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
-    <li style="margin-bottom: 0.5rem;">Web sitemiz (www.gmsgarage.com) üzerindeki formlar (İletişim, Araç İsteği, Değerleme)</li>
-    <li style="margin-bottom: 0.5rem;">E-posta ve telefon iletişimi</li>
-    <li style="margin-bottom: 0.5rem;">Fiziksel ziyaretler ve görüşmeler</li>
-    <li style="margin-bottom: 0.5rem;">Sosyal medya platformları</li>
-    <li style="margin-bottom: 0.5rem;">Otomatik yöntemler (Çerezler, IP adresi kaydı, log kayıtları)</li>
+<ul>
+    <li>Web sitemiz (www.gmsgarage.com) üzerindeki formlar</li>
+    <li>E-posta ve telefon iletişimi</li>
+    <li>Fiziksel ziyaretler ve görüşmeler</li>
+    <li>Sosyal medya platformları</li>
+    <li>Otomatik yöntemler (Çerezler, IP adresi, log kayıtları)</li>
 </ul>
 
-<p style="margin-bottom: 1rem;"><strong>Hukuki Sebepler (KVKK Madde 5/2):</strong></p>
-<ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
-    <li style="margin-bottom: 0.5rem;">Açık rızanızın bulunması (a)</li>
-    <li style="margin-bottom: 0.5rem;">Sözleşmenin kurulması veya ifası için gerekli olması (c)</li>
-    <li style="margin-bottom: 0.5rem;">Veri sorumlusunun hukuki yükümlülüğünü yerine getirebilmesi için zorunlu olması (ç)</li>
-    <li style="margin-bottom: 0.5rem;">Veri sorumlusunun meşru menfaatleri için veri işlenmesinin zorunlu olması (f)</li>
+<p><strong>Hukuki Sebepler (KVKK Madde 5/2):</strong></p>
+<ul>
+    <li>Açık rızanızın bulunması</li>
+    <li>Sözleşmenin kurulması veya ifası için gerekli olması</li>
+    <li>Veri sorumlusunun hukuki yükümlülüğünü yerine getirebilmesi için zorunlu olması</li>
+    <li>Veri sorumlusunun meşru menfaatleri için veri işlenmesinin zorunlu olması</li>
 </ul>
 
-<h2 style="color: #dc2626; font-size: 1.75rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #dc2626; padding-bottom: 0.5rem;">4. İŞLENEN KİŞİSEL VERİ KATEGORİLERİ</h2>
+<h2>4. İŞLENEN KİŞİSEL VERİLER</h2>
 
-<table style="width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; border: 1px solid #e5e7eb;">
-    <thead style="background-color: #f3f4f6;">
+<table>
+    <thead>
         <tr>
-            <th style="padding: 0.75rem; text-align: left; border: 1px solid #e5e7eb; font-weight: 600;">Veri Kategorisi</th>
-            <th style="padding: 0.75rem; text-align: left; border: 1px solid #e5e7eb; font-weight: 600;">Veri Örnekleri</th>
+            <th>Veri Kategorisi</th>
+            <th>Veri Örnekleri</th>
         </tr>
     </thead>
     <tbody>
         <tr>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb;">Kimlik Bilgisi</td>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb;">Ad, soyad, T.C. kimlik numarası (gerektiğinde)</td>
-        </tr>
-        <tr style="background-color: #f9fafb;">
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb;">İletişim Bilgisi</td>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb;">Telefon numarası, e-posta adresi, adres</td>
+            <td>Kimlik Bilgisi</td>
+            <td>Ad, soyad, T.C. kimlik numarası (gerektiğinde)</td>
         </tr>
         <tr>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb;">Müşteri İşlem Bilgisi</td>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb;">Araç tercihleri, talep detayları, değerleme bilgileri</td>
-        </tr>
-        <tr style="background-color: #f9fafb;">
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb;">İşlem Güvenliği Bilgisi</td>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb;">IP adresi, çerez kayıtları, log kayıtları</td>
+            <td>İletişim Bilgisi</td>
+            <td>Telefon numarası, e-posta adresi, adres</td>
         </tr>
         <tr>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb;">Pazarlama Bilgisi</td>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb;">Tercihler, ilgi alanları, kampanya katılımları</td>
+            <td>Müşteri İşlem Bilgisi</td>
+            <td>Araç tercihleri, talep detayları, değerleme bilgileri</td>
         </tr>
-        <tr style="background-color: #f9fafb;">
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb;">Hukuki İşlem Bilgisi</td>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb;">Sözleşme bilgileri, onay kayıtları, versiyon bilgileri</td>
+        <tr>
+            <td>İşlem Güvenliği Bilgisi</td>
+            <td>IP adresi, çerez kayıtları, log kayıtları</td>
         </tr>
     </tbody>
 </table>
 
-<h2 style="color: #dc2626; font-size: 1.75rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #dc2626; padding-bottom: 0.5rem;">5. KİŞİSEL VERİLERİN AKTARILMASI</h2>
+<h2>5. KİŞİSEL VERİLERİN AKTARILMASI</h2>
 
-<p style="margin-bottom: 1rem;">Kişisel verileriniz, KVKK'nın 8. ve 9. maddelerinde belirtilen şartlar dahilinde aşağıdaki kişi ve kuruluşlara aktarılabilir:</p>
+<p>Kişisel verileriniz, KVKK'nın 8. ve 9. maddelerinde belirtilen şartlar dahilinde aşağıdaki kişi ve kuruluşlara aktarılabilir:</p>
 
-<ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
-    <li style="margin-bottom: 0.5rem;"><strong>İş Ortaklarımız:</strong> Araç tedarikçileri, sigorta şirketleri, ekspertiz firmaları</li>
-    <li style="margin-bottom: 0.5rem;"><strong>Hizmet Sağlayıcılar:</strong> Hosting, bulut depolama, e-posta servisleri, analitik hizmetler</li>
-    <li style="margin-bottom: 0.5rem;"><strong>Resmi Kurumlar:</strong> Yasal yükümlülüklerimiz gereği yetkili kamu kurum ve kuruluşları</li>
-    <li style="margin-bottom: 0.5rem;"><strong>Hukuki Danışmanlar:</strong> Avukatlar, mali müşavirler</li>
+<ul>
+    <li><strong>İş Ortaklarımız:</strong> Araç tedarikçileri, sigorta şirketleri, ekspertiz firmaları</li>
+    <li><strong>Hizmet Sağlayıcılar:</strong> Hosting, bulut depolama, e-posta servisleri</li>
+    <li><strong>Resmi Kurumlar:</strong> Yasal yükümlülüklerimiz gereği yetkili kamu kurum ve kuruluşları</li>
+    <li><strong>Hukuki Danışmanlar:</strong> Avukatlar, mali müşavirler</li>
 </ul>
 
-<h2 style="color: #dc2626; font-size: 1.75rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #dc2626; padding-bottom: 0.5rem;">6. KİŞİSEL VERİLERİN SAKLANMA SÜRESİ</h2>
+<h2>6. SAKLAMA SÜRESİ</h2>
 
-<p style="margin-bottom: 1rem;">Kişisel verileriniz, işleme amacının gerektirdiği süre boyunca ve ilgili mevzuatta öngörülen süreler dahilinde saklanmaktadır:</p>
+<p>Kişisel verileriniz, işleme amacının gerektirdiği süre boyunca ve ilgili mevzuatta öngörülen süreler dahilinde saklanmaktadır:</p>
 
-<ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
-    <li style="margin-bottom: 0.5rem;"><strong>Müşteri Verileri:</strong> İlişkinin sona ermesinden itibaren 10 yıl (Vergi mevzuatı gereği)</li>
-    <li style="margin-bottom: 0.5rem;"><strong>İletişim Kayıtları:</strong> 2 yıl veya yasal süre</li>
-    <li style="margin-bottom: 0.5rem;"><strong>Çerez ve Log Kayıtları:</strong> 6 ay - 2 yıl arası</li>
-    <li style="margin-bottom: 0.5rem;"><strong>Pazarlama İzinleri:</strong> İzin geri alınana kadar veya 3 yıl</li>
+<ul>
+    <li><strong>Müşteri Verileri:</strong> İlişkinin sona ermesinden itibaren 10 yıl</li>
+    <li><strong>İletişim Kayıtları:</strong> 2 yıl veya yasal süre</li>
+    <li><strong>Çerez ve Log Kayıtları:</strong> 6 ay - 2 yıl arası</li>
+    <li><strong>Pazarlama İzinleri:</strong> İzin geri alınana kadar veya 3 yıl</li>
 </ul>
 
-<p style="margin-bottom: 1rem;">Bu süreler sona erdiğinde, kişisel verileriniz silinir, yok edilir veya anonim hale getirilir.</p>
+<p>Bu süreler sona erdiğinde, kişisel verileriniz silinir, yok edilir veya anonim hale getirilir.</p>
 
-<h2 style="color: #dc2626; font-size: 1.75rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #dc2626; padding-bottom: 0.5rem;">7. KVKK KAPSAMINDA HAKLARINIZ</h2>
+<h2>7. HAKLARINIZ</h2>
 
-<p style="margin-bottom: 1rem;">KVKK'nın 11. maddesi uyarınca aşağıdaki haklara sahipsiniz:</p>
+<p>KVKK'nın 11. maddesi uyarınca aşağıdaki haklara sahipsiniz:</p>
 
-<div style="background-color: #fef2f2; border-left: 4px solid #dc2626; padding: 1rem; margin-bottom: 1rem;">
-    <ol style="margin-left: 1rem;">
-        <li style="margin-bottom: 0.75rem;">Kişisel verilerinizin işlenip işlenmediğini öğrenme</li>
-        <li style="margin-bottom: 0.75rem;">Kişisel verileriniz işlenmişse buna ilişkin bilgi talep etme</li>
-        <li style="margin-bottom: 0.75rem;">Kişisel verilerin işlenme amacını ve bunların amacına uygun kullanılıp kullanılmadığını öğrenme</li>
-        <li style="margin-bottom: 0.75rem;">Yurt içinde veya yurt dışında kişisel verilerin aktarıldığı üçüncü kişileri bilme</li>
-        <li style="margin-bottom: 0.75rem;">Kişisel verilerin eksik veya yanlış işlenmiş olması halinde bunların düzeltilmesini isteme</li>
-        <li style="margin-bottom: 0.75rem;">KVKK'da öngörülen şartlar çerçevesinde kişisel verilerin silinmesini veya yok edilmesini isteme</li>
-        <li style="margin-bottom: 0.75rem;">Düzeltme, silme ve yok edilme işlemlerinin aktarıldığı üçüncü kişilere bildirilmesini isteme</li>
-        <li style="margin-bottom: 0.75rem;">İşlenen verilerin münhasıran otomatik sistemler vasıtasıyla analiz edilmesi suretiyle aleyhinize bir sonucun ortaya çıkmasına itiraz etme</li>
-        <li style="margin-bottom: 0.75rem;">Kişisel verilerin kanuna aykırı olarak işlenmesi sebebiyle zarara uğramanız halinde zararın giderilmesini talep etme</li>
-    </ol>
-</div>
+<ol>
+    <li>Kişisel verilerinizin işlenip işlenmediğini öğrenme</li>
+    <li>Kişisel verileriniz işlenmişse buna ilişkin bilgi talep etme</li>
+    <li>Kişisel verilerin işlenme amacını ve bunların amacına uygun kullanılıp kullanılmadığını öğrenme</li>
+    <li>Yurt içinde veya yurt dışında kişisel verilerin aktarıldığı üçüncü kişileri bilme</li>
+    <li>Kişisel verilerin eksik veya yanlış işlenmiş olması halinde bunların düzeltilmesini isteme</li>
+    <li>KVKK'da öngörülen şartlar çerçevesinde kişisel verilerin silinmesini veya yok edilmesini isteme</li>
+    <li>Düzeltme, silme ve yok edilme işlemlerinin aktarıldığı üçüncü kişilere bildirilmesini isteme</li>
+    <li>İşlenen verilerin münhasıran otomatik sistemler vasıtasıyla analiz edilmesi suretiyle aleyhinize bir sonucun ortaya çıkmasına itiraz etme</li>
+    <li>Kişisel verilerin kanuna aykırı olarak işlenmesi sebebiyle zarara uğramanız halinde zararın giderilmesini talep etme</li>
+</ol>
 
-<h2 style="color: #dc2626; font-size: 1.75rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #dc2626; padding-bottom: 0.5rem;">8. BAŞVURU YOLLARI</h2>
+<h2>8. BAŞVURU YOLU</h2>
 
-<p style="margin-bottom: 1rem;">Yukarıda belirtilen haklarınızı kullanmak için aşağıdaki yollarla başvurabilirsiniz:</p>
+<p>Haklarınızı kullanmak için aşağıdaki yöntemlerle başvuruda bulunabilirsiniz:</p>
 
-<div style="background-color: #f3f4f6; padding: 1.5rem; border-radius: 0.5rem; margin-bottom: 1rem;">
-    <p style="margin-bottom: 0.75rem;"><strong>📧 E-posta:</strong> kvkk@gmsgarage.com</p>
-    <p style="margin-bottom: 0.75rem;"><strong>📝 Yazılı Başvuru:</strong> [Şirket Adresi]</p>
-    <p style="margin-bottom: 0.75rem;"><strong>🌐 Online Form:</strong> www.gmsgarage.com/kvkk-basvuru</p>
-    <p style="margin-bottom: 0;"><strong>📱 KEP Adresi:</strong> [KEP Adresi]</p>
-</div>
-
-<p style="margin-bottom: 1rem;"><strong>Başvurunuzda Bulunması Gereken Bilgiler:</strong></p>
-<ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
-    <li style="margin-bottom: 0.5rem;">Adınız, soyadınız</li>
-    <li style="margin-bottom: 0.5rem;">T.C. kimlik numaranız</li>
-    <li style="margin-bottom: 0.5rem;">Tebligata esas yerleşim yeri veya iş yeri adresi</li>
-    <li style="margin-bottom: 0.5rem;">Varsa e-posta adresi, telefon veya faks numarası</li>
-    <li style="margin-bottom: 0.5rem;">Talep konusu</li>
+<ul>
+    <li><strong>E-posta:</strong> kvkk@gmsgarage.com</li>
+    <li><strong>Posta:</strong> [Şirket Adresi] (KVKK Birimi)</li>
+    <li><strong>Web Sitesi:</strong> www.gmsgarage.com/kvkk-basvuru</li>
 </ul>
 
-<p style="margin-bottom: 1rem;">Başvurularınız, talebin niteliğine göre <strong>en geç 30 gün</strong> içinde ücretsiz olarak sonuçlandırılacaktır. İşlemin ayrıca bir maliyet gerektirmesi halinde, Kişisel Verileri Koruma Kurulu tarafından belirlenen tarifedeki ücret alınabilir.</p>
+<p>Başvurularınız en geç 30 gün içinde sonuçlandırılır.</p>
 
-<h2 style="color: #dc2626; font-size: 1.75rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #dc2626; padding-bottom: 0.5rem;">9. VERİ GÜVENLİĞİ</h2>
+<h2>9. GÜVENLİK</h2>
 
-<p style="margin-bottom: 1rem;">GMS Garage olarak, kişisel verilerinizin güvenliğini sağlamak için gerekli tüm teknik ve idari tedbirleri almaktayız:</p>
+<p>GMS Garage olarak, kişisel verilerinizin korunmasına azami özen göstermekteyiz:</p>
 
-<ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
-    <li style="margin-bottom: 0.5rem;">SSL sertifikası ile şifreli veri iletimi</li>
-    <li style="margin-bottom: 0.5rem;">Güvenli sunucularda veri depolama</li>
-    <li style="margin-bottom: 0.5rem;">Yetkilendirme ve erişim kontrol sistemleri</li>
-    <li style="margin-bottom: 0.5rem;">Düzenli güvenlik güncellemeleri ve testler</li>
-    <li style="margin-bottom: 0.5rem;">Çalışan eğitimleri ve gizlilik sözleşmeleri</li>
+<ul>
+    <li>SSL Sertifikası ile güvenli veri iletimi</li>
+    <li>Düzenli güvenlik taramaları ve güncellemeleri</li>
+    <li>Çalışan eğitimleri ve KVKK farkındalık programları</li>
+    <li>Yedekleme ve erişim kontrol sistemleri</li>
 </ul>
 
-<div style="background-color: #eff6ff; border-left: 4px solid #3b82f6; padding: 1rem; margin-top: 2rem;">
-    <p style="margin: 0; font-size: 0.875rem; color: #1e40af;"><strong>ℹ️ Güncellemeler:</strong> Bu aydınlatma metni, yasal düzenlemelerdeki değişiklikler veya şirket politikalarımızdaki güncellemeler nedeniyle zaman zaman revize edilebilir. Güncel versiyonu web sitemizden takip edebilirsiniz.</p>
-</div>
+<p><strong>ÖNEMLİ:</strong> GMS Garage hiçbir zaman telefon, e-posta veya SMS yoluyla şifre, kredi kartı bilgisi veya kimlik bilgilerinizi talep etmez.</p>
 
-<p style="margin-top: 2rem; text-align: center; color: #6b7280; font-size: 0.875rem;"><em>Son Güncelleme: Şubat 2026 | Versiyon: 1.0</em></p>
+<h2>10. GÜNCELLEMELER</h2>
 
-</div>
+<p>Bu Aydınlatma Metni, yasal düzenlemelerdeki değişiklikler veya şirket politikalarımızdaki güncellemeler nedeniyle zaman zaman revize edilebilir.</p>
+
+<p><strong>Son Güncellenme:</strong> Şubat 2026</p>
+
+<p><strong>İletişim:</strong> kvkk@gmsgarage.com</p>
+
 EOT;
     }
 
     private function getPrivacyPolicyContent()
     {
         return <<<'EOT'
-<div style="max-width: 100%; font-family: system-ui, -apple-system, sans-serif; color: #374151; line-height: 1.8;">
+<h2>1. GİRİŞ</h2>
 
-<h2 style="color: #dc2626; font-size: 1.75rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #dc2626; padding-bottom: 0.5rem;">1. GİRİŞ</h2>
+<p>GMS Garage Otomotiv olarak, gizliliğinize verdiğimiz önemi ve kişisel verilerinizin korunmasına yönelik taahhüdümüzü bu Gizlilik Politikası ile açıklıyoruz.</p>
 
-<p style="margin-bottom: 1rem;">GMS Garage Otomotiv ("GMS Garage", "biz", "bizim") olarak, gizliliğinize verdiğimiz önemi ve kişisel verilerinizin korunmasına yönelik taahhüdümüzü bu Gizlilik Politikası ile açıklıyoruz.</p>
+<p>Bu politika, web sitemizi ziyaret ettiğinizde, hizmetlerimizi kullandığınızda ve bizimle iletişime geçtiğinizde hangi bilgileri topladığımızı, bu bilgileri nasıl kullandığımızı ve koruduğumuzu açıklamaktadır.</p>
 
-<p style="margin-bottom: 1rem;">Bu politika, <strong>www.gmsgarage.com</strong> web sitesini ziyaret ettiğinizde, hizmetlerimizi kullandığınızda veya bizimle iletişime geçtiğinizde kişisel bilgilerinizin nasıl toplandığını, kullanıldığını, saklandığını ve korunduğunu detaylı olarak açıklamaktadır.</p>
+<h2>2. TOPLANAN BİLGİLER</h2>
 
-<div style="background-color: #fef2f2; border-left: 4px solid #dc2626; padding: 1rem; margin-bottom: 1.5rem;">
-    <p style="margin: 0;"><strong>⚠️ Önemli:</strong> Web sitemizi kullanarak bu Gizlilik Politikası'nı okuduğunuzu, anladığınızı ve kabul ettiğinizi beyan etmiş olursunuz.</p>
-</div>
+<p>Aşağıdaki türdeki bilgileri toplayabiliriz:</p>
 
-<h2 style="color: #dc2626; font-size: 1.75rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #dc2626; padding-bottom: 0.5rem;">2. TOPLANAN BİLGİLER</h2>
-
-<h3 style="color: #991b1b; font-size: 1.25rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem;">2.1. Doğrudan Topladığımız Bilgiler</h3>
-
-<p style="margin-bottom: 1rem;">Web sitemizi kullanırken aşağıdaki bilgileri bizimle paylaşabilirsiniz:</p>
-
-<ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
-    <li style="margin-bottom: 0.5rem;"><strong>Kimlik Bilgileri:</strong> Ad, soyad</li>
-    <li style="margin-bottom: 0.5rem;"><strong>İletişim Bilgileri:</strong> E-posta adresi, telefon numarası, adres</li>
-    <li style="margin-bottom: 0.5rem;"><strong>Araç Bilgileri:</strong> İlgilendiğiniz veya sahip olduğunuz araç detayları</li>
-    <li style="margin-bottom: 0.5rem;"><strong>Talep ve Tercihler:</strong> Araç değerleme talepleri, özel istekler, bütçe bilgisi</li>
-    <li style="margin-bottom: 0.5rem;"><strong>İletişim İçeriği:</strong> Bizimle paylaştığınız mesajlar, yorumlar ve geri bildirimler</li>
+<ul>
+    <li><strong>Kimlik Bilgileri:</strong> Ad, soyad</li>
+    <li><strong>İletişim Bilgileri:</strong> E-posta adresi, telefon numarası, posta adresi</li>
+    <li><strong>İşlem Bilgileri:</strong> Araç tercihleri, satın alma geçmişi, değerleme talepleri</li>
+    <li><strong>Teknik Bilgiler:</strong> IP adresi, tarayıcı türü, işletim sistemi, çerez verileri</li>
+    <li><strong>Kullanım Bilgileri:</strong> Web sitesinde gezinme davranışları, tıklama verileri</li>
 </ul>
 
-<h3 style="color: #991b1b; font-size: 1.25rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem;">2.2. Otomatik Olarak Toplanan Bilgiler</h3>
+<h2>3. BİLGİLERİN KULLANIMI</h2>
 
-<p style="margin-bottom: 1rem;">Web sitemizi ziyaret ettiğinizde aşağıdaki teknik bilgiler otomatik olarak toplanır:</p>
+<p>Topladığımız bilgileri aşağıdaki amaçlarla kullanırız:</p>
 
-<table style="width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; border: 1px solid #e5e7eb;">
-    <thead style="background-color: #f3f4f6;">
-        <tr>
-            <th style="padding: 0.75rem; text-align: left; border: 1px solid #e5e7eb;">Bilgi Türü</th>
-            <th style="padding: 0.75rem; text-align: left; border: 1px solid #e5e7eb;">Açıklama</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb;">IP Adresi</td>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb;">İnternet servis sağlayıcınız tarafından atanan benzersiz numara</td>
-        </tr>
-        <tr style="background-color: #f9fafb;">
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb;">Tarayıcı Bilgisi</td>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb;">Tarayıcı türü, versiyonu, dil tercihi</td>
-        </tr>
-        <tr>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb;">Cihaz Bilgisi</td>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb;">İşletim sistemi, ekran çözünürlüğü, cihaz türü</td>
-        </tr>
-        <tr style="background-color: #f9fafb;">
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb;">Ziyaret Bilgisi</td>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb;">Ziyaret edilen sayfalar, tıklamalar, geçirilen süre</td>
-        </tr>
-        <tr>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb;">Referans URL</td>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb;">Sitemize hangi sayfadan geldiğiniz</td>
-        </tr>
-    </tbody>
-</table>
-
-<h2 style="color: #dc2626; font-size: 1.75rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #dc2626; padding-bottom: 0.5rem;">3. BİLGİLERİN KULLANIM AMAÇLARI</h2>
-
-<p style="margin-bottom: 1rem;">Topladığımız bilgileri aşağıdaki amaçlarla kullanıyoruz:</p>
-
-<div style="display: grid; gap: 1rem; margin-bottom: 1.5rem;">
-    <div style="background-color: #f0fdf4; border-left: 4px solid #22c55e; padding: 1rem;">
-        <h4 style="margin: 0 0 0.5rem 0; color: #166534; font-weight: 600;">✓ Hizmet Sunumu</h4>
-        <p style="margin: 0; font-size: 0.875rem;">Araç alım, satım, değerleme ve danışmanlık hizmetlerinin sunulması, taleplerinizin karşılanması</p>
-    </div>
-    
-    <div style="background-color: #eff6ff; border-left: 4px solid #3b82f6; padding: 1rem;">
-        <h4 style="margin: 0 0 0.5rem 0; color: #1e40af; font-weight: 600;">✓ İletişim ve Destek</h4>
-        <p style="margin: 0; font-size: 0.875rem;">Sorularınızı yanıtlama, müşteri desteği sağlama, bilgilendirme mesajları gönderme</p>
-    </div>
-    
-    <div style="background-color: #fef3c7; border-left: 4px solid #f59e0b; padding: 1rem;">
-        <h4 style="margin: 0 0 0.5rem 0; color: #92400e; font-weight: 600;">✓ Pazarlama (İzninizle)</h4>
-        <p style="margin: 0; font-size: 0.875rem;">Ürün ve hizmetlerimiz hakkında bilgilendirme, özel teklifler ve kampanya duyuruları</p>
-    </div>
-    
-    <div style="background-color: #f5f3ff; border-left: 4px solid #8b5cf6; padding: 1rem;">
-        <h4 style="margin: 0 0 0.5rem 0; color: #5b21b6; font-weight: 600;">✓ İyileştirme ve Analiz</h4>
-        <p style="margin: 0; font-size: 0.875rem;">Web sitesi performansının artırılması, kullanıcı deneyiminin iyileştirilmesi, istatistiksel analizler</p>
-    </div>
-    
-    <div style="background-color: #fef2f2; border-left: 4px solid #ef4444; padding: 1rem;">
-        <h4 style="margin: 0 0 0.5rem 0; color: #991b1b; font-weight: 600;">✓ Güvenlik ve Yasal Yükümlülükler</h4>
-        <p style="margin: 0; font-size: 0.875rem;">Dolandırıcılık önleme, güvenlik tedbirleri, yasal düzenlemelere uyum</p>
-    </div>
-</div>
-
-<h2 style="color: #dc2626; font-size: 1.75rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #dc2626; padding-bottom: 0.5rem;">4. BİLGİ GÜVENLİĞİ</h2>
-
-<p style="margin-bottom: 1rem;">Kişisel verilerinizi korumak için endüstri standardı güvenlik önlemleri kullanıyoruz:</p>
-
-<ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
-    <li style="margin-bottom: 0.5rem;">🔒 <strong>SSL/TLS Şifreleme:</strong> Tüm veri iletimi 256-bit SSL sertifikası ile şifrelenir</li>
-    <li style="margin-bottom: 0.5rem;">🛡️ <strong>Güvenli Sunucular:</strong> Verileriniz güncel güvenlik protokolleriyle korunan sunucularda saklanır</li>
-    <li style="margin-bottom: 0.5rem;">🔐 <strong>Erişim Kontrolü:</strong> Kişisel verilere sadece yetkili personel erişebilir</li>
-    <li style="margin-bottom: 0.5rem;">🔄 <strong>Düzenli Yedekleme:</strong> Veri kaybını önlemek için düzenli yedekleme yapılır</li>
-    <li style="margin-bottom: 0.5rem;">🔍 <strong>Güvenlik Testleri:</strong> Sistemlerimiz düzenli olarak güvenlik açıklarına karşı test edilir</li>
-    <li style="margin-bottom: 0.5rem;">📚 <strong>Personel Eğitimi:</strong> Çalışanlarımız veri güvenliği konusunda düzenli eğitim alır</li>
+<ul>
+    <li>Hizmetlerimizi sunmak ve iyileştirmek</li>
+    <li>Müşteri destek taleplerini yanıtlamak</li>
+    <li>Araç alım-satım işlemlerini gerçekleştirmek</li>
+    <li>Pazarlama ve tanıtım faaliyetleri yürütmek (onayınız dahilinde)</li>
+    <li>Web sitesi güvenliğini sağlamak</li>
+    <li>Yasal yükümlülüklerimizi yerine getirmek</li>
 </ul>
 
-<h2 style="color: #dc2626; font-size: 1.75rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #dc2626; padding-bottom: 0.5rem;">5. ÜÇÜNCÜ TARAFLARLA PAYLAŞIM</h2>
+<h2>4. BİLGİLERİN PAYLAŞIMI</h2>
 
-<p style="margin-bottom: 1rem;">Kişisel bilgilerinizi, aşağıdaki durumlar dışında üçüncü taraflarla <strong>satmıyor, kiralamıyor veya paylaşmıyoruz:</strong></p>
+<p>Kişisel bilgilerinizi aşağıdaki durumlar dışında üçüncü taraflarla paylaşmayız:</p>
 
-<h3 style="color: #991b1b; font-size: 1.25rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem;">5.1. Hizmet Sağlayıcılar</h3>
-<p style="margin-bottom: 1rem;">Hizmetlerimizi sunmak için çalıştığımız güvenilir üçüncü taraf hizmet sağlayıcılar:</p>
-<ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
-    <li style="margin-bottom: 0.5rem;">Hosting ve sunucu hizmetleri</li>
-    <li style="margin-bottom: 0.5rem;">E-posta servisleri</li>
-    <li style="margin-bottom: 0.5rem;">Analitik hizmetler (Google Analytics vb.)</li>
-    <li style="margin-bottom: 0.5rem;">CRM ve müşteri yönetim sistemleri</li>
+<ul>
+    <li>Açık rızanızı aldığımızda</li>
+    <li>Yasal yükümlülüklerimizi yerine getirmek için gerekli olduğunda</li>
+    <li>Hizmet sağlayıcılarımızla (hosting, analitik, ödeme işlemcileri) - Gizlilik sözleşmeleri kapsamında</li>
+    <li>İş ortaklarımızla (araç tedarikçileri, ekspertiz firmaları) - İşlem gereksinimleri için</li>
 </ul>
 
-<h3 style="color: #991b1b; font-size: 1.25rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem;">5.2. İş Ortakları</h3>
-<p style="margin-bottom: 1rem;">Hizmet kalitesini artırmak için:</p>
-<ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
-    <li style="margin-bottom: 0.5rem;">Araç tedarikçileri ve oto galeriler</li>
-    <li style="margin-bottom: 0.5rem;">Sigorta şirketleri</li>
-    <li style="margin-bottom: 0.5rem;">Ekspertiz ve değerleme firmaları</li>
+<h2>5. ÇEREZLER</h2>
+
+<p>Web sitemiz, kullanıcı deneyimini iyileştirmek için çerezler kullanmaktadır:</p>
+
+<ul>
+    <li><strong>Zorunlu Çerezler:</strong> Web sitesinin temel işlevlerini yerine getirmek için gereklidir</li>
+    <li><strong>Analitik Çerezler:</strong> Web sitesi kullanımını analiz etmek ve performansı iyileştirmek için kullanılır</li>
+    <li><strong>Pazarlama Çerezleri:</strong> Size özel reklamlar sunmak için kullanılır (onayınız dahilinde)</li>
 </ul>
 
-<h3 style="color: #991b1b; font-size: 1.25rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem;">5.3. Yasal Zorunluluklar</h3>
-<p style="margin-bottom: 1rem;">Aşağıdaki durumlarda bilgilerinizi paylaşabiliriz:</p>
-<ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
-    <li style="margin-bottom: 0.5rem;">Yasal düzenlemelerin gerektirdiği hallerde</li>
-    <li style="margin-bottom: 0.5rem;">Mahkeme kararı veya resmi talep olması durumunda</li>
-    <li style="margin-bottom: 0.5rem;">Haklarımızı, güvenliğimizi veya mülkiyetimizi korumak için gerekli olduğunda</li>
+<p>Çerezleri tarayıcı ayarlarınızdan yönetebilir veya silebilirsiniz. Detaylı bilgi için <strong>Çerez Politikamızı</strong> inceleyebilirsiniz.</p>
+
+<h2>6. VERİ GÜVENLİĞİ</h2>
+
+<p>Kişisel bilgilerinizi korumak için aşağıdaki güvenlik önlemlerini alıyoruz:</p>
+
+<ul>
+    <li>SSL/TLS şifrelemesi ile güvenli veri iletimi</li>
+    <li>Güvenli sunucularda veri depolama</li>
+    <li>Erişim kontrol sistemleri</li>
+    <li>Düzenli güvenlik denetimleri ve güncellemeleri</li>
+    <li>Çalışan eğitimleri ve gizlilik sözleşmeleri</li>
 </ul>
 
-<h2 style="color: #dc2626; font-size: 1.75rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #dc2626; padding-bottom: 0.5rem;">6. ÇEREZLER (COOKIES)</h2>
+<h2>7. HAKLARINIZ</h2>
 
-<p style="margin-bottom: 1rem;">Web sitemiz, kullanıcı deneyimini iyileştirmek için çerezler kullanmaktadır. Detaylı bilgi için <a href="/sayfa/cerez-politikasi" style="color: #dc2626; text-decoration: underline;">Çerez Politikası</a> sayfamızı ziyaret edebilirsiniz.</p>
+<p>Kişisel bilgilerinizle ilgili olarak aşağıdaki haklara sahipsiniz:</p>
 
-<p style="margin-bottom: 1rem;">Tarayıcı ayarlarınızdan çerezleri yönetebilir veya reddedebilirsiniz. Ancak, çerezleri devre dışı bırakmanız web sitesinin bazı özelliklerinin düzgün çalışmamasına neden olabilir.</p>
-
-<h2 style="color: #dc2626; font-size: 1.75rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #dc2626; padding-bottom: 0.5rem;">7. VERİ SAKLAMA SÜRESİ</h2>
-
-<p style="margin-bottom: 1rem;">Kişisel verilerinizi, toplandıkları amaç için gerekli olduğu sürece ve yasal saklama süreleri boyunca saklarız:</p>
-
-<ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
-    <li style="margin-bottom: 0.5rem;"><strong>Müşteri Kayıtları:</strong> İlişkinin sona ermesinden itibaren 10 yıl</li>
-    <li style="margin-bottom: 0.5rem;"><strong>İletişim Kayıtları:</strong> 2 yıl</li>
-    <li style="margin-bottom: 0.5rem;"><strong>Pazarlama İzinleri:</strong> İzin geri alınana kadar veya 3 yıl</li>
-    <li style="margin-bottom: 0.5rem;"><strong>Çerez ve Log Dosyaları:</strong> 6 ay - 2 yıl</li>
+<ul>
+    <li>Kişisel verilerinize erişim talep etme</li>
+    <li>Kişisel verilerinizi düzeltme veya güncelleme</li>
+    <li>Kişisel verilerinizi silme (unutulma hakkı)</li>
+    <li>Veri işlemeye itiraz etme</li>
+    <li>Veri taşınabilirliği talep etme</li>
+    <li>Pazarlama iletişimlerinden çıkma</li>
 </ul>
 
-<h2 style="color: #dc2626; font-size: 1.75rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #dc2626; padding-bottom: 0.5rem;">8. HAKLARINIZ</h2>
+<p>Bu haklarınızı kullanmak için bizimle iletişime geçebilirsiniz: <strong>info@gmsgarage.com</strong></p>
 
-<p style="margin-bottom: 1rem;">Gizliliğinizle ilgili aşağıdaki haklara sahipsiniz:</p>
+<h2>8. ÜÇÜNCÜ TARAF LİNKLER</h2>
 
-<div style="background-color: #f0fdf4; border: 1px solid #86efac; border-radius: 0.5rem; padding: 1.5rem; margin-bottom: 1.5rem;">
-    <ul style="margin: 0; padding-left: 1.5rem;">
-        <li style="margin-bottom: 0.75rem;">✓ Hangi kişisel verilerinize sahip olduğumuzu öğrenme</li>
-        <li style="margin-bottom: 0.75rem;">✓ Kişisel verilerinizin bir kopyasını talep etme</li>
-        <li style="margin-bottom: 0.75rem;">✓ Yanlış veya eksik bilgilerin düzeltilmesini isteme</li>
-        <li style="margin-bottom: 0.75rem;">✓ Kişisel verilerinizin silinmesini talep etme</li>
-        <li style="margin-bottom: 0.75rem;">✓ Veri işleme faaliyetlerine itiraz etme</li>
-        <li style="margin-bottom: 0.75rem;">✓ Pazarlama iletişimlerinden çıkma (opt-out)</li>
-    </ul>
-</div>
+<p>Web sitemiz, üçüncü taraf web sitelerine linkler içerebilir. Bu sitelerin gizlilik uygulamalarından sorumlu değiliz. Bu siteleri ziyaret ettiğinizde gizlilik politikalarını incelemenizi öneririz.</p>
 
-<p style="margin-bottom: 1rem;">Haklarınızı kullanmak için bizimle <strong>info@gmsgarage.com</strong> adresinden iletişime geçebilirsiniz.</p>
+<h2>9. ÇOCUKLARIN GİZLİLİĞİ</h2>
 
-<h2 style="color: #dc2626; font-size: 1.75rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #dc2626; padding-bottom: 0.5rem;">9. ÇOCUKLARIN GİZLİLİĞİ</h2>
+<p>Hizmetlerimiz 18 yaşın altındaki çocuklara yönelik değildir. Bilerek 18 yaşın altındaki bireylerden kişisel bilgi toplamayız.</p>
 
-<p style="margin-bottom: 1rem;">Web sitemiz ve hizmetlerimiz 18 yaş altındaki kişilere yönelik değildir. Bilerek 18 yaş altındaki bireylerden kişisel bilgi toplamıyoruz. Eğer 18 yaşından küçükseniz, lütfen web sitemizi kullanmayın ve bizimle kişisel bilgi paylaşmayın.</p>
+<h2>10. POLİTİKA DEĞİŞİKLİKLERİ</h2>
 
-<h2 style="color: #dc2626; font-size: 1.75rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #dc2626; padding-bottom: 0.5rem;">10. POLİTİKA DEĞİŞİKLİKLERİ</h2>
+<p>Bu Gizlilik Politikasını zaman zaman güncelleyebiliriz. Değişiklikler web sitemizde yayınlandığında yürürlüğe girer. Önemli değişiklikler için size bildirim gönderilebilir.</p>
 
-<p style="margin-bottom: 1rem;">Bu Gizlilik Politikası'nı zaman zaman güncelleyebiliriz. Önemli değişiklikler yapıldığında, bu değişiklikleri web sitemizde yayınlayarak ve/veya size e-posta göndererek bildiririz. Bu sayfayı düzenli olarak ziyaret ederek güncellemelerden haberdar olmanızı öneririz.</p>
+<p><strong>Son Güncellenme:</strong> Şubat 2026</p>
 
-<h2 style="color: #dc2626; font-size: 1.75rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #dc2626; padding-bottom: 0.5rem;">11. İLETİŞİM</h2>
+<h2>11. İLETİŞİM</h2>
 
-<p style="margin-bottom: 1rem;">Gizlilik Politikamız veya kişisel verilerinizin işlenmesi hakkında sorularınız varsa, lütfen bizimle iletişime geçin:</p>
+<p>Gizlilik politikamız hakkında sorularınız için:</p>
 
-<div style="background-color: #f3f4f6; padding: 1.5rem; border-radius: 0.5rem; margin-bottom: 2rem;">
-    <p style="margin-bottom: 0.75rem;"><strong>GMS Garage Otomotiv</strong></p>
-    <p style="margin-bottom: 0.75rem;">📧 <strong>E-posta:</strong> info@gmsgarage.com</p>
-    <p style="margin-bottom: 0.75rem;">📧 <strong>Gizlilik İletişim:</strong> privacy@gmsgarage.com</p>
-    <p style="margin-bottom: 0.75rem;">📞 <strong>Telefon:</strong> +90 XXX XXX XX XX</p>
-    <p style="margin-bottom: 0.75rem;">📍 <strong>Adres:</strong> [Şirket Adresi]</p>
-    <p style="margin-bottom: 0;">🌐 <strong>Website:</strong> www.gmsgarage.com</p>
-</div>
+<ul>
+    <li><strong>E-posta:</strong> info@gmsgarage.com</li>
+    <li><strong>Telefon:</strong> +90 XXX XXX XX XX</li>
+    <li><strong>Adres:</strong> [Şirket Adresi]</li>
+</ul>
 
-<div style="background-color: #eff6ff; border: 1px solid #93c5fd; border-radius: 0.5rem; padding: 1rem; margin-top: 2rem;">
-    <p style="margin: 0; font-size: 0.875rem; color: #1e40af;">
-        <strong>📢 Not:</strong> Bu politika, KVKK (6698 sayılı Kişisel Verilerin Korunması Kanunu) ve ilgili mevzuata uygun olarak hazırlanmıştır. Yasal haklarınız hakkında daha fazla bilgi için KVKK Aydınlatma Metni'mizi inceleyebilirsiniz.
-    </p>
-</div>
-
-<p style="margin-top: 2rem; text-align: center; color: #6b7280; font-size: 0.875rem;"><em>Son Güncelleme: Şubat 2026 | Versiyon: 1.0</em></p>
-
-</div>
 EOT;
     }
 
     private function getTermsContent()
     {
         return <<<'EOT'
-<div style="max-width: 100%; font-family: system-ui, -apple-system, sans-serif; color: #374151; line-height: 1.8;">
+<h2>1. GENEL HÜKÜMLER</h2>
 
-<div style="background-color: #fef2f2; border: 2px solid #dc2626; border-radius: 0.5rem; padding: 1.5rem; margin-bottom: 2rem;">
-    <h3 style="margin: 0 0 0.75rem 0; color: #dc2626; font-size: 1.25rem; font-weight: 700;">⚖️ Önemli Hukuki Uyarı</h3>
-    <p style="margin: 0; font-size: 0.875rem;">İşbu Kullanım Şartları, GMS Garage web sitesinin (www.gmsgarage.com) kullanımına ilişkin hukuki bir sözleşme niteliğindedir. Sitemizi kullanarak bu şartları kabul etmiş sayılırsınız.</p>
-</div>
+<p>İşbu Kullanım Şartları ("Şartlar"), GMS Garage Otomotiv ("GMS Garage", "biz", "bizim") tarafından işletilen www.gmsgarage.com web sitesinin kullanımına ilişkin kuralları belirlemektedir.</p>
 
-<h2 style="color: #dc2626; font-size: 1.75rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #dc2626; padding-bottom: 0.5rem;">1. TANIMLAR</h2>
+<p>Web sitemizi ziyaret ederek veya hizmetlerimizi kullanarak, bu Şartları kabul etmiş olursunuz. Şartları kabul etmiyorsanız, lütfen web sitemizi kullanmayınız.</p>
 
-<table style="width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; border: 1px solid #e5e7eb;">
-    <tbody>
-        <tr>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb; font-weight: 600; background-color: #f9fafb; width: 30%;">Şirket / Biz</td>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb;">GMS Garage Otomotiv</td>
-        </tr>
-        <tr>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb; font-weight: 600; background-color: #f9fafb;">Web Sitesi / Site</td>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb;">www.gmsgarage.com alan adı ve tüm alt sayfaları</td>
-        </tr>
-        <tr>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb; font-weight: 600; background-color: #f9fafb;">Kullanıcı / Siz</td>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb;">Web sitemizi ziyaret eden veya hizmetlerimizi kullanan gerçek veya tüzel kişi</td>
-        </tr>
-        <tr>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb; font-weight: 600; background-color: #f9fafb;">Hizmetler</td>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb;">Araç alım-satım, değerleme, danışmanlık ve web sitesi üzerinden sunulan tüm hizmetler</td>
-        </tr>
-    </tbody>
-</table>
+<h2>2. HİZMET TANIMI</h2>
 
-<h2 style="color: #dc2626; font-size: 1.75rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #dc2626; padding-bottom: 0.5rem;">2. GENEL HÜKÜMLER</h2>
+<p>GMS Garage, aşağıdaki hizmetleri sunmaktadır:</p>
 
-<p style="margin-bottom: 1rem;">İşbu Kullanım Şartları, GMS Garage web sitesinin kullanımına ilişkin koşulları düzenlemektedir. Web sitemizi ziyaret ederek veya hizmetlerimizi kullanarak:</p>
-
-<ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
-    <li style="margin-bottom: 0.5rem;">✓ Bu şartları okuduğunuzu ve anladığınızı</li>
-    <li style="margin-bottom: 0.5rem;">✓ Bu şartlara uymayı kabul ettiğinizi</li>
-    <li style="margin-bottom: 0.5rem;">✓ Türkiye Cumhuriyeti yasalarına tabi olduğunuzu</li>
-    <li style="margin-bottom: 0.5rem;">✓ 18 yaşından büyük olduğunuzu</li>
+<ul>
+    <li>İkinci el araç alım-satım hizmetleri</li>
+    <li>Araç değerleme ve ekspertiz hizmetleri</li>
+    <li>Otomotiv danışmanlık hizmetleri</li>
+    <li>Online araç listeleme ve arama platformu</li>
 </ul>
 
-<p style="margin-bottom: 1rem;">beyan ve taahhüt etmiş sayılırsınız.</p>
+<h2>3. KULLANIM KURALLARI</h2>
 
-<h2 style="color: #dc2626; font-size: 1.75rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #dc2626; padding-bottom: 0.5rem;">3. HİZMETLERİMİZ</h2>
+<p>Web sitemizi kullanırken aşağıdaki kurallara uymanız gerekmektedir:</p>
 
-<p style="margin-bottom: 1rem;">GMS Garage olarak sunduğumuz hizmetler:</p>
-
-<div style="display: grid; gap: 1rem; margin-bottom: 1.5rem;">
-    <div style="background-color: #f0fdf4; border-left: 4px solid #22c55e; padding: 1rem;">
-        <h4 style="margin: 0 0 0.5rem 0; color: #166534; font-weight: 600;">🚗 Araç Alım-Satım</h4>
-        <p style="margin: 0; font-size: 0.875rem;">İkinci el araç alım satım aracılığı, araç portföyü sergileme</p>
-    </div>
-    
-    <div style="background-color: #eff6ff; border-left: 4px solid #3b82f6; padding: 1rem;">
-        <h4 style="margin: 0 0 0.5rem 0; color: #1e40af; font-weight: 600;">📊 Araç Değerleme</h4>
-        <p style="margin: 0; font-size: 0.875rem;">Profesyonel araç değerleme ve ekspertiz hizmetleri</p>
-    </div>
-    
-    <div style="background-color: #fef3c7; border-left: 4px solid #f59e0b; padding: 1rem;">
-        <h4 style="margin: 0 0 0.5rem 0; color: #92400e; font-weight: 600;">💼 Danışmanlık</h4>
-        <p style="margin: 0; font-size: 0.875rem;">Araç alım satım sürecinde uzman danışmanlık desteği</p>
-    </div>
-    
-    <div style="background-color: #f5f3ff; border-left: 4px solid #8b5cf6; padding: 1rem;">
-        <h4 style="margin: 0 0 0.5rem 0; color: #5b21b6; font-weight: 600;">🔍 Araç Arama</h4>
-        <p style="margin: 0; font-size: 0.875rem;">Özel talep araç bulma ve aracılık hizmetleri</p>
-    </div>
-</div>
-
-<h2 style="color: #dc2626; font-size: 1.75rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #dc2626; padding-bottom: 0.5rem;">4. KULLANICI SORUMLULUKLARI</h2>
-
-<p style="margin-bottom: 1rem;">Web sitemizi kullanırken aşağıdaki kurallara uymayı taahhüt edersiniz:</p>
-
-<h3 style="color: #991b1b; font-size: 1.25rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem;">4.1. Yapmanız Gerekenler</h3>
-<ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
-    <li style="margin-bottom: 0.5rem;">✓ Doğru ve güncel bilgiler vermek</li>
-    <li style="margin-bottom: 0.5rem;">✓ Yasalara ve bu kullanım şartlarına uymak</li>
-    <li style="margin-bottom: 0.5rem;">✓ Başkalarının haklarına saygı göstermek</li>
-    <li style="margin-bottom: 0.5rem;">✓ Güvenlik ve gizlilik kurallarına riayet etmek</li>
+<ul>
+    <li>Doğru, güncel ve eksiksiz bilgi sağlamak</li>
+    <li>Yasalara ve bu Şartlara uymak</li>
+    <li>Diğer kullanıcıların haklarına saygı göstermek</li>
+    <li>Web sitesinin güvenliğini veya işlevselliğini tehlikeye atmamak</li>
+    <li>Ticari olmayan amaçlarla kullanmak (izin verilmedikçe)</li>
 </ul>
 
-<h3 style="color: #991b1b; font-size: 1.25rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem;">4.2. Yapmamanız Gerekenler</h3>
-<ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
-    <li style="margin-bottom: 0.5rem;">✗ Yanlış veya yanıltıcı bilgi vermek</li>
-    <li style="margin-bottom: 0.5rem;">✗ Başkalarının kimliğine bürünmek</li>
-    <li style="margin-bottom: 0.5rem;">✗ Yasadışı veya zararlı içerik paylaşmak</li>
-    <li style="margin-bottom: 0.5rem;">✗ Virüs veya zararlı yazılım göndermek</li>
-    <li style="margin-bottom: 0.5rem;">✗ Sistemi kötüye kullanmak veya sabote etmeye çalışmak</li>
-    <li style="margin-bottom: 0.5rem;">✗ İçerikleri izinsiz kopyalamak veya çoğaltmak</li>
+<p><strong>Yasak Faaliyetler:</strong></p>
+
+<ul>
+    <li>Sahte veya yanıltıcı bilgi sağlamak</li>
+    <li>Web sitesini kötüye kullanmak veya spam göndermek</li>
+    <li>Zararlı yazılım veya virüs yüklemek</li>
+    <li>Diğer kullanıcıların verilerine yetkisiz erişim sağlamak</li>
+    <li>Telif hakkı veya fikri mülkiyet haklarını ihlal etmek</li>
 </ul>
 
-<h2 style="color: #dc2626; font-size: 1.75rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #dc2626; padding-bottom: 0.5rem;">5. FİKRİ MÜLKİYET HAKLARI</h2>
+<h2>4. ÜCRETLER VE ÖDEME</h2>
 
-<p style="margin-bottom: 1rem;">Web sitemizdeki tüm içerik GMS Garage'ın mülkiyetindedir ve fikri mülkiyet yasaları ile korunmaktadır:</p>
+<p>Bazı hizmetlerimiz ücretli olabilir. Ücretler web sitesinde açıkça belirtilecektir.</p>
 
-<ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
-    <li style="margin-bottom: 0.5rem;">© <strong>Logo ve Marka:</strong> GMS Garage logosu ve markası tescilli ticari markalardır</li>
-    <li style="margin-bottom: 0.5rem;">📝 <strong>Metin ve Yazılı İçerik:</strong> Tüm metinler, açıklamalar ve blog yazıları telif hakkı ile korunmaktadır</li>
-    <li style="margin-bottom: 0.5rem;">📸 <strong>Görseller ve Fotoğraflar:</strong> Araç fotoğrafları ve tasarım öğeleri izinsiz kullanılamaz</li>
-    <li style="margin-bottom: 0.5rem;">💻 <strong>Yazılım ve Kod:</strong> Web sitesi kaynak kodu ve yazılım bileşenleri korumalıdır</li>
-    <li style="margin-bottom: 0.5rem;">🎨 <strong>Tasarım ve Grafik:</strong> Tasarım öğeleri, düzen ve grafik unsurlar telif hakkına tabidir</li>
+<ul>
+    <li>Tüm ödemeler Türk Lirası (TL) üzerinden yapılır</li>
+    <li>Ödeme işlemleri güvenli ödeme sağlayıcıları aracılığıyla gerçekleştirilir</li>
+    <li>Ücretler KDV dahildir (aksi belirtilmedikçe)</li>
+    <li>İptal ve iade koşulları İptal ve İade Politikamızda belirtilmiştir</li>
 </ul>
 
-<div style="background-color: #fef2f2; border: 1px solid #fecaca; border-radius: 0.5rem; padding: 1rem; margin-bottom: 1.5rem;">
-    <p style="margin: 0; font-size: 0.875rem; color: #991b1b;"><strong>⚠️ Uyarı:</strong> İzinsiz kullanım, çoğaltma veya dağıtım cezai ve hukuki yaptırımlara tabidir. 5846 sayılı Fikir ve Sanat Eserleri Kanunu uyarınca işlem yapılabilir.</p>
-</div>
+<h2>5. FİKRİ MÜLKİYET HAKLARI</h2>
 
-<h2 style="color: #dc2626; font-size: 1.75rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #dc2626; padding-bottom: 0.5rem;">6. ARAÇ ALIM-SATIM ŞARTLARI</h2>
+<p>Web sitesindeki tüm içerik, tasarım, logo, yazılım ve diğer materyaller GMS Garage'ın veya lisans verenlerin mülkiyetindedir ve telif hakkı, ticari marka ve diğer fikri mülkiyet yasalarıyla korunmaktadır.</p>
 
-<h3 style="color: #991b1b; font-size: 1.25rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem;">6.1. Araç Bilgileri ve Gösterim</h3>
-<p style="margin-bottom: 1rem;">Web sitemizde sergilenen araçlarla ilgili:</p>
-<ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
-    <li style="margin-bottom: 0.5rem;">Tüm araçlar profesyonel ekspertiz raporuyla sunulur</li>
-    <li style="margin-bottom: 0.5rem;">Araç bilgileri mevcut durumu yansıtır, ancak garanti teşkil etmez</li>
-    <li style="margin-bottom: 0.5rem;">Fotoğraflar ve açıklamalar bilgilendirme amaçlıdır</li>
-    <li style="margin-bottom: 0.5rem;">Araç fiyatları güncel piyasa koşullarına göre belirlenir ve değişebilir</li>
+<p>İzin vermediğimiz sürece, web sitesindeki hiçbir içeriği kopyalayamaz, çoğaltamaz, dağıtamaz veya ticari amaçlarla kullanamazsınız.</p>
+
+<h2>6. SORUMLULUK SINIRLAMASI</h2>
+
+<p>GMS Garage, aşağıdaki durumlardan sorumlu tutulamaz:</p>
+
+<ul>
+    <li>Web sitesinin kesintisiz veya hatasız çalışmaması</li>
+    <li>Üçüncü taraf web siteleri veya hizmetleri</li>
+    <li>Kullanıcılar tarafından sağlanan yanlış veya eksik bilgiler</li>
+    <li>Yetkisiz erişim veya veri ihlalleri (makul güvenlik önlemlerine rağmen)</li>
+    <li>Dolaylı, arızi veya özel zararlar</li>
 </ul>
 
-<h3 style="color: #991b1b; font-size: 1.25rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem;">6.2. Alım-Satım Süreci</h3>
-<p style="margin-bottom: 1rem;">Araç alım-satım işlemlerinde:</p>
-<ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
-    <li style="margin-bottom: 0.5rem;">Tüm işlemler yazılı sözleşme ile gerçekleştirilir</li>
-    <li style="margin-bottom: 0.5rem;">Ödeme ve teslimat şartları ayrıca belirlenir</li>
-    <li style="margin-bottom: 0.5rem;">Yasal evraklar ve ruhsat devir işlemleri tamamlanır</li>
-    <li style="margin-bottom: 0.5rem;">Garanti koşulları araç ve işleme özgü olarak düzenlenir</li>
+<p>Hizmetlerimizi "olduğu gibi" sunuyoruz ve herhangi bir garanti vermiyoruz.</p>
+
+<h2>7. TAZMİNAT</h2>
+
+<p>Bu Şartları ihlal etmeniz durumunda, GMS Garage'ı, çalışanlarını, müdürlerini ve iş ortaklarını tüm zarar, kayıp, talep ve masraflardan (avukatlık ücretleri dahil) tazmin etmeyi kabul edersiniz.</p>
+
+<h2>8. HESAP ASKIYA ALMA VE FESİH</h2>
+
+<p>GMS Garage, aşağıdaki durumlarda hesabınızı askıya alma veya feshetme hakkını saklı tutar:</p>
+
+<ul>
+    <li>Bu Şartların ihlali</li>
+    <li>Yasadışı faaliyetler</li>
+    <li>Diğer kullanıcılara zarar verme</li>
+    <li>Sahte veya yanıltıcı bilgi sağlama</li>
 </ul>
 
-<h3 style="color: #991b1b; font-size: 1.25rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem;">6.3. İptal ve İade</h3>
-<p style="margin-bottom: 1rem;">Mesafeli satış sözleşmesi kapsamında:</p>
-<ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
-    <li style="margin-bottom: 0.5rem;">Cayma hakkı kullanımı sözleşme şartlarına tabidir</li>
-    <li style="margin-bottom: 0.5rem;">14 günlük cayma hakkı belirli koşullar altında geçerlidir</li>
-    <li style="margin-bottom: 0.5rem;">İade koşulları satış sözleşmesinde detaylı olarak belirtilir</li>
+<h2>9. ÜÇÜNCÜ TARAF HİZMETLERİ</h2>
+
+<p>Web sitemiz, üçüncü taraf hizmetlerini (ödeme işlemcileri, analitik araçlar, sosyal medya entegrasyonları) kullanabilir. Bu hizmetlerin kendi şartları ve gizlilik politikaları vardır.</p>
+
+<h2>10. UYGULANACAK HUKUK VE YETKİ</h2>
+
+<p>Bu Şartlar, Türkiye Cumhuriyeti yasalarına tabidir. Bu Şartlardan kaynaklanan uyuşmazlıklar, [İl] Mahkemeleri ve İcra Daireleri'nin münhasır yetkisine tabidir.</p>
+
+<h2>11. ŞARTLARIN DEĞİŞTİRİLMESİ</h2>
+
+<p>GMS Garage, bu Şartları dilediği zaman değiştirme hakkını saklı tutar. Değişiklikler web sitesinde yayınlandığında yürürlüğe girer. Web sitemizi kullanmaya devam ederek, güncellenmiş Şartları kabul etmiş olursunuz.</p>
+
+<h2>12. İLETİŞİM</h2>
+
+<p>Kullanım Şartları hakkında sorularınız için:</p>
+
+<ul>
+    <li><strong>E-posta:</strong> info@gmsgarage.com</li>
+    <li><strong>Telefon:</strong> +90 XXX XXX XX XX</li>
+    <li><strong>Adres:</strong> [Şirket Adresi]</li>
 </ul>
 
-<h2 style="color: #dc2626; font-size: 1.75rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #dc2626; padding-bottom: 0.5rem;">7. SORUMLULUK REDDİ VE SINIRLAMALARI</h2>
+<p><strong>Son Güncellenme:</strong> Şubat 2026</p>
 
-<div style="background-color: #fffbeb; border-left: 4px solid #f59e0b; padding: 1rem; margin-bottom: 1rem;">
-    <h4 style="margin: 0 0 0.5rem 0; color: #92400e; font-weight: 600;">📢 Önemli Yasal Uyarı</h4>
-    <p style="margin: 0; font-size: 0.875rem;">GMS Garage, aşağıdaki konularda sorumluluk kabul etmez ve garanti vermez:</p>
-</div>
-
-<ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
-    <li style="margin-bottom: 0.5rem;"><strong>Web Sitesi Erişimi:</strong> Kesintisiz, hatasız veya güvenli erişim garantisi verilmez</li>
-    <li style="margin-bottom: 0.5rem;"><strong>İçerik Doğruluğu:</strong> Web sitesindeki bilgilerin %100 doğru, güncel veya eksiksiz olması garanti edilmez</li>
-    <li style="margin-bottom: 0.5rem;"><strong>Üçüncü Taraf Linkleri:</strong> Dış bağlantıların içeriğinden sorumlu değiliz</li>
-    <li style="margin-bottom: 0.5rem;"><strong>Kullanıcı Kararları:</strong> Kullanıcıların kendi kararlarından kaynaklanan zararlar</li>
-    <li style="margin-bottom: 0.5rem;"><strong>Teknik Sorunlar:</strong> Sunucu hataları, veri kaybı, hizmet kesintileri</li>
-    <li style="margin-bottom: 0.5rem;"><strong>Dolaylı Zararlar:</strong> Kar kaybı, veri kaybı veya diğer dolaylı zararlar</li>
-</ul>
-
-<h2 style="color: #dc2626; font-size: 1.75rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #dc2626; padding-bottom: 0.5rem;">8. GİZLİLİK VE KİŞİSEL VERİLER</h2>
-
-<p style="margin-bottom: 1rem;">Kişisel verilerinizin işlenmesi ayrı belgelerle düzenlenmektedir:</p>
-
-<ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
-    <li style="margin-bottom: 0.5rem;">📄 <a href="/sayfa/gizlilik-politikasi" style="color: #dc2626; text-decoration: underline;">Gizlilik Politikası</a></li>
-    <li style="margin-bottom: 0.5rem;">📄 <a href="/sayfa/kvkk-aydinlatma-metni" style="color: #dc2626; text-decoration: underline;">KVKK Aydınlatma Metni</a></li>
-    <li style="margin-bottom: 0.5rem;">📄 <a href="/sayfa/cerez-politikasi" style="color: #dc2626; text-decoration: underline;">Çerez Politikası</a></li>
-</ul>
-
-<h2 style="color: #dc2626; font-size: 1.75rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #dc2626; padding-bottom: 0.5rem;">9. DEĞİŞİKLİKLER VE GÜNCELLEMELER</h2>
-
-<p style="margin-bottom: 1rem;">GMS Garage, bu kullanım şartlarını önceden haber vermeksizin değiştirme hakkını saklı tutar:</p>
-
-<ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
-    <li style="margin-bottom: 0.5rem;">Değişiklikler web sitesinde yayınlandığı anda yürürlüğe girer</li>
-    <li style="margin-bottom: 0.5rem;">Önemli değişiklikler için bildirim gönderilebilir</li>
-    <li style="margin-bottom: 0.5rem;">Güncel versiyonu düzenli olarak kontrol etmeniz önerilir</li>
-    <li style="margin-bottom: 0.5rem;">Değişikliklerden sonra siteyi kullanmaya devam etmeniz yeni şartları kabul ettiğiniz anlamına gelir</li>
-</ul>
-
-<h2 style="color: #dc2626; font-size: 1.75rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #dc2626; padding-bottom: 0.5rem;">10. HİZMETİN DURDURULMASI</h2>
-
-<p style="margin-bottom: 1rem;">GMS Garage, aşağıdaki durumlarda önceden haber vermeksizin hizmetleri durdurma hakkına sahiptir:</p>
-
-<ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
-    <li style="margin-bottom: 0.5rem;">Kullanım şartlarının ihlal edilmesi</li>
-    <li style="margin-bottom: 0.5rem;">Yasalara aykırı faaliyet tespit edilmesi</li>
-    <li style="margin-bottom: 0.5rem;">Teknik bakım ve güncelleme gereklilikleri</li>
-    <li style="margin-bottom: 0.5rem;">Güvenlik tehditleri ve sistem bütünlüğü riskleri</li>
-</ul>
-
-<h2 style="color: #dc2626; font-size: 1.75rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #dc2626; padding-bottom: 0.5rem;">11. UYUŞMAZLIKLARIN ÇÖZÜMÜ</h2>
-
-<p style="margin-bottom: 1rem;">İşbu sözleşmeden doğacak her türlü uyuşmazlıkta:</p>
-
-<ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
-    <li style="margin-bottom: 0.5rem;"><strong>Uygulanacak Hukuk:</strong> Türkiye Cumhuriyeti yasaları</li>
-    <li style="margin-bottom: 0.5rem;"><strong>Yetkili Mahkeme:</strong> [İl] Mahkemeleri ve İcra Daireleri</li>
-    <li style="margin-bottom: 0.5rem;"><strong>Tüketici Hakları:</strong> Tüketici mahkemeleri ve hakem heyetleri yetkilidir</li>
-    <li style="margin-bottom: 0.5rem;"><strong>Alternatif Çözüm:</strong> Taraflar öncelikle dostane çözüm aramayı taahhüt eder</li>
-</ul>
-
-<h2 style="color: #dc2626; font-size: 1.75rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #dc2626; padding-bottom: 0.5rem;">12. İLETİŞİM</h2>
-
-<p style="margin-bottom: 1rem;">Kullanım şartları hakkında sorularınız için:</p>
-
-<div style="background-color: #f3f4f6; padding: 1.5rem; border-radius: 0.5rem; margin-bottom: 2rem;">
-    <p style="margin-bottom: 0.75rem;"><strong>GMS Garage Otomotiv</strong></p>
-    <p style="margin-bottom: 0.75rem;">📧 <strong>E-posta:</strong> info@gmsgarage.com</p>
-    <p style="margin-bottom: 0.75rem;">📧 <strong>Hukuki İşler:</strong> legal@gmsgarage.com</p>
-    <p style="margin-bottom: 0.75rem;">📞 <strong>Telefon:</strong> +90 XXX XXX XX XX</p>
-    <p style="margin-bottom: 0.75rem;">📍 <strong>Adres:</strong> [Şirket Adresi]</p>
-    <p style="margin-bottom: 0;">🌐 <strong>Website:</strong> www.gmsgarage.com</p>
-</div>
-
-<h2 style="color: #dc2626; font-size: 1.75rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #dc2626; padding-bottom: 0.5rem;">13. YÜRÜRLÜK</h2>
-
-<p style="margin-bottom: 1rem;">İşbu Kullanım Şartları, web sitemizi ziyaret ettiğiniz veya hizmetlerimizi kullanmaya başladığınız andan itibaren yürürlüğe girer ve taraflar arasında bağlayıcıdır.</p>
-
-<div style="background-color: #f0fdf4; border: 1px solid #86efac; border-radius: 0.5rem; padding: 1rem; margin-top: 2rem;">
-    <p style="margin: 0; font-size: 0.875rem; color: #166534;">
-        <strong>✅ Onay:</strong> "Kabul Ediyorum" butonuna tıklayarak veya web sitemizi kullanmaya devam ederek, bu Kullanım Şartları'nın tamamını okuduğunuzu, anladığınızı ve kabul ettiğinizi beyan etmiş olursunuz.
-    </p>
-</div>
-
-<p style="margin-top: 2rem; text-align: center; color: #6b7280; font-size: 0.875rem;"><em>Son Güncelleme: Şubat 2026 | Versiyon: 1.0</em></p>
-
-</div>
 EOT;
     }
 
     private function getCookiePolicyContent()
     {
         return <<<'EOT'
-<div style="max-width: 100%; font-family: system-ui, -apple-system, sans-serif; color: #374151; line-height: 1.8;">
+<h2>1. ÇEREZ NEDİR?</h2>
 
-<div style="background-color: #fffbeb; border-left: 4px solid #f59e0b; padding: 1.5rem; margin-bottom: 2rem;">
-    <h3 style="margin: 0 0 0.75rem 0; color: #92400e; font-size: 1.25rem; font-weight: 700;">🍪 Çerez Bildirimi</h3>
-    <p style="margin: 0; font-size: 0.875rem;">Bu sayfada, GMS Garage web sitesinde kullanılan çerezler (cookies) hakkında detaylı bilgi bulabilirsiniz. Web sitemizi ziyaret ederek çerez kullanımını kabul etmiş sayılırsınız.</p>
-</div>
+<p>Çerezler, bir web sitesini ziyaret ettiğinizde bilgisayarınıza veya mobil cihazınıza kaydedilen küçük metin dosyalarıdır. Çerezler, web sitelerinin daha verimli çalışmasını sağlar ve web sitesi sahiplerine bilgi sağlar.</p>
 
-<h2 style="color: #dc2626; font-size: 1.75rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #dc2626; padding-bottom: 0.5rem;">1. ÇEREZ NEDİR?</h2>
+<h2>2. ÇEREZ TÜRLERİ</h2>
 
-<p style="margin-bottom: 1rem;">Çerezler (cookies), web sitelerini ziyaret ettiğinizde tarayıcınız aracılığıyla cihazınıza (bilgisayar, tablet, telefon) kaydedilen küçük metin dosyalarıdır. Çerezler, web sitesinin daha verimli çalışmasını sağlar ve size daha iyi bir kullanıcı deneyimi sunar.</p>
+<p>Web sitemizde kullanılan çerez türleri:</p>
 
-<div style="background-color: #f0fdf4; border: 1px solid #86efac; border-radius: 0.5rem; padding: 1.5rem; margin-bottom: 1.5rem;">
-    <h4 style="margin: 0 0 0.75rem 0; color: #166534; font-weight: 600;">✓ Çerezlerin Özellikleri</h4>
-    <ul style="margin: 0; padding-left: 1.5rem; font-size: 0.875rem;">
-        <li style="margin-bottom: 0.5rem;">Kişisel olarak sizi tanımlamazlar</li>
-        <li style="margin-bottom: 0.5rem;">Zararlı yazılım içermezler</li>
-        <li style="margin-bottom: 0.5rem;">Virüs veya kötü amaçlı kod taşımazlar</li>
-        <li style="margin-bottom: 0;">Tarayıcınızdan dilediğiniz zaman silebilirsiniz</li>
-    </ul>
-</div>
+<h3>A. Zorunlu Çerezler</h3>
 
-<h2 style="color: #dc2626; font-size: 1.75rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #dc2626; padding-bottom: 0.5rem;">2. ÇEREZ TÜRLERİ</h2>
+<p>Bu çerezler, web sitesinin temel işlevlerini yerine getirmek için gereklidir ve kapatılamaz:</p>
 
-<h3 style="color: #991b1b; font-size: 1.25rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem;">2.1. Süreye Göre Çerezler</h3>
-
-<table style="width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; border: 1px solid #e5e7eb;">
-    <thead style="background-color: #f3f4f6;">
-        <tr>
-            <th style="padding: 0.75rem; text-align: left; border: 1px solid #e5e7eb; width: 30%;">Çerez Türü</th>
-            <th style="padding: 0.75rem; text-align: left; border: 1px solid #e5e7eb;">Açıklama</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb; font-weight: 600;">Oturum Çerezleri</td>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb;">Tarayıcıyı kapattığınızda otomatik olarak silinir. Geçici bilgileri saklar.</td>
-        </tr>
-        <tr style="background-color: #f9fafb;">
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb; font-weight: 600;">Kalıcı Çerezler</td>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb;">Belirli bir süre boyunca cihazınızda kalır. Tercihlerinizi hatırlar.</td>
-        </tr>
-    </tbody>
-</table>
-
-<h3 style="color: #991b1b; font-size: 1.25rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem;">2.2. Sahibine Göre Çerezler</h3>
-
-<table style="width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; border: 1px solid #e5e7eb;">
-    <thead style="background-color: #f3f4f6;">
-        <tr>
-            <th style="padding: 0.75rem; text-align: left; border: 1px solid #e5e7eb; width: 30%;">Çerez Türü</th>
-            <th style="padding: 0.75rem; text-align: left; border: 1px solid #e5e7eb;">Açıklama</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb; font-weight: 600;">Birinci Taraf Çerezler</td>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb;">GMS Garage tarafından oluşturulan ve yönetilen çerezler</td>
-        </tr>
-        <tr style="background-color: #f9fafb;">
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb; font-weight: 600;">Üçüncü Taraf Çerezler</td>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb;">Analitik araçlar (Google Analytics gibi) tarafından oluşturulan çerezler</td>
-        </tr>
-    </tbody>
-</table>
-
-<h2 style="color: #dc2626; font-size: 1.75rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #dc2626; padding-bottom: 0.5rem;">3. KULLANDIĞIMIZ ÇEREZLER</h2>
-
-<h3 style="color: #991b1b; font-size: 1.25rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem;">3.1. Zorunlu Çerezler</h3>
-
-<div style="background-color: #fef2f2; border-left: 4px solid #ef4444; padding: 1rem; margin-bottom: 1rem;">
-    <p style="margin: 0; font-size: 0.875rem;"><strong>⚠️ Önemli:</strong> Bu çerezler web sitesinin temel işlevleri için gereklidir ve devre dışı bırakılamazlar.</p>
-</div>
-
-<table style="width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; border: 1px solid #e5e7eb;">
-    <thead style="background-color: #f3f4f6;">
-        <tr>
-            <th style="padding: 0.75rem; text-align: left; border: 1px solid #e5e7eb;">Çerez Adı</th>
-            <th style="padding: 0.75rem; text-align: left; border: 1px solid #e5e7eb;">Amaç</th>
-            <th style="padding: 0.75rem; text-align: left; border: 1px solid #e5e7eb; width: 15%;">Süre</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb; font-family: monospace;">XSRF-TOKEN</td>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb;">Güvenlik ve CSRF koruması</td>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb;">Oturum</td>
-        </tr>
-        <tr style="background-color: #f9fafb;">
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb; font-family: monospace;">laravel_session</td>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb;">Oturum yönetimi</td>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb;">2 saat</td>
-        </tr>
-        <tr>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb; font-family: monospace;">cookie_consent</td>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb;">Çerez tercihlerinizi hatırlar</td>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb;">1 yıl</td>
-        </tr>
-    </tbody>
-</table>
-
-<h3 style="color: #991b1b; font-size: 1.25rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem;">3.2. İşlevsellik Çerezleri</h3>
-
-<p style="margin-bottom: 1rem;">Tercihlerinizi hatırlamak ve daha kişiselleştirilmiş bir deneyim sunmak için kullanılır:</p>
-
-<table style="width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; border: 1px solid #e5e7eb;">
-    <thead style="background-color: #f3f4f6;">
-        <tr>
-            <th style="padding: 0.75rem; text-align: left; border: 1px solid #e5e7eb;">Çerez Adı</th>
-            <th style="padding: 0.75rem; text-align: left; border: 1px solid #e5e7eb;">Amaç</th>
-            <th style="padding: 0.75rem; text-align: left; border: 1px solid #e5e7eb; width: 15%;">Süre</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb; font-family: monospace;">theme_preference</td>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb;">Tema tercihi (açık/koyu mod)</td>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb;">1 yıl</td>
-        </tr>
-        <tr style="background-color: #f9fafb;">
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb; font-family: monospace;">language</td>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb;">Dil tercihi</td>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb;">1 yıl</td>
-        </tr>
-        <tr>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb; font-family: monospace;">recent_searches</td>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb;">Son aramaları hatırlar</td>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb;">30 gün</td>
-        </tr>
-    </tbody>
-</table>
-
-<h3 style="color: #991b1b; font-size: 1.25rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem;">3.3. Analitik ve Performans Çerezleri</h3>
-
-<p style="margin-bottom: 1rem;">Web sitesi trafiğini ve kullanıcı davranışlarını analiz etmek için kullanılır:</p>
-
-<table style="width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; border: 1px solid #e5e7eb;">
-    <thead style="background-color: #f3f4f6;">
-        <tr>
-            <th style="padding: 0.75rem; text-align: left; border: 1px solid #e5e7eb;">Servis</th>
-            <th style="padding: 0.75rem; text-align: left; border: 1px solid #e5e7eb;">Çerez Adı</th>
-            <th style="padding: 0.75rem; text-align: left; border: 1px solid #e5e7eb;">Amaç</th>
-            <th style="padding: 0.75rem; text-align: left; border: 1px solid #e5e7eb; width: 15%;">Süre</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb;">Google Analytics</td>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb; font-family: monospace;">_ga</td>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb;">Kullanıcı ayırt etme</td>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb;">2 yıl</td>
-        </tr>
-        <tr style="background-color: #f9fafb;">
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb;">Google Analytics</td>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb; font-family: monospace;">_gid</td>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb;">Kullanıcı ayırt etme</td>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb;">24 saat</td>
-        </tr>
-        <tr>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb;">Google Analytics</td>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb; font-family: monospace;">_gat</td>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb;">İstek hızını sınırlar</td>
-            <td style="padding: 0.75rem; border: 1px solid #e5e7eb;">1 dakika</td>
-        </tr>
-    </tbody>
-</table>
-
-<div style="background-color: #eff6ff; border-left: 4px solid #3b82f6; padding: 1rem; margin-bottom: 1.5rem;">
-    <p style="margin: 0; font-size: 0.875rem;"><strong>ℹ️ Not:</strong> Analitik çerezler, ziyaretçi sayısını, popüler sayfaları ve kullanıcı davranışlarını anlamamıza yardımcı olur. Bu veriler toplu ve anonim şekilde işlenir.</p>
-</div>
-
-<h3 style="color: #991b1b; font-size: 1.25rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem;">3.4. Pazarlama ve Reklam Çerezleri (İzninizle)</h3>
-
-<p style="margin-bottom: 1rem;">Size özel reklamlar göstermek ve pazarlama kampanyalarının etkinliğini ölçmek için kullanılır:</p>
-
-<ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
-    <li style="margin-bottom: 0.5rem;">Google Ads remarketing çerezleri</li>
-    <li style="margin-bottom: 0.5rem;">Facebook Pixel</li>
-    <li style="margin-bottom: 0.5rem;">Sosyal medya paylaşım çerezleri</li>
+<ul>
+    <li><strong>Oturum Çerezleri:</strong> Oturumunuzu aktif tutar</li>
+    <li><strong>Güvenlik Çerezleri:</strong> Güvenlik özelliklerini etkinleştirir</li>
+    <li><strong>Yük Dengeleme Çerezleri:</strong> Web sitesi trafiğini yönetir</li>
 </ul>
 
-<h2 style="color: #dc2626; font-size: 1.75rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #dc2626; padding-bottom: 0.5rem;">4. ÇEREZLERİN KULLANIM AMAÇLARI</h2>
+<h3>B. Performans ve Analitik Çerezler</h3>
 
-<div style="display: grid; gap: 1rem; margin-bottom: 1.5rem;">
-    <div style="background-color: #f0fdf4; border-left: 4px solid #22c55e; padding: 1rem;">
-        <h4 style="margin: 0 0 0.5rem 0; color: #166534; font-weight: 600;">✓ Web Sitesi İşlevselliği</h4>
-        <p style="margin: 0; font-size: 0.875rem;">Temel özelliklerin çalışması, güvenli oturum yönetimi, form verilerinin saklanması</p>
-    </div>
-    
-    <div style="background-color: #eff6ff; border-left: 4px solid #3b82f6; padding: 1rem;">
-        <h4 style="margin: 0 0 0.5rem 0; color: #1e40af; font-weight: 600;">✓ Kullanıcı Deneyimi</h4>
-        <p style="margin: 0; font-size: 0.875rem;">Tercihlerinizi hatırlama, kişiselleştirilmiş içerik sunma, daha hızlı yükleme</p>
-    </div>
-    
-    <div style="background-color: #fef3c7; border-left: 4px solid #f59e0b; padding: 1rem;">
-        <h4 style="margin: 0 0 0.5rem 0; color: #92400e; font-weight: 600;">✓ Performans ve Analiz</h4>
-        <p style="margin: 0; font-size: 0.875rem;">Site trafiği analizi, kullanıcı davranışlarının anlaşılması, hizmet iyileştirme</p>
-    </div>
-    
-    <div style="background-color: #f5f3ff; border-left: 4px solid #8b5cf6; padding: 1rem;">
-        <h4 style="margin: 0 0 0.5rem 0; color: #5b21b6; font-weight: 600;">✓ Güvenlik</h4>
-        <p style="margin: 0; font-size: 0.875rem;">Dolandırıcılık önleme, güvenlik tehditleri tespit, spam koruması</p>
-    </div>
-    
-    <div style="background-color: #fef2f2; border-left: 4px solid #ef4444; padding: 1rem;">
-        <h4 style="margin: 0 0 0.5rem 0; color: #991b1b; font-weight: 600;">✓ Pazarlama (İzninizle)</h4>
-        <p style="margin: 0; font-size: 0.875rem;">İlgi alanlarınıza uygun reklamlar, kampanya etkinliği ölçümü</p>
-    </div>
-</div>
+<p>Bu çerezler, web sitesinin nasıl kullanıldığını anlamamıza yardımcı olur:</p>
 
-<h2 style="color: #dc2626; font-size: 1.75rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #dc2626; padding-bottom: 0.5rem;">5. ÇEREZLERİ NASIL YÖNETEBİLİRSİNİZ?</h2>
-
-<h3 style="color: #991b1b; font-size: 1.25rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem;">5.1. Tarayıcı Ayarları</h3>
-
-<p style="margin-bottom: 1rem;">Çerezleri tarayıcı ayarlarınızdan yönetebilirsiniz. Popüler tarayıcılar için ayarlar:</p>
-
-<ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
-    <li style="margin-bottom: 0.5rem;"><strong>Google Chrome:</strong> Ayarlar > Gizlilik ve güvenlik > Çerezler ve diğer site verileri</li>
-    <li style="margin-bottom: 0.5rem;"><strong>Firefox:</strong> Ayarlar > Gizlilik ve Güvenlik > Çerezler ve Site Verileri</li>
-    <li style="margin-bottom: 0.5rem;"><strong>Safari:</strong> Tercihler > Gizlilik > Çerezleri Yönet</li>
-    <li style="margin-bottom: 0.5rem;"><strong>Edge:</strong> Ayarlar > Çerezler ve site izinleri</li>
+<ul>
+    <li><strong>Google Analytics:</strong> Ziyaretçi istatistikleri ve site kullanım bilgileri</li>
+    <li><strong>Isı Haritaları:</strong> Kullanıcıların web sitesinde nasıl gezindiğini gösterir</li>
 </ul>
 
-<h3 style="color: #991b1b; font-size: 1.25rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem;">5.2. Çerez Tercih Merkezi</h3>
+<h3>C. İşlevsellik Çerezleri</h3>
 
-<p style="margin-bottom: 1rem;">Web sitemizde bulunan çerez ayarları panelinden tercihlerinizi değiştirebilirsiniz:</p>
+<p>Bu çerezler, tercihlerinizi hatırlar ve kişiselleştirilmiş deneyim sunar:</p>
 
-<div style="background-color: #f3f4f6; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem; text-align: center;">
-    <button style="background-color: #dc2626; color: white; padding: 0.75rem 1.5rem; border-radius: 0.5rem; border: none; font-weight: 600; cursor: pointer;" onclick="alert('Çerez ayarları paneli açılacak')">🍪 Çerez Ayarlarını Yönet</button>
-</div>
-
-<h3 style="color: #991b1b; font-size: 1.25rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem;">5.3. Üçüncü Taraf Çerezleri Reddetme</h3>
-
-<p style="margin-bottom: 1rem;">Üçüncü taraf çerezleri için doğrudan hizmet sağlayıcıları ziyaret edebilirsiniz:</p>
-
-<ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
-    <li style="margin-bottom: 0.5rem;"><strong>Google Analytics:</strong> <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" style="color: #dc2626; text-decoration: underline;">Google Analytics Opt-out</a></li>
-    <li style="margin-bottom: 0.5rem;"><strong>Google Ads:</strong> <a href="https://adssettings.google.com" target="_blank" style="color: #dc2626; text-decoration: underline;">Reklam Ayarları</a></li>
-    <li style="margin-bottom: 0.5rem;"><strong>Facebook:</strong> <a href="https://www.facebook.com/settings?tab=ads" target="_blank" style="color: #dc2626; text-decoration: underline;">Reklam Tercihleri</a></li>
+<ul>
+    <li><strong>Dil Tercihi:</strong> Seçtiğiniz dili hatırlar</li>
+    <li><strong>Tema Tercihi:</strong> Açık/Koyu mod seçiminizi kaydeder</li>
 </ul>
 
-<div style="background-color: #fffbeb; border: 1px solid #fde68a; border-radius: 0.5rem; padding: 1rem; margin-bottom: 1.5rem;">
-    <p style="margin: 0; font-size: 0.875rem; color: #92400e;"><strong>⚠️ Uyarı:</strong> Çerezleri tamamen devre dışı bırakırsanız, web sitesinin bazı özellikleri düzgün çalışmayabilir. Örneğin, oturum açma, form doldurma veya tercihlerinizin kaydedilmesi gibi işlevler etkilenebilir.</p>
-</div>
+<h3>D. Pazarlama ve Reklamcılık Çerezleri</h3>
 
-<h2 style="color: #dc2626; font-size: 1.75rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #dc2626; padding-bottom: 0.5rem;">6. ÇEREZ POLİTİKASI DEĞİŞİKLİKLERİ</h2>
+<p>Bu çerezler, size özel reklamlar göstermek için kullanılır (onayınız dahilinde):</p>
 
-<p style="margin-bottom: 1rem;">Bu Çerez Politikası, yasal düzenlemeler veya web sitesi değişiklikleri nedeniyle güncellenebilir. Önemli değişiklikler yapıldığında sizi bilgilendireceğiz. Güncel versiyonu düzenli olarak kontrol etmenizi öneririz.</p>
+<ul>
+    <li><strong>Facebook Pixel:</strong> Facebook reklamlarını optimize eder</li>
+    <li><strong>Google Ads:</strong> Google reklamlarını yönetir</li>
+    <li><strong>Yeniden Pazarlama:</strong> Daha önce ziyaret ettiğiniz ürünleri hatırlatır</li>
+</ul>
 
-<h2 style="color: #dc2626; font-size: 1.75rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #dc2626; padding-bottom: 0.5rem;">7. İLETİŞİM</h2>
+<h2>3. KULLANDIĞIMIZ ÇEREZLER</h2>
 
-<p style="margin-bottom: 1rem;">Çerez kullanımı hakkında sorularınız için bizimle iletişime geçebilirsiniz:</p>
+<table>
+    <thead>
+        <tr>
+            <th>Çerez Adı</th>
+            <th>Tür</th>
+            <th>Süre</th>
+            <th>Amaç</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>PHPSESSID</td>
+            <td>Zorunlu</td>
+            <td>Oturum</td>
+            <td>Oturum yönetimi</td>
+        </tr>
+        <tr>
+            <td>csrf_token</td>
+            <td>Zorunlu</td>
+            <td>Oturum</td>
+            <td>Güvenlik</td>
+        </tr>
+        <tr>
+            <td>_ga</td>
+            <td>Analitik</td>
+            <td>2 yıl</td>
+            <td>Google Analytics - Kullanıcı tanımlama</td>
+        </tr>
+        <tr>
+            <td>_gid</td>
+            <td>Analitik</td>
+            <td>24 saat</td>
+            <td>Google Analytics - Oturum tanımlama</td>
+        </tr>
+        <tr>
+            <td>_fbp</td>
+            <td>Pazarlama</td>
+            <td>3 ay</td>
+            <td>Facebook Pixel</td>
+        </tr>
+    </tbody>
+</table>
 
-<div style="background-color: #f3f4f6; padding: 1.5rem; border-radius: 0.5rem; margin-bottom: 2rem;">
-    <p style="margin-bottom: 0.75rem;"><strong>GMS Garage Otomotiv</strong></p>
-    <p style="margin-bottom: 0.75rem;">📧 <strong>E-posta:</strong> privacy@gmsgarage.com</p>
-    <p style="margin-bottom: 0.75rem;">📞 <strong>Telefon:</strong> +90 XXX XXX XX XX</p>
-    <p style="margin-bottom: 0;">🌐 <strong>Website:</strong> www.gmsgarage.com</p>
-</div>
+<h2>4. ÇEREZLERİ NASIL YÖNETEBİLİRSİNİZ?</h2>
 
-<div style="background-color: #eff6ff; border: 1px solid #93c5fd; border-radius: 0.5rem; padding: 1rem; margin-top: 2rem;">
-    <p style="margin: 0; font-size: 0.875rem; color: #1e40af;">
-        <strong>ℹ️ İlgili Belgeler:</strong> Kişisel verilerinizin işlenmesi hakkında daha fazla bilgi için <a href="/sayfa/gizlilik-politikasi" style="color: #dc2626; text-decoration: underline;">Gizlilik Politikası</a> ve <a href="/sayfa/kvkk-aydinlatma-metni" style="color: #dc2626; text-decoration: underline;">KVKK Aydınlatma Metni</a> sayfalarımızı ziyaret edebilirsiniz.
-    </p>
-</div>
+<p>Çerez tercihlerinizi aşağıdaki yöntemlerle yönetebilirsiniz:</p>
 
-<p style="margin-top: 2rem; text-align: center; color: #6b7280; font-size: 0.875rem;"><em>Son Güncelleme: Şubat 2026 | Versiyon: 1.0</em></p>
+<h3>Tarayıcı Ayarları</h3>
 
-</div>
+<p>Çoğu tarayıcı çerezleri kabul edecek şekilde ayarlanmıştır, ancak çerezleri engellemek veya silmek için tarayıcı ayarlarınızı değiştirebilirsiniz:</p>
+
+<ul>
+    <li><strong>Chrome:</strong> Ayarlar > Gizlilik ve güvenlik > Çerezler ve diğer site verileri</li>
+    <li><strong>Firefox:</strong> Ayarlar > Gizlilik ve Güvenlik > Çerezler ve Site Verileri</li>
+    <li><strong>Safari:</strong> Tercihler > Gizlilik > Çerezleri Yönet</li>
+    <li><strong>Edge:</strong> Ayarlar > Çerezler ve site izinleri</li>
+</ul>
+
+<h3>Çerez Onay Paneli</h3>
+
+<p>Web sitemizi ilk ziyaretinizde, çerez tercihlerinizi belirlemeniz için bir onay paneli görüntülenir. Tercihlerinizi dilediğiniz zaman değiştirebilirsiniz.</p>
+
+<h2>5. ÇEREZLERİ REDDETME ETKİSİ</h2>
+
+<p>Çerezleri reddetmeniz durumunda:</p>
+
+<ul>
+    <li>Bazı web sitesi özellikleri çalışmayabilir</li>
+    <li>Tercihleriniz hatırlanmayabilir</li>
+    <li>Oturum açma işlevi etkilenebilir</li>
+    <li>Kişiselleştirilmiş içerik göremeyebilirsiniz</li>
+</ul>
+
+<h2>6. ÜÇÜNCÜ TARAF ÇEREZLERİ</h2>
+
+<p>Web sitemiz, üçüncü taraf hizmetlerden çerezler kullanabilir:</p>
+
+<ul>
+    <li><strong>Google Analytics:</strong> <a href="https://policies.google.com/privacy" target="_blank">Google Gizlilik Politikası</a></li>
+    <li><strong>Facebook:</strong> <a href="https://www.facebook.com/privacy/explanation" target="_blank">Facebook Veri Politikası</a></li>
+    <li><strong>YouTube:</strong> <a href="https://policies.google.com/privacy" target="_blank">YouTube Gizlilik Politikası</a></li>
+</ul>
+
+<p>Bu üçüncü taraf çerezler, ilgili şirketlerin gizlilik politikalarına tabidir.</p>
+
+<h2>7. ÇEREZ POLİTİKASI GÜNCELLEMELERİ</h2>
+
+<p>Bu Çerez Politikası zaman zaman güncellenebilir. Değişiklikler web sitesinde yayınlandığında yürürlüğe girer.</p>
+
+<p><strong>Son Güncellenme:</strong> Şubat 2026</p>
+
+<h2>8. İLETİŞİM</h2>
+
+<p>Çerez politikamız hakkında sorularınız için:</p>
+
+<ul>
+    <li><strong>E-posta:</strong> info@gmsgarage.com</li>
+    <li><strong>Telefon:</strong> +90 XXX XXX XX XX</li>
+</ul>
+
+EOT;
+    }
+
+    private function getRefundPolicyContent()
+    {
+        return <<<'EOT'
+<h2>1. GENEL HÜKÜMLER</h2>
+
+<p>İşbu İptal ve İade Koşulları, GMS Garage Otomotiv tarafından sunulan hizmetlere ilişkin iptal ve iade prosedürlerini belirlemektedir.</p>
+
+<p>6502 sayılı Tüketicinin Korunması Hakkında Kanun ve Mesafeli Sözleşmeler Yönetmeliği uyarınca düzenlenmiştir.</p>
+
+<h2>2. CAYMA HAKKI</h2>
+
+<p>Tüketiciler, 14 gün içinde herhangi bir gerekçe göstermeksizin ve cezai şart ödemeksizin sözleşmeden cayma hakkına sahiptir.</p>
+
+<p>Cayma hakkının kullanılması için bu süre içinde GMS Garage'a yazılı bildirimde bulunulması gerekmektedir.</p>
+
+<p><strong>Cayma Hakkı Süresi:</strong></p>
+
+<ul>
+    <li><strong>Hizmet Sözleşmeleri:</strong> Sözleşmenin kurulduğu günden itibaren 14 gün</li>
+    <li><strong>Araç Alımı:</strong> Aracın teslim edildiği günden itibaren 14 gün</li>
+</ul>
+
+<h2>3. CAYMA HAKKININ KULLANILAMAYACAĞI HALLER</h2>
+
+<p>Aşağıdaki durumlarda cayma hakkı kullanılamaz:</p>
+
+<ul>
+    <li>Tüketicinin onayı ile ifasına başlanan hizmetler</li>
+    <li>Tüketicinin istekleri veya açıkça kişisel ihtiyaçları doğrultusunda hazırlanan hizmetler</li>
+    <li>Niteliği itibariyle iade edilemeyecek hizmetler</li>
+    <li>Cayma hakkı süresi sona erdikten sonra</li>
+</ul>
+
+<h2>4. CAYMA HAKKININ KULLANILMASI</h2>
+
+<p>Cayma hakkını kullanmak için aşağıdaki yöntemlerle başvurabilirsiniz:</p>
+
+<ul>
+    <li><strong>E-posta:</strong> iade@gmsgarage.com</li>
+    <li><strong>Telefon:</strong> +90 XXX XXX XX XX</li>
+    <li><strong>Posta:</strong> [Şirket Adresi]</li>
+</ul>
+
+<p><strong>Bildirimde Bulunması Gereken Bilgiler:</strong></p>
+
+<ul>
+    <li>Ad, soyad</li>
+    <li>İletişim bilgileri</li>
+    <li>Sözleşme numarası veya fatura bilgileri</li>
+    <li>Cayma talebinin nedeni (isteğe bağlı)</li>
+</ul>
+
+<h2>5. İADE SÜRECİ</h2>
+
+<p>Cayma bildirimi alındıktan sonra:</p>
+
+<ol>
+    <li>Talebiniz 2 iş günü içinde incelenir</li>
+    <li>Onay durumunda, ödediğiniz tutar 14 gün içinde iade edilir</li>
+    <li>İade, ödemeyi yaptığınız yöntemle yapılır</li>
+    <li>İade süreci tamamlandığında e-posta ile bilgilendirilirsiniz</li>
+</ol>
+
+<h2>6. ARAÇ ALIMLARINDA İADE KOŞULLARI</h2>
+
+<p>Araç alımlarında iade talebi için:</p>
+
+<ul>
+    <li>Araç, teslim alındığı haliyle iade edilmelidir</li>
+    <li>Aracın kullanılmamış olması gerekmektedir</li>
+    <li>Tüm belgeler ve aksesuarlar eksiksiz olmalıdır</li>
+    <li>Hasar veya değer kaybı oluşmamış olmalıdır</li>
+</ul>
+
+<p><strong>Önemli Not:</strong> İade sırasında tespit edilen hasar veya değer kaybı, iade tutarından düşülebilir.</p>
+
+<h2>7. ÜCRET İADESİ</h2>
+
+<p>İade onaylandıktan sonra:</p>
+
+<ul>
+    <li>Ödeme iade süreci 14 gün içinde başlatılır</li>
+    <li>İade, orijinal ödeme yönteminize yapılır</li>
+    <li>Kredi kartı ödemeleri: 2-8 iş günü (bankanıza bağlı)</li>
+    <li>Banka havalesi: 2-5 iş günü</li>
+</ul>
+
+<h2>8. İPTAL VE İADE ÜCRETLERİ</h2>
+
+<p>Geçerli cayma hakkı kullanımında:</p>
+
+<ul>
+    <li>İptal ücreti alınmaz</li>
+    <li>Ödediğiniz tutar tam olarak iade edilir</li>
+    <li>Araç teslimatı yapılmışsa, iade nakliye masrafı müşteriye aittir</li>
+</ul>
+
+<h2>9. HİZMET İPTALİ</h2>
+
+<p>Devam eden hizmetler için iptal talebi:</p>
+
+<ul>
+    <li>Hizmet başlamadıysa: Tam ücret iadesi</li>
+    <li>Hizmet kısmen tamamlandıysa: Tamamlanan kısım ücreti düşülerek iade</li>
+    <li>Hizmet tamamlandıysa: İade yapılamaz</li>
+</ul>
+
+<h2>10. SORUN ÇÖZÜMÜ</h2>
+
+<p>İade veya iptal talebinizle ilgili sorun yaşarsanız:</p>
+
+<ol>
+    <li>Öncelikle müşteri hizmetlerimizle iletişime geçin</li>
+    <li>Şikayetinizi yazılı olarak bildirin</li>
+    <li>Talep numaranızı saklayın ve takip edin</li>
+</ol>
+
+<p>Anlaşmazlık durumunda, Tüketici Hakem Heyetleri'ne veya Tüketici Mahkemelerine başvurabilirsiniz.</p>
+
+<h2>11. İLETİŞİM</h2>
+
+<p>İptal ve iade işlemleri için:</p>
+
+<ul>
+    <li><strong>E-posta:</strong> iade@gmsgarage.com</li>
+    <li><strong>Telefon:</strong> +90 XXX XXX XX XX</li>
+    <li><strong>Adres:</strong> [Şirket Adresi]</li>
+    <li><strong>Çalışma Saatleri:</strong> Pazartesi - Cuma, 09:00 - 18:00</li>
+</ul>
+
+<p><strong>Son Güncellenme:</strong> Şubat 2026</p>
+
 EOT;
     }
 }

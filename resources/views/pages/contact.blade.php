@@ -112,20 +112,8 @@
                         </div>
                         
                         <!-- KVKK Consent Checkbox (Zorunlu Okuma ile) -->
-                        <div class="bg-gray-50 dark:bg-[#2a2a2a] border-2 border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                            <label class="flex items-start space-x-3 cursor-pointer group">
-                                <input type="checkbox" name="kvkk_consent" id="kvkk_consent" required
-                                       class="mt-1 w-5 h-5 text-primary-600 border-gray-300 rounded focus:ring-2 focus:ring-primary-500 dark:bg-[#2a2a2a] dark:border-gray-600">
-                                <span class="flex-1 text-sm text-gray-700 dark:text-gray-300">
-                                    Kişisel verilerimin 
-                                    <a href="#" data-legal-slug="kvkk-aydinlatma-metni" data-checkbox-id="kvkk_consent" class="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 font-semibold underline">
-                                        KVKK Aydınlatma Metni
-                                    </a> 
-                                    kapsamında işlenmesini kabul ediyorum. <span class="text-red-500">*</span>
-                                </span>
-                            </label>
-                            <span class="text-red-500 text-xs mt-1 hidden" id="kvkk-error"></span>
-                        </div>
+                        {{-- Dinamik Yasal Onaylar --}}
+                        <x-form-legal-consents formId="contact" />
                         
                         <button type="submit" id="submit-btn" class="btn btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed">
                             <span id="submit-text">Gönder</span>

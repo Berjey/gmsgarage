@@ -547,8 +547,19 @@
                 </div>
             </div>
 
-            <!-- Tab Content: Footer Yönetimi -->
-            <div id="tab-footer" class="tab-content p-6 space-y-6 hidden">
+            <!-- Kaydet Butonu (Sadece diğer sekmeler için) -->
+            <div id="save-button-container" class="mt-8 flex justify-end border-t pt-6">
+                <button type="submit" class="px-8 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-bold shadow-lg flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    Ayarları Kaydet
+                </button>
+            </div>
+        </form>
+
+        <!-- Tab Content: Footer Yönetimi (ANA FORMUN DIŞINDA!) -->
+        <div id="tab-footer" class="tab-content p-6 space-y-6 hidden">
                 
                 <h3 class="text-lg font-bold text-gray-900 mb-4">Footer İçeriği</h3>
                 
@@ -588,26 +599,117 @@
                     </div>
                 </div>
 
+                <!-- YASAL SAYFALAR YÖNETİMİ (CRUD) - Direkt pages tablosundan -->
                 <div class="border-t pt-6">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-lg font-bold text-gray-900">Yasal Linkler ve Sayfa İçerikleri</h3>
-                        <button type="button" 
-                                onclick="addFooterLink()"
-                                class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center gap-2">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                        <div class="flex items-start gap-3">
+                            <svg class="w-6 h-6 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <div class="flex-1">
+                                <h3 class="font-semibold text-blue-900 mb-1">Yasal Sayfalar Yönetim Merkezi</h3>
+                                <p class="text-sm text-blue-800">Bu bölüm Footer'daki yasal sayfaların <strong>merkezi yönetim noktasıdır</strong>. Yeni sayfa ekleyin, listede görünecektir. İçeriği düzenlemek için "İçeriği Düzenle" butonuna tıklayın. Aktif olan tüm sayfalar otomatik olarak footer'da görünür.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Yeni Sayfa Ekleme Formu -->
+                    <div class="bg-white border border-gray-200 rounded-lg p-4 mb-6">
+                        <h4 class="text-md font-bold text-gray-900 mb-3 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                             </svg>
-                            Yeni Link Ekle
-                        </button>
+                            Yeni Yasal Sayfa Ekle
+                        </h4>
+                        <form action="{{ route('admin.settings.add-legal-page') }}" method="POST">
+                            @csrf
+                            <div class="flex gap-3">
+                                <div class="flex-1">
+                                    <input type="text" 
+                                           name="title" 
+                                           required
+                                           placeholder="Sayfa başlığı girin (Örn: KVKK, Gizlilik Politikası)"
+                                           class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
+                                </div>
+                                <button type="submit" class="px-6 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-semibold flex items-center gap-2 whitespace-nowrap">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                    </svg>
+                                    Ekle
+                                </button>
+                            </div>
+                            <p class="mt-2 text-xs text-gray-500">Sayfa başlığını girin. URL otomatik oluşturulacak. İçeriği düzenlemek için listeden "İçeriği Düzenle" butonuna tıklayın.</p>
+                        </form>
                     </div>
 
-                    <div id="footerLinksContainer" class="space-y-3">
-                        <!-- Footer links buraya dinamik olarak eklenecek -->
-                    </div>
+                    <!-- Mevcut Yasal Sayfalar Listesi -->
+                    <div class="bg-white border border-gray-200 rounded-lg overflow-hidden">
+                        <div class="bg-gray-50 px-4 py-3 border-b border-gray-200">
+                            <h4 class="text-md font-bold text-gray-900 flex items-center gap-2">
+                                <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                                Mevcut Yasal Sayfalar ({{ $legalPages->count() }})
+                            </h4>
+                        </div>
 
-                    <p id="emptyLinksMessage" class="text-center text-gray-500 py-8 hidden">
-                        Henüz link eklenmedi. "Yeni Link Ekle" butonuna tıklayarak başlayın.
-                    </p>
+                        @if($legalPages->count() > 0)
+                        <div class="divide-y divide-gray-200">
+                            @foreach($legalPages as $page)
+                            <div class="p-4 hover:bg-gray-50 transition-colors flex items-center justify-between gap-4">
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <h5 class="text-sm font-semibold text-gray-900 truncate">{{ $page->title }}</h5>
+                                        @if($page->is_active)
+                                        <span class="px-2 py-0.5 text-xs font-semibold rounded-full bg-green-100 text-green-800">Aktif</span>
+                                        @else
+                                        <span class="px-2 py-0.5 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">Pasif</span>
+                                        @endif
+                                    </div>
+                                    <p class="text-xs text-gray-500">
+                                        <span class="font-mono">/sayfa/{{ $page->slug }}</span>
+                                        <span class="mx-2">•</span>
+                                        Son Güncelleme: {{ $page->updated_at->format('d.m.Y H:i') }}
+                                        @if($page->is_required_in_forms)
+                                        <span class="mx-2">•</span>
+                                        <span class="text-red-600 font-semibold">Formlarda Zorunlu</span>
+                                        @endif
+                                    </p>
+                                </div>
+                                <div class="flex items-center gap-2 flex-shrink-0">
+                                    <!-- İçeriği Düzenle -->
+                                    <a href="{{ route('admin.legal-pages.edit', $page->id) }}" 
+                                       class="px-3 py-1.5 bg-blue-600 text-white text-xs font-semibold rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-1">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                        </svg>
+                                        İçeriği Düzenle
+                                    </a>
+                                    <!-- Sil (Hard Delete) -->
+                                    <form action="{{ route('admin.settings.delete-legal-page', $page->id) }}" method="POST" class="inline" onsubmit="return confirm('{{ $page->title }} sayfasını ve tüm içeriğini silmek istediğinize emin misiniz? Bu işlem geri alınamaz.')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="px-3 py-1.5 bg-red-600 text-white text-xs font-semibold rounded-lg hover:bg-red-700 transition-colors flex items-center gap-1">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                            </svg>
+                                            Sil
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+                        @else
+                        <div class="p-8 text-center text-gray-500">
+                            <svg class="w-16 h-16 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            <p class="font-semibold mb-1">Henüz yasal sayfa eklenmemiş</p>
+                            <p class="text-sm">Yukarıdaki formu kullanarak yeni sayfa ekleyin</p>
+                        </div>
+                        @endif
+                    </div>
                 </div>
             </div>
 
@@ -766,18 +868,7 @@
 
             </div>
 
-            <!-- Sticky Save Button -->
-            <!-- Save Button -->
-            <div class="bg-gray-50 px-6 py-4 border-t border-gray-200 flex justify-end">
-                <button type="submit" 
-                        class="px-8 py-3 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition-colors flex items-center gap-2">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path>
-                    </svg>
-                    Ayarları Kaydet
-                </button>
-            </div>
-        </form>
+        </div>
     </div>
 
     <!-- Modal: İçerik Düzenleme -->
@@ -824,38 +915,7 @@
 @endsection
 
 @push('scripts')
-<!-- CKEditor 4 (Standard-All) -->
-<script src="https://cdn.ckeditor.com/4.22.1/standard-all/ckeditor.js"></script>
-
 <script>
-// Global değişkenler
-let footerLinks = {!! json_encode(json_decode($settings['footer_bottom_links'] ?? '[]', true)) !!};
-let editorInstance = null;
-let currentLinkIndex = null;
-let currentSlug = '';
-let modalTitle = '';
-
-// Sayfa yüklendiğinde
-document.addEventListener('DOMContentLoaded', function() {
-    // CKEditor'ü başlat
-    CKEDITOR.replace('contentEditor', {
-        height: 400,
-        language: 'tr',
-        removePlugins: 'exportpdf'
-    });
-    editorInstance = CKEDITOR.instances.contentEditor;
-    
-    // Footer linklerini render et
-    renderFooterLinks();
-    
-    // Modal kapatma (backdrop click)
-    document.getElementById('contentModal').addEventListener('click', function(e) {
-        if (e.target === this) {
-            closeContentModal();
-        }
-    });
-});
-
 // Bakım modu toggle - Modern iOS Style
 function toggleMaintenanceStatus(isActive) {
     // Status Text
@@ -946,225 +1006,16 @@ function switchTab(tabName) {
     if (activeContent) {
         activeContent.classList.remove('hidden');
     }
-}
-
-// Footer link ekleme
-function addFooterLink() {
-    footerLinks.push({ label: '', url: '' });
-    renderFooterLinks();
-}
-
-// Footer link silme
-function removeFooterLink(index) {
-    Swal.fire({
-        title: '<span style="color: #111827; font-weight: 500; font-size: 1.125rem;">Linki Sil</span>',
-        html: '<p style="color: #6B7280; font-size: 0.875rem; margin-top: 0.5rem;">Bu linki silmek istediğinize emin misiniz? Bu işlem geri alınamaz.</p>',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#DC2626',
-        cancelButtonColor: '#6B7280',
-        confirmButtonText: 'Sil',
-        cancelButtonText: 'Vazgeç',
-        customClass: {
-            popup: 'swal-custom-popup',
-            title: 'swal-custom-title',
-            htmlContainer: 'swal-custom-html',
-            confirmButton: 'swal-custom-confirm',
-            cancelButton: 'swal-custom-cancel',
-            actions: 'swal-custom-actions'
-        },
-        buttonsStyling: false,
-        reverseButtons: true
-    }).then((result) => {
-        if (result.isConfirmed) {
-            footerLinks.splice(index, 1);
-            renderFooterLinks();
-            Swal.fire({
-                title: '<span style="color: #111827; font-weight: 500; font-size: 1.125rem;">Silindi!</span>',
-                html: '<p style="color: #6B7280; font-size: 0.875rem; margin-top: 0.5rem;">Link başarıyla kaldırıldı.</p>',
-                icon: 'success',
-                confirmButtonColor: '#059669',
-                confirmButtonText: 'Tamam',
-                customClass: {
-                    popup: 'swal-custom-popup',
-                    confirmButton: 'swal-custom-confirm'
-                },
-                buttonsStyling: false,
-                timer: 2000
-            });
+    
+    // Kaydet butonunu Footer sekmesinde gizle (Footer'ın kendi formları var)
+    const saveButton = document.getElementById('save-button-container');
+    if (saveButton) {
+        if (tabName === 'footer') {
+            saveButton.style.display = 'none';
+        } else {
+            saveButton.style.display = 'flex';
         }
-    });
-}
-
-// URL slug oluşturma
-function updateUrl(index, label) {
-    if (!label) return;
-    const slug = label.toLowerCase()
-        .replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ş/g, 's')
-        .replace(/ı/g, 'i').replace(/ö/g, 'o').replace(/ç/g, 'c')
-        .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-    footerLinks[index].url = slug;
-    
-    // Sadece URL input'unu güncelle, tüm sayfayı render etme
-    const urlInput = document.querySelector(`input[name="footer_bottom_links[${index}][url]"]`);
-    if (urlInput) {
-        urlInput.value = slug;
     }
-}
-
-// Modal açma
-function openContentModal(index) {
-    const link = footerLinks[index];
-    if (!link.label || !link.url) {
-        Swal.fire({
-            title: '<span style="color: #111827; font-weight: 500; font-size: 1.125rem;">Geçersiz Link</span>',
-            html: '<p style="color: #6B7280; font-size: 0.875rem; margin-top: 0.5rem;">Lütfen önce başlığı girin ve URL oluşsun.</p>',
-            icon: 'warning',
-            confirmButtonColor: '#DC2626',
-            confirmButtonText: 'Tamam',
-            customClass: {
-                popup: 'swal-custom-popup',
-                confirmButton: 'swal-custom-confirm'
-            },
-            buttonsStyling: false
-        });
-        return;
-    }
-    
-    currentLinkIndex = index;
-    currentSlug = link.url;
-    modalTitle = link.label;
-    
-    document.getElementById('modalTitle').textContent = modalTitle + ' - İçerik Düzenleme';
-    document.getElementById('contentModal').classList.remove('hidden');
-    
-    // Mevcut içeriği yükle
-    fetch('/admin/api/pages/get-by-slug?slug=' + encodeURIComponent(currentSlug))
-        .then(res => res.json())
-        .then(data => {
-            if (editorInstance && data.content) {
-                editorInstance.setData(data.content);
-            }
-        })
-        .catch(() => {
-            if (editorInstance) {
-                editorInstance.setData('');
-            }
-        });
-}
-
-// Modal kapatma
-function closeContentModal() {
-    document.getElementById('contentModal').classList.add('hidden');
-    if (editorInstance) {
-        editorInstance.setData('');
-    }
-}
-
-// Modal içerik kaydetme
-function saveModalContent() {
-    if (!editorInstance) return;
-    
-    const content = editorInstance.getData();
-    const csrf = document.querySelector('meta[name=csrf-token]').content;
-    
-    fetch('/admin/api/pages/store-or-update', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': csrf
-        },
-        body: JSON.stringify({
-            slug: currentSlug,
-            title: modalTitle,
-            content: content
-        })
-    })
-    .then(res => res.json())
-    .then(data => {
-        closeContentModal();
-        Swal.fire({
-            title: '<span style="color: #111827; font-weight: 500; font-size: 1.125rem;">Başarılı!</span>',
-            html: '<p style="color: #6B7280; font-size: 0.875rem; margin-top: 0.5rem;">Sayfa içeriği kaydedildi.</p>',
-            icon: 'success',
-            confirmButtonColor: '#059669',
-            confirmButtonText: 'Tamam',
-            customClass: {
-                popup: 'swal-custom-popup',
-                confirmButton: 'swal-custom-confirm'
-            },
-            buttonsStyling: false,
-            timer: 2000
-        });
-    })
-    .catch(() => {
-        Swal.fire({
-            title: '<span style="color: #111827; font-weight: 500; font-size: 1.125rem;">Hata!</span>',
-            html: '<p style="color: #6B7280; font-size: 0.875rem; margin-top: 0.5rem;">İçerik kaydedilemedi. Lütfen tekrar deneyin.</p>',
-            icon: 'error',
-            confirmButtonColor: '#DC2626',
-            confirmButtonText: 'Tamam',
-            customClass: {
-                popup: 'swal-custom-popup',
-                confirmButton: 'swal-custom-confirm'
-            },
-            buttonsStyling: false
-        });
-    });
-}
-
-// Footer linklerini render etme
-function renderFooterLinks() {
-    const container = document.getElementById('footerLinksContainer');
-    const emptyMessage = document.getElementById('emptyLinksMessage');
-    
-    if (footerLinks.length === 0) {
-        container.innerHTML = '';
-        emptyMessage.classList.remove('hidden');
-        return;
-    }
-    
-    emptyMessage.classList.add('hidden');
-    
-    container.innerHTML = footerLinks.map((link, index) => `
-        <div class="flex gap-3 items-center bg-gray-50 p-4 rounded-lg border border-gray-200">
-            <div class="flex-1">
-                <input type="text" 
-                       value="${link.label || ''}"
-                       name="footer_bottom_links[${index}][label]"
-                       oninput="footerLinks[${index}].label = this.value; updateUrl(${index}, this.value)"
-                       placeholder="Başlık (Örn: KVKK)"
-                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm">
-            </div>
-            
-            <div class="flex-1">
-                <input type="text" 
-                       value="${link.url || ''}"
-                       name="footer_bottom_links[${index}][url]"
-                       readonly
-                       placeholder="URL (otomatik oluşur)"
-                       class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 text-sm cursor-not-allowed">
-            </div>
-            
-            <button type="button" 
-                    onclick="openContentModal(${index})"
-                    class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 whitespace-nowrap text-sm">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                </svg>
-                İçeriği Düzenle
-            </button>
-            
-            <button type="button" 
-                    onclick="removeFooterLink(${index})"
-                    class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center gap-2 text-sm">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                </svg>
-                Sil
-            </button>
-        </div>
-    `).join('');
 }
 </script>
 

@@ -974,13 +974,9 @@
                     <textarea name="not" id="not-input" class="form-input" rows="3" placeholder="Eklemek istediğiniz notlar..."></textarea>
                 </div>
 
+                {{-- Dinamik Yasal Onaylar --}}
                 <div class="mb-6">
-                    <label class="flex items-start gap-3 cursor-pointer">
-                        <input type="checkbox" name="kvkk_onay" id="kvkk-checkbox" class="mt-1" required>
-                        <span class="text-sm text-gray-600 dark:text-gray-400">
-                            <a href="{{ route('kvkk') }}" target="_blank" class="text-primary-600 hover:underline">KVKK Aydınlatma Metni</a>'ni okudum ve kabul ediyorum. *
-                        </span>
-                    </label>
+                    <x-form-legal-consents formId="evaluation" />
                 </div>
 
                 <!-- Submit Button -->

@@ -271,6 +271,9 @@
                             @enderror
                         </div>
 
+                        {{-- Dinamik Yasal Onaylar --}}
+                        <x-form-legal-consents formId="vehicle-request" />
+
                         <!-- Submit Button -->
                         <div class="pt-4">
                             <button type="submit" id="submit-btn" class="btn btn-primary w-full py-4 text-lg disabled:opacity-50 disabled:cursor-not-allowed" disabled>

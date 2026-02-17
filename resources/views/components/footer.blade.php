@@ -1,4 +1,4 @@
-<footer class="bg-[#1e1e1e] dark:bg-[#1e1e1e] text-white mt-20 border-t border-gray-800 dark:border-gray-800 relative overflow-hidden transition-colors duration-200">
+<footer class="bg-[#1e1e1e] text-white mt-20 border-t border-gray-800 relative overflow-hidden">
     <!-- Subtle animated gradient overlay -->
     <div class="absolute inset-0 opacity-5">
         <div class="absolute inset-0 footer-gradient-animation"></div>
@@ -9,10 +9,7 @@
             <!-- Sol: Logo + AI ve Güven Vurgulu Marka Metni -->
             <div>
                 <a href="{{ route('home') }}" class="inline-block mb-6">
-                    <!-- Light Mode Logo (Footer dark olduğu için invert edilmiş) -->
-                    <img src="{{ asset('images/light-mode-logo.png') }}" alt="GMSGARAGE Logo" class="h-16 md:h-20 w-auto brightness-0 invert dark:hidden object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                    <!-- Dark Mode Logo (Footer dark olduğu için invert edilmiş) -->
-                    <img src="{{ asset('images/dark-mode-logo.png') }}" alt="GMSGARAGE Logo" class="h-16 md:h-20 w-auto brightness-0 invert hidden dark:block object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <img src="{{ asset('images/light-mode-logo.png') }}" alt="GMSGARAGE Logo" class="h-16 md:h-20 w-auto brightness-0 invert object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                     <div class="text-4xl md:text-5xl font-bold text-white" style="display:none;">GMSGARAGE</div>
                 </a>
                 <p class="text-gray-300 mb-4 text-lg leading-relaxed">
@@ -157,42 +154,24 @@
         </div>
         
         <!-- Alt Bar -->
-        <div class="border-t border-gray-800 dark:border-gray-800 mt-12 pt-8">
+        <div class="border-t border-gray-800 mt-12 pt-8">
             <div class="flex flex-col md:flex-row items-center justify-between gap-4">
                 <p class="text-gray-400">{{ $settings['footer_copyright'] ?? '© 2026 GMSGARAGE. Tüm hakları saklıdır.' }}</p>
                 <div class="flex items-center flex-wrap justify-center gap-4 text-sm">
+                    {{-- Merkezi Sistem: Sadece legal_pages tablosundan çek --}}
                     @php
-                        $footerLinks = json_decode($settings['footer_bottom_links'] ?? '[]', true);
+                        $footerPages = \App\Models\LegalPage::getFooterPages();
                     @endphp
-                    @if(is_array($footerLinks) && count($footerLinks) > 0)
-                        @foreach($footerLinks as $index => $link)
-                            @if(!empty($link['label']) && !empty($link['url']))
-                                @if($index > 0)
-                                    <span class="text-gray-600">|</span>
-                                @endif
-                                <a href="{{ Str::startsWith($link['url'], 'http') ? $link['url'] : route('legal.show', $link['url']) }}" class="text-gray-400 hover:text-white transition-colors">{{ $link['label'] }}</a>
+                    @if($footerPages->count() > 0)
+                        @foreach($footerPages as $page)
+                            <a href="{{ route('legal.show', $page->slug) }}" class="text-gray-400 hover:text-white transition-colors">{{ $page->title }}</a>
+                            @if(!$loop->last)
+                                <span class="text-gray-600">|</span>
                             @endif
                         @endforeach
                     @else
-                        {{-- Dinamik Yasal Sayfalar (Veritabanından) --}}
-                        @php
-                            $legalPages = \App\Models\LegalPage::getActive();
-                        @endphp
-                        @if($legalPages->count() > 0)
-                            @foreach($legalPages as $page)
-                                <a href="{{ route('legal.show', $page->slug) }}" class="text-gray-400 hover:text-white transition-colors">{{ $page->title }}</a>
-                                @if(!$loop->last)
-                                    <span class="text-gray-600">|</span>
-                                @endif
-                            @endforeach
-                        @else
-                            {{-- Final Fallback --}}
-                            <a href="/sayfa/kvkk-aydinlatma-metni" class="text-gray-400 hover:text-white transition-colors">KVKK</a>
-                            <span class="text-gray-600">|</span>
-                            <a href="/sayfa/gizlilik-politikasi" class="text-gray-400 hover:text-white transition-colors">Gizlilik Politikası</a>
-                            <span class="text-gray-600">|</span>
-                            <a href="/sayfa/kullanim-sartlari" class="text-gray-400 hover:text-white transition-colors">Kullanım Şartları</a>
-                        @endif
+                        {{-- Fallback: Eğer hiçbir sayfa işaretlenmemişse --}}
+                        <span class="text-gray-500 text-xs">Admin panelden yasal sayfaları "Footer'da Göster" olarak işaretleyin</span>
                     @endif
                 </div>
             </div>

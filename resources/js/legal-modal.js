@@ -23,43 +23,43 @@ class LegalModal {
 
     createModal() {
         const modalHTML = `
-            <div id="legal-modal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-[9999] opacity-0 invisible transition-all duration-300">
-                <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full m-4 relative transform scale-95 opacity-0 transition-all duration-300 flex flex-col max-h-[90vh]">
+            <div id="legal-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-[9999] opacity-0 invisible transition-all duration-300">
+                <div class="bg-white dark:bg-neutral-900 rounded-2xl shadow-2xl max-w-4xl w-full m-4 relative transform scale-95 opacity-0 transition-all duration-300 flex flex-col max-h-[90vh] border border-gray-200 dark:border-neutral-800">
                     <!-- Header -->
-                    <div class="p-6 border-b border-gray-200 flex items-center justify-between flex-shrink-0">
-                        <h3 id="legal-modal-title" class="text-2xl font-bold text-gray-900"></h3>
-                        <button type="button" onclick="legalModal.close()" class="text-gray-400 hover:text-gray-600 transition-colors">
+                    <div class="p-6 border-b border-gray-200 dark:border-neutral-800 flex items-center justify-between flex-shrink-0 bg-white dark:bg-neutral-950">
+                        <h3 id="legal-modal-title" class="text-2xl font-bold text-gray-900 dark:text-white font-sans"></h3>
+                        <button type="button" onclick="legalModal.close()" class="text-gray-400 dark:text-neutral-400 hover:text-gray-600 dark:hover:text-white transition-colors p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-800">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                             </svg>
                         </button>
                     </div>
 
-                    <!-- Content (Scrollable) -->
-                    <div id="legal-modal-content" class="p-6 overflow-y-auto flex-1 legal-content">
+                    <!-- Content (Scrollable) - SİYAH TEMA -->
+                    <div id="legal-modal-content" class="p-8 overflow-y-auto flex-1 prose prose-lg dark:prose-invert max-w-none text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-neutral-900 font-sans">
                         <div class="flex items-center justify-center py-12">
-                            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+                            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600"></div>
                         </div>
                     </div>
 
                     <!-- Scroll Indicator -->
-                    <div id="scroll-indicator" class="px-6 py-3 bg-yellow-50 border-t border-yellow-200 flex items-center gap-3 flex-shrink-0">
-                        <svg class="w-5 h-5 text-yellow-600 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div id="scroll-indicator" class="px-6 py-4 bg-yellow-50 dark:bg-neutral-900 border-t border-yellow-200 dark:border-neutral-800 flex items-center gap-3 flex-shrink-0">
+                        <svg class="w-5 h-5 text-yellow-600 dark:text-yellow-500 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
                         </svg>
-                        <p class="text-sm text-yellow-800 font-semibold">Lütfen metni sonuna kadar okuyun</p>
+                        <p class="text-sm text-yellow-800 dark:text-yellow-400 font-semibold font-sans">Lütfen metni sonuna kadar okuyun</p>
                     </div>
 
                     <!-- Footer -->
-                    <div class="p-6 border-t border-gray-200 flex justify-end gap-3 flex-shrink-0">
-                        <button type="button" onclick="legalModal.close()" class="px-6 py-2.5 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-semibold">
+                    <div class="p-6 border-t border-gray-200 dark:border-neutral-800 flex justify-end gap-3 flex-shrink-0 bg-white dark:bg-neutral-950">
+                        <button type="button" onclick="legalModal.close()" class="px-6 py-2.5 bg-gray-200 dark:bg-neutral-700 text-gray-700 dark:text-white rounded-lg hover:bg-gray-300 dark:hover:bg-neutral-600 transition-all font-semibold font-sans">
                             İptal
                         </button>
-                        <button type="button" id="legal-accept-btn" onclick="legalModal.accept()" disabled class="px-6 py-2.5 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
+                        <button type="button" id="legal-accept-btn" onclick="legalModal.accept()" disabled class="px-6 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 font-sans shadow-lg">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
-                            Okudum, Anladım
+                            Okudum, Onaylıyorum
                         </button>
                     </div>
                 </div>
@@ -103,6 +103,7 @@ class LegalModal {
     async open(slug, checkboxId = null) {
         this.currentCheckbox = checkboxId ? document.getElementById(checkboxId) : null;
         this.hasScrolledToBottom = false;
+        this.isRequired = true; // Default true
         
         // Reset button state
         const acceptBtn = document.getElementById('legal-accept-btn');
@@ -123,20 +124,32 @@ class LegalModal {
             
             const data = await response.json();
             
+            // Store is_required flag
+            this.isRequired = data.is_required !== undefined ? data.is_required : true;
+            
             document.getElementById('legal-modal-title').textContent = data.title;
             document.getElementById('legal-modal-content').innerHTML = data.content;
             
-            // Check if content is short enough (no scroll needed)
-            setTimeout(() => this.checkScroll(), 100);
+            // If not required, enable button immediately and hide scroll indicator
+            if (!this.isRequired) {
+                acceptBtn.disabled = false;
+                document.getElementById('scroll-indicator').classList.add('hidden');
+            } else {
+                // Check if content is short enough (no scroll needed)
+                setTimeout(() => this.checkScroll(), 100);
+            }
             
         } catch (error) {
             console.error('Error loading legal content:', error);
             document.getElementById('legal-modal-content').innerHTML = 
-                '<p class="text-red-600">İçerik yüklenirken bir hata oluştu. Lütfen sayfayı yenileyin.</p>';
+                '<p class="text-red-600 dark:text-red-400">İçerik yüklenirken bir hata oluştu. Lütfen sayfayı yenileyin.</p>';
         }
     }
 
     checkScroll() {
+        // If not required, don't check scroll
+        if (!this.isRequired) return;
+        
         const contentDiv = document.getElementById('legal-modal-content');
         const scrollIndicator = document.getElementById('scroll-indicator');
         const acceptBtn = document.getElementById('legal-accept-btn');
@@ -144,7 +157,10 @@ class LegalModal {
         // Check if scrolled to bottom (with 50px tolerance)
         const isAtBottom = contentDiv.scrollHeight - contentDiv.scrollTop <= contentDiv.clientHeight + 50;
         
-        if (isAtBottom && !this.hasScrolledToBottom) {
+        // If content doesn't need scrolling (shorter than container)
+        const needsScrolling = contentDiv.scrollHeight > contentDiv.clientHeight;
+        
+        if ((isAtBottom || !needsScrolling) && !this.hasScrolledToBottom) {
             this.hasScrolledToBottom = true;
             acceptBtn.disabled = false;
             scrollIndicator.classList.add('hidden');
@@ -156,7 +172,8 @@ class LegalModal {
     }
 
     accept() {
-        if (this.currentCheckbox && !this.hasScrolledToBottom) {
+        // Only check scroll requirement if is_required is true
+        if (this.currentCheckbox && this.isRequired && !this.hasScrolledToBottom) {
             alert('Lütfen önce metni sonuna kadar okuyun.');
             return;
         }
