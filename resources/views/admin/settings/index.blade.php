@@ -125,7 +125,7 @@
         </div>
 
         <!-- Form -->
-        <form action="{{ route('admin.settings.update') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('admin.settings.update') }}" method="POST" enctype="multipart/form-data" id="settingsForm" onsubmit="return syncFooterFieldsIfActive(this)">
             @csrf
             @method('PUT')
 
@@ -547,15 +547,9 @@
                 </div>
             </div>
 
-            <!-- Kaydet Butonu (Sadece diğer sekmeler için) -->
-            <div id="save-button-container" class="mt-8 flex justify-end border-t pt-6">
-                <button type="submit" class="px-8 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-bold shadow-lg flex items-center gap-2">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                    Ayarları Kaydet
-                </button>
-            </div>
+            <!-- Footer alanları (Footer sekmesindeyken JS ile doldurulup gönderilir) -->
+            <input type="hidden" name="footer_about_text" id="form_hidden_footer_about_text" value="{{ $settings['footer_about_text'] ?? '' }}">
+            <input type="hidden" name="footer_copyright" id="form_hidden_footer_copyright" value="{{ $settings['footer_copyright'] ?? '© 2026 GMSGARAGE. Tüm hakları saklıdır.' }}">
         </form>
 
         <!-- Tab Content: Footer Yönetimi (ANA FORMUN DIŞINDA!) -->
@@ -573,6 +567,7 @@
                             Footer Hakkında Metni
                         </label>
                         <textarea name="footer_about_text" 
+                                  id="textarea_footer_about_text"
                                   rows="5"
                                   class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
                                   placeholder="Footer'da logo altında görünecek kısa açıklama metni...">{{ $settings['footer_about_text'] ?? '' }}</textarea>
@@ -590,6 +585,7 @@
                             Copyright Metni
                         </label>
                         <textarea name="footer_copyright" 
+                                  id="textarea_footer_copyright"
                                   rows="3"
                                   class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
                                   placeholder="© 2026 GMSGARAGE. Tüm hakları saklıdır.">{{ $settings['footer_copyright'] ?? '© 2026 GMSGARAGE. Tüm hakları saklıdır.' }}</textarea>
@@ -868,6 +864,16 @@
 
             </div>
 
+            <!-- Kaydet Butonu (Diğer sekmelerle aynı konum: sayfanın sağ alt köşesi - tüm sekme içeriklerinin altında) -->
+            <div id="save-button-container" class="mt-8 flex justify-end border-t pt-6">
+                <button type="button" onclick="syncFooterFieldsIfActive(); document.getElementById('settingsForm').submit();" class="px-8 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-bold shadow-lg flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    Ayarları Kaydet
+                </button>
+            </div>
+
         </div>
     </div>
 
@@ -916,6 +922,11 @@
 
 @push('scripts')
 <script>
+// Sayfa yüklendiğinde varsayılan aktif sekme (Genel)
+document.addEventListener('DOMContentLoaded', function() {
+    window.currentSettingsTab = 'general';
+});
+
 // Bakım modu toggle - Modern iOS Style
 function toggleMaintenanceStatus(isActive) {
     // Status Text
@@ -981,6 +992,19 @@ function toggleMaintenanceStatus(isActive) {
     }
 }
 
+// Form gönderilirken Footer sekmesindeyse, Footer textarea değerlerini gizli alanlara kopyala (form dışında oldukları için)
+function syncFooterFieldsIfActive(form) {
+    if (window.currentSettingsTab === 'footer') {
+        var aboutEl = document.getElementById('textarea_footer_about_text');
+        var copyrightEl = document.getElementById('textarea_footer_copyright');
+        var hiddenAbout = document.getElementById('form_hidden_footer_about_text');
+        var hiddenCopyright = document.getElementById('form_hidden_footer_copyright');
+        if (aboutEl && hiddenAbout) hiddenAbout.value = aboutEl.value;
+        if (copyrightEl && hiddenCopyright) hiddenCopyright.value = copyrightEl.value;
+    }
+    return true;
+}
+
 // Tab switching fonksiyonu
 function switchTab(tabName) {
     // Tüm tab buttonları üzerinde dön
@@ -1007,14 +1031,13 @@ function switchTab(tabName) {
         activeContent.classList.remove('hidden');
     }
     
-    // Kaydet butonunu Footer sekmesinde gizle (Footer'ın kendi formları var)
+    // Aktif sekmeyi takip et (form gönderiminde Footer alanları için kullanılır)
+    window.currentSettingsTab = tabName;
+    
+    // Ayarları Kaydet butonu tüm sekmelerde (Footer dahil) görünsün
     const saveButton = document.getElementById('save-button-container');
     if (saveButton) {
-        if (tabName === 'footer') {
-            saveButton.style.display = 'none';
-        } else {
-            saveButton.style.display = 'flex';
-        }
+        saveButton.style.display = 'flex';
     }
 }
 </script>

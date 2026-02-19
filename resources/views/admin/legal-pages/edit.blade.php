@@ -5,6 +5,74 @@
 
 @push('styles')
 <script src="https://cdn.ckeditor.com/4.22.1/full/ckeditor.js"></script>
+<style>
+    /* Yasal sayfa toggle'ları: Açık/Kapalı çok belirgin */
+    .legal-toggle-wrap {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    .legal-toggle-track {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 9999px;
+        transition: background-color 0.2s, border-color 0.2s;
+        border: 2px solid #9ca3af;
+        background-color: #9ca3af;
+    }
+    .legal-toggle input:checked ~ .legal-toggle-switch .legal-toggle-track.on-green {
+        background-color: #22c55e;
+        border-color: #16a34a;
+    }
+    .legal-toggle input:checked ~ .legal-toggle-switch .legal-toggle-track.on-blue {
+        background-color: #3b82f6;
+        border-color: #2563eb;
+    }
+    .legal-toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 3rem;
+        height: 1.75rem;
+        flex-shrink: 0;
+    }
+    .legal-toggle-knob {
+        position: absolute;
+        left: 2px;
+        top: 2px;
+        width: 1.25rem;
+        height: 1.25rem;
+        border-radius: 9999px;
+        background: #fff;
+        border: 2px solid #9ca3af;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        transition: transform 0.2s;
+        pointer-events: none;
+    }
+    .legal-toggle input:checked ~ .legal-toggle-switch .legal-toggle-knob {
+        transform: translateX(1.5rem);
+        border-color: #16a34a;
+    }
+    .legal-toggle.legal-toggle-blue input:checked ~ .legal-toggle-switch .legal-toggle-knob {
+        border-color: #2563eb;
+    }
+    .legal-toggle-text {
+        min-width: 3.5rem;
+        font-weight: 600;
+        font-size: 0.875rem;
+    }
+    .legal-toggle-text.off {
+        color: #6b7280;
+    }
+    .legal-toggle-text.on {
+        color: #16a34a;
+    }
+    .legal-toggle.legal-toggle-blue .legal-toggle-text.on {
+        color: #2563eb;
+    }
+</style>
 @endpush
 
 @section('content')
@@ -102,9 +170,13 @@
                             </h4>
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-1"><strong>Aktifse otomatik Footer'da görünür.</strong></p>
                         </div>
-                        <label class="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" name="is_active" value="1" {{ $page->is_active ? 'checked' : '' }} class="sr-only peer">
-                            <div class="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 dark:peer-focus:ring-primary-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+                        <label class="legal-toggle legal-toggle-wrap cursor-pointer">
+                            <input type="checkbox" name="is_active" value="1" {{ $page->is_active ? 'checked' : '' }} class="sr-only legal-toggle-input">
+                            <span class="legal-toggle-switch">
+                                <span class="legal-toggle-track on-green"></span>
+                                <span class="legal-toggle-knob"></span>
+                            </span>
+                            <span class="legal-toggle-text {{ $page->is_active ? 'on' : 'off' }}" data-label>{{ $page->is_active ? 'Açık' : 'Kapalı' }}</span>
                         </label>
                     </div>
 
@@ -119,9 +191,13 @@
                             </h4>
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Bu sözleşme formlarda onay kutusu olarak görünsün.</p>
                         </div>
-                        <label class="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" name="is_required_in_forms" value="1" {{ $page->is_required_in_forms ?? false ? 'checked' : '' }} class="sr-only peer">
-                            <div class="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 dark:peer-focus:ring-primary-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                        <label class="legal-toggle legal-toggle-blue legal-toggle-wrap cursor-pointer">
+                            <input type="checkbox" name="is_required_in_forms" value="1" {{ $page->is_required_in_forms ?? false ? 'checked' : '' }} class="sr-only legal-toggle-input">
+                            <span class="legal-toggle-switch">
+                                <span class="legal-toggle-track on-blue"></span>
+                                <span class="legal-toggle-knob"></span>
+                            </span>
+                            <span class="legal-toggle-text {{ $page->is_required_in_forms ?? false ? 'on' : 'off' }}" data-label>{{ $page->is_required_in_forms ?? false ? 'Açık' : 'Kapalı' }}</span>
                         </label>
                     </div>
                 </div>
@@ -170,6 +246,19 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Toggle'larda "Açık" / "Kapalı" metnini güncelle
+    document.querySelectorAll('.legal-toggle').forEach(function(label) {
+        var input = label.querySelector('.legal-toggle-input');
+        var textEl = label.querySelector('[data-label]');
+        if (!input || !textEl) return;
+        function updateLabel() {
+            textEl.textContent = input.checked ? 'Açık' : 'Kapalı';
+            textEl.classList.toggle('on', input.checked);
+            textEl.classList.toggle('off', !input.checked);
+        }
+        input.addEventListener('change', updateLabel);
+    });
+
     // CKEditor Başlatma
     CKEDITOR.replace('contentEditor', {
         height: 600,
