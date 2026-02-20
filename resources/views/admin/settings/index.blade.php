@@ -125,9 +125,11 @@
         </div>
 
         <!-- Form -->
-        <form action="{{ route('admin.settings.update') }}" method="POST" enctype="multipart/form-data" id="settingsForm" onsubmit="return syncFooterFieldsIfActive(this)">
+        <form action="{{ route('admin.settings.update') }}" method="POST" enctype="multipart/form-data" id="settingsForm">
             @csrf
             @method('PUT')
+            <!-- popup_status checkbox kapalıyken gönderilmez; önce 0, checkbox işaretliyse 1 gönderilir -->
+            <input type="hidden" name="popup_status" value="0">
 
             <!-- Tab Content: Genel Ayarlar -->
             <div id="tab-general" class="tab-content p-6 space-y-6">
@@ -547,12 +549,7 @@
                 </div>
             </div>
 
-            <!-- Footer alanları (Footer sekmesindeyken JS ile doldurulup gönderilir) -->
-            <input type="hidden" name="footer_about_text" id="form_hidden_footer_about_text" value="{{ $settings['footer_about_text'] ?? '' }}">
-            <input type="hidden" name="footer_copyright" id="form_hidden_footer_copyright" value="{{ $settings['footer_copyright'] ?? '© 2026 GMSGARAGE. Tüm hakları saklıdır.' }}">
-        </form>
-
-        <!-- Tab Content: Footer Yönetimi (ANA FORMUN DIŞINDA!) -->
+        <!-- Tab Content: Footer Yönetimi (form içinde; kaydet ile birlikte gönderilir) -->
         <div id="tab-footer" class="tab-content p-6 space-y-6 hidden">
                 
                 <h3 class="text-lg font-bold text-gray-900 mb-4">Footer İçeriği</h3>
@@ -825,19 +822,24 @@
                     <label for="popup_display_frequency" class="block text-sm font-semibold text-gray-900 mb-2">
                         ⏰ Gösterim Sıklığı
                     </label>
-                    <select name="popup_display_frequency" 
-                            id="popup_display_frequency"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 text-base bg-white">
-                        <option value="always" {{ ($settings['popup_display_frequency'] ?? 'daily') == 'always' ? 'selected' : '' }}>
-                            🔄 Her Sayfa Yüklenişinde (Test İçin)
-                        </option>
-                        <option value="daily" {{ ($settings['popup_display_frequency'] ?? 'daily') == 'daily' ? 'selected' : '' }}>
-                            📅 Günde 1 Kez (Önerilen)
-                        </option>
-                        <option value="once" {{ ($settings['popup_display_frequency'] ?? 'daily') == 'once' ? 'selected' : '' }}>
-                            ⭐ Sadece 1 Kez (Hayat Boyu)
-                        </option>
-                    </select>
+                    @php $freq = $settings['popup_display_frequency'] ?? 'daily'; @endphp
+                    <div class="adm-dd" data-adm-dd>
+                        <input type="hidden" name="popup_display_frequency" value="{{ $freq }}">
+                        <button type="button" class="adm-dd-btn" data-adm-trigger>
+                            <span data-adm-label>
+                                @if($freq == 'always') 🔄 Her Sayfa Yüklenişinde (Test İçin)
+                                @elseif($freq == 'once') ⭐ Sadece 1 Kez (Hayat Boyu)
+                                @else 📅 Günde 1 Kez (Önerilen)
+                                @endif
+                            </span>
+                            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                        </button>
+                        <ul class="adm-dd-list" data-adm-list>
+                            <li data-value="always" class="{{ $freq == 'always' ? 'selected' : '' }}">🔄 Her Sayfa Yüklenişinde (Test İçin)</li>
+                            <li data-value="daily"  class="{{ $freq == 'daily'  ? 'selected' : '' }}">📅 Günde 1 Kez (Önerilen)</li>
+                            <li data-value="once"   class="{{ $freq == 'once'   ? 'selected' : '' }}">⭐ Sadece 1 Kez (Hayat Boyu)</li>
+                        </ul>
+                    </div>
                     <div class="mt-3 p-4 bg-blue-50 border border-blue-200 rounded-lg">
                         <p class="text-sm text-blue-800">
                             <strong>💡 İpucu:</strong><br>
@@ -848,25 +850,132 @@
                     </div>
                 </div>
 
-                <!-- Önizleme Butonu -->
+                <!-- Önizleme & Test -->
                 <div class="bg-gray-50 border border-gray-300 rounded-xl p-6">
-                    <h4 class="text-base font-bold text-gray-900 mb-3">🔍 Önizleme & Test</h4>
-                    <p class="text-sm text-gray-600 mb-4">Değişiklikleri kaydet ettikten sonra, web sitesinde pop-up'ı görebilirsin.</p>
-                    <a href="{{ route('home') }}" 
-                       target="_blank"
-                       class="inline-flex items-center gap-2 px-6 py-3 bg-white border-2 border-red-600 text-red-600 font-semibold rounded-lg hover:bg-red-50 transition-colors">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-                        </svg>
-                        Siteyi Aç ve Test Et
-                    </a>
+                    <h4 class="text-base font-bold text-gray-900 mb-1">🔍 Önizleme & Test</h4>
+                    <p class="text-sm text-gray-500 mb-4">Kaydetmeden önce admin içinde canlı önizleyebilir veya siteyi açabilirsin.</p>
+                    <div class="flex flex-wrap gap-3">
+                        <button type="button"
+                                onclick="gmsShowAdminPreview()"
+                                class="inline-flex items-center gap-2 px-5 py-2.5 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition-colors shadow-sm">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                            </svg>
+                            Canlı Önizle
+                        </button>
+                        <a href="{{ route('home') }}?show_campaign=1"
+                           target="_blank"
+                           class="inline-flex items-center gap-2 px-5 py-2.5 bg-white border-2 border-gray-300 text-gray-700 font-semibold rounded-lg hover:border-red-400 hover:text-red-600 transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                            </svg>
+                            Siteyi Aç ve Test Et
+                        </a>
+                    </div>
                 </div>
+
+                <!-- Admin Önizleme Modal -->
+                <div id="gmsAdminPreview"
+                     style="display:none; position:fixed; inset:0; z-index:99999; align-items:center; justify-content:center; padding:16px; background:rgba(0,0,0,0.75);"
+                     onclick="if(event.target===this) gmsCloseAdminPreview()">
+                    <div style="position:relative; width:100%; max-width:460px; border-radius:22px; overflow:hidden; background:#0f1117; border:1px solid rgba(220,38,38,0.22); box-shadow:0 28px 70px rgba(0,0,0,0.75);">
+
+                        <!-- Kapat -->
+                        <button onclick="gmsCloseAdminPreview()"
+                                style="position:absolute;top:12px;right:12px;z-index:10;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.1);border:none;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:17px;line-height:1;transition:background 0.2s;"
+                                onmouseover="this.style.background='rgba(255,255,255,0.2)'"
+                                onmouseout="this.style.background='rgba(255,255,255,0.1)'">
+                            &times;
+                        </button>
+
+                        <!-- Görsel varsa göster, yoksa kırmızı header -->
+                        <div id="gmsPreviewImgWrap" style="display:none; position:relative; width:100%; height:220px; overflow:hidden;">
+                            <img id="gmsPreviewImg" src="" alt="" style="width:100%;height:100%;object-fit:cover;">
+                            <div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(15,17,23,0.9) 100%);"></div>
+                        </div>
+
+                        <div id="gmsPreviewHeader"
+                             style="position:relative;overflow:hidden;background:linear-gradient(135deg,#dc2626 0%,#7f1d1d 100%);padding:36px 28px 30px;text-align:center;">
+                            <div style="position:absolute;inset:0;background:repeating-linear-gradient(-45deg,transparent,transparent 9px,rgba(0,0,0,0.12) 9px,rgba(0,0,0,0.12) 10px);"></div>
+                            <div style="position:relative;z-index:1;">
+                                <div style="display:inline-flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:14px;background:rgba(255,255,255,0.15);margin-bottom:10px;">
+                                    <svg width="24" height="24" fill="white" viewBox="0 0 24 24"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.85 7h10.29l1.04 3H5.81l1.04-3zM19 17H5v-5h14v5z"/><circle cx="7.5" cy="14.5" r="1.5"/><circle cx="16.5" cy="14.5" r="1.5"/></svg>
+                                </div>
+                                <div style="font-size:14px;font-weight:900;letter-spacing:0.18em;color:#fff;">GMS<span style="opacity:.6">GARAGE</span></div>
+                            </div>
+                        </div>
+
+                        <!-- İçerik -->
+                        <div style="padding:28px 34px 32px;text-align:center;background:#0f1117;">
+                            <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+                                <div style="flex:1;height:1px;background:linear-gradient(to right,transparent,rgba(220,38,38,0.45));"></div>
+                                <div style="width:5px;height:5px;border-radius:50%;background:#dc2626;flex-shrink:0;"></div>
+                                <div style="flex:1;height:1px;background:linear-gradient(to left,transparent,rgba(220,38,38,0.45));"></div>
+                            </div>
+                            <h3 id="gmsPreviewTitle" style="font-size:24px;font-weight:900;color:#f0f2f5;margin:0 0 12px;line-height:1.25;">Özel Fırsatlar</h3>
+                            <p id="gmsPreviewText" style="font-size:14px;line-height:1.7;color:#7a8290;margin:0 0 26px;">Premium araçlarımızda sınırlı süreli özel kampanyalar sizi bekliyor.</p>
+                            <div id="gmsPreviewBtn"
+                                 style="display:flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:14px;border-radius:13px;background:linear-gradient(135deg,#dc2626 0%,#991b1b 100%);box-shadow:0 4px 18px rgba(220,38,38,0.35);color:#fff;font-size:15px;font-weight:700;cursor:default;">
+                                Kampanyayı İncele
+                                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+                function gmsShowAdminPreview() {
+                    var title   = document.getElementById('popup_title')?.value || 'Özel Fırsatlar';
+                    var text    = document.getElementById('popup_text')?.value  || 'Premium araçlarımızda sınırlı süreli özel kampanyalar sizi bekliyor.';
+                    var btnTxt  = document.getElementById('popup_button_text')?.value || 'Kampanyayı İncele';
+                    var imgFile = document.getElementById('popup_image')?.files?.[0];
+
+                    document.getElementById('gmsPreviewTitle').textContent = title;
+                    document.getElementById('gmsPreviewText').textContent  = text;
+                    document.getElementById('gmsPreviewBtn').childNodes[0].textContent = btnTxt + ' ';
+
+                    var imgWrap    = document.getElementById('gmsPreviewImgWrap');
+                    var headerWrap = document.getElementById('gmsPreviewHeader');
+                    var previewImg = document.getElementById('gmsPreviewImg');
+
+                    if (imgFile) {
+                        var reader = new FileReader();
+                        reader.onload = function(e) {
+                            previewImg.src = e.target.result;
+                            imgWrap.style.display    = 'block';
+                            headerWrap.style.display = 'none';
+                        };
+                        reader.readAsDataURL(imgFile);
+                    } else {
+                        @if(!empty($settings['popup_image']))
+                        previewImg.src = '{{ asset('storage/' . $settings['popup_image']) }}';
+                        imgWrap.style.display    = 'block';
+                        headerWrap.style.display = 'none';
+                        @else
+                        imgWrap.style.display    = 'none';
+                        headerWrap.style.display = 'block';
+                        @endif
+                    }
+
+                    var overlay = document.getElementById('gmsAdminPreview');
+                    overlay.style.display = 'flex';
+                }
+                function gmsCloseAdminPreview() {
+                    document.getElementById('gmsAdminPreview').style.display = 'none';
+                }
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape') gmsCloseAdminPreview();
+                });
+                </script>
 
             </div>
 
+        </form>
+
             <!-- Kaydet Butonu (Diğer sekmelerle aynı konum: sayfanın sağ alt köşesi - tüm sekme içeriklerinin altında) -->
             <div id="save-button-container" class="mt-8 flex justify-end border-t pt-6">
-                <button type="button" onclick="syncFooterFieldsIfActive(); document.getElementById('settingsForm').submit();" class="px-8 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-bold shadow-lg flex items-center gap-2">
+                <button type="button" onclick="document.getElementById('settingsForm').submit();" class="px-8 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-bold shadow-lg flex items-center gap-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                     </svg>
@@ -992,7 +1101,7 @@ function toggleMaintenanceStatus(isActive) {
     }
 }
 
-// Form gönderilirken Footer sekmesindeyse, Footer textarea değerlerini gizli alanlara kopyala (form dışında oldukları için)
+// Form gönderilirken: Footer ve Pop-up (form dışındaki tab) alanlarını gizli alanlara kopyala
 function syncFooterFieldsIfActive(form) {
     if (window.currentSettingsTab === 'footer') {
         var aboutEl = document.getElementById('textarea_footer_about_text');
@@ -1002,6 +1111,25 @@ function syncFooterFieldsIfActive(form) {
         if (aboutEl && hiddenAbout) hiddenAbout.value = aboutEl.value;
         if (copyrightEl && hiddenCopyright) hiddenCopyright.value = copyrightEl.value;
     }
+    // Pop-up alanları form dışında; her gönderimde güncel değerleri gizli alanlara yaz ki API'ye gitsin
+    var popupCheckbox = document.getElementById('popup_status');
+    var hiddenPopupStatus = document.getElementById('form_hidden_popup_status');
+    if (popupCheckbox && hiddenPopupStatus) hiddenPopupStatus.value = popupCheckbox.checked ? '1' : '0';
+    var popupTitle = document.getElementById('popup_title');
+    var popupText = document.getElementById('popup_text');
+    var popupLink = document.getElementById('popup_link');
+    var popupButtonText = document.getElementById('popup_button_text');
+    var popupFreq = document.getElementById('popup_display_frequency');
+    var hTitle = document.getElementById('form_hidden_popup_title');
+    var hText = document.getElementById('form_hidden_popup_text');
+    var hLink = document.getElementById('form_hidden_popup_link');
+    var hBtn = document.getElementById('form_hidden_popup_button_text');
+    var hFreq = document.getElementById('form_hidden_popup_display_frequency');
+    if (popupTitle && hTitle) hTitle.value = popupTitle.value || '';
+    if (popupText && hText) hText.value = popupText.value || '';
+    if (popupLink && hLink) hLink.value = popupLink.value || '';
+    if (popupButtonText && hBtn) hBtn.value = popupButtonText.value || '';
+    if (popupFreq && hFreq) hFreq.value = popupFreq.value || 'daily';
     return true;
 }
 

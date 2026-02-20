@@ -71,49 +71,7 @@
         transform: rotate(180deg);
     }
 
-    .hero-custom-dropdown-panel {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        z-index: 50;
-        background: white;
-        margin-top: 0.5rem;
-        max-height: 300px;
-        overflow-y: auto;
-    }
-    
-    .hero-custom-dropdown-panel.open {
-        display: block;
-        animation: dropdownFade 0.2s ease-out;
-    }
-    
-    @keyframes dropdownFade {
-        from { opacity: 0; transform: translateY(-10px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-
-    .hero-custom-dropdown-option {
-        padding: 0.75rem 1rem;
-        cursor: pointer;
-        transition: all 0.2s;
-    }
-
-    .hero-custom-dropdown-option:hover {
-        background-color: #f9fafb;
-        color: #e11d48;
-    }
-
-    .hero-custom-dropdown-option.selected {
-        background-color: #fff1f2;
-        color: #e11d48;
-        font-weight: 700;
-    }
-    
-    #new-category-input {
-        border-top: 2px solid #e5e7eb;
-    }
+    #new-category-input { border-top: 2px solid #e5e7eb; }
 </style>
 @endpush
 
@@ -199,33 +157,26 @@
                         <label class="block text-sm font-bold text-gray-700 mb-2">
                             Kategori <span class="text-red-500">*</span>
                         </label>
-                        <div class="relative hero-custom-dropdown" data-dropdown="category">
-                            <button type="button" 
-                                    class="hero-custom-dropdown-trigger w-full flex items-center justify-between px-4 py-3 bg-white border border-gray-200 rounded-xl text-gray-900 font-medium hover:border-primary-500 transition-all"
-                                    aria-expanded="false" aria-haspopup="listbox">
-                                <span class="selected-text">{{ old('category', $post->category) ?? 'Kategori Seçin' }}</span>
-                                <svg class="arrow w-5 h-5 text-gray-400 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        <div class="adm-dd" data-adm-dd>
+                            <input type="hidden" name="category" id="category-input" value="{{ old('category', $post->category) }}" required>
+                            <button type="button" class="adm-dd-btn" data-adm-trigger>
+                                <span data-adm-label>{{ old('category', $post->category) ?? 'Kategori Seçin' }}</span>
+                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                             </button>
-                            <div class="hero-custom-dropdown-panel rounded-xl shadow-xl border border-gray-100" role="listbox">
+                            <ul class="adm-dd-list" data-adm-list style="max-height:260px;overflow-y:auto;">
                                 @foreach($categories as $cat)
-                                <div class="hero-custom-dropdown-option {{ old('category', $post->category) === $cat ? 'selected' : '' }}" data-value="{{ $cat }}" role="option">{{ $cat }}</div>
+                                <li data-value="{{ $cat }}" class="{{ old('category', $post->category) === $cat ? 'selected' : '' }}">{{ $cat }}</li>
                                 @endforeach
-                                <div class="p-3 border-t-2 border-gray-200 bg-gray-50" id="new-category-input">
-                                    <label class="block text-xs font-bold text-gray-600 mb-2">YENİ KATEGORİ EKLE</label>
+                                <li id="new-category-input" style="padding:10px 12px;background:#f9fafb;cursor:default;" onclick="event.stopPropagation()">
+                                    <div class="text-xs font-bold text-gray-500 mb-1.5">YENİ KATEGORİ EKLE</div>
                                     <div class="flex gap-2">
-                                        <input type="text" 
-                                               id="new-category-field"
-                                               placeholder="Yeni kategori adı..."
-                                               class="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500">
-                                        <button type="button" 
-                                                onclick="addNewCategory()"
-                                                class="px-4 py-2 bg-primary-600 text-white text-sm font-bold rounded-lg hover:bg-primary-700 transition-all">
-                                            Ekle
-                                        </button>
+                                        <input type="text" id="new-category-field" placeholder="Kategori adı..."
+                                               onclick="event.stopPropagation()"
+                                               class="flex-1 px-2 py-1.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-red-400" style="font-weight:400;color:#111827;">
+                                        <button type="button" onclick="addNewCategory()" style="padding:5px 12px;background:#dc2626;color:#fff;font-size:12px;font-weight:700;border-radius:6px;border:none;cursor:pointer;">Ekle</button>
                                     </div>
-                                </div>
-                            </div>
-                            <input type="hidden" name="category" id="category-input" value="{{ old('category', $post->category) }}" required class="hero-custom-dropdown-native">
+                                </li>
+                            </ul>
                         </div>
                         @error('category')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -511,104 +462,40 @@
             }
         });
 
-        // Category Dropdown Handler
-        const categoryDropdown = document.querySelector('[data-dropdown="category"]');
-        if (categoryDropdown) {
-            const trigger = categoryDropdown.querySelector('.hero-custom-dropdown-trigger');
-            const panel = categoryDropdown.querySelector('.hero-custom-dropdown-panel');
-            const hiddenInput = document.getElementById('category-input');
-            const selectedText = trigger.querySelector('.selected-text');
-
-            trigger.addEventListener('click', e => {
-                e.stopPropagation();
-                const isOpen = panel.classList.contains('open');
-                panel.classList.toggle('open');
-                trigger.setAttribute('aria-expanded', !isOpen);
-            });
-
-            categoryDropdown.querySelectorAll('.hero-custom-dropdown-option').forEach(opt => {
-                opt.addEventListener('click', () => {
-                    const value = opt.dataset.value;
-                    hiddenInput.value = value;
-                    selectedText.textContent = value;
-                    
-                    // Remove selected class from all options
-                    categoryDropdown.querySelectorAll('.hero-custom-dropdown-option').forEach(o => {
-                        o.classList.remove('selected');
-                    });
-                    opt.classList.add('selected');
-                    
-                    panel.classList.remove('open');
-                    trigger.setAttribute('aria-expanded', 'false');
-                });
-            });
-
-            // Close dropdown on outside click
-            document.addEventListener('click', () => {
-                if (panel.classList.contains('open')) {
-                    panel.classList.remove('open');
-                    trigger.setAttribute('aria-expanded', 'false');
-                }
-            });
-
-            // Prevent closing when clicking inside the new category input
-            document.getElementById('new-category-input').addEventListener('click', (e) => {
-                e.stopPropagation();
-            });
-        }
     });
 
     // Add New Category Function
     function addNewCategory() {
         const input = document.getElementById('new-category-field');
         const newCategory = input.value.trim();
-        
-        if (!newCategory) {
-            alert('Lütfen kategori adı girin!');
-            return;
-        }
-        
-        const categoryDropdown = document.querySelector('[data-dropdown="category"]');
-        const panel = categoryDropdown.querySelector('.hero-custom-dropdown-panel');
+        if (!newCategory) { alert('Lütfen kategori adı girin!'); return; }
+
+        const dd       = document.querySelector('[data-adm-dd]');
+        const list     = dd.querySelector('[data-adm-list]');
         const hiddenInput = document.getElementById('category-input');
-        const selectedText = categoryDropdown.querySelector('.selected-text');
-        const newCategoryInput = document.getElementById('new-category-input');
-        
-        // Create new option
-        const newOption = document.createElement('div');
-        newOption.className = 'hero-custom-dropdown-option selected';
-        newOption.setAttribute('data-value', newCategory);
-        newOption.setAttribute('role', 'option');
-        newOption.textContent = newCategory;
-        
-        // Remove selected class from all existing options
-        categoryDropdown.querySelectorAll('.hero-custom-dropdown-option').forEach(o => {
-            o.classList.remove('selected');
-        });
-        
-        // Add click handler to new option
-        newOption.addEventListener('click', () => {
+        const label    = dd.querySelector('[data-adm-label]');
+        const btn      = dd.querySelector('[data-adm-trigger]');
+        const newCatLi = document.getElementById('new-category-input');
+
+        const li = document.createElement('li');
+        li.dataset.value = newCategory;
+        li.textContent = newCategory;
+        li.className = 'selected';
+        li.addEventListener('click', () => {
             hiddenInput.value = newCategory;
-            selectedText.textContent = newCategory;
-            
-            categoryDropdown.querySelectorAll('.hero-custom-dropdown-option').forEach(o => {
-                o.classList.remove('selected');
-            });
-            newOption.classList.add('selected');
-            
-            panel.classList.remove('open');
+            label.textContent = newCategory;
+            list.querySelectorAll('li').forEach(l => l.classList.remove('selected'));
+            li.classList.add('selected');
+            list.classList.remove('open'); btn.classList.remove('open');
         });
-        
-        // Insert before the new category input section
-        panel.insertBefore(newOption, newCategoryInput);
-        
-        // Set as selected
+
+        list.querySelectorAll('li').forEach(l => l.classList.remove('selected'));
+        list.insertBefore(li, newCatLi);
+
         hiddenInput.value = newCategory;
-        selectedText.textContent = newCategory;
-        
-        // Clear input and close dropdown
+        label.textContent = newCategory;
         input.value = '';
-        panel.classList.remove('open');
+        list.classList.remove('open'); btn.classList.remove('open');
     }
 
     // Allow Enter key to add category

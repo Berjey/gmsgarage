@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Pagination\Paginator;
 use App\Models\Setting;
 
 class AppServiceProvider extends ServiceProvider
@@ -29,5 +30,8 @@ class AppServiceProvider extends ServiceProvider
         });
         
         View::share('settings', $settings);
+
+        // Tüm sayfalamada özel pagination view'ını kullan
+        Paginator::defaultView('vendor.pagination.default');
     }
 }

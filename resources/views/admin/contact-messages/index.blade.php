@@ -5,51 +5,50 @@
 
 @push('styles')
 <style>
-    /* Message preview line clamp */
     .message-preview {
         display: -webkit-box;
         -webkit-line-clamp: 1;
         -webkit-box-orient: vertical;
         overflow: hidden;
     }
-    
-    .hero-custom-dropdown-panel {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        z-index: 50;
-        background: white;
-        margin-top: 0.5rem;
-    }
-    
-    .hero-custom-dropdown-panel.open {
-        display: block;
-        animation: dropdownFade 0.2s ease-out;
-    }
-    
-    @keyframes dropdownFade {
-        from { opacity: 0; transform: translateY(-10px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-
-    .hero-custom-dropdown-option {
-        padding: 0.75rem 1rem;
+    .adm-dd { position: relative; width: 100%; }
+    .adm-dd-btn {
+        display: flex; align-items: center; justify-content: space-between;
+        width: 100%; height: 42px;
+        padding: 0 0.875rem;
+        background: #fff;
+        border: 1.5px solid #e5e7eb;
+        border-radius: 8px;
+        font-size: 0.875rem; font-weight: 500; color: #111827;
         cursor: pointer;
-        transition: all 0.2s;
+        transition: border-color 0.15s, box-shadow 0.15s;
+        text-align: left;
     }
+    .adm-dd-btn:hover,
+    .adm-dd-btn.open { border-color: #dc2626; box-shadow: 0 0 0 3px rgba(220,38,38,0.1); }
+    .adm-dd-btn svg { flex-shrink: 0; color: #9ca3af; transition: transform 0.15s; }
+    .adm-dd-btn.open svg { transform: rotate(180deg); }
 
-    .hero-custom-dropdown-option:hover {
-        background-color: #f9fafb;
-        color: #e11d48;
+    .adm-dd-list {
+        display: none;
+        position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+        background: #fff;
+        border: 1.5px solid #e5e7eb;
+        border-radius: 8px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        z-index: 200;
+        overflow: hidden;
     }
-
-    .hero-custom-dropdown-option.selected {
-        background-color: #fff1f2;
-        color: #e11d48;
-        font-weight: 700;
+    .adm-dd-list.open { display: block; }
+    .adm-dd-list li {
+        padding: 0.6rem 0.875rem;
+        font-size: 0.875rem; font-weight: 500; color: #374151;
+        cursor: pointer;
+        transition: background 0.1s, color 0.1s;
+        list-style: none;
     }
+    .adm-dd-list li:hover    { background: rgba(220,38,38,0.07); color: #dc2626; }
+    .adm-dd-list li.selected { background: rgba(220,38,38,0.1);  color: #dc2626; font-weight: 600; }
 </style>
 @endpush
 
@@ -95,53 +94,39 @@
                         </div>
                     </div>
 
-                    <!-- Dropdowns -->
-                    <div class="relative hero-custom-dropdown" data-dropdown="filter-status">
-                        <button type="button" 
-                                class="hero-custom-dropdown-trigger w-full flex items-center justify-between px-4 py-3 bg-white border border-gray-200 rounded-xl text-gray-700 font-medium hover:border-primary-500 transition-all"
-                                aria-expanded="false" aria-haspopup="listbox">
-                            <span class="selected-text">{{ $filter === 'unread' ? 'Okunmamış' : ($filter === 'read' ? 'Okunmuş' : 'Tüm Mesajlar') }}</span>
-                            <svg class="arrow w-5 h-5 text-gray-400 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    <!-- Durum Filtresi -->
+                    <div class="adm-dd" data-adm-dd data-submit="filter-form">
+                        <input type="hidden" name="filter" value="{{ $filter }}">
+                        <button type="button" class="adm-dd-btn" data-adm-trigger>
+                            <span data-adm-label>{{ $filter === 'unread' ? 'Okunmamış' : ($filter === 'read' ? 'Okunmuş' : 'Tüm Mesajlar') }}</span>
+                            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                         </button>
-                        <div class="hero-custom-dropdown-panel rounded-xl shadow-xl border border-gray-100" role="listbox">
-                            <div class="hero-custom-dropdown-option {{ $filter === 'all' ? 'selected' : '' }}" data-value="all" role="option">Tüm Mesajlar</div>
-                            <div class="hero-custom-dropdown-option {{ $filter === 'unread' ? 'selected' : '' }}" data-value="unread" role="option">Okunmamış</div>
-                            <div class="hero-custom-dropdown-option {{ $filter === 'read' ? 'selected' : '' }}" data-value="read" role="option">Okunmuş</div>
-                        </div>
-                        <select name="filter" class="hero-custom-dropdown-native hidden">
-                            <option value="all" {{ $filter === 'all' ? 'selected' : '' }}>Tümü</option>
-                            <option value="unread" {{ $filter === 'unread' ? 'selected' : '' }}>Okunmamış</option>
-                            <option value="read" {{ $filter === 'read' ? 'selected' : '' }}>Okunmuş</option>
-                        </select>
+                        <ul class="adm-dd-list" data-adm-list>
+                            <li data-value="all"    class="{{ $filter === 'all'    ? 'selected' : '' }}">Tüm Mesajlar</li>
+                            <li data-value="unread" class="{{ $filter === 'unread' ? 'selected' : '' }}">Okunmamış</li>
+                            <li data-value="read"   class="{{ $filter === 'read'   ? 'selected' : '' }}">Okunmuş</li>
+                        </ul>
                     </div>
 
-                    <div class="relative hero-custom-dropdown" data-dropdown="sort-order">
-                        <button type="button" 
-                                class="hero-custom-dropdown-trigger w-full flex items-center justify-between px-4 py-3 bg-white border border-gray-200 rounded-xl text-gray-700 font-medium hover:border-primary-500 transition-all"
-                                aria-expanded="false" aria-haspopup="listbox">
-                            <span class="selected-text">{{ request('sort') === 'oldest' ? 'Eskiden Yeniye' : 'Yeniden Eskiye' }}</span>
-                            <svg class="arrow w-5 h-5 text-gray-400 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    <!-- Sıralama -->
+                    <div class="adm-dd" data-adm-dd data-submit="filter-form">
+                        <input type="hidden" name="sort" value="{{ request('sort', 'newest') }}">
+                        <button type="button" class="adm-dd-btn" data-adm-trigger>
+                            <span data-adm-label>{{ request('sort') === 'oldest' ? 'Eskiden Yeniye' : 'Yeniden Eskiye' }}</span>
+                            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                         </button>
-                        <div class="hero-custom-dropdown-panel rounded-xl shadow-xl border border-gray-100" role="listbox">
-                            <div class="hero-custom-dropdown-option {{ request('sort') !== 'oldest' ? 'selected' : '' }}" data-value="newest" role="option">Yeniden Eskiye</div>
-                            <div class="hero-custom-dropdown-option {{ request('sort') === 'oldest' ? 'selected' : '' }}" data-value="oldest" role="option">Eskiden Yeniye</div>
-                        </div>
-                        <select name="sort" class="hero-custom-dropdown-native hidden">
-                            <option value="newest" {{ request('sort') !== 'oldest' ? 'selected' : '' }}>Yeniden Eskiye</option>
-                            <option value="oldest" {{ request('sort') === 'oldest' ? 'selected' : '' }}>Eskiden Yeniye</option>
-                        </select>
+                        <ul class="adm-dd-list" data-adm-list>
+                            <li data-value="newest" class="{{ request('sort') !== 'oldest' ? 'selected' : '' }}">Yeniden Eskiye</li>
+                            <li data-value="oldest" class="{{ request('sort') === 'oldest' ? 'selected' : '' }}">Eskiden Yeniye</li>
+                        </ul>
                     </div>
                 </div>
 
-                <div class="flex items-center justify-end gap-3 pt-2">
-                    <a href="{{ route('admin.contact-messages.index') }}" 
-                       class="px-6 py-2.5 bg-white text-gray-600 font-bold rounded-xl border border-gray-200 hover:bg-gray-50 transition-all shadow-sm">
-                        Sıfırla
+                <div class="flex items-center justify-end gap-3 pt-1">
+                    <a href="{{ route('admin.contact-messages.index') }}"
+                       class="px-5 py-2 text-sm font-medium text-gray-500 hover:text-red-600 transition-colors">
+                        Filtreleri Sıfırla
                     </a>
-                    <button type="submit" 
-                            class="px-8 py-2.5 bg-gray-800 text-white font-bold rounded-xl hover:bg-gray-900 transition-all shadow-lg shadow-gray-500/25">
-                        Filtrele
-                    </button>
                 </div>
         </form>
     </div>
@@ -254,51 +239,6 @@
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // [PATCH #4.3] Idempotent Unified Dropdown Handler with Guardrails
-        const initDropdowns = () => {
-            document.querySelectorAll('.hero-custom-dropdown:not([data-initialized])').forEach(dropdown => {
-                const trigger = dropdown.querySelector('.hero-custom-dropdown-trigger');
-                const panel = dropdown.querySelector('.hero-custom-dropdown-panel');
-                const select = dropdown.querySelector('.hero-custom-dropdown-native');
-
-                trigger.addEventListener('click', e => {
-                    e.stopPropagation();
-                    const isOpen = panel.classList.contains('open');
-                    
-                    // Close other open dropdowns
-                    document.querySelectorAll('.hero-custom-dropdown-panel.open').forEach(p => {
-                        if (p !== panel) {
-                            p.classList.remove('open');
-                            p.closest('.hero-custom-dropdown').querySelector('.hero-custom-dropdown-trigger').setAttribute('aria-expanded', 'false');
-                        }
-                    });
-
-                    // Toggle current
-                    panel.classList.toggle('open');
-                    trigger.setAttribute('aria-expanded', !isOpen);
-                });
-
-                dropdown.querySelectorAll('.hero-custom-dropdown-option').forEach(opt => {
-                    opt.addEventListener('click', () => {
-                        select.value = opt.dataset.value;
-                        document.getElementById('filter-form').submit();
-                    });
-                });
-
-                dropdown.setAttribute('data-initialized', '1');
-            });
-        };
-
-        initDropdowns();
-
-        // Single global outside click handler for all initialized dropdowns
-        document.addEventListener('click', () => {
-            document.querySelectorAll('.hero-custom-dropdown-panel.open').forEach(p => {
-                p.classList.remove('open');
-                p.closest('.hero-custom-dropdown').querySelector('.hero-custom-dropdown-trigger').setAttribute('aria-expanded', 'false');
-            });
-        });
-
         // Bulk Selection
         const checkboxes = document.querySelectorAll('.message-checkbox');
         const bulkBar = document.getElementById('bulk-actions-bar');

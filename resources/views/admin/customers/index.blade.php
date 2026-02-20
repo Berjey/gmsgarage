@@ -41,7 +41,7 @@
 
     <!-- Search & Filter -->
     <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-        <form method="GET" action="{{ route('admin.customers.index') }}" class="flex flex-wrap gap-4">
+        <form id="customers-filter-form" method="GET" action="{{ route('admin.customers.index') }}" class="flex flex-wrap gap-4">
             <div class="flex-1 min-w-[250px]">
                 <input type="text" 
                        name="search" 
@@ -49,13 +49,24 @@
                        placeholder="🔍 Ad, email veya telefon ara..."
                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500">
             </div>
-            <div class="min-w-[200px]">
-                <select name="source" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500">
-                    <option value="">Tüm Kaynaklar</option>
-                    <option value="contact_form" {{ request('source') == 'contact_form' ? 'selected' : '' }}>İletişim Formu</option>
-                    <option value="vehicle_request" {{ request('source') == 'vehicle_request' ? 'selected' : '' }}>Araç İsteği</option>
-                    <option value="evaluation_request" {{ request('source') == 'evaluation_request' ? 'selected' : '' }}>Değerleme Talebi</option>
-                </select>
+            <div class="adm-dd" data-adm-dd data-submit="customers-filter-form" style="width:210px;flex-shrink:0;">
+                <input type="hidden" name="source" value="{{ request('source') }}">
+                <button type="button" class="adm-dd-btn" data-adm-trigger>
+                    <span data-adm-label>
+                        @if(request('source') == 'contact_form') İletişim Formu
+                        @elseif(request('source') == 'vehicle_request') Araç İsteği
+                        @elseif(request('source') == 'evaluation_request') Değerleme Talebi
+                        @else Tüm Kaynaklar
+                        @endif
+                    </span>
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </button>
+                <ul class="adm-dd-list" data-adm-list>
+                    <li data-value=""                    class="{{ !request('source') ? 'selected' : '' }}">Tüm Kaynaklar</li>
+                    <li data-value="contact_form"        class="{{ request('source') == 'contact_form'        ? 'selected' : '' }}">İletişim Formu</li>
+                    <li data-value="vehicle_request"     class="{{ request('source') == 'vehicle_request'     ? 'selected' : '' }}">Araç İsteği</li>
+                    <li data-value="evaluation_request"  class="{{ request('source') == 'evaluation_request'  ? 'selected' : '' }}">Değerleme Talebi</li>
+                </ul>
             </div>
             <button type="submit" class="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors">
                 Filtrele

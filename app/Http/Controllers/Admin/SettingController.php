@@ -63,8 +63,8 @@ class SettingController extends Controller
             'footer_copyright' => 'nullable|string|max:500',
             'footer_bottom_links' => 'nullable|array',
             
-            // Pop-up Kampanya
-            'popup_status' => 'nullable|in:1',
+            // Pop-up Kampanya (0 = kapalı, 1 = açık)
+            'popup_status' => 'nullable|in:0,1',
             'popup_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'popup_title' => 'nullable|string|max:255',
             'popup_text' => 'nullable|string|max:1000',

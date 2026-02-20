@@ -4,45 +4,6 @@
 @section('page-title', 'Blog Yönetimi')
 
 @push('styles')
-<style>
-    .hero-custom-dropdown-panel {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        z-index: 50;
-        background: white;
-        margin-top: 0.5rem;
-    }
-    
-    .hero-custom-dropdown-panel.open {
-        display: block;
-        animation: dropdownFade 0.2s ease-out;
-    }
-    
-    @keyframes dropdownFade {
-        from { opacity: 0; transform: translateY(-10px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-
-    .hero-custom-dropdown-option {
-        padding: 0.75rem 1rem;
-        cursor: pointer;
-        transition: all 0.2s;
-    }
-
-    .hero-custom-dropdown-option:hover {
-        background-color: #f9fafb;
-        color: #e11d48;
-    }
-
-    .hero-custom-dropdown-option.selected {
-        background-color: #fff1f2;
-        color: #e11d48;
-        font-weight: 700;
-    }
-</style>
 @endpush
 
 @section('content')
@@ -102,81 +63,59 @@
                         </div>
                     </div>
 
-                    <!-- Category Filter Dropdown -->
-                    <div class="relative hero-custom-dropdown" data-dropdown="filter-category">
-                        <button type="button" 
-                                class="hero-custom-dropdown-trigger w-full flex items-center justify-between px-4 py-3 bg-white border border-gray-200 rounded-xl text-gray-700 font-medium hover:border-primary-500 transition-all"
-                                aria-expanded="false" aria-haspopup="listbox">
-                            <span class="selected-text">
-                                {{ request('category') ? request('category') : 'Tüm Kategoriler' }}
-                            </span>
-                            <svg class="arrow w-5 h-5 text-gray-400 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    <!-- Kategori Filtresi -->
+                    <div class="adm-dd" data-adm-dd data-submit="filter-form">
+                        <input type="hidden" name="category" value="{{ request('category') }}">
+                        <button type="button" class="adm-dd-btn" data-adm-trigger>
+                            <span data-adm-label>{{ request('category') ?: 'Tüm Kategoriler' }}</span>
+                            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                         </button>
-                        <div class="hero-custom-dropdown-panel rounded-xl shadow-xl border border-gray-100 max-h-60 overflow-y-auto" role="listbox">
-                            <div class="hero-custom-dropdown-option {{ !request('category') ? 'selected' : '' }}" data-value="" role="option">Tüm Kategoriler</div>
+                        <ul class="adm-dd-list" data-adm-list style="max-height:220px;overflow-y:auto;">
+                            <li data-value="" class="{{ !request('category') ? 'selected' : '' }}">Tüm Kategoriler</li>
                             @foreach($categories as $cat)
-                            <div class="hero-custom-dropdown-option {{ request('category') === $cat ? 'selected' : '' }}" data-value="{{ $cat }}" role="option">{{ $cat }}</div>
+                            <li data-value="{{ $cat }}" class="{{ request('category') === $cat ? 'selected' : '' }}">{{ $cat }}</li>
                             @endforeach
-                        </div>
-                        <select name="category" class="hero-custom-dropdown-native hidden">
-                            <option value="">Tüm Kategoriler</option>
-                            @foreach($categories as $cat)
-                            <option value="{{ $cat }}" {{ request('category') === $cat ? 'selected' : '' }}>{{ $cat }}</option>
-                            @endforeach
-                        </select>
+                        </ul>
                     </div>
 
-                    <!-- Status Filter Dropdown -->
-                    <div class="relative hero-custom-dropdown" data-dropdown="filter-status">
-                        <button type="button" 
-                                class="hero-custom-dropdown-trigger w-full flex items-center justify-between px-4 py-3 bg-white border border-gray-200 rounded-xl text-gray-700 font-medium hover:border-primary-500 transition-all"
-                                aria-expanded="false" aria-haspopup="listbox">
-                            <span class="selected-text">
+                    <!-- Durum Filtresi -->
+                    <div class="adm-dd" data-adm-dd data-submit="filter-form">
+                        <input type="hidden" name="status" value="{{ request('status') }}">
+                        <button type="button" class="adm-dd-btn" data-adm-trigger>
+                            <span data-adm-label>
                                 @if(request('status') === 'published') Yayında
                                 @elseif(request('status') === 'draft') Taslak
                                 @elseif(request('status') === 'featured') Öne Çıkan
                                 @else Tüm Durumlar
                                 @endif
                             </span>
-                            <svg class="arrow w-5 h-5 text-gray-400 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                         </button>
-                        <div class="hero-custom-dropdown-panel rounded-xl shadow-xl border border-gray-100" role="listbox">
-                            <div class="hero-custom-dropdown-option {{ !request('status') ? 'selected' : '' }}" data-value="" role="option">Tüm Durumlar</div>
-                            <div class="hero-custom-dropdown-option {{ request('status') === 'published' ? 'selected' : '' }}" data-value="published" role="option">Yayında</div>
-                            <div class="hero-custom-dropdown-option {{ request('status') === 'draft' ? 'selected' : '' }}" data-value="draft" role="option">Taslak</div>
-                            <div class="hero-custom-dropdown-option {{ request('status') === 'featured' ? 'selected' : '' }}" data-value="featured" role="option">Öne Çıkan</div>
-                        </div>
-                        <select name="status" class="hero-custom-dropdown-native hidden">
-                            <option value="">Tüm Durumlar</option>
-                            <option value="published" {{ request('status') === 'published' ? 'selected' : '' }}>Yayında</option>
-                            <option value="draft" {{ request('status') === 'draft' ? 'selected' : '' }}>Taslak</option>
-                            <option value="featured" {{ request('status') === 'featured' ? 'selected' : '' }}>Öne Çıkan</option>
-                        </select>
+                        <ul class="adm-dd-list" data-adm-list>
+                            <li data-value=""          class="{{ !request('status') ? 'selected' : '' }}">Tüm Durumlar</li>
+                            <li data-value="published" class="{{ request('status') === 'published' ? 'selected' : '' }}">Yayında</li>
+                            <li data-value="draft"     class="{{ request('status') === 'draft'     ? 'selected' : '' }}">Taslak</li>
+                            <li data-value="featured"  class="{{ request('status') === 'featured'  ? 'selected' : '' }}">Öne Çıkan</li>
+                        </ul>
                     </div>
 
-                    <!-- Sort Order Dropdown -->
-                    <div class="relative hero-custom-dropdown" data-dropdown="sort-order">
-                        <button type="button" 
-                                class="hero-custom-dropdown-trigger w-full flex items-center justify-between px-4 py-3 bg-white border border-gray-200 rounded-xl text-gray-700 font-medium hover:border-primary-500 transition-all"
-                                aria-expanded="false" aria-haspopup="listbox">
-                            <span class="selected-text">
+                    <!-- Sıralama -->
+                    <div class="adm-dd" data-adm-dd data-submit="filter-form">
+                        <input type="hidden" name="sort" value="{{ request('sort') }}">
+                        <button type="button" class="adm-dd-btn" data-adm-trigger>
+                            <span data-adm-label>
                                 @if(request('sort') === 'oldest') Eskiden Yeniye
                                 @elseif(request('sort') === 'views') En Çok Görüntülenen
                                 @else Yeniden Eskiye
                                 @endif
                             </span>
-                            <svg class="arrow w-5 h-5 text-gray-400 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                         </button>
-                        <div class="hero-custom-dropdown-panel rounded-xl shadow-xl border border-gray-100" role="listbox">
-                            <div class="hero-custom-dropdown-option {{ !request('sort') || request('sort') === 'newest' ? 'selected' : '' }}" data-value="" role="option">Yeniden Eskiye</div>
-                            <div class="hero-custom-dropdown-option {{ request('sort') === 'oldest' ? 'selected' : '' }}" data-value="oldest" role="option">Eskiden Yeniye</div>
-                            <div class="hero-custom-dropdown-option {{ request('sort') === 'views' ? 'selected' : '' }}" data-value="views" role="option">En Çok Görüntülenen</div>
-                        </div>
-                        <select name="sort" class="hero-custom-dropdown-native hidden">
-                            <option value="">Yeniden Eskiye</option>
-                            <option value="oldest" {{ request('sort') === 'oldest' ? 'selected' : '' }}>Eskiden Yeniye</option>
-                            <option value="views" {{ request('sort') === 'views' ? 'selected' : '' }}>En Çok Görüntülenen</option>
-                        </select>
+                        <ul class="adm-dd-list" data-adm-list>
+                            <li data-value=""       class="{{ !request('sort') || request('sort') === 'newest' ? 'selected' : '' }}">Yeniden Eskiye</li>
+                            <li data-value="oldest" class="{{ request('sort') === 'oldest' ? 'selected' : '' }}">Eskiden Yeniye</li>
+                            <li data-value="views"  class="{{ request('sort') === 'views'  ? 'selected' : '' }}">En Çok Görüntülenen</li>
+                        </ul>
                     </div>
                 </div>
             </form>
@@ -302,13 +241,18 @@
             <div class="text-sm font-bold text-gray-500 uppercase tracking-widest">
                 {{ $posts->firstItem() }}-{{ $posts->lastItem() }} / {{ $posts->total() }} YAZI
             </div>
-            <div class="flex items-center gap-4 font-bold">
-                <select onchange="window.location.href='{{ request()->fullUrlWithQuery(['per_page' => '__PER_PAGE__', 'page' => 1]) }}'.replace('__PER_PAGE__', this.value)"
-                        class="bg-white border border-gray-200 rounded-xl px-3 py-1.5 focus:ring-primary-500/20 transition-all">
-                    <option value="15" {{ request('per_page', 15) == 15 ? 'selected' : '' }}>15</option>
-                    <option value="25" {{ request('per_page') == 25 ? 'selected' : '' }}>25</option>
-                    <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>50</option>
-                </select>
+            <div class="flex items-center gap-3">
+                <div class="adm-dd" data-adm-dd style="width:80px;">
+                    <button type="button" class="adm-dd-btn" data-adm-trigger style="height:38px;padding:0 10px;">
+                        <span data-adm-label>{{ request('per_page', 15) }}</span>
+                        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <ul class="adm-dd-list" data-adm-list>
+                        <li data-value="15"  data-href="{{ request()->fullUrlWithQuery(['per_page' => 15,  'page' => 1]) }}" class="{{ request('per_page', 15) == 15  ? 'selected' : '' }}">15</li>
+                        <li data-value="25"  data-href="{{ request()->fullUrlWithQuery(['per_page' => 25,  'page' => 1]) }}" class="{{ request('per_page') == 25    ? 'selected' : '' }}">25</li>
+                        <li data-value="50"  data-href="{{ request()->fullUrlWithQuery(['per_page' => 50,  'page' => 1]) }}" class="{{ request('per_page') == 50    ? 'selected' : '' }}">50</li>
+                    </ul>
+                </div>
                 {{ $posts->links() }}
             </div>
         </div>
@@ -327,51 +271,6 @@
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // Dropdown Handler
-        const initDropdowns = () => {
-            document.querySelectorAll('.hero-custom-dropdown:not([data-initialized])').forEach(dropdown => {
-                const trigger = dropdown.querySelector('.hero-custom-dropdown-trigger');
-                const panel = dropdown.querySelector('.hero-custom-dropdown-panel');
-                const select = dropdown.querySelector('.hero-custom-dropdown-native');
-
-                trigger.addEventListener('click', e => {
-                    e.stopPropagation();
-                    const isOpen = panel.classList.contains('open');
-                    
-                    // Close other dropdowns
-                    document.querySelectorAll('.hero-custom-dropdown-panel.open').forEach(p => {
-                        if (p !== panel) {
-                            p.classList.remove('open');
-                            p.closest('.hero-custom-dropdown').querySelector('.hero-custom-dropdown-trigger').setAttribute('aria-expanded', 'false');
-                        }
-                    });
-
-                    // Toggle current
-                    panel.classList.toggle('open');
-                    trigger.setAttribute('aria-expanded', !isOpen);
-                });
-
-                dropdown.querySelectorAll('.hero-custom-dropdown-option').forEach(opt => {
-                    opt.addEventListener('click', () => {
-                        select.value = opt.dataset.value;
-                        document.getElementById('filter-form').submit();
-                    });
-                });
-
-                dropdown.setAttribute('data-initialized', '1');
-            });
-        };
-
-        initDropdowns();
-
-        // Close dropdowns on outside click
-        document.addEventListener('click', () => {
-            document.querySelectorAll('.hero-custom-dropdown-panel.open').forEach(p => {
-                p.classList.remove('open');
-                p.closest('.hero-custom-dropdown').querySelector('.hero-custom-dropdown-trigger').setAttribute('aria-expanded', 'false');
-            });
-        });
-
         // Search on Enter key
         const searchInput = document.getElementById('search-input');
         if (searchInput) {

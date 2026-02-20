@@ -27,16 +27,28 @@
 
     <!-- Filters -->
     <div class="p-6 border-b border-gray-200 bg-gray-50/30">
-        <form action="{{ route('admin.vehicles.index') }}" method="GET" class="flex flex-col md:flex-row gap-4">
+        <form id="vehicles-filter-form" action="{{ route('admin.vehicles.index') }}" method="GET" class="flex flex-col md:flex-row gap-4">
             <div class="flex-1">
                 <input type="text" name="search" value="{{ request('search') }}" placeholder="Marka, model veya başlık ara..." 
                        class="w-full px-4 py-3 border border-gray-200 rounded-xl bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all shadow-sm">
             </div>
-            <select name="status" class="px-4 py-3 border border-gray-200 rounded-xl bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all shadow-sm font-medium">
-                <option value="">Tüm Durumlar</option>
-                <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Aktif</option>
-                <option value="passive" {{ request('status') == 'passive' ? 'selected' : '' }}>Pasif</option>
-            </select>
+            <div class="adm-dd" data-adm-dd data-submit="vehicles-filter-form" style="width:200px;flex-shrink:0;">
+                <input type="hidden" name="status" value="{{ request('status') }}">
+                <button type="button" class="adm-dd-btn" data-adm-trigger>
+                    <span data-adm-label>
+                        @if(request('status') == 'active') Aktif
+                        @elseif(request('status') == 'passive') Pasif
+                        @else Tüm Durumlar
+                        @endif
+                    </span>
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </button>
+                <ul class="adm-dd-list" data-adm-list>
+                    <li data-value=""        class="{{ !request('status') ? 'selected' : '' }}">Tüm Durumlar</li>
+                    <li data-value="active"  class="{{ request('status') == 'active'  ? 'selected' : '' }}">Aktif</li>
+                    <li data-value="passive" class="{{ request('status') == 'passive' ? 'selected' : '' }}">Pasif</li>
+                </ul>
+            </div>
             <button type="submit" class="px-8 py-3 bg-gray-800 text-white font-bold rounded-xl hover:bg-gray-900 transition-all shadow-lg shadow-gray-500/25">
                 Filtrele
             </button>
@@ -121,7 +133,10 @@
 
     <!-- Pagination -->
     @if($vehicles->hasPages())
-    <div class="px-6 py-4 border-t border-gray-200 bg-gray-50/50">
+    <div class="px-6 py-4 border-t border-gray-200 bg-gray-50/50 flex items-center justify-between">
+        <div class="text-sm font-medium text-gray-500">
+            {{ $vehicles->firstItem() }}-{{ $vehicles->lastItem() }} / {{ $vehicles->total() }} araç
+        </div>
         {{ $vehicles->links() }}
     </div>
     @endif

@@ -108,6 +108,45 @@
         }
     </style>
     
+    <!-- adm-dd: Minimal Admin Dropdown -->
+    <style>
+        .adm-dd { position: relative; width: 100%; }
+        .adm-dd-btn {
+            display: flex; align-items: center; justify-content: space-between;
+            width: 100%; height: 42px;
+            padding: 0 0.875rem;
+            background: #fff;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 0.875rem; font-weight: 500; color: #111827;
+            cursor: pointer;
+            transition: border-color 0.15s, box-shadow 0.15s;
+            text-align: left;
+        }
+        .adm-dd-btn:hover,
+        .adm-dd-btn.open { border-color: #dc2626; box-shadow: 0 0 0 3px rgba(220,38,38,0.1); }
+        .adm-dd-btn svg  { flex-shrink: 0; color: #9ca3af; transition: transform 0.15s; }
+        .adm-dd-btn.open svg { transform: rotate(180deg); }
+        .adm-dd-list {
+            display: none;
+            position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+            background: #fff;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 8px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            z-index: 200; overflow: hidden;
+        }
+        .adm-dd-list.open { display: block; }
+        .adm-dd-list li {
+            padding: 0.6rem 0.875rem;
+            font-size: 0.875rem; font-weight: 500; color: #374151;
+            cursor: pointer; list-style: none;
+            transition: background 0.1s, color 0.1s;
+        }
+        .adm-dd-list li:hover    { background: rgba(220,38,38,0.07); color: #dc2626; }
+        .adm-dd-list li.selected { background: rgba(220,38,38,0.1);  color: #dc2626; font-weight: 600; }
+    </style>
+
     @stack('styles')
 </head>
 <body class="bg-gray-50 admin-body">
@@ -153,6 +192,59 @@
     
     @stack('scripts')
     
+    <!-- Global adm-dd handler -->
+    <script>
+    (function () {
+        function initAdmDd(root) {
+            (root || document).querySelectorAll('[data-adm-dd]:not([data-adm-ready])').forEach(function (dd) {
+                dd.setAttribute('data-adm-ready', '1');
+                var btn   = dd.querySelector('[data-adm-trigger]');
+                var list  = dd.querySelector('[data-adm-list]');
+                var input = dd.querySelector('input[type=hidden]');
+                var label = dd.querySelector('[data-adm-label]');
+                if (!btn || !list) return;
+
+                btn.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    var opening = !list.classList.contains('open');
+                    // close all others
+                    document.querySelectorAll('[data-adm-list].open').forEach(function (l) {
+                        if (l !== list) { l.classList.remove('open'); l.closest('[data-adm-dd]').querySelector('[data-adm-trigger]').classList.remove('open'); }
+                    });
+                    list.classList.toggle('open', opening);
+                    btn.classList.toggle('open', opening);
+                });
+
+                list.querySelectorAll('li[data-value]').forEach(function (li) {
+                    li.addEventListener('click', function () {
+                        // data-href: navigate directly (per_page selectors)
+                        if (li.dataset.href) { window.location.href = li.dataset.href; return; }
+                        if (input)  input.value = li.dataset.value;
+                        if (label)  { label.textContent = li.textContent.trim(); label.style.color = li.dataset.value ? '#111827' : ''; }
+                        list.querySelectorAll('li').forEach(function (l) { l.classList.remove('selected'); });
+                        li.classList.add('selected');
+                        list.classList.remove('open'); btn.classList.remove('open');
+                        // auto-submit if data-submit attribute set
+                        var formId = dd.getAttribute('data-submit');
+                        if (formId) { var f = document.getElementById(formId); if (f) f.submit(); }
+                    });
+                });
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function () { initAdmDd(); });
+        document.addEventListener('click', function () {
+            document.querySelectorAll('[data-adm-list].open').forEach(function (l) {
+                l.classList.remove('open');
+                var t = l.closest('[data-adm-dd]');
+                if (t) { var b = t.querySelector('[data-adm-trigger]'); if (b) b.classList.remove('open'); }
+            });
+        });
+        // expose for dynamic additions (e.g. addNewCategory)
+        window.initAdmDd = initAdmDd;
+    })();
+    </script>
+
     <!-- Admin Confirm Modal Script -->
     <script src="{{ asset('js/admin-confirm.js') }}"></script>
 </body>

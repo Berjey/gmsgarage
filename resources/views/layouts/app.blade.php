@@ -62,7 +62,7 @@
     
     @include('components.footer')
     
-    <!-- WhatsApp Sabit Butonu - Modern Design -->
+    <!-- WhatsApp Sabit Butonu -->
     @if(!empty($settings['contact_whatsapp']))
     <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $settings['contact_whatsapp']) }}?text=Merhaba, araçlarınız hakkında bilgi almak istiyorum." 
        target="_blank" 
@@ -73,69 +73,227 @@
         <span class="absolute -top-2 -right-2 w-4 h-4 bg-red-500 rounded-full animate-pulse"></span>
     </a>
     @endif
-    
-    <!-- Kampanya Pop-up Modal -->
-    @if(!empty($settings['popup_status']) && $settings['popup_status'] == '1')
-    <div id="campaignPopup" class="hidden fixed inset-0 z-[100] overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-        <!-- Backdrop - Blur Effect -->
-        <div class="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm transition-opacity" onclick="closeCampaignPopup()"></div>
-        
-        <!-- Modal Container -->
-        <div class="flex min-h-full items-center justify-center p-4">
-            <!-- Modal Content -->
-            <div class="relative transform overflow-hidden rounded-2xl bg-white shadow-2xl transition-all w-full max-w-lg">
-                
-                <!-- Close Button -->
-                <button type="button" 
-                        onclick="closeCampaignPopup()"
-                        class="absolute top-4 right-4 z-10 bg-white hover:bg-gray-100 text-gray-600 hover:text-gray-900 rounded-full p-2 shadow-lg transition-all duration-200 hover:scale-110">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                </button>
-                
-                <!-- Image (if exists) -->
-                @if(!empty($settings['popup_image']))
-                <div class="w-full">
-                    <img src="{{ asset('storage/' . $settings['popup_image']) }}" 
-                         alt="{{ $settings['popup_title'] ?? 'Kampanya' }}"
-                         class="w-full h-auto object-cover">
-                </div>
-                @endif
-                
-                <!-- Text Content -->
-                <div class="p-8 text-center">
-                    @if(!empty($settings['popup_title']))
-                    <h3 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-                        {{ $settings['popup_title'] }}
-                    </h3>
-                    @endif
-                    
-                    @if(!empty($settings['popup_text']))
-                    <p class="text-base text-gray-600 mb-6 leading-relaxed">
-                        {{ $settings['popup_text'] }}
-                    </p>
-                    @endif
-                    
-                    <!-- Action Button -->
-                    @if(!empty($settings['popup_link']))
-                    <a href="{{ $settings['popup_link'] }}" 
-                       class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-red-600 hover:bg-red-700 text-white font-bold text-lg rounded-xl transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl">
-                        {{ $settings['popup_button_text'] ?? 'Detayları İncele' }}
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
-                        </svg>
-                    </a>
-                    @endif
-                </div>
-                
+
+    <!-- ===== KAMPANYA POP-UP ===== -->
+    @php
+        $popupActive = !empty($settings['popup_status']) && ($settings['popup_status'] == '1' || $settings['popup_status'] === 1);
+    @endphp
+    @if($popupActive)
+
+    <style>
+        @keyframes gmsPopupIn {
+            from { opacity: 0; transform: translateY(16px) scale(0.97); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes gmsBdIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+        #campaignPopup {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+        #campaignPopup.is-open {
+            display: flex;
+        }
+        #campaignPopup .gms-bd {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.72);
+            animation: gmsBdIn 0.25s ease both;
+        }
+        #campaignPopup .gms-card {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 460px;
+            border-radius: 22px;
+            overflow: hidden;
+            background: #0f1117;
+            border: 1px solid rgba(220,38,38,0.22);
+            box-shadow: 0 28px 70px rgba(0,0,0,0.75);
+            animation: gmsPopupIn 0.38s cubic-bezier(0.22,1,0.36,1) both;
+        }
+        .gms-x {
+            position: absolute;
+            top: 12px; right: 12px;
+            z-index: 10;
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+        }
+        .gms-x:hover { background: rgba(255,255,255,0.2); transform: scale(1.1) rotate(90deg); }
+        .gms-header {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #dc2626 0%, #7f1d1d 100%);
+            padding: 36px 28px 30px;
+            text-align: center;
+        }
+        .gms-header::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(-45deg,transparent,transparent 9px,rgba(0,0,0,0.12) 9px,rgba(0,0,0,0.12) 10px);
+        }
+        .gms-header-inner { position: relative; z-index: 1; }
+        .gms-logo-wrap {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 52px; height: 52px;
+            border-radius: 14px;
+            background: rgba(255,255,255,0.15);
+            margin-bottom: 10px;
+        }
+        .gms-brand {
+            font-size: 14px; font-weight: 900;
+            letter-spacing: 0.18em;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+        .gms-badge {
+            display: inline-flex; align-items: center; gap: 5px;
+            font-size: 10px; font-weight: 700;
+            letter-spacing: 0.12em; text-transform: uppercase;
+            color: rgba(255,255,255,0.9);
+            background: rgba(255,255,255,0.13);
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 5px 12px; border-radius: 20px;
+        }
+        .gms-img-wrap {
+            position: relative;
+            width: 100%; height: 220px;
+            overflow: hidden;
+        }
+        .gms-img-wrap img { width:100%; height:100%; object-fit:cover; }
+        .gms-img-wrap::after {
+            content:'';
+            position:absolute; inset:0;
+            background: linear-gradient(to bottom, transparent 40%, rgba(15,17,23,0.9) 100%);
+        }
+        .gms-body {
+            padding: 28px 34px 32px;
+            text-align: center;
+        }
+        .gms-divider {
+            display: flex; align-items: center; gap: 10px;
+            margin-bottom: 16px;
+        }
+        .gms-divider::before, .gms-divider::after {
+            content: '';
+            flex: 1; height: 1px;
+            background: linear-gradient(to right, transparent, rgba(220,38,38,0.45));
+        }
+        .gms-divider::after { background: linear-gradient(to left, transparent, rgba(220,38,38,0.45)); }
+        .gms-divider span {
+            width: 5px; height: 5px;
+            border-radius: 50%;
+            background: #dc2626;
+            flex-shrink: 0;
+        }
+        .gms-title {
+            font-size: 24px; font-weight: 900;
+            color: #f0f2f5;
+            line-height: 1.25;
+            margin: 0 0 12px;
+        }
+        .gms-text {
+            font-size: 14px; line-height: 1.7;
+            color: #7a8290;
+            margin: 0 0 26px;
+        }
+        .gms-btn {
+            display: flex; align-items: center; justify-content: center; gap: 7px;
+            width: 100%; padding: 14px;
+            border-radius: 13px;
+            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+            box-shadow: 0 4px 18px rgba(220,38,38,0.35);
+            color: #fff; font-size: 15px; font-weight: 700;
+            border: none; cursor: pointer; text-decoration: none;
+            transition: all 0.22s ease;
+        }
+        .gms-btn:hover {
+            background: linear-gradient(135deg, #b91c1c 0%, #7f1d1d 100%);
+            box-shadow: 0 6px 24px rgba(220,38,38,0.5);
+            transform: translateY(-1px);
+            color: #fff;
+        }
+    </style>
+
+    <div id="campaignPopup"
+         aria-labelledby="gms-popup-title"
+         role="dialog"
+         aria-modal="true"
+         data-popup="1">
+
+        <div class="gms-bd" onclick="closeCampaignPopup()"></div>
+
+        <div class="gms-card">
+
+            <button class="gms-x" onclick="closeCampaignPopup()" aria-label="Kapat">
+                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+
+            @if(!empty($settings['popup_image']))
+            <div class="gms-img-wrap">
+                <img src="{{ asset('storage/' . $settings['popup_image']) }}"
+                     alt="{{ $settings['popup_title'] ?? 'Kampanya' }}">
             </div>
+            @else
+            <div class="gms-header">
+                <div class="gms-header-inner">
+                    <div class="gms-logo-wrap">
+                        <svg width="24" height="24" fill="white" viewBox="0 0 24 24">
+                            <path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.85 7h10.29l1.04 3H5.81l1.04-3zM19 17H5v-5h14v5z"/>
+                            <circle cx="7.5" cy="14.5" r="1.5"/>
+                            <circle cx="16.5" cy="14.5" r="1.5"/>
+                        </svg>
+                    </div>
+                    <div class="gms-brand">GMS<span style="opacity:.6">GARAGE</span></div>
+                </div>
+            </div>
+            @endif
+
+            <div class="gms-body">
+                <div class="gms-divider"><span></span></div>
+
+                <h3 id="gms-popup-title" class="gms-title">
+                    {{ !empty($settings['popup_title']) ? $settings['popup_title'] : 'Özel Fırsatlar' }}
+                </h3>
+
+                <p class="gms-text">
+                    {{ !empty($settings['popup_text']) ? $settings['popup_text'] : 'Premium araçlarımızda sınırlı süreli özel kampanyalar sizi bekliyor.' }}
+                </p>
+
+                @if(!empty($settings['popup_link']))
+                <a href="{{ $settings['popup_link'] }}" class="gms-btn">
+                    {{ $settings['popup_button_text'] ?? 'Kampanyayı İncele' }}
+                    <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                    </svg>
+                </a>
+                @else
+                <button onclick="closeCampaignPopup()" class="gms-btn">
+                    {{ !empty($settings['popup_button_text']) ? $settings['popup_button_text'] : 'Tamam, Anladım' }}
+                </button>
+                @endif
+            </div>
+
         </div>
     </div>
 
-    <!-- Pop-up Cookie Control Script -->
     <script>
-        // Cookie helper functions
         function setCookie(name, value, days) {
             const expires = new Date();
             expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
@@ -143,62 +301,48 @@
         }
 
         function getCookie(name) {
-            const nameEQ = name + "=";
+            const nameEQ = name + '=';
             const ca = document.cookie.split(';');
-            for(let i = 0; i < ca.length; i++) {
-                let c = ca[i];
-                while (c.charAt(0) == ' ') c = c.substring(1, c.length);
-                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i].trim();
+                if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length);
             }
             return null;
         }
 
-        // Pop-up control
         function closeCampaignPopup() {
             const popup = document.getElementById('campaignPopup');
-            if (popup) {
-                popup.classList.add('hidden');
-                
-                // Set cookie based on frequency
-                const frequency = '{{ $settings["popup_display_frequency"] ?? "daily" }}';
-                
-                if (frequency === 'always') {
-                    // Don't set cookie, will show every time
-                } else if (frequency === 'daily') {
-                    setCookie('gms_campaign_popup_seen', '1', 1); // 1 day
-                } else if (frequency === 'once') {
-                    setCookie('gms_campaign_popup_seen', '1', 365); // 1 year (permanent)
-                }
+            if (!popup) return;
+            popup.classList.remove('is-open');
+            const frequency = '{{ $settings["popup_display_frequency"] ?? "daily" }}';
+            if (frequency === 'daily') {
+                setCookie('gms_campaign_popup_seen', '1', 1);
+            } else if (frequency === 'once') {
+                setCookie('gms_campaign_popup_seen', '1', 365);
             }
         }
 
-        // Show popup on page load if not seen
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const forceShow = urlParams.get('show_campaign') === '1';
             const frequency = '{{ $settings["popup_display_frequency"] ?? "daily" }}';
             const hasSeenPopup = getCookie('gms_campaign_popup_seen');
-            
-            // Show popup if:
-            // - frequency is 'always' (test mode), OR
-            // - user hasn't seen it yet (no cookie)
-            if (frequency === 'always' || !hasSeenPopup) {
-                setTimeout(function() {
+            const showPopup = forceShow || frequency === 'always' || !hasSeenPopup;
+
+            if (showPopup) {
+                setTimeout(function () {
                     const popup = document.getElementById('campaignPopup');
-                    if (popup) {
-                        popup.classList.remove('hidden');
-                    }
-                }, 1000); // Show after 1 second delay
+                    if (popup) popup.classList.add('is-open');
+                }, forceShow ? 0 : 700);
             }
         });
 
-        // Close on ESC key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeCampaignPopup();
-            }
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') closeCampaignPopup();
         });
     </script>
     @endif
-    
+
     @stack('scripts')
 </body>
 </html>

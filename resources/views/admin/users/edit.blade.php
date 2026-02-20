@@ -51,18 +51,25 @@
                     Kullanıcı Rolü
                     <span class="text-red-500">*</span>
                 </label>
-                <select name="role" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white transition-all duration-200 hover:border-primary-400 shadow-sm">
-                    <option value="" disabled>Rol seçiniz...</option>
-                    <option value="admin" {{ old('role', $user->role) == 'admin' ? 'selected' : '' }} class="py-3">
-                        🔴 Süper Yönetici
-                    </option>
-                    <option value="manager" {{ old('role', $user->role) == 'manager' ? 'selected' : '' }} class="py-3">
-                        🔵 Galeri Yöneticisi
-                    </option>
-                    <option value="editor" {{ old('role', $user->role) == 'editor' ? 'selected' : '' }} class="py-3">
-                        🟢 İçerik Editörü
-                    </option>
-                </select>
+                @php $currentRole = old('role', $user->role); @endphp
+                <div class="adm-dd" data-adm-dd>
+                    <input type="hidden" name="role" value="{{ $currentRole }}" id="role-input">
+                    <button type="button" class="adm-dd-btn" data-adm-trigger>
+                        <span data-adm-label>
+                            @if($currentRole == 'admin') 🔴 Süper Yönetici
+                            @elseif($currentRole == 'manager') 🔵 Galeri Yöneticisi
+                            @elseif($currentRole == 'editor') 🟢 İçerik Editörü
+                            @else Rol seçiniz...
+                            @endif
+                        </span>
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <ul class="adm-dd-list" data-adm-list>
+                        <li data-value="admin"   class="{{ $currentRole == 'admin'   ? 'selected' : '' }}">🔴 Süper Yönetici</li>
+                        <li data-value="manager" class="{{ $currentRole == 'manager' ? 'selected' : '' }}">🔵 Galeri Yöneticisi</li>
+                        <li data-value="editor"  class="{{ $currentRole == 'editor'  ? 'selected' : '' }}">🟢 İçerik Editörü</li>
+                    </ul>
+                </div>
                 @error('role')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
                 
                 <!-- Rol Açıklamaları -->
