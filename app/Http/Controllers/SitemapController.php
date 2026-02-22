@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Vehicle;
 use App\Models\BlogPost;
+use App\Models\LegalPage;
 use Illuminate\Http\Response;
 
 class SitemapController extends Controller
@@ -18,6 +19,7 @@ class SitemapController extends Controller
                 ->distinct()
                 ->pluck('category')
                 ->filter(),
+            'legalPages' => LegalPage::where('is_active', true)->select('slug')->get(),
         ])->render();
 
         return response($content, 200)

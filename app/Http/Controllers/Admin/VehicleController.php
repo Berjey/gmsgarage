@@ -34,7 +34,7 @@ class VehicleController extends Controller
         if ($request->has('status') && $request->status !== '') {
             if ($request->status === 'active') {
                 $query->where('is_active', true);
-            } elseif ($request->status === 'inactive') {
+            } elseif ($request->status === 'passive') {
                 $query->where('is_active', false);
             } elseif ($request->status === 'featured') {
                 $query->where('is_featured', true);
@@ -361,6 +361,38 @@ class VehicleController extends Controller
                 })->toArray(),
                 'SelectedItem' => null
             ]
+        ]);
+    }
+
+    /**
+     * Araç aktif/pasif durumunu değiştir
+     */
+    public function toggleActive($id)
+    {
+        $vehicle = Vehicle::findOrFail($id);
+        $vehicle->is_active = !$vehicle->is_active;
+        $vehicle->save();
+
+        return response()->json([
+            'success' => true,
+            'is_active' => $vehicle->is_active,
+            'message' => $vehicle->is_active ? 'Araç yayına alındı.' : 'Araç yayından kaldırıldı.'
+        ]);
+    }
+
+    /**
+     * Araç öne çıkan durumunu değiştir
+     */
+    public function toggleFeatured($id)
+    {
+        $vehicle = Vehicle::findOrFail($id);
+        $vehicle->is_featured = !$vehicle->is_featured;
+        $vehicle->save();
+
+        return response()->json([
+            'success' => true,
+            'is_featured' => $vehicle->is_featured,
+            'message' => $vehicle->is_featured ? 'Araç öne çıkarıldı.' : 'Araç öne çıkandan kaldırıldı.'
         ]);
     }
 }

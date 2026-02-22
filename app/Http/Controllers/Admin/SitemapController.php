@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Vehicle;
 use App\Models\BlogPost;
+use App\Models\LegalPage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 
@@ -19,10 +20,11 @@ class SitemapController extends Controller
             'vehicles' => Vehicle::active()->count(),
             'blogPosts' => BlogPost::published()->count(),
             'blogCategories' => BlogPost::published()->distinct('category')->count('category'),
-            'staticPages' => 10,
+            'legalPages' => LegalPage::where('is_active', true)->count(),
+            'staticPages' => 7, // Anasayfa, Hakkımızda, İletişim, Araçlar, Değerleme, İstek, Blog
         ];
 
-        $stats['total'] = $stats['vehicles'] + $stats['blogPosts'] + $stats['blogCategories'] + $stats['staticPages'];
+        $stats['total'] = $stats['vehicles'] + $stats['blogPosts'] + $stats['blogCategories'] + $stats['legalPages'] + $stats['staticPages'];
 
         return view('admin.sitemap.index', [
             'stats' => $stats,
@@ -40,18 +42,23 @@ class SitemapController extends Controller
             ->distinct()
             ->pluck('category')
             ->filter();
+        $legalPages = LegalPage::where('is_active', true)->select('slug')->get();
 
         $content = view('sitemap.index', [
             'vehicles' => $vehicles,
             'blogPosts' => $blogPosts,
             'blogCategories' => $blogCategories,
+            'legalPages' => $legalPages,
         ])->render();
 
         $path = public_path('sitemap.xml');
         File::put($path, $content);
 
+        $staticPageCount = 7; // Anasayfa, Hakkımızda, İletişim, Araçlar, Değerleme, İstek, Blog
+        $totalUrls = $vehicles->count() + $blogPosts->count() + $blogCategories->count() + $legalPages->count() + $staticPageCount;
+
         return redirect()->route('admin.sitemap.index')
-            ->with('success', 'Sitemap başarıyla oluşturuldu! Toplam ' . ($vehicles->count() + $blogPosts->count() + $blogCategories->count() + 10) . ' URL eklendi.');
+            ->with('success', 'Sitemap başarıyla oluşturuldu! Toplam ' . $totalUrls . ' URL eklendi.');
     }
 
     public function preview()
@@ -63,6 +70,7 @@ class SitemapController extends Controller
             ->distinct()
             ->pluck('category')
             ->filter();
+        $legalPages = LegalPage::where('is_active', true)->select('slug', 'title')->get();
 
         $urls = collect();
 
@@ -75,13 +83,20 @@ class SitemapController extends Controller
             ['loc' => route('evaluation.index'), 'priority' => '0.8', 'changefreq' => 'monthly', 'type' => 'Araç Değerleme'],
             ['loc' => route('vehicle-request.index'), 'priority' => '0.7', 'changefreq' => 'monthly', 'type' => 'Araç İsteği'],
             ['loc' => route('blog.index'), 'priority' => '0.9', 'changefreq' => 'daily', 'type' => 'Blog'],
-            ['loc' => route('kvkk'), 'priority' => '0.3', 'changefreq' => 'yearly', 'type' => 'KVKK'],
-            ['loc' => route('privacy'), 'priority' => '0.3', 'changefreq' => 'yearly', 'type' => 'Gizlilik'],
-            ['loc' => route('terms'), 'priority' => '0.3', 'changefreq' => 'yearly', 'type' => 'Kullanım Şartları'],
         ];
 
         foreach ($staticPages as $page) {
             $urls->push($page);
+        }
+
+        // Yasal Sayfalar (Dinamik)
+        foreach ($legalPages as $legalPage) {
+            $urls->push([
+                'loc' => route('legal.show', $legalPage->slug),
+                'priority' => '0.3',
+                'changefreq' => 'yearly',
+                'type' => 'Yasal - ' . $legalPage->title,
+            ]);
         }
 
         // Araçlar

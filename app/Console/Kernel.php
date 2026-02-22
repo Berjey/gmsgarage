@@ -12,7 +12,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
+        // 7 günden eski aktivite loglarını her gün saat 02:00'de temizle
+        $schedule->command('logs:clean-old')->dailyAt('02:00');
     }
 
     /**

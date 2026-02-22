@@ -16,6 +16,8 @@ class User extends Authenticatable
         'password',
         'is_admin',
         'role',
+        'last_login_at',
+        'last_login_ip',
     ];
 
     protected $hidden = [
@@ -29,7 +31,16 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'is_admin' => 'boolean',
+            'last_login_at' => 'datetime',
         ];
+    }
+
+    /**
+     * İlişki: Kullanıcının aktivite logları
+     */
+    public function activityLogs()
+    {
+        return $this->hasMany(ActivityLog::class)->orderBy('created_at', 'desc');
     }
 
     /**

@@ -37,21 +37,14 @@
         <changefreq>daily</changefreq>
         <priority>0.9</priority>
     </url>
+    {{-- Yasal Sayfalar (Dinamik) --}}
+    @foreach($legalPages as $legalPage)
     <url>
-        <loc>{{ route('kvkk') }}</loc>
+        <loc>{{ route('legal.show', $legalPage->slug) }}</loc>
         <changefreq>yearly</changefreq>
         <priority>0.3</priority>
     </url>
-    <url>
-        <loc>{{ route('privacy') }}</loc>
-        <changefreq>yearly</changefreq>
-        <priority>0.3</priority>
-    </url>
-    <url>
-        <loc>{{ route('terms') }}</loc>
-        <changefreq>yearly</changefreq>
-        <priority>0.3</priority>
-    </url>
+    @endforeach
 
     {{-- Araçlar --}}
     @foreach($vehicles as $vehicle)

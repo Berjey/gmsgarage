@@ -113,23 +113,12 @@
                 </svg>
                 Footer
             </button>
-            <button type="button" 
-                    data-tab="popup"
-                    onclick="switchTab('popup')"
-                    class="tab-button flex-1 min-w-[180px] px-5 py-4 text-sm font-semibold transition-colors border-l border-gray-200 bg-white text-gray-700 hover:bg-gray-50">
-                <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path>
-                </svg>
-                Duyuru & Kampanya
-            </button>
         </div>
 
         <!-- Form -->
         <form action="{{ route('admin.settings.update') }}" method="POST" enctype="multipart/form-data" id="settingsForm">
             @csrf
             @method('PUT')
-            <!-- popup_status checkbox kapalıyken gönderilmez; önce 0, checkbox işaretliyse 1 gönderilir -->
-            <input type="hidden" name="popup_status" value="0">
 
             <!-- Tab Content: Genel Ayarlar -->
             <div id="tab-general" class="tab-content p-6 space-y-6">
@@ -550,7 +539,7 @@
             </div>
 
         <!-- Tab Content: Footer Yönetimi (form içinde; kaydet ile birlikte gönderilir) -->
-        <div id="tab-footer" class="tab-content p-6 space-y-6 hidden">
+            <div id="tab-footer" class="tab-content p-6 space-y-6 hidden">
                 
                 <h3 class="text-lg font-bold text-gray-900 mb-4">Footer İçeriği</h3>
                 
@@ -614,25 +603,25 @@
                             </svg>
                             Yeni Yasal Sayfa Ekle
                         </h4>
-                        <form action="{{ route('admin.settings.add-legal-page') }}" method="POST">
-                            @csrf
+                        <div id="add-legal-page-form">
                             <div class="flex gap-3">
                                 <div class="flex-1">
                                     <input type="text" 
-                                           name="title" 
+                                           id="new-page-title"
                                            required
                                            placeholder="Sayfa başlığı girin (Örn: KVKK, Gizlilik Politikası)"
-                                           class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
+                                           class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                           onkeypress="if(event.key === 'Enter') { event.preventDefault(); addNewLegalPage(); }">
                                 </div>
-                                <button type="submit" class="px-6 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-semibold flex items-center gap-2 whitespace-nowrap">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                                    </svg>
+                                <button type="button" onclick="addNewLegalPage()" class="px-6 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-semibold flex items-center gap-2 whitespace-nowrap">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                            </svg>
                                     Ekle
-                                </button>
+                        </button>
                             </div>
                             <p class="mt-2 text-xs text-gray-500">Sayfa başlığını girin. URL otomatik oluşturulacak. İçeriği düzenlemek için listeden "İçeriği Düzenle" butonuna tıklayın.</p>
-                        </form>
+                        </div>
                     </div>
 
                     <!-- Mevcut Yasal Sayfalar Listesi -->
@@ -644,7 +633,7 @@
                                 </svg>
                                 Mevcut Yasal Sayfalar ({{ $legalPages->count() }})
                             </h4>
-                        </div>
+                    </div>
 
                         @if($legalPages->count() > 0)
                         <div class="divide-y divide-gray-200">
@@ -679,16 +668,12 @@
                                         İçeriği Düzenle
                                     </a>
                                     <!-- Sil (Hard Delete) -->
-                                    <form action="{{ route('admin.settings.delete-legal-page', $page->id) }}" method="POST" class="inline" onsubmit="return confirm('{{ $page->title }} sayfasını ve tüm içeriğini silmek istediğinize emin misiniz? Bu işlem geri alınamaz.')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="px-3 py-1.5 bg-red-600 text-white text-xs font-semibold rounded-lg hover:bg-red-700 transition-colors flex items-center gap-1">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                                            </svg>
-                                            Sil
-                                        </button>
-                                    </form>
+                                    <button type="button" onclick="deleteLegalPage({{ $page->id }}, '{{ $page->title }}')" class="px-3 py-1.5 bg-red-600 text-white text-xs font-semibold rounded-lg hover:bg-red-700 transition-colors flex items-center gap-1">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                        </svg>
+                                        Sil
+                                    </button>
                                 </div>
                             </div>
                             @endforeach
@@ -706,270 +691,6 @@
                 </div>
             </div>
 
-            <!-- Tab Content: Duyuru & Kampanya Pop-up -->
-            <div id="tab-popup" class="tab-content p-6 space-y-6 hidden">
-                
-                <h3 class="text-lg font-bold text-gray-900 mb-4">🎉 Duyuru & Kampanya Yönetimi (Pop-up)</h3>
-                <p class="text-sm text-gray-600 mb-6">Site ziyaretçilerine gösterilecek kampanya veya duyuru pop-up'ını buradan yönetin.</p>
-
-                <!-- Pop-up Aktif/Pasif -->
-                <div class="bg-gradient-to-r from-red-50 to-orange-50 border border-red-200 rounded-xl p-6">
-                    <div class="flex items-start justify-between">
-                        <div class="flex-1">
-                            <label class="flex items-center gap-3 cursor-pointer">
-                                <span class="text-base font-bold text-gray-900">Pop-up Durumu</span>
-                                <div class="toggle-switch">
-                                    <input type="checkbox" 
-                                           name="popup_status" 
-                                           value="1" 
-                                           id="popup_status"
-                                           {{ !empty($settings['popup_status']) && $settings['popup_status'] == '1' ? 'checked' : '' }}>
-                                    <span class="toggle-slider"></span>
-                                </div>
-                            </label>
-                            <p class="text-sm text-gray-600 mt-2">
-                                ✅ Aktif olduğunda pop-up web sitesinde gösterilir.<br>
-                                ❌ Kapalı olduğunda hiç görünmez.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Pop-up Görseli -->
-                <div>
-                    <label class="block text-sm font-semibold text-gray-900 mb-2">
-                        📸 Kampanya Görseli (Opsiyonel)
-                    </label>
-                    <p class="text-xs text-gray-500 mb-3">Gösterişli bir görsel yükleyin. Boş bırakırsanız sadece metin gösterilir.</p>
-                    
-                    <div class="flex items-start gap-4">
-                        <div class="flex-1">
-                            <input type="file" 
-                                   name="popup_image" 
-                                   id="popup_image"
-                                   accept="image/jpeg,image/png,image/jpg,image/webp"
-                                   class="block w-full text-sm text-gray-700 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100">
-                            <p class="text-xs text-gray-500 mt-1">Önerilen: 800x600px, Max: 2MB, Format: JPG, PNG, WebP</p>
-                        </div>
-                        
-                        @if(!empty($settings['popup_image']))
-                        <div class="flex-shrink-0">
-                            <img src="{{ asset('storage/' . $settings['popup_image']) }}" 
-                                 alt="Mevcut Görsel" 
-                                 class="w-32 h-24 object-cover rounded-lg border-2 border-gray-200 shadow-sm">
-                        </div>
-                        @endif
-                    </div>
-                </div>
-
-                <!-- Pop-up Başlık -->
-                <div>
-                    <label for="popup_title" class="block text-sm font-semibold text-gray-900 mb-2">
-                        ✨ Duyuru Başlığı
-                    </label>
-                    <input type="text" 
-                           name="popup_title" 
-                           id="popup_title"
-                           value="{{ $settings['popup_title'] ?? '' }}"
-                           placeholder="Örn: Yaz Kampanyası Başladı! %50 İndirim"
-                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 text-base">
-                    <p class="text-xs text-gray-500 mt-1">Dikkat çekici ve kısa bir başlık yazın (Max 255 karakter)</p>
-                </div>
-
-                <!-- Pop-up Açıklama -->
-                <div>
-                    <label for="popup_text" class="block text-sm font-semibold text-gray-900 mb-2">
-                        📝 Açıklama Metni
-                    </label>
-                    <textarea name="popup_text" 
-                              id="popup_text"
-                              rows="4"
-                              placeholder="Örn: Tüm araçlarda geçerli özel fırsatlar! Detayları görmek için tıklayın."
-                              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 text-base">{{ $settings['popup_text'] ?? '' }}</textarea>
-                    <p class="text-xs text-gray-500 mt-1">Kısa ve net bir açıklama yapın (Max 1000 karakter)</p>
-                </div>
-
-                <!-- Yönlendirme Linki -->
-                <div>
-                    <label for="popup_link" class="block text-sm font-semibold text-gray-900 mb-2">
-                        🔗 Yönlendirme Linki
-                    </label>
-                    <input type="url" 
-                           name="popup_link" 
-                           id="popup_link"
-                           value="{{ $settings['popup_link'] ?? '' }}"
-                           placeholder="https://gmsgarage.com/araclar"
-                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 text-base">
-                    <p class="text-xs text-gray-500 mt-1">Kullanıcı butona tıkladığında gideceği tam URL (Örn: {{ url('/araclar') }})</p>
-                </div>
-
-                <!-- Buton Metni -->
-                <div>
-                    <label for="popup_button_text" class="block text-sm font-semibold text-gray-900 mb-2">
-                        🎯 Buton Metni
-                    </label>
-                    <input type="text" 
-                           name="popup_button_text" 
-                           id="popup_button_text"
-                           value="{{ $settings['popup_button_text'] ?? 'Detayları İncele' }}"
-                           placeholder="Fırsatları İncele"
-                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 text-base">
-                    <p class="text-xs text-gray-500 mt-1">Butonda görünecek metin (Örn: "Fırsatları Gör", "Hemen İncele")</p>
-                </div>
-
-                <!-- Gösterim Sıklığı -->
-                <div>
-                    <label for="popup_display_frequency" class="block text-sm font-semibold text-gray-900 mb-2">
-                        ⏰ Gösterim Sıklığı
-                    </label>
-                    @php $freq = $settings['popup_display_frequency'] ?? 'daily'; @endphp
-                    <div class="adm-dd" data-adm-dd>
-                        <input type="hidden" name="popup_display_frequency" value="{{ $freq }}">
-                        <button type="button" class="adm-dd-btn" data-adm-trigger>
-                            <span data-adm-label>
-                                @if($freq == 'always') 🔄 Her Sayfa Yüklenişinde (Test İçin)
-                                @elseif($freq == 'once') ⭐ Sadece 1 Kez (Hayat Boyu)
-                                @else 📅 Günde 1 Kez (Önerilen)
-                                @endif
-                            </span>
-                            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-                        </button>
-                        <ul class="adm-dd-list" data-adm-list>
-                            <li data-value="always" class="{{ $freq == 'always' ? 'selected' : '' }}">🔄 Her Sayfa Yüklenişinde (Test İçin)</li>
-                            <li data-value="daily"  class="{{ $freq == 'daily'  ? 'selected' : '' }}">📅 Günde 1 Kez (Önerilen)</li>
-                            <li data-value="once"   class="{{ $freq == 'once'   ? 'selected' : '' }}">⭐ Sadece 1 Kez (Hayat Boyu)</li>
-                        </ul>
-                    </div>
-                    <div class="mt-3 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                        <p class="text-sm text-blue-800">
-                            <strong>💡 İpucu:</strong><br>
-                            • <strong>Her Sayfa Yüklenişinde:</strong> Pop-up her zaman açılır (test için ideal).<br>
-                            • <strong>Günde 1 Kez:</strong> Kullanıcı günde bir kez görür (24 saat cookie).<br>
-                            • <strong>Sadece 1 Kez:</strong> Kullanıcı bir kez görür, bir daha hiç görmez (kalıcı cookie).
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Önizleme & Test -->
-                <div class="bg-gray-50 border border-gray-300 rounded-xl p-6">
-                    <h4 class="text-base font-bold text-gray-900 mb-1">🔍 Önizleme & Test</h4>
-                    <p class="text-sm text-gray-500 mb-4">Kaydetmeden önce admin içinde canlı önizleyebilir veya siteyi açabilirsin.</p>
-                    <div class="flex flex-wrap gap-3">
-                        <button type="button"
-                                onclick="gmsShowAdminPreview()"
-                                class="inline-flex items-center gap-2 px-5 py-2.5 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition-colors shadow-sm">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                            </svg>
-                            Canlı Önizle
-                        </button>
-                        <a href="{{ route('home') }}?show_campaign=1"
-                           target="_blank"
-                           class="inline-flex items-center gap-2 px-5 py-2.5 bg-white border-2 border-gray-300 text-gray-700 font-semibold rounded-lg hover:border-red-400 hover:text-red-600 transition-colors">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
-                            </svg>
-                            Siteyi Aç ve Test Et
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Admin Önizleme Modal -->
-                <div id="gmsAdminPreview"
-                     style="display:none; position:fixed; inset:0; z-index:99999; align-items:center; justify-content:center; padding:16px; background:rgba(0,0,0,0.75);"
-                     onclick="if(event.target===this) gmsCloseAdminPreview()">
-                    <div style="position:relative; width:100%; max-width:460px; border-radius:22px; overflow:hidden; background:#0f1117; border:1px solid rgba(220,38,38,0.22); box-shadow:0 28px 70px rgba(0,0,0,0.75);">
-
-                        <!-- Kapat -->
-                        <button onclick="gmsCloseAdminPreview()"
-                                style="position:absolute;top:12px;right:12px;z-index:10;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.1);border:none;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:17px;line-height:1;transition:background 0.2s;"
-                                onmouseover="this.style.background='rgba(255,255,255,0.2)'"
-                                onmouseout="this.style.background='rgba(255,255,255,0.1)'">
-                            &times;
-                        </button>
-
-                        <!-- Görsel varsa göster, yoksa kırmızı header -->
-                        <div id="gmsPreviewImgWrap" style="display:none; position:relative; width:100%; height:220px; overflow:hidden;">
-                            <img id="gmsPreviewImg" src="" alt="" style="width:100%;height:100%;object-fit:cover;">
-                            <div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(15,17,23,0.9) 100%);"></div>
-                        </div>
-
-                        <div id="gmsPreviewHeader"
-                             style="position:relative;overflow:hidden;background:linear-gradient(135deg,#dc2626 0%,#7f1d1d 100%);padding:36px 28px 30px;text-align:center;">
-                            <div style="position:absolute;inset:0;background:repeating-linear-gradient(-45deg,transparent,transparent 9px,rgba(0,0,0,0.12) 9px,rgba(0,0,0,0.12) 10px);"></div>
-                            <div style="position:relative;z-index:1;">
-                                <div style="display:inline-flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:14px;background:rgba(255,255,255,0.15);margin-bottom:10px;">
-                                    <svg width="24" height="24" fill="white" viewBox="0 0 24 24"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.85 7h10.29l1.04 3H5.81l1.04-3zM19 17H5v-5h14v5z"/><circle cx="7.5" cy="14.5" r="1.5"/><circle cx="16.5" cy="14.5" r="1.5"/></svg>
-                                </div>
-                                <div style="font-size:14px;font-weight:900;letter-spacing:0.18em;color:#fff;">GMS<span style="opacity:.6">GARAGE</span></div>
-                            </div>
-                        </div>
-
-                        <!-- İçerik -->
-                        <div style="padding:28px 34px 32px;text-align:center;background:#0f1117;">
-                            <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
-                                <div style="flex:1;height:1px;background:linear-gradient(to right,transparent,rgba(220,38,38,0.45));"></div>
-                                <div style="width:5px;height:5px;border-radius:50%;background:#dc2626;flex-shrink:0;"></div>
-                                <div style="flex:1;height:1px;background:linear-gradient(to left,transparent,rgba(220,38,38,0.45));"></div>
-                            </div>
-                            <h3 id="gmsPreviewTitle" style="font-size:24px;font-weight:900;color:#f0f2f5;margin:0 0 12px;line-height:1.25;">Özel Fırsatlar</h3>
-                            <p id="gmsPreviewText" style="font-size:14px;line-height:1.7;color:#7a8290;margin:0 0 26px;">Premium araçlarımızda sınırlı süreli özel kampanyalar sizi bekliyor.</p>
-                            <div id="gmsPreviewBtn"
-                                 style="display:flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:14px;border-radius:13px;background:linear-gradient(135deg,#dc2626 0%,#991b1b 100%);box-shadow:0 4px 18px rgba(220,38,38,0.35);color:#fff;font-size:15px;font-weight:700;cursor:default;">
-                                Kampanyayı İncele
-                                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <script>
-                function gmsShowAdminPreview() {
-                    var title   = document.getElementById('popup_title')?.value || 'Özel Fırsatlar';
-                    var text    = document.getElementById('popup_text')?.value  || 'Premium araçlarımızda sınırlı süreli özel kampanyalar sizi bekliyor.';
-                    var btnTxt  = document.getElementById('popup_button_text')?.value || 'Kampanyayı İncele';
-                    var imgFile = document.getElementById('popup_image')?.files?.[0];
-
-                    document.getElementById('gmsPreviewTitle').textContent = title;
-                    document.getElementById('gmsPreviewText').textContent  = text;
-                    document.getElementById('gmsPreviewBtn').childNodes[0].textContent = btnTxt + ' ';
-
-                    var imgWrap    = document.getElementById('gmsPreviewImgWrap');
-                    var headerWrap = document.getElementById('gmsPreviewHeader');
-                    var previewImg = document.getElementById('gmsPreviewImg');
-
-                    if (imgFile) {
-                        var reader = new FileReader();
-                        reader.onload = function(e) {
-                            previewImg.src = e.target.result;
-                            imgWrap.style.display    = 'block';
-                            headerWrap.style.display = 'none';
-                        };
-                        reader.readAsDataURL(imgFile);
-                    } else {
-                        @if(!empty($settings['popup_image']))
-                        previewImg.src = '{{ asset('storage/' . $settings['popup_image']) }}';
-                        imgWrap.style.display    = 'block';
-                        headerWrap.style.display = 'none';
-                        @else
-                        imgWrap.style.display    = 'none';
-                        headerWrap.style.display = 'block';
-                        @endif
-                    }
-
-                    var overlay = document.getElementById('gmsAdminPreview');
-                    overlay.style.display = 'flex';
-                }
-                function gmsCloseAdminPreview() {
-                    document.getElementById('gmsAdminPreview').style.display = 'none';
-                }
-                document.addEventListener('keydown', function(e) {
-                    if (e.key === 'Escape') gmsCloseAdminPreview();
-                });
-                </script>
-
-            </div>
 
         </form>
 
@@ -1031,9 +752,17 @@
 
 @push('scripts')
 <script>
-// Sayfa yüklendiğinde varsayılan aktif sekme (Genel)
+// Sayfa yüklendiğinde varsayılan aktif sekme (Genel veya session'dan gelen)
 document.addEventListener('DOMContentLoaded', function() {
-    window.currentSettingsTab = 'general';
+    @if(session('active_tab'))
+        switchTab('{{ session('active_tab') }}');
+        window.currentSettingsTab = '{{ session('active_tab') }}';
+    @elseif(request('tab'))
+        switchTab('{{ request('tab') }}');
+        window.currentSettingsTab = '{{ request('tab') }}';
+    @else
+        window.currentSettingsTab = 'general';
+    @endif
 });
 
 // Bakım modu toggle - Modern iOS Style
@@ -1131,6 +860,151 @@ function syncFooterFieldsIfActive(form) {
     if (popupButtonText && hBtn) hBtn.value = popupButtonText.value || '';
     if (popupFreq && hFreq) hFreq.value = popupFreq.value || 'daily';
     return true;
+}
+
+// Yeni yasal sayfa ekleme fonksiyonu (AJAX)
+async function addNewLegalPage() {
+    const titleInput = document.getElementById('new-page-title');
+    const title = titleInput.value.trim();
+    
+    if (!title) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Hata!',
+            text: 'Lütfen sayfa başlığını girin.',
+            confirmButtonColor: '#dc2626',
+            customClass: {
+                popup: 'rounded-xl',
+                confirmButton: 'rounded-lg px-6 py-2.5 font-semibold'
+            }
+        });
+        return;
+    }
+    
+    try {
+        const response = await fetch('{{ route('admin.settings.add-legal-page') }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ title: title })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Başarılı!',
+                text: data.message || 'Sayfa başarıyla eklendi!',
+                confirmButtonColor: '#059669',
+                customClass: {
+                    popup: 'rounded-xl',
+                    confirmButton: 'rounded-lg px-6 py-2.5 font-semibold'
+                }
+            }).then(() => {
+                // Sayfayı yenile ve footer tabında kal
+                window.location.href = '{{ route('admin.settings.index') }}?tab=footer';
+            });
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Hata!',
+                text: data.message || 'Sayfa eklenirken bir hata oluştu.',
+                confirmButtonColor: '#dc2626',
+                customClass: {
+                    popup: 'rounded-xl',
+                    confirmButton: 'rounded-lg px-6 py-2.5 font-semibold'
+                }
+            });
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Hata!',
+            text: 'Bir sorun oluştu. Lütfen tekrar deneyin.',
+            confirmButtonColor: '#dc2626',
+            customClass: {
+                popup: 'rounded-xl',
+                confirmButton: 'rounded-lg px-6 py-2.5 font-semibold'
+            }
+        });
+    }
+}
+
+// Legal page silme fonksiyonu (AJAX ile SweetAlert2)
+async function deleteLegalPage(pageId, pageTitle) {
+    const result = await Swal.fire({
+        title: 'Sayfayı Sil?',
+        html: '<strong>' + pageTitle + '</strong> sayfasını ve tüm içeriğini silmek istediğinize emin misiniz?<br><span class="text-red-600 font-semibold">Bu işlem geri alınamaz.</span>',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc2626',
+        cancelButtonColor: '#6b7280',
+        confirmButtonText: 'Evet, Sil!',
+        cancelButtonText: 'İptal',
+        customClass: {
+            popup: 'rounded-xl',
+            confirmButton: 'rounded-lg px-6 py-2.5 font-semibold',
+            cancelButton: 'rounded-lg px-6 py-2.5 font-semibold'
+        }
+    });
+    
+    if (result.isConfirmed) {
+        try {
+            const response = await fetch('/admin/settings/delete-legal-page/' + pageId, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json'
+                }
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Silindi!',
+                    text: data.message || 'Sayfa başarıyla silindi.',
+                    confirmButtonColor: '#059669',
+                    customClass: {
+                        popup: 'rounded-xl',
+                        confirmButton: 'rounded-lg px-6 py-2.5 font-semibold'
+                    }
+                }).then(() => {
+                    // Sayfayı yenile ve footer tabında kal
+                    window.location.href = '{{ route('admin.settings.index') }}?tab=footer';
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Hata!',
+                    text: data.message || 'Sayfa silinirken bir hata oluştu.',
+                    confirmButtonColor: '#dc2626',
+                    customClass: {
+                        popup: 'rounded-xl',
+                        confirmButton: 'rounded-lg px-6 py-2.5 font-semibold'
+                    }
+                });
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Hata!',
+                text: 'Bir sorun oluştu. Lütfen tekrar deneyin.',
+                confirmButtonColor: '#dc2626',
+                customClass: {
+                    popup: 'rounded-xl',
+                    confirmButton: 'rounded-lg px-6 py-2.5 font-semibold'
+                }
+            });
+        }
+    }
 }
 
 // Tab switching fonksiyonu

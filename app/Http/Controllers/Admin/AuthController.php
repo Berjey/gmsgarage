@@ -51,6 +51,18 @@ class AuthController extends Controller
                 ])->withInput();
             }
 
+            // Son giriş zamanını ve IP'yi kaydet
+            $user->update([
+                'last_login_at' => now(),
+                'last_login_ip' => $request->ip(),
+            ]);
+
+            // Aktivite logla
+            \App\Models\ActivityLog::log(
+                'login',
+                'Admin paneline giriş yaptı'
+            );
+
             return redirect()->intended(route('admin.dashboard'))->with('success', 'Hoş geldiniz!');
         }
 

@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\SitemapController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\LegalPageController as AdminLegalPageController;
+use App\Http\Controllers\Admin\ActivityLogController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -81,6 +82,15 @@ Route::prefix('admin')->name('admin.')->group(function () {
                 Route::delete('/{id}', [UserController::class, 'destroy'])->name('destroy');
             });
             
+            // Aktivite Logları (Kullanıcı Takibi)
+            Route::prefix('activity-logs')->name('activity-logs.')->group(function () {
+                Route::get('/', [ActivityLogController::class, 'index'])->name('index');
+                Route::get('/user/{userId}', [ActivityLogController::class, 'userActivities'])->name('user');
+                Route::post('/clear-all', [ActivityLogController::class, 'clearAll'])->name('clear-all');
+                Route::post('/clear-old', [ActivityLogController::class, 'clearOld'])->name('clear-old');
+                Route::post('/clear-user/{userId}', [ActivityLogController::class, 'clearUser'])->name('clear-user');
+            });
+            
             // Sitemap Yönetimi
             Route::prefix('sitemap')->name('sitemap.')->group(function () {
                 Route::get('/', [SitemapController::class, 'index'])->name('index');
@@ -101,6 +111,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
                 Route::get('/{id}/edit', [AdminVehicleController::class, 'edit'])->name('edit');
                 Route::put('/{id}', [AdminVehicleController::class, 'update'])->name('update');
                 Route::delete('/{id}', [AdminVehicleController::class, 'destroy'])->name('destroy');
+                
+                // Toggle endpoints for quick actions
+                Route::patch('/{id}/toggle-active', [AdminVehicleController::class, 'toggleActive'])->name('toggle-active');
+                Route::patch('/{id}/toggle-featured', [AdminVehicleController::class, 'toggleFeatured'])->name('toggle-featured');
                 
                 // API endpoints for vehicle form
                 Route::get('/api/brands', [AdminVehicleController::class, 'getBrands'])->name('api.brands');
