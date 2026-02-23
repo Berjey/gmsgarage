@@ -1995,15 +1995,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             formData.set('ekspertiz', JSON.stringify(ekspertizData));
 
-            // DEBUG: Log all form data
-            console.log('=== FORM SUBMISSION DEBUG ===');
-            console.log('Form action:', form.action);
-            for (let [key, value] of formData.entries()) {
-                console.log(`${key}:`, value);
-            }
-            console.log('Ekspertiz data:', ekspertizData);
-            console.log('=============================');
-
             const response = await fetch(form.action, {
                 method: 'POST',
                 body: formData,
@@ -2012,26 +2003,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
 
-            console.log('Response status:', response.status);
-            console.log('Response ok:', response.ok);
-
             const responseText = await response.text();
-            console.log('Response text:', responseText);
-
             let result;
             try {
                 result = JSON.parse(responseText);
             } catch (parseError) {
-                console.error('JSON parse error:', parseError);
-                console.error('Response was not valid JSON:', responseText);
                 alert('Sunucu yanıtı geçersiz. Lütfen tekrar deneyin.');
                 submitBtn.disabled = false;
                 submitText.classList.remove('hidden');
                 submitLoading.classList.add('hidden');
                 return;
             }
-
-            console.log('Parsed result:', result);
 
             if (result.success) {
                 // Show success message
@@ -2050,15 +2032,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                 `;
             } else {
-                console.error('Server returned error:', result);
                 alert(result.message || 'Bir hata oluştu. Lütfen tekrar deneyin.');
                 submitBtn.disabled = false;
                 submitText.classList.remove('hidden');
                 submitLoading.classList.add('hidden');
             }
         } catch (error) {
-            console.error('Submit error:', error);
-            console.error('Error stack:', error.stack);
             alert('Bir hata oluştu. Lütfen tekrar deneyin.');
             submitBtn.disabled = false;
             submitText.classList.remove('hidden');

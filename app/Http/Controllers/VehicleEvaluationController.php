@@ -111,7 +111,6 @@ class VehicleEvaluationController extends Controller
     
     /**
      * Get vehicle options for hybrid system
-     * TODO: Arabam.com API entegrasyonu eklenebilir
      */
     public function getVehicleOptions(Request $request)
     {
@@ -154,8 +153,6 @@ class VehicleEvaluationController extends Controller
             ]);
         }
         
-        // TODO: Arabam.com API entegrasyonu eklenebilir
-        // Şimdilik boş array döndür
         return response()->json([
             'success' => true,
             'versions' => []

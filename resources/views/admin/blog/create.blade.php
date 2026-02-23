@@ -395,16 +395,8 @@
             const content = quill.root.innerHTML;
             contentInput.value = content; // İçeriği tekrar set et
             
-            // DEBUG: Form değerlerini kontrol et
             const formData = new FormData(form);
-            console.log('=== FORM GÖNDERİLİYOR ===');
-            console.log('Başlık:', formData.get('title'));
-            console.log('Kategori:', formData.get('category'));
-            console.log('Kısa Özet:', formData.get('excerpt'));
-            console.log('İçerik:', formData.get('content'));
-            console.log('İçerik uzunluğu:', formData.get('content')?.length || 0);
-            console.log('========================');
-            
+
             // Eksik alanları kontrol et
             const missingFields = [];
             if (!formData.get('title')?.trim()) missingFields.push('Başlık');

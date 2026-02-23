@@ -9,22 +9,82 @@
 @endsection
 
 @section('content')
+@php
+    $totalReqs  = \App\Models\VehicleRequest::count();
+    $newReqs    = \App\Models\VehicleRequest::where('is_read', false)->count();
+    $readReqs   = \App\Models\VehicleRequest::where('is_read', true)->count();
+@endphp
+
+<!-- İstatistik Kartları -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+    <div class="bg-white rounded-xl p-6 border-2 border-primary-100 shadow-sm group">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-600 text-sm font-medium mb-1">Toplam İstek</p>
+                <p class="text-3xl font-bold text-gray-900">{{ $totalReqs }}</p>
+            </div>
+            <div class="w-14 h-14 bg-primary-50 rounded-xl flex items-center justify-center">
+                <svg class="w-7 h-7 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+    <div class="bg-white rounded-xl p-6 border-2 border-gray-100 shadow-sm hover:shadow-lg hover:border-blue-300 transition-all group">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-600 text-sm font-medium mb-1">Yeni / Okunmamış</p>
+                <p class="text-3xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">{{ $newReqs }}</p>
+            </div>
+            <div class="w-14 h-14 bg-blue-50 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                <svg class="w-7 h-7 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+    <div class="bg-white rounded-xl p-6 border-2 border-gray-100 shadow-sm hover:shadow-lg hover:border-green-300 transition-all group">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-600 text-sm font-medium mb-1">İncelendi</p>
+                <p class="text-3xl font-bold text-gray-900 group-hover:text-green-600 transition-colors">{{ $readReqs }}</p>
+            </div>
+            <div class="w-14 h-14 bg-green-50 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                <svg class="w-7 h-7 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
     <div class="p-6 border-b border-gray-200">
-        <h2 class="text-xl font-bold text-gray-900">Araç İstekleri</h2>
-        <p class="text-sm text-gray-600 mt-1">Kullanıcıların araç bulamıyorum formu üzerinden gönderdiği istekler</p>
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-900 flex items-center gap-3">
+                    <div class="w-10 h-10 bg-primary-100 rounded-xl flex items-center justify-center">
+                        <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                        </svg>
+                    </div>
+                    Araç İstekleri
+                </h2>
+                <p class="text-sm text-gray-600 mt-2">Toplam <span class="font-bold text-primary-600">{{ $totalReqs }}</span> istek • <span class="font-bold text-blue-600">{{ $newReqs }}</span> yeni</p>
+            </div>
+        </div>
     </div>
 
     <div class="overflow-x-auto">
         <table class="w-full">
-            <thead class="bg-gray-50 border-b border-gray-200">
+            <thead class="bg-gray-50/50">
                 <tr>
-                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Gönderen</th>
-                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">İstenen Araç</th>
-                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">İletişim</th>
-                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Durum</th>
-                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Tarih</th>
-                    <th class="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">İşlemler</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-widest">Gönderen</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-widest">İstenen Araç</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-widest">İletişim</th>
+                    <th class="px-6 py-4 text-center text-xs font-bold text-gray-400 uppercase tracking-widest">Durum</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-widest">Tarih</th>
+                    <th class="px-6 py-4 text-right text-xs font-bold text-gray-400 uppercase tracking-widest">İşlemler</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-200">
@@ -82,7 +142,11 @@
 
     <!-- Pagination -->
     @if($requests->hasPages())
-    <div class="px-6 py-4 border-t border-gray-200 bg-gray-50/50">
+    <div class="px-6 py-4 border-t border-gray-200 bg-gray-50/50 flex items-center justify-between">
+        <p class="text-sm text-gray-500">
+            {{ $requests->firstItem() }}-{{ $requests->lastItem() }} arası gösteriliyor
+            (toplam {{ $requests->total() }} istek)
+        </p>
         {{ $requests->links() }}
     </div>
     @endif

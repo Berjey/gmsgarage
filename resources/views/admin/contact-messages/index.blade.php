@@ -2,84 +2,91 @@
 
 @section('title', 'İletişim Mesajları - Admin Panel')
 @section('page-title', 'İletişim Mesajları')
-
-@push('styles')
-<style>
-    .message-preview {
-        display: -webkit-box;
-        -webkit-line-clamp: 1;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
-    .adm-dd { position: relative; width: 100%; }
-    .adm-dd-btn {
-        display: flex; align-items: center; justify-content: space-between;
-        width: 100%; height: 42px;
-        padding: 0 0.875rem;
-        background: #fff;
-        border: 1.5px solid #e5e7eb;
-        border-radius: 8px;
-        font-size: 0.875rem; font-weight: 500; color: #111827;
-        cursor: pointer;
-        transition: border-color 0.15s, box-shadow 0.15s;
-        text-align: left;
-    }
-    .adm-dd-btn:hover,
-    .adm-dd-btn.open { border-color: #dc2626; box-shadow: 0 0 0 3px rgba(220,38,38,0.1); }
-    .adm-dd-btn svg { flex-shrink: 0; color: #9ca3af; transition: transform 0.15s; }
-    .adm-dd-btn.open svg { transform: rotate(180deg); }
-
-    .adm-dd-list {
-        display: none;
-        position: absolute; top: calc(100% + 4px); left: 0; right: 0;
-        background: #fff;
-        border: 1.5px solid #e5e7eb;
-        border-radius: 8px;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-        z-index: 200;
-        overflow: hidden;
-    }
-    .adm-dd-list.open { display: block; }
-    .adm-dd-list li {
-        padding: 0.6rem 0.875rem;
-        font-size: 0.875rem; font-weight: 500; color: #374151;
-        cursor: pointer;
-        transition: background 0.1s, color 0.1s;
-        list-style: none;
-    }
-    .adm-dd-list li:hover    { background: rgba(220,38,38,0.07); color: #dc2626; }
-    .adm-dd-list li.selected { background: rgba(220,38,38,0.1);  color: #dc2626; font-weight: 600; }
-</style>
-@endpush
+@section('breadcrumb')
+    <a href="{{ route('admin.dashboard') }}" class="hover:text-primary-600">Dashboard</a>
+    <span>/</span>
+    <span>İletişim</span>
+@endsection
 
 @section('content')
+
+<!-- İstatistik Kartları -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+    <a href="{{ route('admin.contact-messages.index', ['filter' => 'all'] + request()->except('filter')) }}"
+       class="bg-white rounded-xl p-6 border-2 {{ $filter === 'all' ? 'border-primary-500 shadow-lg shadow-primary-500/10' : 'border-gray-100' }} shadow-sm hover:shadow-lg hover:border-primary-300 transition-all cursor-pointer group">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-600 text-sm font-medium mb-1">Toplam Mesaj</p>
+                <p class="text-3xl font-bold {{ $filter === 'all' ? 'text-primary-600' : 'text-gray-900 group-hover:text-primary-600' }} transition-colors">{{ $totalCount }}</p>
+            </div>
+            <div class="w-14 h-14 bg-primary-50 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                <svg class="w-7 h-7 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                </svg>
+            </div>
+        </div>
+    </a>
+
+    <a href="{{ route('admin.contact-messages.index', ['filter' => 'unread'] + request()->except('filter')) }}"
+       class="bg-white rounded-xl p-6 border-2 {{ $filter === 'unread' ? 'border-orange-400 shadow-lg shadow-orange-500/10' : 'border-gray-100' }} shadow-sm hover:shadow-lg hover:border-orange-300 transition-all cursor-pointer group">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-600 text-sm font-medium mb-1">Okunmamış</p>
+                <p class="text-3xl font-bold {{ $filter === 'unread' ? 'text-orange-500' : 'text-gray-900 group-hover:text-orange-500' }} transition-colors">{{ $unreadCount }}</p>
+            </div>
+            <div class="w-14 h-14 bg-orange-50 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                <svg class="w-7 h-7 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                </svg>
+            </div>
+        </div>
+    </a>
+
+    <a href="{{ route('admin.contact-messages.index', ['filter' => 'read'] + request()->except('filter')) }}"
+       class="bg-white rounded-xl p-6 border-2 {{ $filter === 'read' ? 'border-green-400 shadow-lg shadow-green-500/10' : 'border-gray-100' }} shadow-sm hover:shadow-lg hover:border-green-300 transition-all cursor-pointer group">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-600 text-sm font-medium mb-1">Okunmuş</p>
+                <p class="text-3xl font-bold {{ $filter === 'read' ? 'text-green-600' : 'text-gray-900 group-hover:text-green-600' }} transition-colors">{{ $readCount }}</p>
+            </div>
+            <div class="w-14 h-14 bg-green-50 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                <svg class="w-7 h-7 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+            </div>
+        </div>
+    </a>
+</div>
+
+<!-- Ana İçerik -->
 <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
     <!-- Header -->
-    <div class="p-6 border-b border-gray-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-            <h2 class="text-xl font-bold text-gray-900">İletişim Mesajları</h2>
-            <p class="text-sm text-gray-600 mt-1">Gelen mesajların yönetimi</p>
-        </div>
-        <a href="{{ \App\Models\Setting::get('contact_mail_hostinger_link', 'https://mail.hostinger.com/v2/mailboxes/INBOX') }}" 
-           target="_blank"
-           class="inline-flex items-center px-6 py-3 bg-primary-600 text-white font-bold rounded-xl hover:bg-primary-700 transition-all shadow-lg shadow-primary-500/25 gap-2">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-            Mail Paneline Git
-        </a>
-    </div>
-
-    <!-- Stats Cards -->
     <div class="p-6 border-b border-gray-200">
-        @include('admin.components.stats-cards', [
-            'totalCount' => $totalCount,
-            'unreadCount' => $unreadCount,
-            'readCount' => $readCount,
-            'activeFilter' => $filter
-        ])
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-900 flex items-center gap-3">
+                    <div class="w-10 h-10 bg-primary-100 rounded-xl flex items-center justify-center">
+                        <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                        </svg>
+                    </div>
+                    İletişim Mesajları
+                </h2>
+                <p class="text-sm text-gray-600 mt-2">Toplam <span class="font-bold text-primary-600">{{ $totalCount }}</span> mesaj • <span class="font-bold text-orange-500">{{ $unreadCount }}</span> okunmamış</p>
+            </div>
+            <a href="{{ \App\Models\Setting::get('contact_mail_hostinger_link', 'https://mail.hostinger.com/v2/mailboxes/INBOX') }}"
+               target="_blank"
+               class="px-6 py-2.5 bg-primary-600 text-white font-bold rounded-xl hover:bg-primary-700 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                </svg>
+                Mail Paneline Git
+            </a>
+        </div>
     </div>
 
-    <!-- Toolbar & Filters -->
-    <div class="p-6 border-b border-gray-200 bg-gray-50/30">
+    <!-- Filtreler -->
+    <div class="p-6 border-b border-gray-200 bg-gray-50">
         <form id="filter-form" method="GET" action="{{ route('admin.contact-messages.index') }}" class="space-y-4">
                 <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
                     <!-- [PATCH #4.2] Search Input -->
@@ -211,9 +218,9 @@
 
     <!-- Pagination -->
     @if($messages->hasPages())
-    <div class="px-6 py-5 bg-gray-50/30 border-t border-gray-200 flex items-center justify-between">
-        <div class="text-sm font-medium text-gray-600">
-            {{ $messages->firstItem() }}-{{ $messages->lastItem() }} / {{ $messages->total() }} mesaj gösteriliyor
+    <div class="px-6 py-5 bg-gray-50 border-t border-gray-200 flex items-center justify-between">
+        <div class="text-sm font-semibold text-gray-500">
+            {{ $messages->firstItem() }}–{{ $messages->lastItem() }} / <span class="text-gray-900">{{ $messages->total() }}</span> mesaj
         </div>
         <div class="flex items-center gap-4">
             <select onchange="window.location.href='{{ request()->fullUrlWithQuery(['per_page' => '__PER_PAGE__', 'page' => 1]) }}'.replace('__PER_PAGE__', this.value)"

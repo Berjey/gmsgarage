@@ -28,19 +28,7 @@
                     @php
                         $vehicleImages = [];
                         $defaultImage = asset('images/vehicles/default.jpg');
-                        
-                        // Test görselleri sadece development ortamında
-                        if (config('app.env') === 'local' || config('app.debug')) {
-                            $vehicleImages = [
-                                'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800&h=600&fit=crop',
-                                'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=800&h=600&fit=crop',
-                                'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=800&h=600&fit=crop',
-                                'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&h=600&fit=crop',
-                                'https://images.unsplash.com/photo-1502877338535-766e1452684a?w=800&h=600&fit=crop',
-                            ];
-                            $defaultImage = 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800&h=600&fit=crop';
-                        }
-                        
+
                         // Vehicle'dan görselleri al ve ekle
                         if (is_array($vehicle->images) && count($vehicle->images) > 0) {
                             foreach ($vehicle->images as $img) {

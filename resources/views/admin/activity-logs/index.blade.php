@@ -10,9 +10,38 @@
 
 @section('content')
 <div class="space-y-6">
-    
+
+    <!-- Başlık -->
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+        <div class="p-6 border-b border-gray-200">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-900 flex items-center gap-3">
+                        <div class="w-10 h-10 bg-primary-100 rounded-xl flex items-center justify-center">
+                            <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
+                            </svg>
+                        </div>
+                        Aktivite Logları
+                    </h2>
+                    <p class="text-sm text-gray-600 mt-2">Toplam <span class="font-bold text-primary-600">{{ $activities->total() }}</span> aktivite kaydı</p>
+                </div>
+                <button type="button" onclick="clearAllLogs()" class="px-5 py-2.5 bg-red-50 text-red-600 rounded-xl hover:bg-red-600 hover:text-white transition-all flex items-center gap-2 font-semibold border border-red-200">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                    </svg>
+                    Tüm Logları Temizle
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Filtreler -->
-    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+        <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+            <h3 class="text-sm font-semibold text-gray-700">Filtrele</h3>
+        </div>
+        <div class="p-6">
         <form method="GET" action="{{ route('admin.activity-logs.index') }}" class="space-y-4">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <!-- Kullanıcı Filtresi -->
@@ -84,48 +113,30 @@
                 </div>
             </div>
 
-            <div class="flex justify-between items-center">
-                <div class="flex space-x-3">
-                    <button type="button" onclick="clearAllLogs()" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors flex items-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                        </svg>
-                        Tüm Logları Temizle
-                    </button>
-                </div>
-                <div class="flex space-x-3">
-                    <a href="{{ route('admin.activity-logs.index') }}" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
-                        Filtreyi Temizle
-                    </a>
-                    <button type="submit" class="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-colors">
-                        Filtrele
-                    </button>
-                </div>
+            <div class="flex justify-end items-center gap-3">
+                <a href="{{ route('admin.activity-logs.index') }}" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors text-sm font-medium">
+                    Filtreyi Temizle
+                </a>
+                <button type="submit" class="px-5 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-xl transition-colors text-sm font-semibold">
+                    Filtrele
+                </button>
             </div>
         </form>
+        </div>
     </div>
 
     <!-- Aktivite Listesi -->
     <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-        <div class="p-6 border-b border-gray-200">
-            <div class="flex items-center justify-between">
-                <div>
-                    <h2 class="text-lg font-bold text-gray-900">Aktivite Geçmişi</h2>
-                    <p class="text-sm text-gray-500 mt-1">Toplam {{ $activities->total() }} kayıt bulundu</p>
-                </div>
-            </div>
-        </div>
-
         @if($activities->count() > 0)
             <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
+                <table class="w-full">
+                    <thead class="bg-gray-50/50">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kullanıcı</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksiyon</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Açıklama</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">IP Adresi</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tarih/Saat</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-widest">Kullanıcı</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-widest">Aksiyon</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-widest">Açıklama</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-widest">IP Adresi</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-widest">Tarih/Saat</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
@@ -172,7 +183,11 @@
             </div>
 
             <!-- Pagination -->
-            <div class="px-6 py-4 border-t border-gray-200">
+            <div class="px-6 py-4 border-t border-gray-200 bg-gray-50/50 flex items-center justify-between">
+                <p class="text-sm text-gray-500">
+                    {{ $activities->firstItem() }}-{{ $activities->lastItem() }} arası gösteriliyor
+                    (toplam {{ $activities->total() }} kayıt)
+                </p>
                 {{ $activities->links() }}
             </div>
         @else

@@ -10,91 +10,104 @@
 
 @section('content')
 <div class="space-y-6">
-    <!-- Başlık ve Oluştur Butonu -->
-    <div class="flex items-center justify-between">
-        <h1 class="text-3xl font-bold text-gray-900">Sitemap Yönetimi</h1>
-        <form action="{{ route('admin.sitemap.generate') }}" method="POST">
-            @csrf
-            <button type="submit" class="flex items-center space-x-2 px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-lg font-bold transition-colors">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-                </svg>
-                <span>Sitemap Oluştur</span>
-            </button>
-        </form>
+    <!-- Başlık -->
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+        <div class="p-6 border-b border-gray-200">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-900 flex items-center gap-3">
+                        <div class="w-10 h-10 bg-primary-100 rounded-xl flex items-center justify-center">
+                            <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+                            </svg>
+                        </div>
+                        Sitemap Yönetimi
+                    </h2>
+                    <p class="text-sm text-gray-600 mt-2">Toplam <span class="font-bold text-primary-600">{{ $stats['total'] }}</span> URL indekslenmiş</p>
+                </div>
+                <form action="{{ route('admin.sitemap.generate') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="flex items-center gap-2 px-6 py-2.5 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-semibold transition-colors shadow-sm">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                        </svg>
+                        Sitemap Oluştur
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        @if(session('success'))
+        <div class="px-6 py-3 bg-green-50 border-b border-green-100 text-green-700 text-sm font-medium flex items-center gap-2">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+            </svg>
+            {{ session('success') }}
+        </div>
+        @endif
     </div>
 
-    @if(session('success'))
-    <div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg">
-        {{ session('success') }}
-    </div>
-    @endif
-
-    <!-- İstatistikler -->
+    <!-- İstatistik Kartları -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div class="bg-white rounded-xl p-6 border-2 border-primary-100 shadow-sm group">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm font-medium text-gray-500">Toplam URL</p>
+                    <p class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Toplam URL</p>
                     <p class="text-2xl font-bold text-gray-900">{{ $stats['total'] }}</p>
                 </div>
-                <div class="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center">
+                <div class="w-12 h-12 bg-primary-50 rounded-xl flex items-center justify-center">
                     <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
                     </svg>
                 </div>
             </div>
         </div>
-
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div class="bg-white rounded-xl p-6 border-2 border-gray-100 shadow-sm hover:border-blue-300 transition-all group">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm font-medium text-gray-500">Araçlar</p>
+                    <p class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Araçlar</p>
                     <p class="text-2xl font-bold text-blue-600">{{ $stats['vehicles'] }}</p>
                 </div>
-                <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
                     <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                     </svg>
                 </div>
             </div>
         </div>
-
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div class="bg-white rounded-xl p-6 border-2 border-gray-100 shadow-sm hover:border-green-300 transition-all group">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm font-medium text-gray-500">Blog Yazıları</p>
+                    <p class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Blog Yazıları</p>
                     <p class="text-2xl font-bold text-green-600">{{ $stats['blogPosts'] }}</p>
                 </div>
-                <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
                     <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                     </svg>
                 </div>
             </div>
         </div>
-
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div class="bg-white rounded-xl p-6 border-2 border-gray-100 shadow-sm hover:border-purple-300 transition-all group">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm font-medium text-gray-500">Kategoriler</p>
+                    <p class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Kategoriler</p>
                     <p class="text-2xl font-bold text-purple-600">{{ $stats['blogCategories'] }}</p>
                 </div>
-                <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
+                <div class="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
                     <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
                     </svg>
                 </div>
             </div>
         </div>
-
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div class="bg-white rounded-xl p-6 border-2 border-gray-100 shadow-sm hover:border-orange-300 transition-all group">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm font-medium text-gray-500">Statik Sayfalar</p>
+                    <p class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Statik Sayfalar</p>
                     <p class="text-2xl font-bold text-orange-600">{{ $stats['staticPages'] }}</p>
                 </div>
-                <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
+                <div class="w-12 h-12 bg-orange-50 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
                     <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
                     </svg>
@@ -104,10 +117,13 @@
     </div>
 
     <!-- Durum Bilgisi -->
-    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <h2 class="text-xl font-semibold text-gray-900 mb-4">Sitemap Durumu</h2>
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+        <div class="p-6 border-b border-gray-200">
+            <h2 class="text-lg font-bold text-gray-900">Sitemap Durumu</h2>
+        </div>
+        <div class="p-6">
 
-        <div class="space-y-4">
+        <div class="space-y-1">
             <div class="flex items-center justify-between py-3 border-b border-gray-100">
                 <span class="text-gray-600">Dosya Durumu</span>
                 @if($fileExists)
@@ -153,14 +169,15 @@
                 <span class="text-gray-500 text-sm">Sitemap: {{ url('/sitemap.xml') }}</span>
             </div>
         </div>
+        </div>
     </div>
 
     <!-- URL Önizleme -->
-    <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
         <div class="p-6 border-b border-gray-200">
             <div class="flex items-center justify-between">
-                <h2 class="text-xl font-semibold text-gray-900">URL Önizleme</h2>
-                <button type="button" id="loadPreview" class="text-primary-600 hover:text-primary-700 text-sm font-medium">
+                <h2 class="text-lg font-bold text-gray-900">URL Önizleme</h2>
+                <button type="button" id="loadPreview" class="px-4 py-2 text-sm font-semibold text-primary-600 bg-primary-50 rounded-xl hover:bg-primary-100 transition-colors">
                     Yükle
                 </button>
             </div>

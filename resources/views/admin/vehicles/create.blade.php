@@ -764,13 +764,11 @@ $(document).ready(function() {
                             .attr('data-arabam-id', brand.ArabamId || '')
                             .text(brand.Name));
                     });
-                    console.log('✅ Markalar veritabanından yüklendi:', response.data.Items.length);
                 } else {
                     $('#brandSelect').empty().append('<option value="">Marka yüklenemedi</option>');
                 }
             },
             error: function(xhr, status, error) {
-                console.error('❌ Marka yükleme hatası:', error);
                 $('#brandSelect').empty().append('<option value="">Hata oluştu</option>');
             }
         });
@@ -790,7 +788,6 @@ $(document).ready(function() {
         });
         
         $('#yearSelect').prop('disabled', false);
-        console.log('✅ Yıllar yüklendi');
     }
     
     // ============================================================
@@ -801,8 +798,6 @@ $(document).ready(function() {
     $('#brandSelect').on('change', function() {
         cascadeData.brandId = $(this).val(); // value artık ID
         const brandName = $(this).find(':selected').data('name') || $(this).find(':selected').text();
-        
-        console.log('🔍 [1/7] Marka seçildi:', { brandId: cascadeData.brandId, brandName });
         
         // Reset sonraki alanlar
         resetCascadeFrom('year');
@@ -815,8 +810,6 @@ $(document).ready(function() {
     // 2. YIL SEÇİMİ → MODEL YÜKLE
     $('#yearSelect').on('change', function() {
         cascadeData.year = $(this).val();
-        
-        console.log('🔍 [2/7] Yıl seçildi:', cascadeData.year);
         
         // Reset sonraki alanlar
         resetCascadeFrom('model');
@@ -833,8 +826,6 @@ $(document).ready(function() {
         const modelName = $(this).find(':selected').data('name') || $(this).find(':selected').text();
         const arabamId = $('#brandSelect option:selected').data('arabam-id');
         
-        console.log('🔍 [3/7] Model seçildi:', { modelId: cascadeData.modelId, modelName, arabamId });
-        
         // Reset sonraki alanlar
         resetCascadeFrom('bodyType');
         
@@ -849,8 +840,6 @@ $(document).ready(function() {
         cascadeData.bodyTypeId = $(this).val(); // value artık ID
         const bodyTypeName = $(this).find(':selected').data('name') || $(this).find(':selected').text();
         
-        console.log('🔍 [4/7] Gövde tipi seçildi:', { bodyTypeId: cascadeData.bodyTypeId, bodyTypeName });
-        
         // Reset sonraki alanlar
         resetCascadeFrom('fuelType');
         
@@ -863,8 +852,6 @@ $(document).ready(function() {
     $('#fuelTypeSelect').on('change', function() {
         cascadeData.fuelTypeId = $(this).val(); // value artık ID
         const fuelTypeName = $(this).find(':selected').data('name') || $(this).find(':selected').text();
-        
-        console.log('🔍 [5/7] Yakıt tipi seçildi:', { fuelTypeId: cascadeData.fuelTypeId, fuelTypeName });
         
         // Reset sonraki alanlar
         resetCascadeFrom('transmission');
@@ -879,8 +866,6 @@ $(document).ready(function() {
         cascadeData.transmissionId = $(this).val(); // value artık ID
         const transmissionName = $(this).find(':selected').data('name') || $(this).find(':selected').text();
         
-        console.log('🔍 [6/7] Vites tipi seçildi:', { transmissionId: cascadeData.transmissionId, transmissionName });
-        
         // Reset sonraki alanlar
         resetCascadeFrom('version');
         
@@ -893,8 +878,6 @@ $(document).ready(function() {
     $('#versionSelect').on('change', function() {
         cascadeData.versionId = $(this).val(); // value artık ID
         const versionName = $(this).find(':selected').data('name') || $(this).find(':selected').text();
-        
-        console.log('🔍 [7/7] Versiyon seçildi:', { versionId: cascadeData.versionId, versionName });
         
         if (cascadeData.versionId) {
             loadColors(cascadeData.brandId, cascadeData.year, cascadeData.modelId, cascadeData.bodyTypeId, cascadeData.fuelTypeId, cascadeData.transmissionId, cascadeData.versionId);
@@ -956,8 +939,6 @@ $(document).ready(function() {
             success: function(response) {
                 if (response.success && response.data && response.data.Items) {
                     populateSelect('#modelSelect', response.data.Items, 'Model Seçiniz');
-                    console.log(`✅ ${response.data.Items.length} model veritabanından yüklendi`);
-                    
                     // Auto-select if only 1 option
                     if (response.data.Items.length === 1) {
                         $('#modelSelect').val(response.data.Items[0].Id).trigger('change');
@@ -967,7 +948,6 @@ $(document).ready(function() {
                 }
             },
             error: function(xhr, status, error) {
-                console.error('❌ Model yükleme hatası:', error);
                 $('#modelSelect').empty().append('<option value="">Hata oluştu</option>');
             }
         });
@@ -992,8 +972,6 @@ $(document).ready(function() {
             success: function(response) {
                 if (response.success && response.data && response.data.Items) {
                     populateSelect('#bodyTypeSelect', response.data.Items, 'Gövde Tipi Seçiniz');
-                    console.log(`✅ ${response.data.Items.length} gövde tipi yüklendi`);
-                    
                     if (response.data.Items.length === 1) {
                         $('#bodyTypeSelect').val(response.data.Items[0].Id).trigger('change');
                     }
@@ -1018,8 +996,6 @@ $(document).ready(function() {
             success: function(response) {
                 if (response.success && response.data && response.data.Items) {
                     populateSelect('#fuelTypeSelect', response.data.Items, 'Yakıt Tipi Seçiniz');
-                    console.log(`✅ ${response.data.Items.length} yakıt tipi yüklendi`);
-                    
                     if (response.data.Items.length === 1) {
                         $('#fuelTypeSelect').val(response.data.Items[0].Name).trigger('change');
                     }
@@ -1044,8 +1020,6 @@ $(document).ready(function() {
             success: function(response) {
                 if (response.success && response.data && response.data.Items) {
                     populateSelect('#transmissionSelect', response.data.Items, 'Vites Tipi Seçiniz');
-                    console.log(`✅ ${response.data.Items.length} vites tipi yüklendi`);
-                    
                     if (response.data.Items.length === 1) {
                         $('#transmissionSelect').val(response.data.Items[0].Name).trigger('change');
                     }
@@ -1070,8 +1044,6 @@ $(document).ready(function() {
             success: function(response) {
                 if (response.success && response.data && response.data.Items) {
                     populateSelect('#versionSelect', response.data.Items, 'Versiyon Seçiniz');
-                    console.log(`✅ ${response.data.Items.length} versiyon yüklendi`);
-                    
                     if (response.data.Items.length === 1) {
                         $('#versionSelect').val(response.data.Items[0].Name).trigger('change');
                     }
@@ -1096,8 +1068,6 @@ $(document).ready(function() {
             success: function(response) {
                 if (response.success && response.data && response.data.Items) {
                     populateSelect('#colorSelect', response.data.Items, 'Renk Seçiniz');
-                    console.log(`✅ ${response.data.Items.length} renk yüklendi`);
-                    
                     if (response.data.Items.length === 1) {
                         $('#colorSelect').val(response.data.Items[0].Name);
                     }
@@ -1265,7 +1235,6 @@ $(document).ready(function() {
     $('.submit-btn').on('click', function(e) {
         const action = $(this).data('action');
         $('#formAction').val(action);
-        console.log('✅ Form action set:', action);
     });
     
     // Form Submit
@@ -1331,8 +1300,6 @@ $(document).ready(function() {
         });
         
         const action = $('#formAction').val();
-        console.log('📤 Form submit action:', action);
-        
         if (action === 'publish') {
             const requiredFields = [
                 { name: 'title', label: 'Başlık' },

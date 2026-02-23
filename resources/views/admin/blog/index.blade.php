@@ -2,42 +2,116 @@
 
 @section('title', 'Blog Yönetimi - Admin Panel')
 @section('page-title', 'Blog Yönetimi')
-
-@push('styles')
-@endpush
+@section('breadcrumb')
+    <a href="{{ route('admin.dashboard') }}" class="hover:text-primary-600">Dashboard</a>
+    <span>/</span>
+    <span>Blog</span>
+@endsection
 
 @section('content')
-<div class="max-w-7xl mx-auto space-y-6">
-    <!-- Header Area -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-            <h1 class="text-3xl font-bold text-gray-900">Blog Yönetimi</h1>
-            <p class="mt-1 text-sm text-gray-500 font-medium tracking-wide uppercase">BLOG YAZILARININ YÖNETİMİ</p>
+@php
+    $totalPosts     = \App\Models\BlogPost::count();
+    $publishedCount = \App\Models\BlogPost::where('is_published', true)->count();
+    $draftCount     = \App\Models\BlogPost::where('is_published', false)->count();
+    $featuredCount  = \App\Models\BlogPost::where('is_featured', true)->count();
+@endphp
+
+<!-- İstatistik Kartları -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+    <a href="{{ route('admin.blog.index') }}" class="bg-white rounded-xl p-6 border-2 border-primary-100 shadow-sm hover:shadow-lg hover:border-primary-300 transition-all cursor-pointer group">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-600 text-sm font-medium mb-1">Toplam Yazı</p>
+                <p class="text-3xl font-bold text-gray-900 group-hover:text-primary-600 transition-colors">{{ $totalPosts }}</p>
+            </div>
+            <div class="w-14 h-14 bg-primary-50 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                <svg class="w-7 h-7 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>
+                </svg>
+            </div>
         </div>
-        <div class="flex items-center gap-3">
-            <button type="button"
-                    onclick="window.location.reload()"
-                    class="inline-flex items-center justify-center w-11 h-11 bg-white text-gray-600 rounded-xl border border-gray-200 hover:bg-gray-50 hover:text-primary-600 hover:border-primary-300 transition-all shadow-sm group"
-                    title="Sayfayı Yenile">
-                <svg class="w-5 h-5 group-hover:rotate-180 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-            </button>
-            <a href="{{ route('blog.index') }}" 
-               target="_blank"
-               class="inline-flex items-center px-5 py-2.5 bg-white text-gray-700 font-bold rounded-xl border border-gray-200 hover:bg-gray-50 hover:text-primary-600 transition-all shadow-sm group">
-                <svg class="w-5 h-5 mr-2 text-gray-400 group-hover:text-primary-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zM2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-                Blog Sayfasını Görüntüle
-            </a>
-            <a href="{{ route('admin.blog.create') }}" 
-               class="inline-flex items-center px-5 py-2.5 bg-primary-600 text-white font-bold rounded-xl hover:bg-primary-700 transition-all shadow-lg shadow-primary-500/25 group">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                Yeni Yazı Ekle
-            </a>
+    </a>
+
+    <a href="{{ route('admin.blog.index', ['status' => 'published']) }}" class="bg-white rounded-xl p-6 border-2 border-gray-100 shadow-sm hover:shadow-lg hover:border-green-300 transition-all cursor-pointer group">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-600 text-sm font-medium mb-1">Yayında</p>
+                <p class="text-3xl font-bold text-gray-900 group-hover:text-green-600 transition-colors">{{ $publishedCount }}</p>
+            </div>
+            <div class="w-14 h-14 bg-green-50 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                <svg class="w-7 h-7 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+            </div>
+        </div>
+    </a>
+
+    <a href="{{ route('admin.blog.index', ['status' => 'featured']) }}" class="bg-white rounded-xl p-6 border-2 border-gray-100 shadow-sm hover:shadow-lg hover:border-yellow-300 transition-all cursor-pointer group">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-600 text-sm font-medium mb-1">Öne Çıkan</p>
+                <p class="text-3xl font-bold text-gray-900 group-hover:text-yellow-600 transition-colors">{{ $featuredCount }}</p>
+            </div>
+            <div class="w-14 h-14 bg-yellow-50 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                <svg class="w-7 h-7 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+                </svg>
+            </div>
+        </div>
+    </a>
+
+    <a href="{{ route('admin.blog.index', ['status' => 'draft']) }}" class="bg-white rounded-xl p-6 border-2 border-gray-100 shadow-sm hover:shadow-lg hover:border-gray-300 transition-all cursor-pointer group">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-600 text-sm font-medium mb-1">Taslak</p>
+                <p class="text-3xl font-bold text-gray-900 group-hover:text-gray-600 transition-colors">{{ $draftCount }}</p>
+            </div>
+            <div class="w-14 h-14 bg-gray-100 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                <svg class="w-7 h-7 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                </svg>
+            </div>
+        </div>
+    </a>
+</div>
+
+
+<!-- Ana İçerik -->
+<div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+    <!-- Header -->
+    <div class="p-6 border-b border-gray-200">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-900 flex items-center gap-3">
+                    <div class="w-10 h-10 bg-primary-100 rounded-xl flex items-center justify-center">
+                        <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>
+                        </svg>
+                    </div>
+                    Blog Yazıları
+                </h2>
+                <p class="text-sm text-gray-600 mt-2">Toplam <span class="font-bold text-primary-600">{{ $posts->total() }}</span> yazı kayıtlı</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <a href="{{ route('blog.index') }}"
+                   target="_blank"
+                   class="inline-flex items-center px-4 py-2.5 bg-white text-gray-700 font-semibold rounded-xl border border-gray-200 hover:bg-gray-50 hover:text-primary-600 transition-all shadow-sm">
+                    <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zM2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                    Blog'u Görüntüle
+                </a>
+                <a href="{{ route('admin.blog.create') }}"
+                   class="px-6 py-2.5 bg-primary-600 text-white font-bold rounded-xl hover:bg-primary-700 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                    Yeni Yazı Ekle
+                </a>
+            </div>
         </div>
     </div>
 
-    <!-- Toolbar & Filters -->
-    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-        <div class="p-6 bg-gray-50/30 border-b border-gray-50">
+    <!-- Filtreler -->
+    <div class="p-6 bg-gray-50 border-b border-gray-200">
             <form id="filter-form" method="GET" action="{{ route('admin.blog.index') }}">
                 <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
                     <!-- Search Input with Clear Button -->
@@ -237,9 +311,9 @@
 
         <!-- Pagination -->
         @if($posts->hasPages())
-        <div class="px-6 py-5 bg-gray-50/30 border-t border-gray-50 flex items-center justify-between">
-            <div class="text-sm font-bold text-gray-500 uppercase tracking-widest">
-                {{ $posts->firstItem() }}-{{ $posts->lastItem() }} / {{ $posts->total() }} YAZI
+        <div class="px-6 py-5 bg-gray-50 border-t border-gray-200 flex items-center justify-between">
+            <div class="text-sm font-semibold text-gray-500">
+                {{ $posts->firstItem() }}–{{ $posts->lastItem() }} / <span class="text-gray-900">{{ $posts->total() }}</span> yazı
             </div>
             <div class="flex items-center gap-3">
                 <div class="adm-dd" data-adm-dd style="width:80px;">
@@ -258,7 +332,6 @@
         </div>
         @endif
     </div>
-</div>
 
 @include('admin.components.confirm-modal', [
     'id' => 'delete-modal',

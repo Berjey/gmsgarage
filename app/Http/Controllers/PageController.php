@@ -233,21 +233,6 @@ class PageController extends Controller
         return back()->with('success', 'Talebiniz başarıyla gönderildi! En kısa sürede size dönüş yapacağız.');
     }
 
-    public function kvkk()
-    {
-        return view('pages.kvkk');
-    }
-
-    public function privacy()
-    {
-        return view('pages.privacy');
-    }
-
-    public function terms()
-    {
-        return view('pages.terms');
-    }
-
     public function landing()
     {
         return view('pages.landing');
