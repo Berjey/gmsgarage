@@ -234,19 +234,22 @@
                                     }
                                 }
                                 
-                                // KVKK Consent validation
-                                const kvkkCheckbox = document.getElementById('kvkk_consent');
-                                const kvkkError = document.getElementById('kvkk-error');
+                                // Yasal onay kutucukları validasyonu
+                                const legalCheckboxes = form.querySelectorAll('[name^="legal_consent_"]');
                                 let isKvkkValid = true;
-                                if (!kvkkCheckbox.checked) {
-                                    kvkkError.textContent = 'KVKK Aydınlatma Metnini kabul etmelisiniz.';
-                                    kvkkError.classList.remove('hidden');
-                                    kvkkCheckbox.classList.add('ring-2', 'ring-red-500');
-                                    isKvkkValid = false;
-                                } else {
-                                    kvkkError.classList.add('hidden');
-                                    kvkkCheckbox.classList.remove('ring-2', 'ring-red-500');
-                                }
+                                legalCheckboxes.forEach(function(cb) {
+                                    const slug = cb.name.replace('legal_consent_', '');
+                                    const errorEl = document.getElementById('error-' + slug + '-contact');
+                                    if (!cb.checked) {
+                                        isKvkkValid = false;
+                                        if (errorEl) {
+                                            errorEl.textContent = 'Sözleşmeyi okuyup onaylamanız zorunludur.';
+                                            errorEl.classList.remove('hidden');
+                                        }
+                                    } else {
+                                        if (errorEl) errorEl.classList.add('hidden');
+                                    }
+                                });
                                 
                                 if (!isNameValid || !isEmailValid || !isMessageValid || !isPhoneValid || !isKvkkValid) {
                                     return false;

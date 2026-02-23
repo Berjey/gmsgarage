@@ -54,26 +54,34 @@ class PageController extends Controller
 
     public function contactSubmit(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|min:2|max:255',
-            'email' => 'required|email|max:255',
-            'phone' => ['nullable', 'string', 'regex:/^[0-9]{0,11}$/', 'max:11'],
+        // Dinamik yasal onay validasyonu
+        $formPages = \App\Models\LegalPage::getFormPages();
+        $legalRules = [];
+        $legalMessages = [];
+        foreach ($formPages as $page) {
+            $field = 'legal_consent_' . $page->slug;
+            $legalRules[$field] = 'required|accepted';
+            $legalMessages[$field . '.required'] = $page->title . ' metnini kabul etmelisiniz.';
+            $legalMessages[$field . '.accepted'] = $page->title . ' metnini kabul etmelisiniz.';
+        }
+
+        $request->validate(array_merge([
+            'name'    => 'required|string|min:2|max:255',
+            'email'   => 'required|email|max:255',
+            'phone'   => ['nullable', 'string', 'regex:/^[0-9]{0,11}$/', 'max:11'],
             'subject' => 'nullable|string|max:255',
             'message' => 'required|string|min:10|max:1000',
-            'kvkk_consent' => 'required|accepted',
-        ], [
-            'name.required' => 'Ad Soyad alanı zorunludur.',
-            'name.min' => 'Ad Soyad en az 2 karakter olmalıdır.',
-            'email.required' => 'E-posta alanı zorunludur.',
-            'email.email' => 'Geçerli bir e-posta adresi girin.',
-            'phone.regex' => 'Telefon numarası sadece rakamlardan oluşmalı ve en fazla 11 haneli olmalıdır.',
-            'phone.max' => 'Telefon numarası en fazla 11 haneli olmalıdır.',
+        ], $legalRules), array_merge([
+            'name.required'    => 'Ad Soyad alanı zorunludur.',
+            'name.min'         => 'Ad Soyad en az 2 karakter olmalıdır.',
+            'email.required'   => 'E-posta alanı zorunludur.',
+            'email.email'      => 'Geçerli bir e-posta adresi girin.',
+            'phone.regex'      => 'Telefon numarası sadece rakamlardan oluşmalı ve en fazla 11 haneli olmalıdır.',
+            'phone.max'        => 'Telefon numarası en fazla 11 haneli olmalıdır.',
             'message.required' => 'Mesaj alanı zorunludur.',
-            'message.min' => 'Mesaj en az 10 karakter olmalıdır.',
-            'message.max' => 'Mesaj en fazla 1000 karakter olabilir.',
-            'kvkk_consent.required' => 'KVKK Aydınlatma Metnini kabul etmelisiniz.',
-            'kvkk_consent.accepted' => 'KVKK Aydınlatma Metnini kabul etmelisiniz.',
-        ]);
+            'message.min'      => 'Mesaj en az 10 karakter olmalıdır.',
+            'message.max'      => 'Mesaj en fazla 1000 karakter olabilir.',
+        ], $legalMessages));
 
         // Save contact message to database
         $contactMessage = ContactMessage::create([

@@ -89,14 +89,27 @@ class LegalModal {
     }
 
     attachLinkListeners() {
-        // Find all legal links with data-legal-slug attribute
         document.querySelectorAll('[data-legal-slug]').forEach(link => {
+            // Link click: open modal
             link.addEventListener('click', (e) => {
                 e.preventDefault();
-                const slug = link.dataset.legalSlug;
-                const checkboxId = link.dataset.checkboxId;
-                this.open(slug, checkboxId);
+                this.open(link.dataset.legalSlug, link.dataset.checkboxId);
             });
+
+            // Checkbox direct click: block if not yet read
+            const cbId = link.dataset.checkboxId;
+            if (cbId) {
+                const checkbox = document.getElementById(cbId);
+                if (checkbox) {
+                    checkbox.addEventListener('click', () => {
+                        // Browser already toggled checked at this point
+                        if (checkbox.checked && checkbox.dataset.needsReading !== 'false') {
+                            checkbox.checked = false; // revert
+                            this.open(link.dataset.legalSlug, cbId);
+                        }
+                    });
+                }
+            }
         });
     }
 
@@ -178,11 +191,14 @@ class LegalModal {
             return;
         }
         
-        // Check the associated checkbox
+        // Unlock and check the associated checkbox
         if (this.currentCheckbox) {
+            this.currentCheckbox.dataset.needsReading = 'false';
             this.currentCheckbox.checked = true;
-            
-            // Trigger change event for validation
+            this.currentCheckbox.classList.remove('opacity-40', 'cursor-not-allowed');
+            this.currentCheckbox.classList.add('cursor-pointer');
+
+            // Trigger change event for validation listeners
             this.currentCheckbox.dispatchEvent(new Event('change', { bubbles: true }));
         }
         
