@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\EvaluationRequest;
 use App\Models\CarBrand;
 use App\Models\CarModel;
+use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
@@ -407,6 +408,16 @@ class VehicleEvaluationController extends Controller
             ]);
 
             \Log::info('Evaluation request saved', ['id' => $evaluationRequest->id]);
+
+            // Müşteriyi CRM listesine kaydet / güncelle
+            Customer::findOrCreateFromRequest([
+                'name'         => $request->ad . ' ' . $request->soyad,
+                'email'        => $request->email,
+                'phone'        => $request->telefon,
+                'source'       => 'evaluation_request',
+                'kvkk_consent' => true,
+                'ip_address'   => $request->ip(),
+            ]);
 
             return response()->json([
                 'success' => true,
