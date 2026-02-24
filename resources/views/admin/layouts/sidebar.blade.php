@@ -73,22 +73,6 @@
             @endif
         </a>
 
-        <a href="{{ route('admin.vehicle-requests.index') }}" 
-           class="group flex items-center justify-between px-4 py-3 rounded-xl font-medium transition-all duration-200 {{ request()->routeIs('admin.vehicle-requests.*') ? 'bg-primary-50 text-primary-600 border-l-4 border-primary-600' : 'text-gray-700 hover:bg-gray-50 hover:translate-x-1' }}">
-            <div class="flex items-center space-x-3">
-                <svg class="w-5 h-5 {{ request()->routeIs('admin.vehicle-requests.*') ? 'text-primary-600' : 'text-gray-500 group-hover:text-primary-600' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-                </svg>
-                <span>Araç İstekleri</span>
-            </div>
-            @php
-                $unreadCount = \App\Models\VehicleRequest::where('is_read', false)->count();
-            @endphp
-            @if($unreadCount > 0)
-                <span class="bg-primary-600 text-white text-xs font-bold px-2 py-1 rounded-full animate-pulse">{{ $unreadCount }}</span>
-            @endif
-        </a>
-
         <a href="{{ route('admin.evaluation-requests.index') }}" 
            class="group flex items-center justify-between px-4 py-3 rounded-xl font-medium transition-all duration-200 {{ request()->routeIs('admin.evaluation-requests.*') ? 'bg-primary-50 text-primary-600 border-l-4 border-primary-600' : 'text-gray-700 hover:bg-gray-50 hover:translate-x-1' }}">
             <div class="flex items-center space-x-3">
@@ -121,10 +105,10 @@
                 <span>Müşteri Listesi</span>
             </div>
             @php
-                $totalCustomers = \App\Models\Customer::count();
+                $newCustomers = \App\Models\Customer::where('is_new', true)->count();
             @endphp
-            @if($totalCustomers > 0)
-                <span class="bg-blue-100 text-blue-700 text-xs font-bold px-2 py-1 rounded-full">{{ $totalCustomers }}</span>
+            @if($newCustomers > 0)
+                <span class="bg-primary-600 text-white text-xs font-bold px-2 py-1 rounded-full animate-pulse">{{ $newCustomers }}</span>
             @endif
         </a>
 

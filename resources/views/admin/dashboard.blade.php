@@ -199,22 +199,6 @@
         </div>
     </div>
 
-    <!-- Vehicle Requests -->
-    <div class="stat-card bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
-        <div class="flex items-center justify-between">
-            <div class="flex-1">
-                <p class="text-sm font-semibold text-gray-600 mb-2">Araç İstekleri</p>
-                <p class="text-3xl font-bold text-primary-600">{{ $stats['unread_vehicle_requests'] }}</p>
-                <p class="text-xs text-gray-500 mt-1">Bugün: {{ $stats['today_vehicle_requests'] }} | Toplam: {{ $stats['total_vehicle_requests'] }}</p>
-            </div>
-            <div class="w-14 h-14 bg-primary-100 rounded-xl flex items-center justify-center">
-                <svg class="w-7 h-7 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-                </svg>
-            </div>
-        </div>
-    </div>
-
     <!-- Evaluation Requests -->
     <div class="stat-card bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
         <div class="flex items-center justify-between">

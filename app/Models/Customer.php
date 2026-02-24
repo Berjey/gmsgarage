@@ -24,6 +24,7 @@ class Customer extends Model
         'legal_consents',
         'consent_given_at',
         'consent_ip',
+        'is_new',
     ];
 
     /**
@@ -33,6 +34,7 @@ class Customer extends Model
      */
     protected $casts = [
         'kvkk_consent' => 'boolean',
+        'is_new' => 'boolean',
         'legal_consents' => 'array',
         'consent_given_at' => 'datetime',
         'created_at' => 'datetime',
@@ -114,6 +116,7 @@ class Customer extends Model
                 'legal_consents' => $legalConsents,
                 'consent_given_at' => now(),
                 'consent_ip' => request()->ip(),
+                'is_new' => true,
             ]
         );
     }

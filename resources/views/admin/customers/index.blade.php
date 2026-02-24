@@ -108,7 +108,6 @@
                 <button type="button" class="adm-dd-btn" data-adm-trigger>
                     <span data-adm-label>
                         @if(request('source') == 'contact_form') İletişim Formu
-                        @elseif(request('source') == 'vehicle_request') Araç İsteği
                         @elseif(request('source') == 'evaluation_request') Değerleme Talebi
                         @else Tüm Kaynaklar
                         @endif
@@ -118,7 +117,6 @@
                 <ul class="adm-dd-list" data-adm-list>
                     <li data-value=""                    class="{{ !request('source') ? 'selected' : '' }}">Tüm Kaynaklar</li>
                     <li data-value="contact_form"        class="{{ request('source') == 'contact_form'        ? 'selected' : '' }}">İletişim Formu</li>
-                    <li data-value="vehicle_request"     class="{{ request('source') == 'vehicle_request'     ? 'selected' : '' }}">Araç İsteği</li>
                     <li data-value="evaluation_request"  class="{{ request('source') == 'evaluation_request'  ? 'selected' : '' }}">Değerleme Talebi</li>
                 </ul>
             </div>

@@ -19,9 +19,8 @@
         <!-- Bildirim İkonu -->
         @php
             $unreadMessages = \App\Models\ContactMessage::where('is_read', false)->count();
-            $unreadVehicleRequests = \App\Models\VehicleRequest::where('is_read', false)->count();
             $unreadEvaluations = \App\Models\EvaluationRequest::where('is_read', false)->count();
-            $totalUnread = $unreadMessages + $unreadVehicleRequests + $unreadEvaluations;
+            $totalUnread = $unreadMessages + $unreadEvaluations;
         @endphp
         
         <div class="relative" x-data="{ open: false }">
@@ -68,22 +67,6 @@
                                 <p class="text-xs text-gray-500">{{ $unreadMessages }} okunmamış mesaj</p>
                             </div>
                             <span class="px-2 py-1 bg-blue-600 text-white text-xs font-bold rounded-full">{{ $unreadMessages }}</span>
-                        </a>
-                        @endif
-
-                        <!-- Araç İstekleri -->
-                        @if($unreadVehicleRequests > 0)
-                        <a href="{{ route('admin.vehicle-requests.index') }}" class="flex items-start gap-3 p-4 hover:bg-gray-50 border-b border-gray-100 transition-colors">
-                            <div class="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                                <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-                                </svg>
-                            </div>
-                            <div class="flex-1 min-w-0">
-                                <p class="text-sm font-bold text-gray-900">Araç İsteği</p>
-                                <p class="text-xs text-gray-500">{{ $unreadVehicleRequests }} yeni istek</p>
-                            </div>
-                            <span class="px-2 py-1 bg-amber-600 text-white text-xs font-bold rounded-full">{{ $unreadVehicleRequests }}</span>
                         </a>
                         @endif
 

@@ -34,10 +34,6 @@ Route::redirect('/kvkk', '/sayfa/kvkk-aydinlatma-metni');
 Route::redirect('/gizlilik-politikasi', '/sayfa/gizlilik-politikasi');
 Route::redirect('/kullanim-sartlari', '/sayfa/kullanim-sartlari');
 
-// Araç İsteği
-Route::get('/aracimi-bulamiyorum', [PageController::class, 'vehicleRequest'])->name('vehicle-request.index');
-Route::post('/aracimi-bulamiyorum', [PageController::class, 'vehicleRequestSubmit'])->name('vehicle-request.submit');
-
 // Araçlar
 Route::get('/araclar', [VehicleController::class, 'index'])->name('vehicles.index');
 Route::get('/araclar/{slug}', [VehicleController::class, 'show'])->name('vehicles.show');

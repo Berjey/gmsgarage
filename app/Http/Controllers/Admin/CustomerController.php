@@ -34,6 +34,11 @@ class CustomerController extends Controller
         // Order by latest
         $customers = $query->orderBy('created_at', 'desc')->paginate(20);
 
+        // Yeni müşteri bildirimini temizle (sadece filtre yoksa)
+        if (!$request->hasAny(['search', 'source'])) {
+            Customer::where('is_new', true)->update(['is_new' => false]);
+        }
+
         return view('admin.customers.index', compact('customers'));
     }
 

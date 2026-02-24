@@ -7,7 +7,6 @@ use App\Models\Vehicle;
 use App\Models\BlogPost;
 use App\Models\User;
 use App\Models\ContactMessage;
-use App\Models\VehicleRequest;
 use App\Models\EvaluationRequest;
 use App\Models\Customer;
 use Illuminate\Http\Request;
@@ -44,8 +43,6 @@ class AdminController extends Controller
             // Mesaj İstatistikleri
             'unread_messages' => ContactMessage::where('is_read', false)->count(),
             'total_messages' => ContactMessage::count(),
-            'unread_vehicle_requests' => VehicleRequest::where('is_read', false)->count(),
-            'total_vehicle_requests' => VehicleRequest::count(),
             'unread_evaluation_requests' => EvaluationRequest::where('is_read', false)->count(),
             'total_evaluation_requests' => EvaluationRequest::count(),
             
@@ -56,7 +53,6 @@ class AdminController extends Controller
             
             // Bugünün İstatistikleri
             'today_messages' => ContactMessage::whereDate('created_at', today())->count(),
-            'today_vehicle_requests' => VehicleRequest::whereDate('created_at', today())->count(),
             'today_evaluation_requests' => EvaluationRequest::whereDate('created_at', today())->count(),
         ];
 

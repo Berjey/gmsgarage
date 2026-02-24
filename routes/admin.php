@@ -7,7 +7,6 @@ use App\Http\Controllers\Admin\BlogController as AdminBlogController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ContactMessageController;
-use App\Http\Controllers\Admin\VehicleRequestController;
 use App\Http\Controllers\Admin\EvaluationRequestController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\SitemapController;
@@ -130,14 +129,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
                 Route::post('/{id}/read', [ContactMessageController::class, 'markAsRead'])->name('read');
                 Route::post('/{id}/unread', [ContactMessageController::class, 'markAsUnread'])->name('unread');
                 Route::delete('/{id}', [ContactMessageController::class, 'destroy'])->name('destroy');
-            });
-            
-            // Araç İstekleri
-            Route::prefix('vehicle-requests')->name('vehicle-requests.')->group(function () {
-                Route::get('/', [VehicleRequestController::class, 'index'])->name('index');
-                Route::get('/{id}', [VehicleRequestController::class, 'show'])->name('show');
-                Route::post('/{id}/read', [VehicleRequestController::class, 'markAsRead'])->name('read');
-                Route::delete('/{id}', [VehicleRequestController::class, 'destroy'])->name('destroy');
             });
             
             // Değerleme İstekleri
