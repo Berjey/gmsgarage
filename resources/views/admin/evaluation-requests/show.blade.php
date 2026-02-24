@@ -91,8 +91,6 @@
     </div>
 
     {{-- İstatistik Satırı --}}
-    <div class="flex items-center justify-between">
-    {{-- İstatistik Satırı --}}
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {{-- Araç --}}
         <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
