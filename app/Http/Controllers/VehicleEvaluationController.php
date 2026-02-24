@@ -320,30 +320,42 @@ class VehicleEvaluationController extends Controller
                 'vites_tipi' => 'nullable|string|max:255',
                 'versiyon' => 'nullable|string|max:255',
                 'kilometre' => 'required|string|max:50',
-                'renk' => 'nullable|string|max:255',
+                'renk' => 'required|string|max:255',
                 'tramer' => 'required|in:YOK,VAR,BILMIYORUM,AGIR_HASAR',
-                'tramer_tutari' => 'nullable|string|max:50',
+                'tramer_tutari' => 'required_if:tramer,VAR,AGIR_HASAR|nullable|string|max:50',
                 'ekspertiz' => 'nullable|string',
                 'ad' => 'required|string|max:255',
                 'soyad' => 'required|string|max:255',
                 'telefon' => 'required|string|max:20',
                 'email' => 'required|email|max:255',
-                'sehir' => 'required|string|max:255',
                 'not' => 'nullable|string|max:1000',
-                'kvkk_onay' => 'required|accepted',
             ], [
                 'marka.required' => 'Marka alanı zorunludur.',
                 'model.required' => 'Model alanı zorunludur.',
                 'kilometre.required' => 'Kilometre alanı zorunludur.',
+                'renk.required' => 'Renk seçimi zorunludur.',
                 'tramer.required' => 'Tramer bilgisi zorunludur.',
+                'tramer_tutari.required_if' => 'Hasar/tramer durumunda toplam tutar girilmesi zorunludur.',
                 'ad.required' => 'Ad alanı zorunludur.',
                 'soyad.required' => 'Soyad alanı zorunludur.',
                 'telefon.required' => 'Telefon alanı zorunludur.',
                 'email.required' => 'E-posta alanı zorunludur.',
                 'email.email' => 'Geçerli bir e-posta adresi girin.',
-                'sehir.required' => 'Şehir alanı zorunludur.',
-                'kvkk_onay.required' => 'KVKK onayı zorunludur.',
             ]);
+
+            // Dinamik yasal onay validasyonu
+            $formPages = \App\Models\LegalPage::getFormPages();
+            $legalRules = [];
+            $legalMessages = [];
+            foreach ($formPages as $page) {
+                $field = 'legal_consent_' . $page->slug;
+                $legalRules[$field] = 'required|accepted';
+                $legalMessages[$field . '.required'] = $page->title . ' metnini kabul etmelisiniz.';
+                $legalMessages[$field . '.accepted'] = $page->title . ' metnini kabul etmelisiniz.';
+            }
+            if (!empty($legalRules)) {
+                $request->validate($legalRules, $legalMessages);
+            }
 
             \Log::info('Validation passed');
 
@@ -390,7 +402,6 @@ class VehicleEvaluationController extends Controller
                     'tramer' => $request->tramer,
                     'tramer_tutari' => $tramerTutari,
                     'ekspertiz' => $ekspertiz,
-                    'sehir' => $request->sehir,
                     'not' => $request->not,
                 ], JSON_UNESCAPED_UNICODE),
             ]);

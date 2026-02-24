@@ -686,6 +686,7 @@
                     </div>
                     <input type="hidden" name="marka" id="marka-input" value="" required>
                     <input type="hidden" name="marka_id" id="marka-id" value="{{ request('marka_id') }}">
+                    <span id="marka-error" class="hidden mt-1 flex items-center gap-1 text-xs text-red-500"><svg class="w-3.5 h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg><span></span></span>
                 </div>
                 <div>
                     <label class="form-label">Yıl *</label>
@@ -699,6 +700,7 @@
                         <div class="eval-custom-dropdown-panel"></div>
                     </div>
                     <input type="hidden" name="yil" id="yil-input" value="" required>
+                    <span id="yil-error" class="hidden mt-1 flex items-center gap-1 text-xs text-red-500"><svg class="w-3.5 h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg><span></span></span>
                 </div>
             </div>
 
@@ -717,6 +719,7 @@
                     </div>
                     <input type="hidden" name="model" id="model-input" value="" required>
                     <input type="hidden" name="model_id" id="model-id" value="">
+                    <span id="model-error" class="hidden mt-1 flex items-center gap-1 text-xs text-red-500"><svg class="w-3.5 h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg><span></span></span>
                 </div>
                 <div>
                     <label class="form-label">Gövde Tipi</label>
@@ -787,9 +790,10 @@
                 <div>
                     <label class="form-label">Kilometre *</label>
                     <input type="text" name="kilometre" id="kilometre-input" class="form-input" placeholder="Kilometre giriniz" disabled required>
+                    <span id="kilometre-error" class="hidden mt-1 flex items-center gap-1 text-xs text-red-500"><svg class="w-3.5 h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg><span></span></span>
                 </div>
                 <div>
-                    <label class="form-label">Renk</label>
+                    <label class="form-label">Renk *</label>
                     <div class="eval-custom-dropdown disabled" id="renk-dropdown">
                         <button type="button" class="eval-custom-dropdown-trigger" data-value="" data-id="">
                             <span class="selected-text placeholder">Renk Seçin</span>
@@ -801,6 +805,7 @@
                     </div>
                     <input type="hidden" name="renk" id="renk-input" value="">
                     <input type="hidden" name="renk_id" id="renk-id" value="">
+                    <span id="renk-error" class="hidden mt-1 flex items-center gap-1 text-xs text-red-500"><svg class="w-3.5 h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg><span></span></span>
                 </div>
             </div>
 
@@ -909,11 +914,12 @@
                         <input type="hidden" name="tramer" id="tramer-input" value="YOK" required>
                     </div>
                     <div class="tramer-tutar-wrapper">
-                        <label class="form-label">Toplam Tramer Tutarı</label>
+                        <label class="form-label" id="tramer-tutari-label">Toplam Tramer Tutarı</label>
                         <div class="tutar-input-wrapper">
                             <input type="text" name="tramer_tutari" id="tramer-tutari" class="form-input" placeholder="0" disabled>
                             <span class="tutar-suffix">TL</span>
                         </div>
+                        <span id="tramer-tutari-error" class="hidden mt-1 flex items-center gap-1 text-xs text-red-500"><svg class="w-3.5 h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg><span></span></span>
                     </div>
                 </div>
 
@@ -929,10 +935,18 @@
                     <div>
                         <label class="form-label">Ad *</label>
                         <input type="text" name="ad" id="ad-input" class="form-input" placeholder="Adınız" required>
+                        <span id="ad-error" class="hidden text-xs text-red-500 mt-1 flex items-center gap-1">
+                            <svg class="w-3.5 h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+                            <span></span>
+                        </span>
                     </div>
                     <div>
                         <label class="form-label">Soyad *</label>
                         <input type="text" name="soyad" id="soyad-input" class="form-input" placeholder="Soyadınız" required>
+                        <span id="soyad-error" class="hidden text-xs text-red-500 mt-1 flex items-center gap-1">
+                            <svg class="w-3.5 h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+                            <span></span>
+                        </span>
                     </div>
                 </div>
 
@@ -940,33 +954,19 @@
                     <div>
                         <label class="form-label">Telefon *</label>
                         <input type="tel" name="telefon" id="telefon-input" class="form-input" placeholder="05XX XXX XX XX" required>
+                        <span id="telefon-error" class="hidden text-xs text-red-500 mt-1 flex items-center gap-1">
+                            <svg class="w-3.5 h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+                            <span></span>
+                        </span>
                     </div>
                     <div>
                         <label class="form-label">E-posta *</label>
                         <input type="email" name="email" id="email-input" class="form-input" placeholder="ornek@email.com" required>
+                        <span id="email-error" class="hidden text-xs text-red-500 mt-1 flex items-center gap-1">
+                            <svg class="w-3.5 h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+                            <span></span>
+                        </span>
                     </div>
-                </div>
-
-                <div class="mb-4">
-                    <label class="form-label">Şehir *</label>
-                    <div class="eval-custom-dropdown" id="sehir-dropdown">
-                        <button type="button" class="eval-custom-dropdown-trigger" data-value="">
-                            <span class="selected-text placeholder">Şehir Seçin</span>
-                            <svg class="arrow w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </button>
-                        <div class="eval-custom-dropdown-panel">
-                            @php
-                                $cities = ['Adana', 'Adıyaman', 'Afyonkarahisar', 'Ağrı', 'Amasya', 'Ankara', 'Antalya', 'Artvin', 'Aydın', 'Balıkesir', 'Bilecik', 'Bingöl', 'Bitlis', 'Bolu', 'Burdur', 'Bursa', 'Çanakkale', 'Çankırı', 'Çorum', 'Denizli', 'Diyarbakır', 'Edirne', 'Elazığ', 'Erzincan', 'Erzurum', 'Eskişehir', 'Gaziantep', 'Giresun', 'Gümüşhane', 'Hakkari', 'Hatay', 'Isparta', 'Mersin', 'İstanbul', 'İzmir', 'Kars', 'Kastamonu', 'Kayseri', 'Kırklareli', 'Kırşehir', 'Kocaeli', 'Konya', 'Kütahya', 'Malatya', 'Manisa', 'Kahramanmaraş', 'Mardin', 'Muğla', 'Muş', 'Nevşehir', 'Niğde', 'Ordu', 'Rize', 'Sakarya', 'Samsun', 'Siirt', 'Sinop', 'Sivas', 'Tekirdağ', 'Tokat', 'Trabzon', 'Tunceli', 'Şanlıurfa', 'Uşak', 'Van', 'Yozgat', 'Zonguldak', 'Aksaray', 'Bayburt', 'Karaman', 'Kırıkkale', 'Batman', 'Şırnak', 'Bartın', 'Ardahan', 'Iğdır', 'Yalova', 'Karabük', 'Kilis', 'Osmaniye', 'Düzce'];
-                                sort($cities);
-                            @endphp
-                            @foreach($cities as $city)
-                                <div class="eval-custom-dropdown-option" data-value="{{ $city }}">{{ $city }}</div>
-                            @endforeach
-                        </div>
-                    </div>
-                    <input type="hidden" name="sehir" id="sehir-input" value="" required>
                 </div>
 
                 <div class="mb-4">
@@ -991,6 +991,33 @@
 
 @push('scripts')
 <script>
+// ===== GLOBAL INLINE VALIDATION HELPERS =====
+function showFieldError(inputEl, errorId, msg) {
+    const wrap = document.getElementById(errorId);
+    if (!wrap) return;
+    const spanEl = wrap.querySelector('span');
+    if (spanEl) spanEl.textContent = msg;
+    wrap.classList.remove('hidden');
+    if (inputEl) {
+        if (inputEl.classList.contains('eval-custom-dropdown-trigger')) {
+            inputEl.style.borderColor = '#ef4444';
+        } else {
+            inputEl.classList.add('border-red-500');
+        }
+    }
+}
+function clearFieldError(inputEl, errorId) {
+    const wrap = document.getElementById(errorId);
+    if (wrap) wrap.classList.add('hidden');
+    if (inputEl) {
+        if (inputEl.classList.contains('eval-custom-dropdown-trigger')) {
+            inputEl.style.borderColor = '';
+        } else {
+            inputEl.classList.remove('border-red-500');
+        }
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     // ===== CUSTOM DROPDOWN GENEL DAVRANIŞLARI =====
     
@@ -1057,6 +1084,7 @@ document.addEventListener('DOMContentLoaded', function() {
         selectedBrandId = e.detail.id || null;
         document.getElementById('marka-input').value = e.detail.value || '';
         document.getElementById('marka-id').value = selectedBrandId || '';
+        if (e.detail.value) clearFieldError(this.querySelector('.eval-custom-dropdown-trigger'), 'marka-error');
 
         // Reset all subsequent fields
         resetFrom('yil');
@@ -1070,6 +1098,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('yil-dropdown').addEventListener('dropdown-change', function(e) {
         selectedYear = e.detail.value || null;
         document.getElementById('yil-input').value = selectedYear || '';
+        if (e.detail.value) clearFieldError(this.querySelector('.eval-custom-dropdown-trigger'), 'yil-error');
 
         // Reset all subsequent fields
         resetFrom('model');
@@ -1084,6 +1113,7 @@ document.addEventListener('DOMContentLoaded', function() {
         selectedModelId = e.detail.id || null;
         document.getElementById('model-input').value = e.detail.value || '';
         document.getElementById('model-id').value = selectedModelId || '';
+        if (e.detail.value) clearFieldError(this.querySelector('.eval-custom-dropdown-trigger'), 'model-error');
 
         // Reset all subsequent fields
         resetFrom('govde');
@@ -1151,12 +1181,16 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('renk-dropdown').addEventListener('dropdown-change', function(e) {
         document.getElementById('renk-input').value = e.detail.value || '';
         document.getElementById('renk-id').value = e.detail.id || '';
+        if (e.detail.value) {
+            clearFieldError(this.querySelector('.eval-custom-dropdown-trigger'), 'renk-error');
+        }
     });
 
-    // Format kilometre input
+    // Format kilometre input + clear error
     document.getElementById('kilometre-input').addEventListener('input', function() {
         let value = this.value.replace(/\D/g, '');
         this.value = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        if (this.value.trim()) clearFieldError(this, 'kilometre-error');
     });
 
     // Reset functions for custom dropdowns
@@ -1723,11 +1757,16 @@ document.addEventListener('DOMContentLoaded', function() {
             panel.classList.remove('open');
             
             // Enable/disable tramer tutarı based on selection
+            const tramerTutariLabel = document.getElementById('tramer-tutari-label');
             if (value === 'VAR' || value === 'AGIR_HASAR') {
                 tramerTutari.disabled = false;
+                tramerTutari.focus();
+                if (tramerTutariLabel) tramerTutariLabel.innerHTML = 'Toplam Tramer Tutarı <span class="text-red-500">*</span>';
             } else {
                 tramerTutari.disabled = true;
                 tramerTutari.value = '';
+                clearFieldError(tramerTutari, 'tramer-tutari-error');
+                if (tramerTutariLabel) tramerTutariLabel.textContent = 'Toplam Tramer Tutarı';
             }
         });
     });
@@ -1909,10 +1948,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Format tramer tutarı with dots
+    // Format tramer tutarı with dots + clear error
     tramerTutari.addEventListener('input', function() {
         let value = this.value.replace(/\D/g, '');
         this.value = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        if (this.value.trim()) clearFieldError(this, 'tramer-tutari-error');
     });
 
     // Format phone number
@@ -1933,6 +1973,18 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Input'lara yazılınca hata mesajlarını temizle
+    ['ad-input','soyad-input','telefon-input','email-input'].forEach(function(id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.addEventListener('input', function() {
+            const errId = id.replace('-input', '-error');
+            const errEl = document.getElementById(errId);
+            if (errEl) errEl.classList.add('hidden');
+            el.classList.remove('border-red-500');
+        });
+    });
+
     // Form submission
     const form = document.getElementById('evaluation-form');
     form.addEventListener('submit', async function(e) {
@@ -1943,40 +1995,55 @@ document.addEventListener('DOMContentLoaded', function() {
         const submitLoading = document.getElementById('submit-loading');
 
         // Validate step 3
-        const adInput = document.getElementById('ad-input');
-        const soyadInput = document.getElementById('soyad-input');
+        const adInput      = document.getElementById('ad-input');
+        const soyadInput   = document.getElementById('soyad-input');
         const telefonInput = document.getElementById('telefon-input');
-        const emailInput = document.getElementById('email-input');
-        const sehirSelect = document.getElementById('sehir-select');
-        const kvkkCheckbox = document.getElementById('kvkk-checkbox');
+        const emailInput   = document.getElementById('email-input');
+        // Temizle
+        ['ad','soyad','telefon','email'].forEach(f => {
+            const el = document.getElementById(f + '-input');
+            if (el) clearFieldError(el, f + '-error');
+        });
+
+        let hasError = false;
 
         if (!adInput.value.trim()) {
-            alert('Lütfen adınızı girin');
-            adInput.focus();
-            return;
+            showFieldError(adInput, 'ad-error', 'Ad alanı zorunludur.');
+            hasError = true;
         }
         if (!soyadInput.value.trim()) {
-            alert('Lütfen soyadınızı girin');
-            soyadInput.focus();
-            return;
+            showFieldError(soyadInput, 'soyad-error', 'Soyad alanı zorunludur.');
+            hasError = true;
         }
         if (!telefonInput.value.trim() || telefonInput.value.replace(/\D/g, '').length < 10) {
-            alert('Lütfen geçerli bir telefon numarası girin');
-            telefonInput.focus();
-            return;
+            showFieldError(telefonInput, 'telefon-error', 'Geçerli bir telefon numarası girin (en az 10 rakam).');
+            hasError = true;
         }
         if (!emailInput.value.trim() || !emailInput.value.includes('@')) {
-            alert('Lütfen geçerli bir e-posta adresi girin');
-            emailInput.focus();
-            return;
+            showFieldError(emailInput, 'email-error', 'Geçerli bir e-posta adresi girin.');
+            hasError = true;
         }
-        if (!sehirSelect.value) {
-            alert('Lütfen şehir seçin');
-            sehirSelect.focus();
-            return;
-        }
-        if (!kvkkCheckbox.checked) {
-            alert('KVKK Aydınlatma Metni\'ni kabul etmelisiniz');
+
+        // Yasal onay kontrolü
+        const legalCheckboxes = document.querySelectorAll('#step-3 [name^="legal_consent_"]');
+        legalCheckboxes.forEach(cb => {
+            const slug = cb.name.replace('legal_consent_', '');
+            const errEl = document.getElementById('error-' + slug + '-evaluation');
+            if (!cb.checked) {
+                hasError = true;
+                if (errEl) {
+                    errEl.textContent = 'Sözleşmeyi okuyup onaylamanız zorunludur.';
+                    errEl.classList.remove('hidden');
+                }
+            } else {
+                if (errEl) errEl.classList.add('hidden');
+            }
+        });
+
+        if (hasError) {
+            // İlk hatalı alana kaydır
+            const firstError = document.querySelector('#step-3 .border-red-500, #step-3 [id$="-error"]:not(.hidden)');
+            if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
             return;
         }
 
@@ -2053,30 +2120,62 @@ function goToStep(step) {
     // Validate before moving forward
     if (step > currentStep) {
         if (currentStep === 1 && step >= 2) {
-            const markaInput = document.getElementById('marka-input');
-            const yilInput = document.getElementById('yil-input');
-            const modelInput = document.getElementById('model-input');
+            const markaInput     = document.getElementById('marka-input');
+            const yilInput       = document.getElementById('yil-input');
+            const modelInput     = document.getElementById('model-input');
             const kilometreInput = document.getElementById('kilometre-input');
+            const renkInput      = document.getElementById('renk-input');
+
+            // Clear previous step-1 errors
+            ['marka','yil','model','kilometre','renk'].forEach(function(f) {
+                const trigger = document.getElementById(f + '-dropdown')?.querySelector('.eval-custom-dropdown-trigger');
+                clearFieldError(f === 'kilometre' ? document.getElementById('kilometre-input') : (trigger || null), f + '-error');
+            });
+
+            let hasError = false;
 
             if (!markaInput.value) {
-                alert('Lütfen marka seçin');
-                document.getElementById('marka-dropdown').querySelector('.eval-custom-dropdown-trigger').focus();
-                return;
+                showFieldError(document.getElementById('marka-dropdown').querySelector('.eval-custom-dropdown-trigger'), 'marka-error', 'Lütfen marka seçin.');
+                hasError = true;
             }
             if (!yilInput.value) {
-                alert('Lütfen yıl seçin');
-                document.getElementById('yil-dropdown').querySelector('.eval-custom-dropdown-trigger').focus();
-                return;
+                showFieldError(document.getElementById('yil-dropdown').querySelector('.eval-custom-dropdown-trigger'), 'yil-error', 'Lütfen yıl seçin.');
+                hasError = true;
             }
             if (!modelInput.value) {
-                alert('Lütfen model seçin');
-                document.getElementById('model-dropdown').querySelector('.eval-custom-dropdown-trigger').focus();
+                showFieldError(document.getElementById('model-dropdown').querySelector('.eval-custom-dropdown-trigger'), 'model-error', 'Lütfen model seçin.');
+                hasError = true;
+            }
+            if (!kilometreInput.value.trim()) {
+                showFieldError(kilometreInput, 'kilometre-error', 'Lütfen kilometre girin.');
+                hasError = true;
+            }
+            if (!renkInput.value) {
+                const renkTrigger = document.getElementById('renk-dropdown').querySelector('.eval-custom-dropdown-trigger');
+                showFieldError(renkTrigger, 'renk-error', 'Renk seçimi zorunludur.');
+                hasError = true;
+            }
+
+            if (hasError) {
+                const firstError = document.querySelector('#step-1 [id$="-error"]:not(.hidden)');
+                if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 return;
             }
-            if (!kilometreInput.value) {
-                alert('Lütfen kilometre girin');
-                kilometreInput.focus();
-                return;
+        }
+
+        if (currentStep === 2 && step >= 3) {
+            const tramerInput  = document.getElementById('tramer-input');
+            const tramerTutari = document.getElementById('tramer-tutari');
+
+            clearFieldError(tramerTutari, 'tramer-tutari-error');
+
+            if (tramerInput && ['VAR', 'AGIR_HASAR'].includes(tramerInput.value)) {
+                if (!tramerTutari.value.trim()) {
+                    showFieldError(tramerTutari, 'tramer-tutari-error', 'Hasar/tramer durumunda toplam tutar girilmesi zorunludur.');
+                    tramerTutari.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    tramerTutari.focus();
+                    return;
+                }
             }
         }
     }

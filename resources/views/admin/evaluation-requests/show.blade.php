@@ -152,14 +152,22 @@
                             <dt class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">KİLOMETRE</dt>
                             <dd class="text-base font-bold text-primary-600">{{ number_format($request->mileage, 0, ',', '.') }} KM</dd>
                         </div>
-                        <div>
-                            <dt class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">YAKIT / VİTES</dt>
-                            <dd class="text-sm font-bold text-gray-900">{{ $request->fuel_type }} / {{ $request->transmission }}</dd>
-                        </div>
                         @if(!empty($extra['govde_tipi']))
                         <div>
                             <dt class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">GÖVDE TİPİ</dt>
                             <dd class="text-sm font-bold text-gray-900">{{ $extra['govde_tipi'] }}</dd>
+                        </div>
+                        @endif
+                        @if($request->fuel_type)
+                        <div>
+                            <dt class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">YAKIT TİPİ</dt>
+                            <dd class="text-sm font-bold text-gray-900">{{ $request->fuel_type }}</dd>
+                        </div>
+                        @endif
+                        @if($request->transmission)
+                        <div>
+                            <dt class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">VİTES TİPİ</dt>
+                            <dd class="text-sm font-bold text-gray-900">{{ $request->transmission }}</dd>
                         </div>
                         @endif
                         @if(!empty($extra['renk']))
@@ -174,6 +182,18 @@
                             <dd class="text-sm font-bold text-gray-900">{{ $request->version }}</dd>
                         </div>
                         @endif
+                        @if(!empty($extra['tramer_tutari']))
+                        <div>
+                            <dt class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">TRAMER TUTARI</dt>
+                            <dd class="text-sm font-bold text-red-600">{{ number_format($extra['tramer_tutari'], 0, ',', '.') }} TL</dd>
+                        </div>
+                        @endif
+                        <div>
+                            <dt class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">HASAR DURUMU</dt>
+                            <dd class="text-sm font-bold {{ $hasHasar ? 'text-red-600' : 'text-green-700' }}">
+                                {{ $tramerLabels[$tramerVal] ?? '-' }}
+                            </dd>
+                        </div>
                     </dl>
 
                     @if(!empty($extra['not']))
