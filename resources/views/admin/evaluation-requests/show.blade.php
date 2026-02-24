@@ -14,21 +14,6 @@
         'LOKAL_BOYALI' => ['fill' => '#fbbf24', 'bg' => 'bg-yellow-100', 'text' => 'text-yellow-800', 'label' => 'Lokal Boyalı'],
         'DEGISMIS'     => ['fill' => '#dc2626', 'bg' => 'bg-red-100',    'text' => 'text-red-800',    'label' => 'Değişmiş'],
     ];
-    $partToSvg = [
-        'sag_arka_camurluk' => 'svg-sag_arka_camurluk',
-        'arka_kaput'        => 'svg-arka_kaput',
-        'sol_arka_camurluk' => 'svg-sol_arka_camurluk',
-        'sag_arka_kapi'     => 'svg-sag_arka_kapi',
-        'sag_on_kapi'       => 'svg-sag_on_kapi',
-        'tavan'             => 'svg-tavan',
-        'sol_arka_kapi'     => 'svg-sol_arka_kapi',
-        'sol_on_kapi'       => 'svg-sol_on_kapi',
-        'sag_on_camurluk'   => 'svg-sag_on_camurluk',
-        'motor_kaputu'      => 'svg-motor_kaputu',
-        'sol_on_camurluk'   => 'svg-sol_on_camurluk',
-        'on_tampon'         => 'svg-on_tampon',
-        'arka_tampon'       => 'svg-arka_tampon',
-    ];
     $partLabels = [
         'sag_arka_camurluk' => 'Sağ Arka Çamurluk',
         'arka_kaput'        => 'Arka Kaput',
@@ -60,10 +45,18 @@
             <span>/</span>
             <span class="text-gray-900 font-medium">İstek Detayı</span>
         </nav>
-        <a href="{{ route('admin.evaluation-requests.index') }}" class="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-primary-600 transition-colors font-medium">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-            Listeye Dön
-        </a>
+        <div class="flex items-center gap-3">
+            @if(!$request->is_read)
+            <span data-new-badge class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-orange-100 text-orange-700 border border-orange-200 animate-pulse">
+                <span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>
+                YENİ
+            </span>
+            @endif
+            <a href="{{ route('admin.evaluation-requests.index') }}" class="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-primary-600 transition-colors font-medium">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                Listeye Dön
+            </a>
+        </div>
     </div>
 
     {{-- İstatistik Satırı --}}
@@ -135,17 +128,17 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
 
             {{-- Araç Bilgileri (col-span-2) --}}
-            <div class="lg:col-span-2">
+            <div class="lg:col-span-2 flex flex-col">
 
             {{-- Araç Bilgileri --}}
-            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden h-full">
                 <div class="px-6 py-5 border-b border-gray-50 flex items-center gap-3 bg-gray-50/30">
                     <div class="p-2 bg-primary-50 text-primary-600 rounded-lg">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
                     </div>
                     <h2 class="text-lg font-bold text-gray-900">Araç Bilgileri</h2>
                 </div>
-                <div class="p-8 space-y-6">
+                <div class="p-6 space-y-6">
                     <dl class="grid grid-cols-2 sm:grid-cols-3 gap-x-8 gap-y-6">
                         <div>
                             <dt class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">MARKA / MODEL</dt>
@@ -197,7 +190,10 @@
 
             {{-- Müşteri Bilgileri (col-span-1) --}}
             <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden h-full">
-                <div class="px-6 py-5 border-b border-gray-50 bg-gray-50/30">
+                <div class="px-6 py-5 border-b border-gray-50 flex items-center gap-3 bg-gray-50/30">
+                    <div class="p-2 bg-primary-50 text-primary-600 rounded-lg">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                    </div>
                     <h2 class="text-lg font-bold text-gray-900">Müşteri Bilgileri</h2>
                 </div>
                 <div class="p-6 space-y-6">
@@ -263,8 +259,7 @@
         </div>{{-- /Üst Blok --}}
 
         {{-- ALT BLOK: Ekspertiz Durumu (tam genişlik) --}}
-        {{-- Ekspertiz Durumu --}}
-            @if(!empty($ekspertiz))
+        @if(!empty($ekspertiz))
             <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
                 <div class="px-6 py-5 border-b border-gray-50 flex items-center gap-3 bg-gray-50/30">
                     <div class="p-2 bg-primary-50 text-primary-600 rounded-lg">
@@ -303,7 +298,15 @@
                     </div>{{-- /grid-cols-2 --}}
                 </div>
             </div>
-            @endif
+        @else
+            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-8 text-center">
+                <div class="w-14 h-14 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-7 h-7 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                </div>
+                <p class="text-sm font-semibold text-gray-500">Ekspertiz bilgisi girilmemiş</p>
+                <p class="text-xs text-gray-400 mt-1">Müşteri araç durumunu belirtmeden form göndermiş.</p>
+            </div>
+        @endif
 
     </div>{{-- /Ana İçerik --}}
 
@@ -311,8 +314,8 @@
 
 @push('scripts')
 <script>
-// Araç SVG parçalarını ekspertiz verisine göre renklendir
 (function() {
+    // SVG parçalarını renklendir
     const ekspertiz = @json($ekspertiz);
     const colorMap = {
         'ORIJINAL':     '#FFFFFF',
@@ -336,12 +339,24 @@
         'arka_tampon':       'svg-arka_tampon',
     };
     Object.entries(ekspertiz).forEach(([partKey, val]) => {
-        const svgId = partToSvg[partKey];
-        if (!svgId) return;
-        const el = document.getElementById(svgId);
-        if (!el) return;
-        el.style.fill = colorMap[val] || '#FFFFFF';
+        const el = document.getElementById(partToSvg[partKey]);
+        if (el) el.style.fill = colorMap[val] || '#FFFFFF';
     });
+
+    // Okunmamışsa sayfa yüklenir yüklenmez otomatik okundu işaretle
+    @if(!$request->is_read)
+    fetch('{{ route('admin.evaluation-requests.read', $request->id) }}', {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        }
+    }).then(() => {
+        // YENİ badge'ini sessizce gizle
+        document.querySelectorAll('[data-new-badge]').forEach(el => el.remove());
+    });
+    @endif
 })();
 </script>
 @endpush
