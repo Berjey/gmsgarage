@@ -15,12 +15,14 @@ class LegalPage extends Model
         'content',
         'is_active',
         'is_required_in_forms',
+        'is_optional_in_forms',
         'version',
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
         'is_required_in_forms' => 'boolean',
+        'is_optional_in_forms' => 'boolean',
     ];
 
     /**

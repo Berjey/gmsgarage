@@ -349,10 +349,13 @@ class VehicleEvaluationController extends Controller
             $legalRules = [];
             $legalMessages = [];
             foreach ($formPages as $page) {
-                $field = 'legal_consent_' . $page->slug;
-                $legalRules[$field] = 'required|accepted';
-                $legalMessages[$field . '.required'] = $page->title . ' metnini kabul etmelisiniz.';
-                $legalMessages[$field . '.accepted'] = $page->title . ' metnini kabul etmelisiniz.';
+                // Opsiyonel sözleşmeler için HİÇBİR VALIDATION KOYMA
+                if (!$page->is_optional_in_forms) {
+                    $field = 'legal_consent_' . $page->slug;
+                    $legalRules[$field] = 'required|accepted';
+                    $legalMessages[$field . '.required'] = $page->title . ' metnini kabul etmelisiniz.';
+                    $legalMessages[$field . '.accepted'] = $page->title . ' metnini kabul etmelisiniz.';
+                }
             }
             if (!empty($legalRules)) {
                 $request->validate($legalRules, $legalMessages);
@@ -409,15 +412,24 @@ class VehicleEvaluationController extends Controller
 
             \Log::info('Evaluation request saved', ['id' => $evaluationRequest->id]);
 
-            // Müşteriyi CRM listesine kaydet / güncelle
-            Customer::findOrCreateFromRequest([
+            // Müşteriyi CRM listesine kaydet / güncelle - Sadece TÜM sözleşmeler onaylandıysa
+            $customerData = [
                 'name'         => $request->ad . ' ' . $request->soyad,
                 'email'        => $request->email,
                 'phone'        => $request->telefon,
                 'source'       => 'evaluation_request',
                 'kvkk_consent' => true,
                 'ip_address'   => $request->ip(),
-            ]);
+            ];
+            
+            // Legal consent verilerini ekle
+            foreach ($request->all() as $key => $value) {
+                if (strpos($key, 'legal_consent_') === 0) {
+                    $customerData[$key] = $value === 'on' || $value === '1' || $value === true;
+                }
+            }
+            
+            Customer::findOrCreateFromRequest($customerData);
 
             return response()->json([
                 'success' => true,

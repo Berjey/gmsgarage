@@ -58,10 +58,13 @@ class PageController extends Controller
         $legalRules = [];
         $legalMessages = [];
         foreach ($formPages as $page) {
-            $field = 'legal_consent_' . $page->slug;
-            $legalRules[$field] = 'required|accepted';
-            $legalMessages[$field . '.required'] = $page->title . ' metnini kabul etmelisiniz.';
-            $legalMessages[$field . '.accepted'] = $page->title . ' metnini kabul etmelisiniz.';
+            // Opsiyonel sözleşmeler için HİÇBİR VALIDATION KOYMA
+            if (!$page->is_optional_in_forms) {
+                $field = 'legal_consent_' . $page->slug;
+                $legalRules[$field] = 'required|accepted';
+                $legalMessages[$field . '.required'] = $page->title . ' metnini kabul etmelisiniz.';
+                $legalMessages[$field . '.accepted'] = $page->title . ' metnini kabul etmelisiniz.';
+            }
         }
 
         $request->validate(array_merge([
@@ -91,15 +94,24 @@ class PageController extends Controller
             'message' => $request->message,
         ]);
 
-        // Save or update customer (CRM)
-        Customer::findOrCreateFromRequest([
+        // Save or update customer (CRM) - Sadece TÜM sözleşmeler onaylandıysa
+        $customerData = [
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
             'source' => 'contact_form',
             'kvkk_consent' => true,
             'ip_address' => $request->ip(),
-        ]);
+        ];
+        
+        // Legal consent verilerini ekle
+        foreach ($request->all() as $key => $value) {
+            if (strpos($key, 'legal_consent_') === 0) {
+                $customerData[$key] = $value === 'on' || $value === '1' || $value === true;
+            }
+        }
+        
+        Customer::findOrCreateFromRequest($customerData);
 
         // Send email to configured recipient
         $mailRecipient = Setting::get('contact_mail_recipient', 'info@gmsgarage.com');

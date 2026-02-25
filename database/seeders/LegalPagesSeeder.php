@@ -50,6 +50,15 @@ class LegalPagesSeeder extends Seeder
                 'is_required_in_forms' => false,
                 'version' => 1,
             ],
+            [
+                'title' => 'Ticari Elektronik İleti Açık Rıza Metni',
+                'slug' => 'ticari-elektronik-ileti-acik-riza',
+                'content' => $this->getCommercialConsentContent(),
+                'is_active' => true,
+                'is_required_in_forms' => true,
+                'is_optional_in_forms' => true,
+                'version' => 1,
+            ],
         ];
 
         foreach ($legalPages as $page) {
@@ -726,4 +735,142 @@ EOT;
 
 EOT;
     }
+
+    private function getCommercialConsentContent()
+    {
+        return <<<'EOT'
+<h2>TİCARİ ELEKTRONİK İLETİ AÇIK RIZA METNİ</h2>
+
+<p>6563 sayılı Elektronik Ticaretin Düzenlenmesi Hakkında Kanun uyarınca düzenlenmiştir.</p>
+
+<h2>1. AÇIK RIZA BEYANI</h2>
+
+<p>İşbu metni onaylayarak, <strong>GMS Garage Otomotiv</strong> ("GMS Garage" veya "Şirket") tarafından tarafıma ticari elektronik ileti gönderilmesine açık rıza veriyorum.</p>
+
+<p><strong>Onayladığım İletişim Kanalları:</strong></p>
+
+<ul>
+    <li>E-posta (E-mail)</li>
+    <li>SMS (Kısa Mesaj)</li>
+    <li>Telefon Araması</li>
+    <li>Otomatik Arama Makineleri</li>
+    <li>WhatsApp ve diğer anlık mesajlaşma uygulamaları</li>
+</ul>
+
+<h2>2. GÖNDERİLECEK İLETİLERİN İÇERİĞİ</h2>
+
+<p>Tarafıma aşağıdaki konularda ticari elektronik ileti gönderilebilir:</p>
+
+<ul>
+    <li><strong>Ürün ve Hizmet Tanıtımları:</strong> Yeni araç ilanları, ekspertiz hizmetleri, otomotiv danışmanlık</li>
+    <li><strong>Kampanya ve İndirimler:</strong> Özel fırsatlar, sezonluk kampanyalar, indirim duyuruları</li>
+    <li><strong>Duyurular:</strong> Yeni hizmetler, etkinlik bilgilendirmeleri, önemli güncellemeler</li>
+    <li><strong>Anketler ve Geri Bildirim Talepleri:</strong> Memnuniyet anketleri, görüş toplama formları</li>
+    <li><strong>Hatırlatmalar:</strong> Randevu hatırlatmaları, araç bakım bildirimleri, yıl dönümü mesajları</li>
+</ul>
+
+<h2>3. AÇIK RIZA SÜRESİ</h2>
+
+<p>Bu açık rıza beyanı, geri alınıncaya kadar geçerlidir. Rızanızı istediğiniz zaman geri alabilirsiniz.</p>
+
+<h2>4. KİŞİSEL VERİLERİN İŞLENMESİ</h2>
+
+<p>İletişim bilgileriniz (ad, soyad, e-posta, telefon) KVKK uyarınca güvenli bir şekilde saklanır ve yalnızca ticari elektronik ileti gönderimi amacıyla kullanılır.</p>
+
+<p>Verileriniz, onayınız olmadan üçüncü taraflarla paylaşılmaz.</p>
+
+<h2>5. AÇIK RIZANIN GERİ ALINMASI</h2>
+
+<p>Ticari elektronik ileti almayı istemediğiniz takdirde, rızanızı aşağıdaki yöntemlerle geri alabilirsiniz:</p>
+
+<ul>
+    <li><strong>İletideki Ret Linki:</strong> Aldığınız her e-posta veya SMS'teki "Abonelikten Çık" linkine tıklayın</li>
+    <li><strong>E-posta:</strong> bilgi@gmsgarage.com adresine "Ticari İleti Ret" konulu e-posta gönderin</li>
+    <li><strong>Telefon:</strong> +90 XXX XXX XX XX numaralı hattımızı arayın</li>
+    <li><strong>Web Sitesi:</strong> Hesabınıza giriş yaparak iletişim tercihlerinizi güncelleyin</li>
+    <li><strong>İYS (İleti Yönetim Sistemi):</strong> https://www.iys.org.tr adresinden ret işlemi yapabilirsiniz</li>
+</ul>
+
+<p>Ret işleminiz en geç 3 iş günü içinde sistem tarafımızda güncellenir ve tarafınıza yeni ticari elektronik ileti gönderilmez.</p>
+
+<h2>6. İLETİ SIKLIĞI</h2>
+
+<p>Ticari elektronik iletiler, abonelik tercihinize bağlı olarak aşağıdaki sıklıklarda gönderilebilir:</p>
+
+<ul>
+    <li>Kampanya duyuruları: Ayda 2-4 kez</li>
+    <li>Yeni araç ilanları: Haftada 1-2 kez</li>
+    <li>Önemli duyurular: Gerektiğinde</li>
+    <li>Anketler ve geri bildirim talepleri: 3 ayda bir</li>
+</ul>
+
+<h2>7. SPAM OLMAYAN İÇERİK</h2>
+
+<p>GMS Garage olarak, gönderdiğimiz tüm ticari elektronik iletilerin:</p>
+
+<ul>
+    <li>İçeriğinin açık ve anlaşılır olmasını,</li>
+    <li>Spam veya yanıltıcı bilgi içermemesini,</li>
+    <li>Yasal düzenlemelere uygun olmasını,</li>
+    <li>Ret mekanizmasını kolayca görünür ve erişilebilir olmasını taahhüt ediyoruz.</li>
+</ul>
+
+<h2>8. GÜVENLİK</h2>
+
+<p>İletişim bilgileriniz güvenli sunucularda saklanır ve yetkisiz erişime karşı korunur:</p>
+
+<ul>
+    <li>SSL/TLS şifrelemesi</li>
+    <li>Güvenli veri tabanı sistemleri</li>
+    <li>Erişim kontrol mekanizmaları</li>
+    <li>Düzenli güvenlik güncellemeleri</li>
+</ul>
+
+<h2>9. ÜÇÜNCÜ TARAF PAYLAŞIMI</h2>
+
+<p>İletişim bilgileriniz, açık rızanız olmadan pazarlama amacıyla üçüncü taraflarla paylaşılmaz.</p>
+
+<p>Yalnızca teknik hizmet sağlayıcılarımız (e-posta gönderim servisleri, SMS operatörleri) ile gizlilik sözleşmeleri kapsamında paylaşılır.</p>
+
+<h2>10. ÇOCUKLARIN GİZLİLİĞİ</h2>
+
+<p>18 yaşın altındaki bireylerden ticari elektronik ileti onayı toplamıyoruz. Ebeveyn veya vasi onayı gereklidir.</p>
+
+<h2>11. ONAY TARİHİ VE KAYITLAR</h2>
+
+<p>Açık rıza beyanınız, onay tarihi, IP adresi ve onay kanalı ile birlikte kayıt altına alınır:</p>
+
+<ul>
+    <li><strong>Onay Tarihi:</strong> Formun gönderildiği tarih ve saat</li>
+    <li><strong>Onay Yöntemi:</strong> Web sitesi formu, mobil uygulama, fiziksel form vb.</li>
+    <li><strong>IP Adresi:</strong> Güvenlik ve doğrulama amacıyla</li>
+</ul>
+
+<p>Bu kayıtlar, yasal yükümlülüklerimiz gereği 3 yıl süreyle saklanır.</p>
+
+<h2>12. DEĞİŞİKLİKLER</h2>
+
+<p>Bu Açık Rıza Metni, yasal düzenlemelerdeki değişiklikler nedeniyle güncellenebilir. Önemli değişiklikler için tarafınıza bilgilendirme yapılır.</p>
+
+<p><strong>Son Güncellenme:</strong> Şubat 2026</p>
+
+<h2>13. İLETİŞİM</h2>
+
+<p>Ticari elektronik ileti onayı hakkında sorularınız için:</p>
+
+<ul>
+    <li><strong>E-posta:</strong> bilgi@gmsgarage.com</li>
+    <li><strong>Telefon:</strong> +90 XXX XXX XX XX</li>
+    <li><strong>Adres:</strong> [Şirket Adresi]</li>
+</ul>
+
+<hr>
+
+<p><strong>ÖNEMLİ:</strong> Bu onay tamamen gönüllüdür. Onay vermemeniz durumunda, GMS Garage hizmetlerinden yararlanmaya devam edebilirsiniz. Ancak kampanya ve özel fırsatlardan haberdar olamayabilirsiniz.</p>
+
+<p><strong>ONAY BEYANI:</strong> İşbu metni okuyup anladığımı ve GMS Garage tarafından tarafıma yukarıda belirtilen kanallardan ticari elektronik ileti gönderilmesine açık rıza verdiğimi beyan ederim.</p>
+
+EOT;
+    }
 }
+

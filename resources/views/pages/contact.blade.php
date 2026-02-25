@@ -240,7 +240,10 @@
                                 legalCheckboxes.forEach(function(cb) {
                                     const slug = cb.name.replace('legal_consent_', '');
                                     const errorEl = document.getElementById('error-' + slug + '-contact');
-                                    if (!cb.checked) {
+                                    const isOptional = cb.dataset.isOptional === 'true';
+                                    
+                                    // Sadece zorunlu sözleşmeleri kontrol et
+                                    if (!isOptional && !cb.checked) {
                                         isKvkkValid = false;
                                         if (errorEl) {
                                             errorEl.textContent = 'Sözleşmeyi okuyup onaylamanız zorunludur.';

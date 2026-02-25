@@ -90,18 +90,42 @@ class Customer extends Model
 
     /**
      * Find or create customer with legal consent tracking
+     * Müşteri listesine eklemek için TÜM form sözleşmelerinin onaylanması gerekli
      */
-    public static function findOrCreateFromRequest(array $data): self
+    public static function findOrCreateFromRequest(array $data): ?self
     {
+        // Get all form pages (including optional ones)
+        $formPages = \App\Models\LegalPage::getFormPages();
+        
+        // Check if ALL form consents are accepted
+        $allConsentsGiven = true;
+        foreach ($formPages as $page) {
+            $consentKey = 'legal_consent_' . $page->slug;
+            if (!isset($data[$consentKey]) || !$data[$consentKey]) {
+                $allConsentsGiven = false;
+                break;
+            }
+        }
+        
+        // Eğer TÜM sözleşmeler onaylanmadıysa müşteri listesine EKLEME
+        if (!$allConsentsGiven) {
+            return null;
+        }
+        
+        // TÜM sözleşmeler onaylandıysa müşteri listesine ekle
         $legalConsents = [];
         
         // Get all active legal pages and their versions
         $legalPages = \App\Models\LegalPage::getActive();
         foreach ($legalPages as $page) {
+            $consentKey = 'legal_consent_' . $page->slug;
+            $isAccepted = isset($data[$consentKey]) && $data[$consentKey];
+            
             $legalConsents[$page->slug] = [
                 'title' => $page->title,
                 'version' => $page->version,
-                'accepted_at' => now()->toDateTimeString(),
+                'accepted' => $isAccepted,
+                'accepted_at' => $isAccepted ? now()->toDateTimeString() : null,
             ];
         }
 

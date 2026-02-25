@@ -2029,7 +2029,10 @@ document.addEventListener('DOMContentLoaded', function() {
         legalCheckboxes.forEach(cb => {
             const slug = cb.name.replace('legal_consent_', '');
             const errEl = document.getElementById('error-' + slug + '-evaluation');
-            if (!cb.checked) {
+            const isOptional = cb.dataset.isOptional === 'true';
+            
+            // Sadece zorunlu sözleşmeleri kontrol et
+            if (!isOptional && !cb.checked) {
                 hasError = true;
                 if (errEl) {
                     errEl.textContent = 'Sözleşmeyi okuyup onaylamanız zorunludur.';
