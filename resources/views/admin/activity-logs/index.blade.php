@@ -37,91 +37,94 @@
     </div>
 
     <!-- Filtreler -->
-    <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm" style="overflow:visible;">
         <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
             <h3 class="text-sm font-semibold text-gray-700">Filtrele</h3>
         </div>
-        <div class="p-6">
-        <form method="GET" action="{{ route('admin.activity-logs.index') }}" class="space-y-4">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <!-- Kullanıcı Filtresi -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Kullanıcı</label>
-                    <div class="adm-dd" data-adm-dd>
-                        <input type="hidden" name="user_id" value="{{ request('user_id') }}" id="user-filter-input">
-                        <button type="button" class="adm-dd-btn" data-adm-trigger>
-                            <span data-adm-label style="{{ !request('user_id') ? 'color:#9ca3af;' : '' }}">
-                                @if(request('user_id'))
-                                    {{ $users->firstWhere('id', request('user_id'))->name ?? 'Tüm Kullanıcılar' }}
-                                @else
-                                    Tüm Kullanıcılar
-                                @endif
-                            </span>
-                            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-                        </button>
-                        <ul class="adm-dd-list" data-adm-list>
-                            <li data-value="" class="{{ !request('user_id') ? 'selected' : '' }}">Tüm Kullanıcılar</li>
-                            @foreach($users as $user)
-                                <li data-value="{{ $user->id }}" class="{{ request('user_id') == $user->id ? 'selected' : '' }}">
-                                    {{ $user->name }} ({{ $user->role_name }})
-                                </li>
-                            @endforeach
-                        </ul>
-                    </div>
+        <div class="p-6" style="overflow:visible;">
+            <form method="GET" action="{{ route('admin.activity-logs.index') }}" class="flex flex-wrap gap-3 items-end" style="overflow:visible;">
+                
+                <!-- Kullanıcı -->
+                <div class="adm-dd" data-adm-dd style="width:220px; flex-shrink:0; position:relative; z-index:100;">
+                    <label class="block text-xs font-medium text-gray-500 mb-1.5">Kullanıcı</label>
+                    <input type="hidden" name="user_id" value="{{ request('user_id') }}">
+                    <button type="button" class="adm-dd-btn" data-adm-trigger>
+                        <span data-adm-label>
+                            @if(request('user_id'))
+                                @php $selectedUser = $users->firstWhere('id', request('user_id')); @endphp
+                                {{ $selectedUser ? $selectedUser->name : 'Tüm Kullanıcılar' }}
+                            @else
+                                Tüm Kullanıcılar
+                            @endif
+                        </span>
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+                    <ul class="adm-dd-list" data-adm-list>
+                        <li data-value="" class="{{ !request('user_id') ? 'selected' : '' }}">Tüm Kullanıcılar</li>
+                        @foreach($users as $user)
+                            <li data-value="{{ $user->id }}" class="{{ request('user_id') == $user->id ? 'selected' : '' }}">
+                                {{ $user->name }} ({{ $user->role_name }})
+                            </li>
+                        @endforeach
+                    </ul>
                 </div>
 
-                <!-- Aksiyon Filtresi -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Aksiyon</label>
-                    <div class="adm-dd" data-adm-dd>
-                        <input type="hidden" name="action" value="{{ request('action') }}" id="action-filter-input">
-                        <button type="button" class="adm-dd-btn" data-adm-trigger>
-                            <span data-adm-label style="{{ !request('action') ? 'color:#9ca3af;' : '' }}">
-                                @if(request('action') == 'login') 🔐 Giriş
-                                @elseif(request('action') == 'created') ➕ Oluşturma
-                                @elseif(request('action') == 'updated') ✏️ Güncelleme
-                                @elseif(request('action') == 'deleted') 🗑️ Silme
-                                @elseif(request('action') == 'viewed') 👁️ Görüntüleme
-                                @else Tüm Aksiyonlar
-                                @endif
-                            </span>
-                            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-                        </button>
-                        <ul class="adm-dd-list" data-adm-list>
-                            <li data-value="" class="{{ !request('action') ? 'selected' : '' }}">Tüm Aksiyonlar</li>
-                            <li data-value="login" class="{{ request('action') == 'login' ? 'selected' : '' }}">🔐 Giriş</li>
-                            <li data-value="created" class="{{ request('action') == 'created' ? 'selected' : '' }}">➕ Oluşturma</li>
-                            <li data-value="updated" class="{{ request('action') == 'updated' ? 'selected' : '' }}">✏️ Güncelleme</li>
-                            <li data-value="deleted" class="{{ request('action') == 'deleted' ? 'selected' : '' }}">🗑️ Silme</li>
-                            <li data-value="viewed" class="{{ request('action') == 'viewed' ? 'selected' : '' }}">👁️ Görüntüleme</li>
-                        </ul>
-                    </div>
+                <!-- Aksiyon -->
+                <div class="adm-dd" data-adm-dd style="width:200px; flex-shrink:0; position:relative; z-index:90;">
+                    <label class="block text-xs font-medium text-gray-500 mb-1.5">Aksiyon</label>
+                    <input type="hidden" name="action" value="{{ request('action') }}">
+                    <button type="button" class="adm-dd-btn" data-adm-trigger>
+                        <span data-adm-label>
+                            @if(request('action'))
+                                {{ $actions[request('action')] ?? 'Tüm Aksiyonlar' }}
+                            @else
+                                Tüm Aksiyonlar
+                            @endif
+                        </span>
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+                    <ul class="adm-dd-list" data-adm-list>
+                        <li data-value="" class="{{ !request('action') ? 'selected' : '' }}">Tüm Aksiyonlar</li>
+                        @foreach($actions as $actionKey => $actionLabel)
+                            <li data-value="{{ $actionKey }}" class="{{ request('action') == $actionKey ? 'selected' : '' }}">
+                                {{ $actionLabel }}
+                            </li>
+                        @endforeach
+                    </ul>
                 </div>
 
-                <!-- Başlangıç Tarihi -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Başlangıç</label>
-                    <input type="date" name="date_from" value="{{ request('date_from') }}" 
-                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500">
+                <!-- Tarih Başlangıç -->
+                <div style="width:170px; flex-shrink:0;">
+                    <label class="block text-xs font-medium text-gray-500 mb-1.5">Başlangıç</label>
+                    <input type="date" 
+                           name="date_from" 
+                           value="{{ request('date_from') }}" 
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 text-sm">
                 </div>
 
-                <!-- Bitiş Tarihi -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Bitiş</label>
-                    <input type="date" name="date_to" value="{{ request('date_to') }}" 
-                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500">
+                <!-- Tarih Bitiş -->
+                <div style="width:170px; flex-shrink:0;">
+                    <label class="block text-xs font-medium text-gray-500 mb-1.5">Bitiş</label>
+                    <input type="date" 
+                           name="date_to" 
+                           value="{{ request('date_to') }}" 
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 text-sm">
                 </div>
-            </div>
 
-            <div class="flex justify-end items-center gap-3">
-                <a href="{{ route('admin.activity-logs.index') }}" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors text-sm font-medium">
-                    Filtreyi Temizle
-                </a>
-                <button type="submit" class="px-5 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-xl transition-colors text-sm font-semibold">
+                <!-- Butonlar -->
+                <button type="submit" class="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors">
                     Filtrele
                 </button>
-            </div>
-        </form>
+                @if(request('user_id') || request('action') || request('date_from') || request('date_to'))
+                    <a href="{{ route('admin.activity-logs.index') }}" class="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
+                        Temizle
+                    </a>
+                @endif
+            </form>
         </div>
     </div>
 

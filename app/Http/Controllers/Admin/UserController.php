@@ -93,15 +93,25 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
         
-        // Prevent deleting yourself
+        // 1. Prevent deleting yourself
         if ($user->id === auth()->id()) {
             return redirect()->route('admin.users.index')
                 ->with('error', 'Kendi hesabınızı silemezsiniz.');
         }
 
+        // 2. Prevent deleting the last admin
+        if ($user->role === 'admin') {
+            $adminCount = User::where('role', 'admin')->count();
+            if ($adminCount <= 1) {
+                return redirect()->route('admin.users.index')
+                    ->with('error', 'Son Süper Yönetici silinemez! Sistemde en az bir Süper Yönetici bulunmalıdır.');
+            }
+        }
+
+        $userName = $user->name;
         $user->delete();
 
         return redirect()->route('admin.users.index')
-            ->with('success', 'Kullanıcı başarıyla silindi.');
+            ->with('success', "{$userName} kullanıcısı başarıyla silindi.");
     }
 }

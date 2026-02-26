@@ -38,12 +38,22 @@ class ActivityLogController extends Controller
         // Sayfalama
         $activities = $query->orderBy('created_at', 'desc')->paginate(30);
 
-        // Kullanıcı listesi (filtre için)
-        $users = User::whereIn('role', ['admin', 'manager', 'editor'])
-            ->orderBy('name')
-            ->get();
+        // TÜM kullanıcılar (filtre için)
+        $users = User::orderBy('name')->get();
 
-        return view('admin.activity-logs.index', compact('activities', 'users'));
+        // TÜM olası aksiyonlar (sabit liste)
+        $actions = collect([
+            'login' => '🔐 Giriş',
+            'logout' => '🔓 Çıkış',
+            'created' => '➕ Oluşturma',
+            'updated' => '✏️ Güncelleme',
+            'deleted' => '🗑️ Silme',
+            'viewed' => '👁️ Görüntüleme',
+            'exported' => '📥 Dışa Aktarma',
+            'imported' => '📤 İçe Aktarma',
+        ]);
+
+        return view('admin.activity-logs.index', compact('activities', 'users', 'actions'));
     }
 
     /**

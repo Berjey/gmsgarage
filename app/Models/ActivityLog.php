@@ -19,6 +19,11 @@ class ActivityLog extends Model
         'user_agent',
     ];
 
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
+
     /**
      * İlişki: Log hangi kullanıcıya ait
      */
