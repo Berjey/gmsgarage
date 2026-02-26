@@ -21,7 +21,7 @@ class SitemapController extends Controller
             'blogPosts' => BlogPost::published()->count(),
             'blogCategories' => BlogPost::published()->distinct('category')->count('category'),
             'legalPages' => LegalPage::where('is_active', true)->count(),
-            'staticPages' => 7, // Anasayfa, Hakkımızda, İletişim, Araçlar, Değerleme, İstek, Blog
+            'staticPages' => 6, // Anasayfa, Hakkımızda, İletişim, Araçlar, Değerleme, Blog
         ];
 
         $stats['total'] = $stats['vehicles'] + $stats['blogPosts'] + $stats['blogCategories'] + $stats['legalPages'] + $stats['staticPages'];
@@ -54,7 +54,7 @@ class SitemapController extends Controller
         $path = public_path('sitemap.xml');
         File::put($path, $content);
 
-        $staticPageCount = 7; // Anasayfa, Hakkımızda, İletişim, Araçlar, Değerleme, İstek, Blog
+        $staticPageCount = 6; // Anasayfa, Hakkımızda, İletişim, Araçlar, Değerleme, Blog
         $totalUrls = $vehicles->count() + $blogPosts->count() + $blogCategories->count() + $legalPages->count() + $staticPageCount;
 
         return redirect()->route('admin.sitemap.index')
@@ -81,7 +81,6 @@ class SitemapController extends Controller
             ['loc' => route('contact'), 'priority' => '0.8', 'changefreq' => 'monthly', 'type' => 'İletişim'],
             ['loc' => route('vehicles.index'), 'priority' => '0.9', 'changefreq' => 'daily', 'type' => 'Araçlar'],
             ['loc' => route('evaluation.index'), 'priority' => '0.8', 'changefreq' => 'monthly', 'type' => 'Araç Değerleme'],
-            ['loc' => route('vehicle-request.index'), 'priority' => '0.7', 'changefreq' => 'monthly', 'type' => 'Araç İsteği'],
             ['loc' => route('blog.index'), 'priority' => '0.9', 'changefreq' => 'daily', 'type' => 'Blog'],
         ];
 

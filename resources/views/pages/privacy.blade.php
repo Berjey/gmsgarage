@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'Gizlilik Politikası - GMSGARAGE')
-@section('description', 'GMSGARAGE gizlilik politikası ve kişisel verilerin korunması.')
+@section('title', 'Gizlilik Politikası - ' . ($settings['site_title'] ?? 'GMSGARAGE'))
+@section('description', ($settings['site_title'] ?? 'GMSGARAGE') . ' gizlilik politikası ve kişisel verilerin korunması.')
 
 @section('content')
 <section class="section-padding bg-white dark:bg-[#1e1e1e] transition-colors duration-200">

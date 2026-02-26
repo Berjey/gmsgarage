@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', ($settings['site_title'] ?? 'GMSGARAGE') . ' - Premium Oto Galeri')</title>
+    <title>@yield('title', $settings['site_title'] ?? 'GMSGARAGE')</title>
     <meta name="description" content="@yield('description', $settings['site_description'] ?? 'GMSGARAGE - Premium ikinci el araçlar, garantili ve bakımlı araçlar. En iyi fiyat garantisi.')">
-    <meta name="keywords" content="@yield('keywords', $settings['site_keywords'] ?? 'ikinci el araç, oto galeri, garantili araç, premium araç, GMSGARAGE')">
+    <meta name="keywords" content="@yield('keywords', $settings['site_keywords'] ?? 'ikinci el araç, oto galeri, garantili araç, premium araç')">
     <meta name="author" content="{{ $settings['site_title'] ?? 'GMSGARAGE' }}">
     <link rel="canonical" href="@yield('canonical', url()->current())">
     
@@ -16,13 +16,18 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="@yield('og_type', 'website')">
     <meta property="og:url" content="@yield('og_url', url()->current())">
-    <meta property="og:title" content="@yield('og_title', ($settings['og_title'] ?? $settings['site_title'] ?? 'GMSGARAGE') . ' - Premium Oto Galeri')">
-    <meta property="og:description" content="@yield('og_description', $settings['site_description'] ?? 'GMSGARAGE - Premium ikinci el araçlar, garantili ve bakımlı araçlar. En iyi fiyat garantisi.')">
+    <meta property="og:title" content="@yield('og_title', $settings['og_title'] ?? $settings['site_title'] ?? 'GMSGARAGE')">
     @php
+        $metaDescription = $__env->hasSection('og_description')
+            ? $__env->yieldContent('og_description')
+            : ($__env->hasSection('description')
+                ? $__env->yieldContent('description')
+                : ($settings['site_description'] ?? ''));
         $defaultOgImage = !empty($settings['og_image']) 
             ? asset('storage/' . $settings['og_image']) 
             : asset('images/light-mode-logo.png');
     @endphp
+    <meta property="og:description" content="{{ $metaDescription }}">
     <meta property="og:image" content="@yield('og_image', $defaultOgImage)">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
@@ -32,8 +37,8 @@
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="@yield('og_url', url()->current())">
-    <meta name="twitter:title" content="@yield('og_title', ($settings['og_title'] ?? $settings['site_title'] ?? 'GMSGARAGE') . ' - Premium Oto Galeri')">
-    <meta name="twitter:description" content="@yield('og_description', $settings['site_description'] ?? 'GMSGARAGE - Premium ikinci el araçlar, garantili ve bakımlı araçlar. En iyi fiyat garantisi.')">
+    <meta name="twitter:title" content="@yield('og_title', $settings['og_title'] ?? $settings['site_title'] ?? 'GMSGARAGE')">
+    <meta name="twitter:description" content="{{ $metaDescription }}">
     <meta name="twitter:image" content="@yield('og_image', $defaultOgImage)">
     
     @stack('meta')
@@ -64,7 +69,11 @@
     
     <!-- WhatsApp Sabit Butonu -->
     @if(!empty($settings['contact_whatsapp']))
-    <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $settings['contact_whatsapp']) }}?text=Merhaba, araçlarınız hakkında bilgi almak istiyorum." 
+    @php
+        $waRaw = preg_replace('/[^0-9]/', '', $settings['contact_whatsapp']);
+        $waNumber = str_starts_with($waRaw, '0') ? '90' . substr($waRaw, 1) : $waRaw;
+    @endphp
+    <a href="https://wa.me/{{ $waNumber }}?text=Merhaba, araçlarınız hakkında bilgi almak istiyorum." 
        target="_blank" 
        class="fixed bottom-6 right-6 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white p-4 rounded-full shadow-2xl z-50 transition-all duration-500 hover:scale-110 hover:rotate-12 group">
         <svg class="w-6 h-6 transition-transform duration-300 group-hover:scale-110" fill="currentColor" viewBox="0 0 24 24">

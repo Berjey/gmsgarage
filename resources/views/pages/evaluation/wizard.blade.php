@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Aracımı Değerle - GMSGARAGE')
+@section('title', 'Aracımı Değerle - ' . ($settings['site_title'] ?? 'GMSGARAGE'))
 @section('description', 'Aracınızın değerini öğrenin. Hızlı ve güvenilir araç değerleme hizmeti.')
 
 @push('styles')

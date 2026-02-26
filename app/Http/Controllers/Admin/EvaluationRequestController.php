@@ -14,8 +14,17 @@ class EvaluationRequestController extends Controller
      */
     public function index()
     {
-        $requests = EvaluationRequest::orderBy('created_at', 'desc')->paginate(15);
-        return view('admin.evaluation-requests.index', compact('requests'));
+        $requests = EvaluationRequest::orderBy('created_at', 'desc')
+                                     ->paginate(15)
+                                     ->withQueryString();
+
+        $stats = [
+            'total' => EvaluationRequest::count(),
+            'new'   => EvaluationRequest::where('is_read', false)->count(),
+            'read'  => EvaluationRequest::where('is_read', true)->count(),
+        ];
+
+        return view('admin.evaluation-requests.index', compact('requests', 'stats'));
     }
 
     /**

@@ -62,11 +62,17 @@ class ActivityLogController extends Controller
     public function userActivities($userId)
     {
         $user = User::findOrFail($userId);
+
         $activities = ActivityLog::where('user_id', $userId)
             ->orderBy('created_at', 'desc')
             ->paginate(30);
 
-        return view('admin.activity-logs.user', compact('user', 'activities'));
+        $stats = ActivityLog::where('user_id', $userId)
+            ->selectRaw('action, COUNT(*) as total')
+            ->groupBy('action')
+            ->pluck('total', 'action');
+
+        return view('admin.activity-logs.user', compact('user', 'activities', 'stats'));
     }
 
     /**

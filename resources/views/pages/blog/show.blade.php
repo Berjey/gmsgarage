@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $post->meta_title . ' - Blog - GMSGARAGE')
+@section('title', $post->meta_title . ' - Blog - ' . ($settings['site_title'] ?? 'GMSGARAGE'))
 @section('description', $post->meta_description)
 @section('keywords', $post->meta_keywords ? implode(', ', $post->meta_keywords) : 'blog, araç blog')
 @section('og_type', 'article')

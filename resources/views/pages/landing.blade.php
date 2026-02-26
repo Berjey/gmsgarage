@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>GMSGARAGE - Premium Oto Galeri</title>
-    <meta name="description" content="GMSGARAGE - Premium ikinci el araçlar, garantili ve bakımlı araçlar. En iyi fiyat garantisi.">
+    <title>{{ $settings['site_title'] ?? 'GMSGARAGE' }}</title>
+    <meta name="description" content="{{ ($settings['site_title'] ?? 'GMSGARAGE') }} - Premium ikinci el araçlar, garantili ve bakımlı araçlar. En iyi fiyat garantisi.">
     
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     
@@ -127,10 +127,10 @@
                 <!-- Logo -->
                 <a href="{{ route('home') }}" class="flex items-center space-x-3 group">
                     <!-- Light Mode Logo -->
-                    <img src="{{ asset('images/light-mode-logo.png') }}" alt="GMSGARAGE Logo" class="h-16 w-auto transition-transform duration-300 group-hover:scale-105 dark:hidden object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <img src="{{ asset('images/light-mode-logo.png') }}" alt="{{ ($settings['site_title'] ?? 'GMSGARAGE') }} Logo" class="h-16 w-auto transition-transform duration-300 group-hover:scale-105 dark:hidden object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                     <!-- Dark Mode Logo -->
-                    <img src="{{ asset('images/dark-mode-logo.png') }}" alt="GMSGARAGE Logo" class="h-16 w-auto transition-transform duration-300 group-hover:scale-105 hidden dark:block object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                    <div class="text-3xl font-bold text-primary-600" style="display:none;">GMSGARAGE</div>
+                    <img src="{{ asset('images/dark-mode-logo.png') }}" alt="{{ ($settings['site_title'] ?? 'GMSGARAGE') }} Logo" class="h-16 w-auto transition-transform duration-300 group-hover:scale-105 hidden dark:block object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <div class="text-3xl font-bold text-primary-600" style="display:none;">{{ $settings['site_title'] ?? 'GMSGARAGE' }}</div>
                 </a>
                 
                 <!-- Desktop Navigation -->

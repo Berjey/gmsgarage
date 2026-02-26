@@ -9,11 +9,6 @@
 @endsection
 
 @section('content')
-@php
-    $totalEval = \App\Models\EvaluationRequest::count();
-    $newEval   = \App\Models\EvaluationRequest::where('is_read', false)->count();
-    $readEval  = \App\Models\EvaluationRequest::where('is_read', true)->count();
-@endphp
 
 <!-- İstatistik Kartları -->
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
@@ -21,7 +16,7 @@
         <div class="flex items-center justify-between">
             <div>
                 <p class="text-gray-600 text-sm font-medium mb-1">Toplam Talep</p>
-                <p class="text-3xl font-bold text-gray-900">{{ $totalEval }}</p>
+                <p class="text-3xl font-bold text-gray-900">{{ $stats['total'] }}</p>
             </div>
             <div class="w-14 h-14 bg-primary-50 rounded-xl flex items-center justify-center">
                 <svg class="w-7 h-7 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -34,7 +29,7 @@
         <div class="flex items-center justify-between">
             <div>
                 <p class="text-gray-600 text-sm font-medium mb-1">Yeni / Okunmamış</p>
-                <p class="text-3xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">{{ $newEval }}</p>
+                <p class="text-3xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">{{ $stats['new'] }}</p>
             </div>
             <div class="w-14 h-14 bg-blue-50 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
                 <svg class="w-7 h-7 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -47,7 +42,7 @@
         <div class="flex items-center justify-between">
             <div>
                 <p class="text-gray-600 text-sm font-medium mb-1">İncelendi</p>
-                <p class="text-3xl font-bold text-gray-900 group-hover:text-green-600 transition-colors">{{ $readEval }}</p>
+                <p class="text-3xl font-bold text-gray-900 group-hover:text-green-600 transition-colors">{{ $stats['read'] }}</p>
             </div>
             <div class="w-14 h-14 bg-green-50 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
                 <svg class="w-7 h-7 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -70,7 +65,7 @@
                     </div>
                     Değerleme İstekleri
                 </h2>
-                <p class="text-sm text-gray-600 mt-2">Toplam <span class="font-bold text-primary-600">{{ $totalEval }}</span> talep • <span class="font-bold text-blue-600">{{ $newEval }}</span> yeni</p>
+                <p class="text-sm text-gray-600 mt-2">Toplam <span class="font-bold text-primary-600">{{ $stats['total'] }}</span> talep • <span class="font-bold text-blue-600">{{ $stats['new'] }}</span> yeni</p>
             </div>
         </div>
     </div>
@@ -98,12 +93,19 @@
                         <div class="text-xs text-gray-500">{{ $request->year }} - {{ $request->fuel_type }} - {{ $request->transmission }}</div>
                     </td>
                     <td class="px-6 py-4">
-                        <div class="text-sm text-gray-900">{{ number_format($request->km, 0, ',', '.') }} KM</div>
-                        <div class="text-xs text-gray-500">Hasar: {{ $request->has_damage }}</div>
+                        <div class="text-sm text-gray-900 font-medium">{{ number_format($request->mileage, 0, ',', '.') }} KM</div>
+                        <div class="text-xs mt-0.5">
+                            @if($request->condition === 'Hasarsız')
+                                <span class="text-green-600 font-medium">{{ $request->condition }}</span>
+                            @else
+                                <span class="text-red-500 font-medium">{{ $request->condition ?? '-' }}</span>
+                            @endif
+                        </div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                        {{ $request->phone }}<br>
-                        <span class="text-xs text-gray-400">{{ $request->contact_method }}</span>
+                        <a href="tel:{{ preg_replace('/[^0-9+]/', '', $request->phone) }}" class="hover:text-primary-600 transition-colors">
+                            {{ $request->phone }}
+                        </a>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {{ $request->created_at->format('d.m.Y H:i') }}
@@ -115,7 +117,8 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zM2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                                 </svg>
                             </a>
-                            <form action="{{ route('admin.evaluation-requests.destroy', $request->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Silmek istediğinize emin misiniz?')">
+                            <form action="{{ route('admin.evaluation-requests.destroy', $request->id) }}" method="POST" class="inline-block"
+                                  onsubmit="return confirmDelete(this, '{{ addslashes($request->brand . ' ' . $request->model) }} talebini')">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="p-2.5 text-red-600 bg-red-50 rounded-xl hover:bg-red-600 hover:text-white transition-all shadow-sm" title="Sil">

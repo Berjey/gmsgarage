@@ -54,12 +54,15 @@ class ActivityLog extends Model
     public function getIconAttribute()
     {
         return match($this->action) {
-            'login' => '🔐',
-            'created' => '➕',
-            'updated' => '✏️',
-            'deleted' => '🗑️',
-            'viewed' => '👁️',
-            default => '📝',
+            'login'    => '🔐',
+            'logout'   => '🔓',
+            'created'  => '➕',
+            'updated'  => '✏️',
+            'deleted'  => '🗑️',
+            'viewed'   => '👁️',
+            'exported' => '📥',
+            'imported' => '📤',
+            default    => '📝',
         };
     }
 
@@ -69,12 +72,15 @@ class ActivityLog extends Model
     public function getColorAttribute()
     {
         return match($this->action) {
-            'login' => 'blue',
-            'created' => 'green',
-            'updated' => 'amber',
-            'deleted' => 'red',
-            'viewed' => 'gray',
-            default => 'gray',
+            'login'    => 'blue',
+            'logout'   => 'indigo',
+            'created'  => 'green',
+            'updated'  => 'amber',
+            'deleted'  => 'red',
+            'viewed'   => 'gray',
+            'exported' => 'purple',
+            'imported' => 'teal',
+            default    => 'gray',
         };
     }
 }

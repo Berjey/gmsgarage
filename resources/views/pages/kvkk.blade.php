@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'KVKK Aydınlatma Metni - GMSGARAGE')
-@section('description', 'GMSGARAGE Kişisel Verilerin Korunması Kanunu (KVKK) aydınlatma metni.')
+@section('title', 'KVKK Aydınlatma Metni - ' . ($settings['site_title'] ?? 'GMSGARAGE'))
+@section('description', ($settings['site_title'] ?? 'GMSGARAGE') . ' Kişisel Verilerin Korunması Kanunu (KVKK) aydınlatma metni.')
 
 @section('content')
 <section class="section-padding bg-white dark:bg-[#1e1e1e] transition-colors duration-200">

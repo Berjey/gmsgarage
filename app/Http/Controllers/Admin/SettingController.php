@@ -61,7 +61,6 @@ class SettingController extends Controller
             // Footer
             'footer_about_text' => 'nullable|string|max:1000',
             'footer_copyright' => 'nullable|string|max:500',
-            'footer_bottom_links' => 'nullable|array',
         ]);
 
         // Bakım modu checkbox'ı işle (checkbox gönderilmezse 0 yap)
@@ -69,17 +68,20 @@ class SettingController extends Controller
             Setting::set('maintenance_mode', '0');
         }
 
-        // OG Image Upload (Eğer yeni resim yüklendiyse)
+        // OG Image: sil veya güncelle
         if ($request->hasFile('og_image')) {
-            // Eski resmi sil (eğer varsa)
             $oldImage = Setting::get('og_image');
             if ($oldImage && \Storage::exists('public/' . $oldImage)) {
                 \Storage::delete('public/' . $oldImage);
             }
-            
-            // Yeni resmi kaydet
             $imagePath = $request->file('og_image')->store('settings/og-images', 'public');
             Setting::set('og_image', $imagePath);
+        } elseif ($request->input('og_image_delete') == '1') {
+            $oldImage = Setting::get('og_image');
+            if ($oldImage && \Storage::exists('public/' . $oldImage)) {
+                \Storage::delete('public/' . $oldImage);
+            }
+            Setting::set('og_image', null);
         }
 
         // Tüm request verilerini işle
@@ -109,8 +111,11 @@ class SettingController extends Controller
         \Artisan::call('cache:clear');
         \Artisan::call('view:clear');
         
+        $activeTab = $request->input('_active_tab', 'general');
+
         return redirect()->route('admin.settings.index')
-            ->with('success', 'Ayarlar başarıyla güncellendi. Cache temizlendi, değişiklikler anında aktif.');
+            ->with('success', 'Ayarlar başarıyla güncellendi. Cache temizlendi, değişiklikler anında aktif.')
+            ->with('active_tab', $activeTab);
     }
     
     /**

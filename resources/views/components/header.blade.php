@@ -4,10 +4,10 @@
             <!-- Logo -->
             <a href="{{ route('home') }}" class="flex items-center space-x-3 group relative h-16 md:h-20">
                 <!-- Light Mode Logo -->
-                <img src="{{ asset('images/light-mode-logo.png') }}" alt="GMSGARAGE Logo" class="h-16 md:h-20 w-auto transition-transform duration-300 group-hover:scale-105 dark:hidden object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                <img src="{{ asset('images/light-mode-logo.png') }}" alt="{{ $settings['site_title'] ?? 'GMSGARAGE' }} Logo" class="h-16 md:h-20 w-auto transition-transform duration-300 group-hover:scale-105 dark:hidden object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                 <!-- Dark Mode Logo -->
-                <img src="{{ asset('images/dark-mode-logo.png') }}" alt="GMSGARAGE Logo" class="h-16 md:h-20 w-auto transition-transform duration-300 group-hover:scale-105 hidden dark:block object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                <div class="text-4xl md:text-5xl font-bold text-primary-600 dark:text-primary-400" style="display:none;">GMSGARAGE</div>
+                <img src="{{ asset('images/dark-mode-logo.png') }}" alt="{{ $settings['site_title'] ?? 'GMSGARAGE' }} Logo" class="h-16 md:h-20 w-auto transition-transform duration-300 group-hover:scale-105 hidden dark:block object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                <div class="text-4xl md:text-5xl font-bold text-primary-600 dark:text-primary-400" style="display:none;">{{ $settings['site_title'] ?? 'GMSGARAGE' }}</div>
             </a>
             
             <!-- Desktop Navigation -->
@@ -32,7 +32,7 @@
                    class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-gray-50 dark:hover:bg-gray-800 font-medium transition-all duration-200 rounded-lg {{ request()->routeIs('contact') ? 'text-primary-600 dark:text-primary-400 bg-gray-50 dark:bg-gray-800' : '' }}">
                     İletişim
                 </a>
-                <a href="tel:+905551234567" class="ml-4 btn btn-primary">
+                <a href="tel:{{ preg_replace('/[^0-9+]/', '', $settings['contact_phone'] ?? '') }}" class="ml-4 btn btn-primary">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
                     </svg>

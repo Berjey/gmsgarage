@@ -1,10 +1,11 @@
 @extends('layouts.app')
 
 @php
-    $pageTitle = isset($category) ? $category . ' Kategorisi - Blog - GMSGARAGE' : 'Blog - GMSGARAGE';
+    $siteTitle = $settings['site_title'] ?? 'GMSGARAGE';
+    $pageTitle = isset($category) ? $category . ' Kategorisi - Blog - ' . $siteTitle : 'Blog - ' . $siteTitle;
     $pageDescription = isset($category) 
-        ? "GMSGARAGE blog'da {$category} kategorisindeki makaleleri keşfedin. Araç bakımı, satın alma ipuçları ve sektör haberleri."
-        : "GMSGARAGE blog - İkinci el araç satın alma rehberi, araç bakım ipuçları, sektör haberleri ve daha fazlası.";
+        ? "{$siteTitle} blog'da {$category} kategorisindeki makaleleri keşfedin. Araç bakımı, satın alma ipuçları ve sektör haberleri."
+        : "{$siteTitle} blog - İkinci el araç satın alma rehberi, araç bakım ipuçları, sektör haberleri ve daha fazlası.";
 @endphp
 
 @section('title', $pageTitle)
@@ -21,12 +22,12 @@
 {
     "@context": "https://schema.org",
     "@type": "Blog",
-    "name": "GMSGARAGE Blog",
+    "name": "{{ $siteTitle }} Blog",
     "description": "{{ $pageDescription }}",
     "url": "{{ route('blog.index') }}",
     "publisher": {
         "@type": "Organization",
-        "name": "GMSGARAGE",
+        "name": "{{ $siteTitle }}",
         "logo": {
             "@type": "ImageObject",
             "url": "{{ asset('images/light-mode-logo.png') }}"
@@ -243,7 +244,7 @@
     <div class="container-custom">
         <div class="text-center max-w-3xl mx-auto">
             <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6" style="opacity: 0; animation: fadeIn 0.8s ease-out 0.1s forwards;">
-                GMSGARAGE Blog
+                {{ $siteTitle }} Blog
             </h1>
             <p class="text-xl md:text-2xl text-primary-100 dark:text-primary-200 mb-8" style="opacity: 0; animation: fadeIn 0.8s ease-out 0.2s forwards;">
                 Araç dünyasından son haberler, ipuçları ve rehberler

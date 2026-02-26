@@ -272,8 +272,10 @@
         'arka_tampon' => 'Arka Tampon',
     ];
 
-    $boyaliCount = collect($ekspertiz)->filter(fn($v) => $v === 'BOYALI')->count();
-    $degismisCount = collect($ekspertiz)->filter(fn($v) => $v === 'DEGISMIS')->count();
+    $boyaliCount      = collect($ekspertiz)->filter(fn($v) => $v === 'BOYALI')->count();
+    $lokalBoyaliCount = collect($ekspertiz)->filter(fn($v) => $v === 'LOKAL_BOYALI')->count();
+    $degismisCount    = collect($ekspertiz)->filter(fn($v) => $v === 'DEGISMIS')->count();
+    $orijinalCount    = 13 - $boyaliCount - $lokalBoyaliCount - $degismisCount;
 @endphp
 
     <!-- Header -->
@@ -411,16 +413,22 @@
                 <div class="section-title">Ekspertiz Ozeti</div>
 
                 <div style="text-align:center; margin-bottom:15px;">
-                    <div style="display:inline-block; text-align:center; margin:0 10px;">
-                        <div style="font-size:24px; font-weight:bold; color:#10b981;">{{ 13 - $boyaliCount - $degismisCount }}</div>
+                    <div style="display:inline-block; text-align:center; margin:0 8px;">
+                        <div style="font-size:22px; font-weight:bold; color:#10b981;">{{ $orijinalCount }}</div>
                         <div style="font-size:9px; color:#6b7280;">Orijinal</div>
                     </div>
-                    <div style="display:inline-block; text-align:center; margin:0 10px;">
-                        <div style="font-size:24px; font-weight:bold; color:#fbbf24;">{{ $boyaliCount }}</div>
+                    <div style="display:inline-block; text-align:center; margin:0 8px;">
+                        <div style="font-size:22px; font-weight:bold; color:#3b82f6;">{{ $boyaliCount }}</div>
                         <div style="font-size:9px; color:#6b7280;">Boyali</div>
                     </div>
-                    <div style="display:inline-block; text-align:center; margin:0 10px;">
-                        <div style="font-size:24px; font-weight:bold; color:#dc2626;">{{ $degismisCount }}</div>
+                    @if($lokalBoyaliCount > 0)
+                    <div style="display:inline-block; text-align:center; margin:0 8px;">
+                        <div style="font-size:22px; font-weight:bold; color:#fbbf24;">{{ $lokalBoyaliCount }}</div>
+                        <div style="font-size:9px; color:#6b7280;">Lokal Boyali</div>
+                    </div>
+                    @endif
+                    <div style="display:inline-block; text-align:center; margin:0 8px;">
+                        <div style="font-size:22px; font-weight:bold; color:#dc2626;">{{ $degismisCount }}</div>
                         <div style="font-size:9px; color:#6b7280;">Degismis</div>
                     </div>
                 </div>
@@ -437,14 +445,16 @@
                             @php
                                 $status = $ekspertiz[$key] ?? 'ORIJINAL';
                                 $statusText = match($status) {
-                                    'BOYALI' => 'Boyali',
-                                    'DEGISMIS' => 'Degismis',
-                                    default => 'Orijinal'
+                                    'BOYALI'       => 'Boyali',
+                                    'LOKAL_BOYALI' => 'Lokal Boyali',
+                                    'DEGISMIS'     => 'Degismis',
+                                    default        => 'Orijinal',
                                 };
                                 $statusClass = match($status) {
-                                    'BOYALI' => 'status-yellow',
-                                    'DEGISMIS' => 'status-red',
-                                    default => 'status-green'
+                                    'BOYALI'       => 'status-yellow',
+                                    'LOKAL_BOYALI' => 'status-yellow',
+                                    'DEGISMIS'     => 'status-red',
+                                    default        => 'status-green',
                                 };
                             @endphp
                             <tr>

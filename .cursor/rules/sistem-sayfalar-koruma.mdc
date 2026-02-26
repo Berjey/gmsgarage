@@ -1,0 +1,55 @@
+---
+description: SİSTEM bölümündeki test edilmiş ve onaylanmış sayfaları koruma kuralları
+alwaysApply: true
+---
+
+# SİSTEM Bölümü — Test Edilmiş ve Kilitli Sayfalar
+
+Aşağıdaki sayfalar kapsamlı şekilde test edilmiş ve onaylanmıştır. Bu sayfalara ait dosyalarda değişiklik yaparken **son derece dikkatli ol**.
+
+## Korunan Sayfalar ve Dosyaları
+
+### Aktivite Logları
+- `app/Http/Controllers/Admin/ActivityLogController.php`
+- `app/Models/ActivityLog.php`
+- `resources/views/admin/activity-logs/`
+
+### Kullanıcılar & RBAC
+- `app/Http/Controllers/Admin/UserController.php`
+- `app/Support/AdminPermissions.php`
+- `app/Exceptions/Handler.php`
+- `resources/views/admin/layouts/sidebar.blade.php`
+- `resources/views/components/admin/access-denied.blade.php`
+- `resources/views/admin/errors/403.blade.php`
+
+### Ayarlar
+- `app/Http/Controllers/Admin/SettingController.php`
+- `app/Providers/AppServiceProvider.php`
+- `resources/views/admin/settings/index.blade.php`
+
+### Sitemap
+- `app/Http/Controllers/Admin/SitemapController.php`
+- `resources/views/admin/sitemap/index.blade.php`
+- `resources/views/sitemap/index.blade.php`
+- `public/sitemap.xml`
+- `public/robots.txt`
+
+### Müşteri Listesi (CRM)
+- `app/Http/Controllers/Admin/CustomerController.php`
+- `app/Models/Customer.php`
+- `resources/views/admin/customers/index.blade.php`
+- `resources/views/admin/customers/show.blade.php`
+- `resources/views/admin/customers/edit.blade.php`
+- `resources/js/admin-confirm.js`
+- `public/js/admin-confirm.js`
+- `database/migrations/2026_02_26_141625_add_notes_to_customers_table.php`
+
+## Kurallar
+
+1. **Bu dosyalara dokunmadan önce kullanıcıya sor.** Dolaylı da olsa etkileyecek bir değişiklik söz konusuysa mutlaka uyar.
+2. **Refactor veya "temizlik" adıyla bile olsa bu dosyaları değiştirme** — kullanıcı açıkça istemediği sürece.
+3. **Yeni bir özellik eklenirken** bu dosyaları bozmadan entegre et; mevcut mantığa dokunma.
+4. **`AdminPermissions.php` ve `Handler.php`** — RBAC sisteminin çekirdeğidir, kesinlikle dokunma.
+5. **`AppServiceProvider.php`** — `$settings` cache ve View composer burada; hata yapılırsa tüm public site bozulur.
+6. **`CustomerController.php` ve `Customer.php`** — CRM çekirdeğidir; `sourceBadges()`, `destroyAll()`, `sendBulkEmail()`, CSV export mantığına dokunma.
+7. **`admin-confirm.js`** — Tüm admin silme onaylarının tek kaynağıdır; `confirmDelete`, `confirmDeleteAll`, `showSuccess`, `showError` fonksiyonlarını değiştirme.

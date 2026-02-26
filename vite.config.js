@@ -5,9 +5,10 @@ export default defineConfig({
     plugins: [
         laravel({
             input: [
-                'resources/css/app.css', 
+                'resources/css/app.css',
                 'resources/js/app.js',
-                'resources/js/legal-modal.js'
+                'resources/js/legal-modal.js',
+                'resources/js/admin-confirm.js',
             ],
             refresh: true,
         }),

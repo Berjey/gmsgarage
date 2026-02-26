@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $vehicle->title . ' - GMSGARAGE')
+@section('title', $vehicle->title . ' - ' . ($settings['site_title'] ?? 'GMSGARAGE'))
 @section('description', $vehicle->description ?? $vehicle->title)
 
 @section('content')

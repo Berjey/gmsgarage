@@ -31,3 +31,5 @@ composer-setup.php
 Thumbs.db
 *.sqlite
 *.sqlite-journal
+/storage/framework/sessions/*
+!/storage/framework/sessions/.gitkeep

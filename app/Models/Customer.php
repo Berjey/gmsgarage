@@ -25,6 +25,7 @@ class Customer extends Model
         'consent_given_at',
         'consent_ip',
         'is_new',
+        'notes',
     ];
 
     /**
@@ -49,9 +50,27 @@ class Customer extends Model
         if (!$this->phone) {
             return '#';
         }
-        
+
         $cleanPhone = preg_replace('/[^0-9]/', '', $this->phone);
+
+        // Türkiye numaraları: 0xxx → 90xxx
+        if (str_starts_with($cleanPhone, '0')) {
+            $cleanPhone = '90' . substr($cleanPhone, 1);
+        }
+
         return "https://wa.me/{$cleanPhone}";
+    }
+
+    /**
+     * Source etiket + renk haritası (tüm view'larda ortak kaynak)
+     */
+    public static function sourceBadges(): array
+    {
+        return [
+            'contact_form'       => ['label' => 'İletişim Formu',   'class' => 'bg-blue-100 text-blue-800'],
+            'vehicle_request'    => ['label' => 'Araç İsteği',      'class' => 'bg-green-100 text-green-800'],
+            'evaluation_request' => ['label' => 'Değerleme Talebi', 'class' => 'bg-purple-100 text-purple-800'],
+        ];
     }
 
     /**
@@ -59,25 +78,7 @@ class Customer extends Model
      */
     public function getSourceNameAttribute(): string
     {
-        return match($this->source) {
-            'contact_form' => 'İletişim Formu',
-            'vehicle_request' => 'Araç İsteği',
-            'evaluation_request' => 'Değerleme Talebi',
-            default => 'Bilinmiyor'
-        };
-    }
-
-    /**
-     * Get source badge color
-     */
-    public function getSourceBadgeColorAttribute(): string
-    {
-        return match($this->source) {
-            'contact_form' => 'blue',
-            'vehicle_request' => 'green',
-            'evaluation_request' => 'purple',
-            default => 'gray'
-        };
+        return static::sourceBadges()[$this->source]['label'] ?? 'Bilinmiyor';
     }
 
     /**

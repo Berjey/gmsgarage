@@ -329,10 +329,17 @@
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Varsayılan Paylaşım Resmi (OG Image)</label>
                             @if(!empty($settings['og_image']))
-                            <div class="mb-3">
+                            <div class="mb-3 flex items-start gap-4">
                                 <img src="{{ asset('storage/' . $settings['og_image']) }}" 
                                      alt="OG Image" 
                                      class="w-full max-w-md h-48 object-cover rounded-lg border border-gray-300">
+                                <div class="flex flex-col gap-2 mt-1">
+                                    <span class="text-xs text-gray-500">Mevcut resim</span>
+                                    <label class="flex items-center gap-2 cursor-pointer">
+                                        <input type="checkbox" name="og_image_delete" value="1" class="rounded border-gray-300 text-red-600">
+                                        <span class="text-xs text-red-600 font-medium">Resmi sil</span>
+                                    </label>
+                                </div>
                             </div>
                             @endif
                             <input type="file" 
@@ -449,7 +456,7 @@
                                value="{{ $settings['contact_whatsapp'] ?? '' }}"
                                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
                                placeholder="905551234567">
-                        <p class="mt-1 text-xs text-gray-500">Ülke kodu dahil, + işareti olmadan (Örn: 905551234567)</p>
+                        <p class="mt-1 text-xs text-gray-500">Türkiye için: 0554 ile başlıyorsa otomatik +90'a çevrilir. Uluslararası format da kabul edilir (Örn: 905551234567)</p>
                     </div>
 
                     <div>
@@ -707,17 +714,20 @@
             </div>
 
 
-        </form>
+            <!-- Gizli alan: aktif sekmeyi form ile birlikte gönderir -->
+            <input type="hidden" name="_active_tab" id="hidden_active_tab" value="general">
 
-            <!-- Kaydet Butonu (Diğer sekmelerle aynı konum: sayfanın sağ alt köşesi - tüm sekme içeriklerinin altında) -->
+            <!-- Kaydet Butonu -->
             <div id="save-button-container" class="mt-8 flex justify-end border-t pt-6">
-                <button type="button" onclick="document.getElementById('settingsForm').submit();" class="px-8 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-bold shadow-lg flex items-center gap-2">
+                <button type="submit" class="px-8 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-bold shadow-lg flex items-center gap-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                     </svg>
                     Ayarları Kaydet
                 </button>
             </div>
+
+        </form>
 
         </div>
     </div>
@@ -1048,8 +1058,10 @@ function switchTab(tabName) {
         activeContent.classList.remove('hidden');
     }
     
-    // Aktif sekmeyi takip et (form gönderiminde Footer alanları için kullanılır)
+    // Aktif sekmeyi takip et
     window.currentSettingsTab = tabName;
+    var hiddenTab = document.getElementById('hidden_active_tab');
+    if (hiddenTab) hiddenTab.value = tabName;
     
     // Ayarları Kaydet butonu tüm sekmelerde (Footer dahil) görünsün
     const saveButton = document.getElementById('save-button-container');

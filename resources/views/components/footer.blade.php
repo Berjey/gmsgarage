@@ -9,8 +9,8 @@
             <!-- Sol: Logo + AI ve Güven Vurgulu Marka Metni -->
             <div>
                 <a href="{{ route('home') }}" class="inline-block mb-6">
-                    <img src="{{ asset('images/light-mode-logo.png') }}" alt="GMSGARAGE Logo" class="h-16 md:h-20 w-auto brightness-0 invert object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                    <div class="text-4xl md:text-5xl font-bold text-white" style="display:none;">GMSGARAGE</div>
+                    <img src="{{ asset('images/light-mode-logo.png') }}" alt="{{ $settings['site_title'] ?? 'GMSGARAGE' }} Logo" class="h-16 md:h-20 w-auto brightness-0 invert object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <div class="text-4xl md:text-5xl font-bold text-white" style="display:none;">{{ $settings['site_title'] ?? 'GMSGARAGE' }}</div>
                 </a>
                 <p class="text-gray-300 mb-4 text-lg leading-relaxed">
                     {{ $settings['footer_about_text'] ?? 'AI destekli araç değerleme ve güvenli alışveriş deneyimi. Premium ikinci el araçlar için güvenilir adresiniz.' }}

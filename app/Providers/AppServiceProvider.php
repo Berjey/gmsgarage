@@ -23,13 +23,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Tüm view'larda $settings değişkenini kullanılabilir yap
-        // Cache ile performans optimize et (1 dakika - bakım modu için hızlı güncelleme)
-        $settings = Cache::remember('app.settings', 60, function () {
-            return Setting::pluck('value', 'key')->toArray();
+        // Tüm view'larda $settings değişkenini kullanılabilir yap.
+        // View Composer kullanılıyor: her request'te render anında cache'den okur,
+        // böylece ayar güncellendikten sonraki ilk request'te değişiklik anında yansır.
+        View::composer('*', function ($view) {
+            $settings = Cache::remember('app.settings', 60, function () {
+                return Setting::pluck('value', 'key')->toArray();
+            });
+            $view->with('settings', $settings);
         });
-        
-        View::share('settings', $settings);
 
         // Tüm sayfalamada özel pagination view'ını kullan
         Paginator::defaultView('vendor.pagination.default');

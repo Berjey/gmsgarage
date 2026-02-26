@@ -246,6 +246,6 @@
     </script>
 
     <!-- Admin Confirm Modal Script -->
-    <script src="{{ asset('js/admin-confirm.js') }}"></script>
+    @vite('resources/js/admin-confirm.js')
 </body>
 </html>

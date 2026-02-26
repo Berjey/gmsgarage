@@ -69,7 +69,7 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm text-gray-600 mb-1">Giriş Sayısı</p>
-                    <p class="text-2xl font-bold text-gray-900">{{ $activities->where('action', 'login')->count() }}</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ $stats->get('login', 0) }}</p>
                 </div>
                 <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
                     <span class="text-2xl">🔐</span>
@@ -81,7 +81,7 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm text-gray-600 mb-1">Oluşturma</p>
-                    <p class="text-2xl font-bold text-gray-900">{{ $activities->where('action', 'created')->count() }}</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ $stats->get('created', 0) }}</p>
                 </div>
                 <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
                     <span class="text-2xl">➕</span>
@@ -93,7 +93,7 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm text-gray-600 mb-1">Silme</p>
-                    <p class="text-2xl font-bold text-gray-900">{{ $activities->where('action', 'deleted')->count() }}</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ $stats->get('deleted', 0) }}</p>
                 </div>
                 <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
                     <span class="text-2xl">🗑️</span>

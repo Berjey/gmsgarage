@@ -96,6 +96,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
                 Route::post('/generate', [SitemapController::class, 'generate'])->name('generate');
                 Route::get('/preview', [SitemapController::class, 'preview'])->name('preview');
             });
+
+            // Legal Page API (Yazma) - Yalnızca Admin
+            Route::post('/api/pages/store-or-update', [AdminLegalPageController::class, 'storeOrUpdate'])
+                ->name('api.pages.store-or-update');
         });
         
         // ============================================
@@ -149,11 +153,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
             // Müşteri Yönetimi (CRM) - HERKES ERİŞEBİLİR
             Route::prefix('customers')->name('customers.')->group(function () {
                 Route::get('/', [CustomerController::class, 'index'])->name('index');
-                Route::get('/export', [CustomerController::class, 'export'])->name('export'); // Excel/CSV Export
-                Route::post('/send-bulk-email', [CustomerController::class, 'sendBulkEmail'])->name('send-bulk-email'); // Toplu Mail
+                Route::get('/export', [CustomerController::class, 'export'])->name('export');
+                Route::post('/send-bulk-email', [CustomerController::class, 'sendBulkEmail'])->name('send-bulk-email');
+                Route::get('/{id}', [CustomerController::class, 'show'])->name('show');
                 Route::get('/{id}/edit', [CustomerController::class, 'edit'])->name('edit');
                 Route::put('/{id}', [CustomerController::class, 'update'])->name('update');
                 Route::delete('/{id}', [CustomerController::class, 'destroy'])->name('destroy');
+                Route::delete('/', [CustomerController::class, 'destroyAll'])->name('destroy-all');
             });
             // Blog Yönetimi
             Route::prefix('blog')->name('blog.')->group(function () {
@@ -165,11 +171,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
                 Route::post('/{id}/toggle-featured', [AdminBlogController::class, 'toggleFeatured'])->name('toggle-featured');
                 Route::delete('/{id}', [AdminBlogController::class, 'destroy'])->name('destroy');
             });
-            // Footer Ayarları API
-            Route::prefix('api/pages')->name('api.pages.')->group(function () {
-                Route::get('/get-by-slug', [AdminLegalPageController::class, 'getBySlug'])->name('get-by-slug');
-                Route::post('/store-or-update', [AdminLegalPageController::class, 'storeOrUpdate'])->name('store-or-update');
-            });
+            // Legal Page API (Okuma) - Tüm roller okuyabilir
+            Route::get('/api/pages/get-by-slug', [AdminLegalPageController::class, 'getBySlug'])
+                ->name('api.pages.get-by-slug');
         });
     });
 });

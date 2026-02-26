@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Araçlar - GMSGARAGE')
+@section('title', 'Araçlar - ' . ($settings['site_title'] ?? 'GMSGARAGE'))
 @section('description', 'Premium ikinci el araçlarımızı inceleyin. Geniş araç yelpazesi, garantili ve bakımlı araçlar.')
 
 @push('styles')

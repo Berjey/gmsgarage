@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'Hakkımızda - GMSGARAGE')
-@section('description', 'GMSGARAGE hakkında bilgiler. Premium ikinci el araç sektöründe güvenilir hizmet.')
+@section('title', 'Hakkımızda - ' . ($settings['site_title'] ?? 'GMSGARAGE'))
+@section('description', ($settings['site_title'] ?? 'GMSGARAGE') . ' hakkında bilgiler. Premium ikinci el araç sektöründe güvenilir hizmet.')
 
 @push('styles')
 <style>

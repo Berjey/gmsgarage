@@ -8,7 +8,7 @@
 
     <!-- Navigation -->
     <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
-        <!-- Anasayfa - Özel Vurgu -->
+        <!-- Anasayfa -->
         <a href="{{ route('admin.dashboard') }}" 
            class="group flex items-center space-x-3 px-4 py-3 rounded-xl font-medium transition-all duration-200 {{ request()->routeIs('admin.dashboard') ? 'bg-gradient-to-r from-primary-600 to-primary-700 text-white shadow-lg shadow-primary-500/30' : 'text-gray-700 hover:bg-gray-50 hover:translate-x-1' }}">
             <svg class="w-5 h-5 {{ request()->routeIs('admin.dashboard') ? 'text-white' : 'text-gray-500 group-hover:text-primary-600' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -17,13 +17,11 @@
             <span>Anasayfa</span>
         </a>
 
-        <!-- Kategori Başlık -->
+        <!-- İçerik Yönetimi -->
         <div class="pt-4 pb-2">
             <p class="px-4 text-xs font-bold text-gray-500 uppercase tracking-wider">İçerik Yönetimi</p>
         </div>
 
-        <!-- İçerik Menüleri -->
-        @if(auth()->user()->role === 'admin' || auth()->user()->role === 'manager')
         <a href="{{ route('admin.vehicles.index') }}" 
            class="group flex items-center space-x-3 px-4 py-3 rounded-xl font-medium transition-all duration-200 {{ request()->routeIs('admin.vehicles.*') ? 'bg-primary-50 text-primary-600 border-l-4 border-primary-600' : 'text-gray-700 hover:bg-gray-50 hover:translate-x-1' }}">
             <svg class="w-5 h-5 {{ request()->routeIs('admin.vehicles.*') ? 'text-primary-600' : 'text-gray-500 group-hover:text-primary-600' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -31,9 +29,7 @@
             </svg>
             <span>Araçlar</span>
         </a>
-        @endif
 
-        <!-- Blog - HERKES görebilir -->
         <a href="{{ route('admin.blog.index') }}" 
            class="group flex items-center space-x-3 px-4 py-3 rounded-xl font-medium transition-all duration-200 {{ request()->routeIs('admin.blog.*') ? 'bg-primary-50 text-primary-600 border-l-4 border-primary-600' : 'text-gray-700 hover:bg-gray-50 hover:translate-x-1' }}">
             <svg class="w-5 h-5 {{ request()->routeIs('admin.blog.*') ? 'text-primary-600' : 'text-gray-500 group-hover:text-primary-600' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -49,14 +45,12 @@
             </svg>
             <span>Yasal Sayfalar</span>
         </a>
-        
-        @if(auth()->user()->role === 'admin' || auth()->user()->role === 'manager')
-        <!-- Kategori Başlık -->
+
+        <!-- Mesajlar -->
         <div class="pt-6 pb-2">
             <p class="px-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Mesajlar</p>
         </div>
 
-        <!-- Mesaj Menüleri -->
         <a href="{{ route('admin.contact-messages.index') }}" 
            class="group flex items-center justify-between px-4 py-3 rounded-xl font-medium transition-all duration-200 {{ request()->routeIs('admin.contact-messages.*') ? 'bg-primary-50 text-primary-600 border-l-4 border-primary-600' : 'text-gray-700 hover:bg-gray-50 hover:translate-x-1' }}">
             <div class="flex items-center space-x-3">
@@ -65,11 +59,9 @@
                 </svg>
                 <span>İletişim</span>
             </div>
-            @php
-                $unreadCount = \App\Models\ContactMessage::where('is_read', false)->count();
-            @endphp
-            @if($unreadCount > 0)
-                <span class="bg-primary-600 text-white text-xs font-bold px-2 py-1 rounded-full animate-pulse">{{ $unreadCount }}</span>
+            @php $unreadContactCount = \App\Models\ContactMessage::where('is_read', false)->count(); @endphp
+            @if($unreadContactCount > 0)
+                <span class="bg-primary-600 text-white text-xs font-bold px-2 py-1 rounded-full animate-pulse">{{ $unreadContactCount }}</span>
             @endif
         </a>
 
@@ -81,21 +73,17 @@
                 </svg>
                 <span>Değerleme İstekleri</span>
             </div>
-            @php
-                $unreadCount = \App\Models\EvaluationRequest::where('is_read', false)->count();
-            @endphp
-            @if($unreadCount > 0)
-                <span class="bg-primary-600 text-white text-xs font-bold px-2 py-1 rounded-full animate-pulse">{{ $unreadCount }}</span>
+            @php $unreadEvalCount = \App\Models\EvaluationRequest::where('is_read', false)->count(); @endphp
+            @if($unreadEvalCount > 0)
+                <span class="bg-primary-600 text-white text-xs font-bold px-2 py-1 rounded-full animate-pulse">{{ $unreadEvalCount }}</span>
             @endif
         </a>
-        @endif
 
-        <!-- Kategori Başlık - Müşteri Yönetimi (HERKES GÖREBİLİR) -->
+        <!-- Müşteri Portföyü -->
         <div class="pt-6 pb-2">
             <p class="px-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Müşteri Portföyü</p>
         </div>
-        
-        <!-- Müşteri Listesi (HERKES GÖREBİLİR) -->
+
         <a href="{{ route('admin.customers.index') }}" 
            class="group flex items-center justify-between px-4 py-3 rounded-xl font-medium transition-all duration-200 {{ request()->routeIs('admin.customers.*') ? 'bg-primary-50 text-primary-600 border-l-4 border-primary-600' : 'text-gray-700 hover:bg-gray-50 hover:translate-x-1' }}">
             <div class="flex items-center space-x-3">
@@ -104,21 +92,17 @@
                 </svg>
                 <span>Müşteri Listesi</span>
             </div>
-            @php
-                $newCustomers = \App\Models\Customer::where('is_new', true)->count();
-            @endphp
+            @php $newCustomers = \App\Models\Customer::where('is_new', true)->count(); @endphp
             @if($newCustomers > 0)
                 <span class="bg-primary-600 text-white text-xs font-bold px-2 py-1 rounded-full animate-pulse">{{ $newCustomers }}</span>
             @endif
         </a>
 
-        @if(auth()->user()->role === 'admin')
-        <!-- Kategori Başlık -->
+        <!-- Sistem -->
         <div class="pt-6 pb-2">
             <p class="px-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Sistem</p>
         </div>
 
-        <!-- Sistem Menüleri -->
         <a href="{{ route('admin.sitemap.index') }}"
            class="group flex items-center space-x-3 px-4 py-3 rounded-xl font-medium transition-all duration-200 {{ request()->routeIs('admin.sitemap.*') ? 'bg-primary-50 text-primary-600 border-l-4 border-primary-600' : 'text-gray-700 hover:bg-gray-50 hover:translate-x-1' }}">
             <svg class="w-5 h-5 {{ request()->routeIs('admin.sitemap.*') ? 'text-primary-600' : 'text-gray-500 group-hover:text-primary-600' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -151,7 +135,6 @@
             </svg>
             <span>Aktivite Logları</span>
         </a>
-        @endif
 
         <!-- Siteyi Görüntüle -->
         <div class="pt-4">

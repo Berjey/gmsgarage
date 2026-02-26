@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $sellerData['name'] . ' - Satıcı Profili - GMSGARAGE')
+@section('title', $sellerData['name'] . ' - Satıcı Profili - ' . ($settings['site_title'] ?? 'GMSGARAGE'))
 @section('description', $sellerData['name'] . ' satıcı profil sayfası. Aktif ve kaldırılan ilanlar.')
 
 @section('content')

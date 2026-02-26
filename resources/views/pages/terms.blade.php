@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'Kullanım Şartları - GMSGARAGE')
-@section('description', 'GMSGARAGE web sitesi kullanım şartları.')
+@section('title', 'Kullanım Şartları - ' . ($settings['site_title'] ?? 'GMSGARAGE'))
+@section('description', ($settings['site_title'] ?? 'GMSGARAGE') . ' web sitesi kullanım şartları.')
 
 @section('content')
 <section class="section-padding bg-white dark:bg-[#1e1e1e] transition-colors duration-200">
