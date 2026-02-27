@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
-@section('title', $post->meta_title . ' - Blog - ' . ($settings['site_title'] ?? 'GMSGARAGE'))
+@php $siteTitle = $settings['site_title'] ?? 'GMSGARAGE'; @endphp
+@section('title', $post->title . ' - Blog - ' . $siteTitle)
 @section('description', $post->meta_description)
 @section('keywords', $post->meta_keywords ? implode(', ', $post->meta_keywords) : 'blog, araç blog')
 @section('og_type', 'article')
@@ -27,7 +28,7 @@
     },
     "publisher": {
         "@type": "Organization",
-        "name": "GMSGARAGE",
+        "name": "{{ $siteTitle }}",
         "logo": {
             "@type": "ImageObject",
             "url": "{{ asset('images/light-mode-logo.png') }}"
@@ -146,8 +147,7 @@
     }
     
     .blog-content {
-        @apply prose prose-lg max-w-none dark:prose-invert;
-        color: #374151; /* gray-700 */
+        color: #374151;
     }
     
     .dark .blog-content {
@@ -160,8 +160,7 @@
     .blog-content h4,
     .blog-content h5,
     .blog-content h6 {
-        @apply text-gray-900 dark:text-gray-100;
-        color: #111827 !important; /* gray-900 */
+        color: #111827 !important;
     }
     
     .dark .blog-content h1,
@@ -174,8 +173,8 @@
     }
     
     .blog-content p {
-        @apply text-gray-700 dark:text-gray-300 leading-relaxed;
-        color: #374151 !important; /* gray-700 */
+        color: #374151 !important;
+        line-height: 1.75;
     }
     
     .dark .blog-content p {
@@ -183,8 +182,7 @@
     }
     
     .blog-content a {
-        @apply text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300;
-        color: #dc2626 !important; /* primary-600 */
+        color: #dc2626 !important;
     }
     
     .dark .blog-content a {
@@ -200,13 +198,13 @@
     }
     
     .blog-content img {
-        @apply rounded-xl shadow-lg;
+        border-radius: 0.75rem;
+        box-shadow: 0 10px 15px -3px rgba(0,0,0,.1), 0 4px 6px -2px rgba(0,0,0,.05);
     }
     
     .blog-content ul,
     .blog-content ol {
-        @apply text-gray-700 dark:text-gray-300;
-        color: #374151 !important; /* gray-700 */
+        color: #374151 !important;
     }
     
     .dark .blog-content ul,
@@ -215,8 +213,7 @@
     }
     
     .blog-content li {
-        @apply text-gray-700 dark:text-gray-300;
-        color: #374151 !important; /* gray-700 */
+        color: #374151 !important;
     }
     
     .dark .blog-content li {
@@ -225,8 +222,7 @@
     
     .blog-content strong,
     .blog-content b {
-        @apply text-gray-900 dark:text-gray-100;
-        color: #111827 !important; /* gray-900 */
+        color: #111827 !important;
         font-weight: 600;
     }
     
@@ -237,8 +233,7 @@
     
     .blog-content em,
     .blog-content i {
-        @apply text-gray-700 dark:text-gray-300;
-        color: #374151 !important; /* gray-700 */
+        color: #374151 !important;
     }
     
     .dark .blog-content em,
@@ -247,8 +242,12 @@
     }
     
     .blog-content blockquote {
-        @apply border-l-4 border-primary-500 dark:border-primary-400 bg-gray-50 dark:bg-[#252525] p-4 rounded-r-lg italic;
-        color: #374151 !important; /* gray-700 */
+        border-left: 4px solid #ef4444;
+        background-color: #f9fafb;
+        padding: 1rem;
+        border-radius: 0 0.5rem 0.5rem 0;
+        font-style: italic;
+        color: #374151 !important;
     }
     
     .dark .blog-content blockquote {
@@ -264,8 +263,10 @@
     }
     
     .blog-content code {
-        @apply bg-gray-100 dark:bg-[#2a2a2a] text-gray-900 dark:text-gray-100 px-2 py-1 rounded;
-        color: #111827 !important; /* gray-900 */
+        background-color: #f3f4f6;
+        color: #111827 !important;
+        padding: 0.125rem 0.5rem;
+        border-radius: 0.25rem;
     }
     
     .dark .blog-content code {
@@ -273,24 +274,33 @@
     }
     
     .blog-content pre {
-        @apply bg-gray-100 dark:bg-[#2a2a2a] text-gray-900 dark:text-gray-100 p-4 rounded-lg overflow-x-auto;
+        background-color: #f3f4f6;
+        color: #111827;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        overflow-x: auto;
     }
-    
+
     .blog-content pre code {
-        @apply bg-transparent p-0;
+        background-color: transparent;
+        padding: 0;
     }
-    
+
     .blog-content table {
-        @apply w-full border-collapse;
+        width: 100%;
+        border-collapse: collapse;
     }
-    
+
     .blog-content table th,
     .blog-content table td {
-        @apply border border-gray-300 dark:border-gray-700 px-4 py-2 text-gray-900 dark:text-gray-100;
+        border: 1px solid #d1d5db;
+        padding: 0.5rem 1rem;
+        color: #111827;
     }
-    
+
     .blog-content table th {
-        @apply bg-gray-100 dark:bg-[#2a2a2a] font-semibold;
+        background-color: #f3f4f6;
+        font-weight: 600;
     }
     
     .related-post-card {

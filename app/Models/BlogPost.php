@@ -48,11 +48,9 @@ class BlogPost extends Model
             if (empty($post->slug)) {
                 $post->slug = Str::slug($post->title);
             }
-            
-            // Okuma süresini otomatik hesapla (yaklaşık 200 kelime/dakika)
+
             if (empty($post->reading_time)) {
-                $wordCount = str_word_count(strip_tags($post->content));
-                $post->reading_time = max(1, ceil($wordCount / 200));
+                $post->reading_time = self::estimateReadingTime($post->content);
             }
         });
 
@@ -60,11 +58,9 @@ class BlogPost extends Model
             if ($post->isDirty('title') && empty($post->slug)) {
                 $post->slug = Str::slug($post->title);
             }
-            
-            // Okuma süresini güncelle
+
             if ($post->isDirty('content')) {
-                $wordCount = str_word_count(strip_tags($post->content));
-                $post->reading_time = max(1, ceil($wordCount / 200));
+                $post->reading_time = self::estimateReadingTime($post->content);
             }
         });
     }
@@ -103,6 +99,16 @@ class BlogPost extends Model
     public function scopeCategory($query, $category)
     {
         return $query->where('category', $category);
+    }
+
+    /**
+     * Türkçe dahil çok dilli metin için okuma süresi hesapla (yaklaşık 200 kelime/dakika)
+     */
+    private static function estimateReadingTime(?string $content): int
+    {
+        $text      = strip_tags((string) $content);
+        $wordCount = preg_match_all('/\S+/u', $text);
+        return max(1, (int) ceil($wordCount / 200));
     }
 
     /**

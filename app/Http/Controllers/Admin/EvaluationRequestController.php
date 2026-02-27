@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\EvaluationRequest;
+use App\Services\EmailService;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -47,6 +48,39 @@ class EvaluationRequestController extends Controller
         $request = EvaluationRequest::findOrFail($id);
         $request->markAsRead();
         return back()->with('success', 'İstek okundu olarak işaretlendi.');
+    }
+
+    /**
+     * Değerleme isteği sahibine e-posta gönder
+     */
+    public function sendEmail(Request $request, $id)
+    {
+        $evalRequest = EvaluationRequest::findOrFail($id);
+
+        if (empty($evalRequest->email)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Bu müşterinin e-posta adresi kayıtlı değil.',
+            ], 422);
+        }
+
+        $request->validate([
+            'subject' => 'required|string|max:255',
+            'message' => 'required|string',
+        ], [
+            'subject.required' => 'E-posta konusu zorunludur.',
+            'message.required' => 'Mesaj zorunludur.',
+        ]);
+
+        $result = EmailService::sendTo(
+            email:   $evalRequest->email,
+            name:    $evalRequest->name,
+            subject: $request->subject,
+            body:    $request->message,
+            context: ['source' => 'evaluation_request', 'evaluation_id' => $evalRequest->id]
+        );
+
+        return response()->json($result, $result['success'] ? 200 : 500);
     }
 
     /**

@@ -12,7 +12,7 @@ class BlogController extends Controller
      */
     public function index(Request $request)
     {
-        $query = BlogPost::published()->orderBy('published_at', 'desc');
+        $query = BlogPost::published()->orderByRaw('COALESCE(published_at, created_at) DESC');
 
         // Kategori filtresi
         if ($request->has('kategori') && $request->kategori) {
@@ -38,9 +38,8 @@ class BlogController extends Controller
             ->orderBy('category')
             ->pluck('category');
 
-        // Öne çıkan postlar
         $featuredPosts = BlogPost::featured()
-            ->orderBy('published_at', 'desc')
+            ->orderByRaw('COALESCE(published_at, created_at) DESC')
             ->limit(3)
             ->get();
 
@@ -82,16 +81,20 @@ class BlogController extends Controller
     {
         $posts = BlogPost::published()
             ->where('category', $category)
-            ->orderBy('published_at', 'desc')
+            ->orderByRaw('COALESCE(published_at, created_at) DESC')
             ->paginate(9);
 
-        // Kategorileri al
         $categories = BlogPost::published()
             ->select('category')
             ->distinct()
             ->orderBy('category')
             ->pluck('category');
 
-        return view('pages.blog.index', compact('posts', 'categories', 'category'));
+        $featuredPosts = BlogPost::featured()
+            ->orderByRaw('COALESCE(published_at, created_at) DESC')
+            ->limit(3)
+            ->get();
+
+        return view('pages.blog.index', compact('posts', 'categories', 'category', 'featuredPosts'));
     }
 }

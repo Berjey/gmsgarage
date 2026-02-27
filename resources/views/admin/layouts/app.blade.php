@@ -247,5 +247,101 @@
 
     <!-- Admin Confirm Modal Script -->
     @vite('resources/js/admin-confirm.js')
+
+    <!-- Send Email Modal Script (global, reused across pages) -->
+    <script>
+    function openSendEmailModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+            // Focus konu alanına
+            setTimeout(() => {
+                const subjectInput = document.getElementById(modalId + '-subject');
+                if (subjectInput) subjectInput.focus();
+            }, 100);
+        }
+    }
+
+    function closeSendEmailModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+            // Alanları temizle (readonly alıcı hariç)
+            const subjectInput = document.getElementById(modalId + '-subject');
+            const messageInput = document.getElementById(modalId + '-message');
+            if (messageInput) messageInput.value = '';
+            // Subject'i sadece boşsa temizleme (default subject korunur)
+            // Butonu sıfırla
+            const btn = document.getElementById(modalId + '-submit-btn');
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg> E-posta Gönder';
+            }
+        }
+    }
+
+    function submitSendEmailModal(modalId, postUrl, recipientEmail) {
+        const subject = document.getElementById(modalId + '-subject').value.trim();
+        const message = document.getElementById(modalId + '-message').value.trim();
+        const btn     = document.getElementById(modalId + '-submit-btn');
+
+        if (!subject) {
+            Swal.fire({ icon: 'warning', title: 'Eksik Alan', text: 'E-posta konusu zorunludur.', confirmButtonColor: '#e11d48' });
+            return;
+        }
+        if (!message) {
+            Swal.fire({ icon: 'warning', title: 'Eksik Alan', text: 'Mesaj alanı zorunludur.', confirmButtonColor: '#e11d48' });
+            return;
+        }
+
+        // Loading state + double-click koruması
+        btn.disabled = true;
+        btn.innerHTML = '<svg class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg> Gönderiliyor...';
+
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        fetch(postUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept':       'application/json',
+                'X-CSRF-TOKEN': csrfToken,
+            },
+            body: JSON.stringify({ subject, message }),
+        })
+        .then(res => res.json().then(data => ({ ok: res.ok, data })))
+        .then(({ ok, data }) => {
+            closeSendEmailModal(modalId);
+            if (ok && data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Gönderildi!',
+                    text: data.message,
+                    confirmButtonColor: '#e11d48',
+                    timer: 3000,
+                    timerProgressBar: true,
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gönderilemedi',
+                    text: data.message || 'Bir hata oluştu. Lütfen tekrar deneyin.',
+                    confirmButtonColor: '#e11d48',
+                });
+            }
+        })
+        .catch(() => {
+            closeSendEmailModal(modalId);
+            Swal.fire({
+                icon: 'error',
+                title: 'Bağlantı Hatası',
+                text: 'Sunucuya ulaşılamadı. Lütfen tekrar deneyin.',
+                confirmButtonColor: '#e11d48',
+            });
+        });
+    }
+    </script>
 </body>
 </html>

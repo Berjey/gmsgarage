@@ -109,11 +109,12 @@
                         </form>
                     @endif
 
-                    <a href="mailto:{{ $message->email }}?subject=Re: {{ $message->subject }}" 
-                       class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-white text-gray-700 font-bold rounded-xl border border-gray-200 hover:bg-gray-50 hover:text-blue-600 transition-all shadow-sm">
+                    <button type="button"
+                            onclick="openSendEmailModal('contact-reply-modal')"
+                            class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-white text-gray-700 font-bold rounded-xl border border-gray-200 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200 transition-all shadow-sm">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
                         E-posta ile Yanıtla
-                    </a>
+                    </button>
 
                     <a href="{{ \App\Models\Setting::get('contact_mail_hostinger_link', 'https://mail.hostinger.com/v2/mailboxes/INBOX') }}" 
                        target="_blank"
@@ -194,4 +195,12 @@
     }
 </script>
 @endpush
+
+<x-admin.send-email-modal
+    modalId="contact-reply-modal"
+    postUrl="{{ route('admin.contact-messages.reply-email', $message->id) }}"
+    recipientEmail="{{ $message->email }}"
+    recipientName="{{ $message->name }}"
+    defaultSubject="Re: {{ $message->subject }}"
+/>
 @endsection

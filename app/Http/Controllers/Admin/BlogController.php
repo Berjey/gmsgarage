@@ -10,6 +10,15 @@ use Illuminate\Support\Facades\Storage;
 
 class BlogController extends Controller
 {
+    private const CATEGORIES = [
+        'Araç Alım Satım Rehberi',
+        'Sürücü Rehberi',
+        'Otomobil Dünyası',
+        'Otomobil Sözlüğü',
+        'Araç Bakımı ve Onarımı',
+        'Dünden Bugüne',
+    ];
+
     /**
      * Blog yazıları listesi
      */
@@ -56,7 +65,14 @@ class BlogController extends Controller
 
         $perPage = $request->get('per_page', 15);
         $posts = $query->paginate($perPage)->withQueryString();
-        
+
+        $stats = [
+            'total'     => BlogPost::count(),
+            'published' => BlogPost::where('is_published', true)->count(),
+            'draft'     => BlogPost::where('is_published', false)->count(),
+            'featured'  => BlogPost::where('is_featured', true)->count(),
+        ];
+
         // Kategoriler (sadece var olan ve boş olmayanlar)
         $categories = BlogPost::select('category')
             ->whereNotNull('category')
@@ -65,7 +81,7 @@ class BlogController extends Controller
             ->orderBy('category', 'asc')
             ->pluck('category');
 
-        return view('admin.blog.index', compact('posts', 'categories'));
+        return view('admin.blog.index', compact('posts', 'categories', 'stats'));
     }
 
     /**
@@ -73,15 +89,7 @@ class BlogController extends Controller
      */
     public function create()
     {
-        $categories = [
-            'Araç Alım Satım Rehberi',
-            'Sürücü Rehberi',
-            'Otomobil Dünyası',
-            'Otomobil Sözlüğü',
-            'Araç Bakımı ve Onarımı',
-            'Dünden Bugüne',
-        ];
-
+        $categories = self::CATEGORIES;
         return view('admin.blog.create', compact('categories'));
     }
 
@@ -134,7 +142,7 @@ class BlogController extends Controller
 
         // Meta title ve description varsayılanları
         if (empty($validated['meta_title'])) {
-            $validated['meta_title'] = $validated['title'] . ' - GMSGARAGE Blog';
+            $validated['meta_title'] = $validated['title'] . ' - ' . config('app.name') . ' Blog';
         }
         if (empty($validated['meta_description'])) {
             $validated['meta_description'] = $validated['excerpt'] ?? Str::limit(strip_tags($validated['content']), 160);
@@ -142,7 +150,7 @@ class BlogController extends Controller
 
         // Author varsayılanı
         if (empty($validated['author'])) {
-            $validated['author'] = 'GMSGARAGE';
+            $validated['author'] = config('app.name');
         }
 
         // Görsel yükleme
@@ -165,17 +173,8 @@ class BlogController extends Controller
      */
     public function edit($id)
     {
-        $post = BlogPost::findOrFail($id);
-        
-        $categories = [
-            'Araç Alım Satım Rehberi',
-            'Sürücü Rehberi',
-            'Otomobil Dünyası',
-            'Otomobil Sözlüğü',
-            'Araç Bakımı ve Onarımı',
-            'Dünden Bugüne',
-        ];
-
+        $post       = BlogPost::findOrFail($id);
+        $categories = self::CATEGORIES;
         return view('admin.blog.edit', compact('post', 'categories'));
     }
 
@@ -234,19 +233,21 @@ class BlogController extends Controller
 
         // Meta title ve description varsayılanları
         if (empty($validated['meta_title'])) {
-            $validated['meta_title'] = $validated['title'] . ' - GMSGARAGE Blog';
+            $validated['meta_title'] = $validated['title'] . ' - ' . config('app.name') . ' Blog';
         }
         if (empty($validated['meta_description'])) {
             $validated['meta_description'] = $validated['excerpt'] ?? Str::limit(strip_tags($validated['content']), 160);
         }
 
+        // Görsel silme seçeneği
+        if ($request->boolean('remove_featured_image')) {
+            $this->deleteStorageImage($post->featured_image);
+            $validated['featured_image'] = null;
+        }
+
         // Görsel yükleme
         if ($request->hasFile('featured_image')) {
-            // Eski görseli sil (eğer storage'da ise)
-            if ($post->featured_image && str_starts_with($post->featured_image, '/storage/')) {
-                $oldPath = str_replace('/storage/', '', $post->featured_image);
-                Storage::disk('public')->delete($oldPath);
-            }
+            $this->deleteStorageImage($post->featured_image);
             $image = $request->file('featured_image');
             $imageName = time() . '_' . Str::random(10) . '.' . $image->getClientOriginalExtension();
             $imagePath = $image->storeAs('blog', $imageName, 'public');
@@ -266,9 +267,17 @@ class BlogController extends Controller
     public function destroy($id)
     {
         $post = BlogPost::findOrFail($id);
+        $this->deleteStorageImage($post->featured_image);
         $post->delete();
 
         return redirect()->route('admin.blog.index')->with('success', 'Blog yazısı başarıyla silindi.');
+    }
+
+    private function deleteStorageImage(?string $imageUrl): void
+    {
+        if ($imageUrl && str_starts_with($imageUrl, '/storage/')) {
+            Storage::disk('public')->delete(str_replace('/storage/', '', $imageUrl));
+        }
     }
 
     /**

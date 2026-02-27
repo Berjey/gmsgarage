@@ -6,7 +6,7 @@
     <title>Araç Değerleme Raporu #{{ $request->id }}</title>
     <style>
         @page {
-            margin: 20mm 15mm;
+            margin: 15mm 18mm;
         }
         * {
             margin: 0;
@@ -18,6 +18,11 @@
             font-size: 11px;
             line-height: 1.5;
             color: #1f2937;
+        }
+        .page-wrapper {
+            width: 100%;
+            max-width: 100%;
+            padding: 0 8px;
         }
         .header {
             border-bottom: 3px solid #dc2626;
@@ -278,6 +283,7 @@
     $orijinalCount    = 13 - $boyaliCount - $lokalBoyaliCount - $degismisCount;
 @endphp
 
+<div class="page-wrapper">
     <!-- Header -->
     <div class="header">
         <div class="header-content">
@@ -482,5 +488,6 @@
         <p>GMS GARAGE - Arac Degerleme Raporu | Olusturulma Tarihi: {{ now()->format('d.m.Y H:i') }}</p>
         <p>Bu rapor bilgilendirme amaclidir. Kesin degerleme icin uzman incelemesi gerekmektedir.</p>
     </div>
+</div>
 </body>
 </html>

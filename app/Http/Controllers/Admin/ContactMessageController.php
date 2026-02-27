@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ContactMessage;
+use App\Services\EmailService;
 use Illuminate\Http\Request;
 
 class ContactMessageController extends Controller
@@ -113,6 +114,39 @@ class ContactMessageController extends Controller
             'read_at' => null,
         ]);
         return back()->with('success', 'Mesaj okunmamış olarak işaretlendi.');
+    }
+
+    /**
+     * İletişim mesajı göndericisine e-posta ile yanıtla
+     */
+    public function replyEmail(Request $request, $id)
+    {
+        $message = ContactMessage::findOrFail($id);
+
+        if (empty($message->email)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Bu kişinin e-posta adresi kayıtlı değil.',
+            ], 422);
+        }
+
+        $request->validate([
+            'subject' => 'required|string|max:255',
+            'message' => 'required|string',
+        ], [
+            'subject.required' => 'E-posta konusu zorunludur.',
+            'message.required' => 'Mesaj zorunludur.',
+        ]);
+
+        $result = EmailService::sendTo(
+            email:   $message->email,
+            name:    $message->name,
+            subject: $request->subject,
+            body:    $request->message,
+            context: ['source' => 'contact_message', 'contact_id' => $message->id]
+        );
+
+        return response()->json($result, $result['success'] ? 200 : 500);
     }
 
     /**

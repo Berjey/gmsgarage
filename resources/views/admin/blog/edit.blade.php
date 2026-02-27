@@ -84,12 +84,24 @@
             <p class="mt-1 text-sm text-gray-500 font-medium tracking-wide uppercase">İÇERİĞİ GÜNCELLE</p>
         </div>
         <div class="flex items-center gap-3">
+            @if($post->is_published)
             <a href="{{ route('blog.show', $post->slug) }}" 
                target="_blank"
                class="inline-flex items-center px-5 py-2.5 bg-white text-gray-700 font-bold rounded-xl border border-gray-200 hover:bg-gray-50 transition-all shadow-sm">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zM2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                 Önizle
             </a>
+            @endif
+            <form action="{{ route('admin.blog.destroy', $post->id) }}" method="POST" class="inline-block"
+                  onsubmit="return confirmDelete(this, '{{ addslashes($post->title) }} yazısını')">
+                @csrf
+                @method('DELETE')
+                <button type="submit"
+                        class="inline-flex items-center px-5 py-2.5 bg-red-50 text-red-600 font-bold rounded-xl border border-red-200 hover:bg-red-600 hover:text-white transition-all shadow-sm">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    Sil
+                </button>
+            </form>
             <a href="{{ route('admin.blog.index') }}" 
                class="inline-flex items-center px-5 py-2.5 bg-white text-gray-700 font-bold rounded-xl border border-gray-200 hover:bg-gray-50 transition-all shadow-sm">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
@@ -119,7 +131,7 @@
     </div>
     @endif
 
-    <form action="{{ route('admin.blog.update', $post->id) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+    <form id="blog-edit-form" action="{{ route('admin.blog.update', $post->id) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
         @csrf
         @method('PUT')
 
@@ -222,10 +234,18 @@
             <div class="p-6">
                 <!-- Mevcut Görsel Önizleme -->
                 @if($post->featured_image)
-                <div class="mb-6">
+                <div class="mb-6" id="current-image-block">
                     <label class="block text-sm font-bold text-gray-700 mb-2">Mevcut Görsel</label>
                     <div class="relative inline-block">
                         <img src="{{ $post->featured_image }}" alt="{{ $post->title }}" class="max-w-md w-full h-auto rounded-xl border border-gray-200 shadow-sm">
+                    </div>
+                    <div class="mt-3">
+                        <label class="inline-flex items-center gap-2 cursor-pointer group">
+                            <input type="checkbox" name="remove_featured_image" value="1" id="remove-image-cb"
+                                   class="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500"
+                                   onchange="toggleRemoveImage(this)">
+                            <span class="text-sm text-red-600 font-semibold group-hover:text-red-700">Mevcut görseli kaldır</span>
+                        </label>
                     </div>
                 </div>
                 @endif
@@ -241,7 +261,14 @@
                                    accept="image/*"
                                    class="block w-full text-sm text-gray-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-bold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100 transition-all border border-gray-200 rounded-xl">
                         </div>
-                        <p class="mt-2 text-xs text-gray-500">PNG, JPG, GIF - Maksimum 5MB</p>
+                        <p class="mt-2 text-xs text-gray-500">PNG, JPG, GIF · Maks. 5MB</p>
+                        <div class="mt-2 flex items-start gap-2 px-3 py-2 bg-amber-50 border border-amber-200 rounded-lg">
+                            <svg class="w-3.5 h-3.5 text-amber-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            <p class="text-xs text-amber-700 leading-relaxed">
+                                <span class="font-bold">Önerilen boyut:</span> 1200 × 630 piksel (16:9 oran)<br>
+                                <span class="text-amber-600">Kare (1:1) görseller için: 1200 × 1200 piksel</span>
+                            </p>
+                        </div>
                     </div>
 
                     <!-- URL ile Görsel -->
@@ -425,19 +452,22 @@
             }
         });
 
-        // Form submit edildiğinde içeriği hidden input'a aktar
-        const form = document.querySelector('form');
+        // Doğru formu ID ile seç (sayfada birden fazla form var)
+        const form = document.getElementById('blog-edit-form');
         const contentInput = document.getElementById('content-input');
 
-        // Her değişiklikte içeriği kaydet
+        // Quill yüklendiğinde mevcut içeriği hemen hidden input'a yaz
+        contentInput.value = quill.root.innerHTML;
+
+        // Her değişiklikte içeriği güncelle
         quill.on('text-change', function() {
             contentInput.value = quill.root.innerHTML;
         });
 
         form.addEventListener('submit', function(e) {
-            const content = quill.root.innerHTML;
-            contentInput.value = content; // İçeriği tekrar set et
-            
+            // Gönderim öncesi son kez senkronize et
+            contentInput.value = quill.root.innerHTML;
+
             const formData = new FormData(form);
 
             // Eksik alanları kontrol et
@@ -449,7 +479,13 @@
             
             if (missingFields.length > 0) {
                 e.preventDefault();
-                alert('EKSIK ALANLAR:\n\n• ' + missingFields.join('\n• ') + '\n\nLütfen tüm zorunlu alanları doldurun!');
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Eksik Alanlar',
+                    html: '<ul class="text-left text-sm mt-2 space-y-1">' + missingFields.map(f => `<li>• ${f}</li>`).join('') + '</ul>',
+                    confirmButtonText: 'Tamam',
+                    confirmButtonColor: '#e11d48',
+                });
                 return false;
             }
         });
@@ -460,7 +496,7 @@
     function addNewCategory() {
         const input = document.getElementById('new-category-field');
         const newCategory = input.value.trim();
-        if (!newCategory) { alert('Lütfen kategori adı girin!'); return; }
+        if (!newCategory) { Swal.fire({ icon: 'warning', title: 'Uyarı', text: 'Lütfen kategori adı girin!', confirmButtonColor: '#e11d48' }); return; }
 
         const dd       = document.querySelector('[data-adm-dd]');
         const list     = dd.querySelector('[data-adm-list]');
@@ -534,6 +570,13 @@
         previewImg.src = '';
         imageUpload.value = '';
         imageUrl.value = '';
+    }
+
+    function toggleRemoveImage(cb) {
+        const block = document.getElementById('current-image-block');
+        if (block) {
+            block.querySelector('img').style.opacity = cb.checked ? '0.3' : '1';
+        }
     }
 
     // Collapsible Sections

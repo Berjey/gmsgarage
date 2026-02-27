@@ -224,7 +224,14 @@
                                    accept="image/*"
                                    class="block w-full text-sm text-gray-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-bold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100 transition-all border border-gray-200 rounded-xl">
                         </div>
-                        <p class="mt-2 text-xs text-gray-500">PNG, JPG, GIF - Maksimum 5MB</p>
+                        <p class="mt-2 text-xs text-gray-500">PNG, JPG, GIF · Maks. 5MB</p>
+                        <div class="mt-2 flex items-start gap-2 px-3 py-2 bg-amber-50 border border-amber-200 rounded-lg">
+                            <svg class="w-3.5 h-3.5 text-amber-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            <p class="text-xs text-amber-700 leading-relaxed">
+                                <span class="font-bold">Önerilen boyut:</span> 1200 × 630 piksel (16:9 oran)<br>
+                                <span class="text-amber-600">Kare (1:1) görseller için: 1200 × 1200 piksel</span>
+                            </p>
+                        </div>
                     </div>
 
                     <!-- URL ile Görsel -->
@@ -382,19 +389,21 @@
             }
         });
 
-        // Form submit edildiğinde içeriği hidden input'a aktar
         const form = document.querySelector('form');
         const contentInput = document.getElementById('content-input');
 
-        // Her değişiklikte içeriği kaydet
+        // Quill yüklendiğinde mevcut içeriği hemen hidden input'a yaz
+        contentInput.value = quill.root.innerHTML;
+
+        // Her değişiklikte içeriği güncelle
         quill.on('text-change', function() {
             contentInput.value = quill.root.innerHTML;
         });
 
         form.addEventListener('submit', function(e) {
-            const content = quill.root.innerHTML;
-            contentInput.value = content; // İçeriği tekrar set et
-            
+            // Gönderim öncesi son kez senkronize et
+            contentInput.value = quill.root.innerHTML;
+
             const formData = new FormData(form);
 
             // Eksik alanları kontrol et
@@ -406,7 +415,13 @@
             
             if (missingFields.length > 0) {
                 e.preventDefault();
-                alert('EKSIK ALANLAR:\n\n• ' + missingFields.join('\n• ') + '\n\nLütfen tüm zorunlu alanları doldurun!');
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Eksik Alanlar',
+                    html: '<ul class="text-left text-sm mt-2 space-y-1">' + missingFields.map(f => `<li>• ${f}</li>`).join('') + '</ul>',
+                    confirmButtonText: 'Tamam',
+                    confirmButtonColor: '#e11d48',
+                });
                 return false;
             }
         });
@@ -416,7 +431,7 @@
     function addNewCategory() {
         const input = document.getElementById('new-category-field');
         const newCategory = input.value.trim();
-        if (!newCategory) { alert('Lütfen kategori adı girin!'); return; }
+        if (!newCategory) { Swal.fire({ icon: 'warning', title: 'Uyarı', text: 'Lütfen kategori adı girin!', confirmButtonColor: '#e11d48' }); return; }
 
         const dd       = document.querySelector('[data-adm-dd]');
         const list     = dd.querySelector('[data-adm-list]');
