@@ -12,6 +12,8 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
+            AdminUserSeeder::class, // Admin kullanıcıları oluştur
+            LegalPagesSeeder::class, // Yasal sayfalar oluştur
             CarBrandSeeder::class, // Arabam.com'dan marka ve modelleri çek
             VehicleSeeder::class,
             BlogPostSeeder::class,

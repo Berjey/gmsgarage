@@ -16,10 +16,33 @@ class AdminUserSeeder extends Seeder
         // Admin kullanıcısı oluştur (eğer yoksa)
         if (!User::where('email', 'admin@gmsgarage.com')->exists()) {
             User::create([
-                'name' => 'Admin',
+                'name' => 'Gms Garage Süper Admin',
                 'email' => 'admin@gmsgarage.com',
                 'password' => Hash::make('admin123'),
                 'is_admin' => true,
+                'role' => 'admin',
+            ]);
+        }
+
+        // Galeri Yöneticisi
+        if (!User::where('email', 'manager@gmsgarage.com')->exists()) {
+            User::create([
+                'name' => 'Galeri Yöneticisi',
+                'email' => 'manager@gmsgarage.com',
+                'password' => Hash::make('manager123'),
+                'is_admin' => true,
+                'role' => 'manager',
+            ]);
+        }
+
+        // Editör
+        if (!User::where('email', 'editor@gmsgarage.com')->exists()) {
+            User::create([
+                'name' => 'Editör',
+                'email' => 'editor@gmsgarage.com',
+                'password' => Hash::make('editor123'),
+                'is_admin' => true,
+                'role' => 'editor',
             ]);
         }
     }
