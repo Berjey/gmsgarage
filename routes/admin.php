@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\SitemapController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\LegalPageController as AdminLegalPageController;
 use App\Http\Controllers\Admin\ActivityLogController;
+use App\Http\Controllers\Admin\SahibindenImportController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -122,6 +123,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
                 // API endpoints for vehicle form
                 Route::get('/api/brands', [AdminVehicleController::class, 'getBrands'])->name('api.brands');
                 Route::get('/api/models', [AdminVehicleController::class, 'getModels'])->name('api.models');
+
+                // Sahibinden.com import (Phase 1)
+                Route::post('/import/sahibinden', [SahibindenImportController::class, 'import'])->name('import.sahibinden');
             });
             
             // İletişim Mesajları

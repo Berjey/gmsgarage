@@ -4,9 +4,9 @@
     <div class="block flex flex-col h-full">
         <!-- Temsili Görsel Bölümü -->
         <div class="relative h-56 bg-gradient-to-br from-gray-100 via-gray-50 to-gray-100 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 overflow-hidden rounded-t-2xl">
-            @if(is_array($vehicle->images) && count($vehicle->images) > 0)
+            @if(count($vehicle->all_images) > 0)
                 <!-- Gerçek Görsel Varsa -->
-                <img src="{{ $vehicle->images[0] }}" 
+                <img src="{{ $vehicle->all_images[0] }}" 
                      alt="{{ $vehicle->title }}"
                      loading="lazy"
                      class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
@@ -27,6 +27,18 @@
             @if($vehicle->is_featured)
                 <span class="absolute top-3 left-3 bg-accent-600 text-white px-3 py-1.5 rounded-full text-xs font-bold shadow-lg z-10">
                     ⭐ Öne Çıkan
+                </span>
+            @endif
+
+            @if(($vehicle->vehicle_status ?? 'available') !== 'available')
+                <span class="absolute top-3 right-3 text-xs font-bold px-2.5 py-1 rounded-full shadow-md z-10 border
+                    {{ match($vehicle->vehicle_status ?? 'available') {
+                        'sold'        => 'bg-red-600 text-white border-red-700',
+                        'reserved'    => 'bg-yellow-500 text-white border-yellow-600',
+                        'opportunity' => 'bg-green-600 text-white border-green-700',
+                        default       => ''
+                    } }}">
+                    {{ $vehicle->status_label }}
                 </span>
             @endif
             
@@ -87,7 +99,7 @@
             
             <!-- Butonlar -->
             <div class="flex gap-2.5 mt-auto pt-4">
-                <a href="{{ route('vehicles.show', $vehicle->slug) }}" 
+                <a href="{{ route('vehicles.show', $vehicle->slug ?: $vehicle->id) }}" 
                    class="flex-1 px-4 py-3 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white rounded-xl font-semibold transition-all duration-300 text-sm text-center whitespace-nowrap flex items-center justify-center gap-1.5 shadow-md hover:shadow-lg">
                     <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>

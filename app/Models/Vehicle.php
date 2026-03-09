@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class Vehicle extends Model
@@ -56,6 +57,8 @@ class Vehicle extends Model
         // Durum
         'is_featured',
         'is_active',
+        'vehicle_status',
+        'views',
         
         // Entegrasyon
         'sahibinden_url',
@@ -70,8 +73,10 @@ class Vehicle extends Model
         'painted_parts' => 'array',
         'replaced_parts' => 'array',
         'images_meta' => 'array',
-        'is_featured' => 'boolean',
-        'is_active' => 'boolean',
+        'is_featured'    => 'boolean',
+        'is_active'      => 'boolean',
+        'vehicle_status' => 'string',
+        'views'          => 'integer',
         'has_warranty' => 'boolean',
         'price' => 'decimal:2',
         'tramer_amount' => 'decimal:2',
@@ -95,15 +100,39 @@ class Vehicle extends Model
 
         static::creating(function ($vehicle) {
             if (empty($vehicle->slug)) {
-                $vehicle->slug = Str::slug($vehicle->title);
+                $vehicle->slug = static::generateUniqueSlug($vehicle->title);
             }
         });
 
         static::updating(function ($vehicle) {
-            if ($vehicle->isDirty('title') && empty($vehicle->slug)) {
-                $vehicle->slug = Str::slug($vehicle->title);
+            // Yalnızca slug tamamen boşsa otomatik üret; dolu slug'ı asla üzerine yazma
+            if (empty($vehicle->slug)) {
+                $vehicle->slug = static::generateUniqueSlug($vehicle->title, $vehicle->id);
             }
         });
+    }
+
+    /**
+     * Verilen başlıktan benzersiz bir slug üretir.
+     * Çakışma varsa sonuna -1, -2, ... ekler.
+     * excludeId: güncelleme sırasında kendi kaydını dışarıda bırakmak için.
+     */
+    public static function generateUniqueSlug(string $title, ?int $excludeId = null): string
+    {
+        $base    = Str::slug($title) ?: 'arac';
+        $slug    = $base;
+        $counter = 1;
+
+        while (
+            static::where('slug', $slug)
+                ->when($excludeId, fn ($q) => $q->where('id', '!=', $excludeId))
+                ->exists()
+        ) {
+            $slug = $base . '-' . $counter;
+            $counter++;
+        }
+
+        return $slug;
     }
 
     /**
@@ -112,6 +141,34 @@ class Vehicle extends Model
     public function getRouteKeyName()
     {
         return 'slug';
+    }
+
+    /** Geçerli vehicle_status değerleri */
+    public const STATUSES = [
+        'available'   => 'Satılık',
+        'sold'        => 'Satıldı',
+        'reserved'    => 'Rezerve',
+        'opportunity' => 'Fırsat',
+    ];
+
+    /** Türkçe durum etiketi */
+    public function getStatusLabelAttribute(): string
+    {
+        return self::STATUSES[$this->vehicle_status ?? 'available'] ?? 'Satılık';
+    }
+
+    /**
+     * Tailwind badge renk sınıfları (bg + text).
+     * is_active ve vehicle_status birbirinden bağımsızdır.
+     */
+    public function getStatusBadgeClassAttribute(): string
+    {
+        return match ($this->vehicle_status ?? 'available') {
+            'sold'        => 'bg-red-100 text-red-700 border-red-200',
+            'reserved'    => 'bg-yellow-100 text-yellow-700 border-yellow-200',
+            'opportunity' => 'bg-green-100 text-green-700 border-green-200',
+            default       => 'bg-blue-100 text-blue-700 border-blue-200',
+        };
     }
 
     /**
@@ -139,13 +196,75 @@ class Vehicle extends Model
     }
 
     /**
-     * İlk görseli getir
+     * Herhangi bir görsel yolunu display-ready URL'ye çevirir.
+     * Tüm path formatlarıyla geriye dönük uyumludur:
+     *   - 'vehicles/file.jpg'      → '/storage/vehicles/file.jpg'
+     *   - '/storage/vehicles/...'  → değişmeden
+     *   - 'https://...'            → değişmeden
+     *   - '/'  ile başlayan        → değişmeden
      */
-    public function getFirstImageAttribute()
+    public static function resolveImageUrl(?string $path): string
+    {
+        if (empty($path)) {
+            return asset('images/vehicles/default.jpg');
+        }
+        if (filter_var($path, FILTER_VALIDATE_URL)) {
+            return $path;
+        }
+        if (str_starts_with($path, '/')) {
+            return $path;
+        }
+        return Storage::url($path);
+    }
+
+    /**
+     * images[] dizisinden images_meta[] dizisi oluşturur ve senkronize tutar.
+     * Boş/null path'leri siler; TypeHint güvenliği için önce filtreler.
+     */
+    public static function buildImagesMeta(array $images, ?string $mainPath = null): array
+    {
+        $images = array_values(array_filter($images, fn ($p) => is_string($p) && $p !== ''));
+
+        return array_values(array_map(function (string $path, int $index) use ($mainPath): array {
+            return [
+                'path'       => $path,
+                'sort_order' => $index,
+                'is_main'    => !empty($mainPath) ? ($path === $mainPath) : ($index === 0),
+            ];
+        }, $images, array_keys($images)));
+    }
+
+    /**
+     * Tüm görselleri display-ready URL olarak döner.
+     * Eski kayıtlarda images null ise sadece 'image' alanından fallback yapar.
+     */
+    public function getAllImagesAttribute(): array
+    {
+        $paths = [];
+
+        if (is_array($this->images) && count($this->images) > 0) {
+            $paths = $this->images;
+        } elseif (!empty($this->image)) {
+            $paths = [$this->image];
+        }
+
+        return array_values(array_filter(array_map(
+            fn ($p) => static::resolveImageUrl($p),
+            $paths
+        )));
+    }
+
+    /**
+     * Ana (kapak) görseli display-ready URL olarak döner.
+     */
+    public function getFirstImageAttribute(): string
     {
         if (is_array($this->images) && count($this->images) > 0) {
-            return $this->images[0];
+            return static::resolveImageUrl($this->images[0]);
         }
-        return '/images/vehicles/default.jpg';
+        if (!empty($this->image)) {
+            return static::resolveImageUrl($this->image);
+        }
+        return asset('images/vehicles/default.jpg');
     }
 }

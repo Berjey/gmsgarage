@@ -15,684 +15,610 @@
 <style>
     /* Select2 Compact */
     .select2-container--default .select2-selection--single {
-        height: 38px !important;
-        padding: 4px 10px !important;
-        border: 1px solid #d1d5db !important;
-        border-radius: 0.5rem !important;
+        height: 38px !important; padding: 4px 10px !important;
+        border: 1px solid #d1d5db !important; border-radius: 0.5rem !important;
         font-size: 0.875rem !important;
     }
-    .select2-container--default .select2-selection--single .select2-selection__rendered {
-        line-height: 30px !important;
-        font-size: 0.875rem !important;
-    }
-    .select2-container--default .select2-selection--single .select2-selection__arrow {
-        height: 36px !important;
-    }
+    .select2-container--default .select2-selection--single .select2-selection__rendered { line-height: 30px !important; font-size: 0.875rem !important; }
+    .select2-container--default .select2-selection--single .select2-selection__arrow { height: 36px !important; }
     .select2-container--default.select2-container--focus .select2-selection--single {
-        border-color: #dc2626 !important;
-        box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.08) !important;
+        border-color: #dc2626 !important; box-shadow: 0 0 0 3px rgba(220,38,38,0.15) !important;
     }
-    
-    /* Tabs */
-    .tab-item {
-        position: relative;
-        padding: 0.75rem 1.25rem;
-        font-weight: 500;
-        font-size: 0.875rem;
-        color: #6b7280;
-        cursor: pointer;
-        transition: all 0.2s;
-        border-bottom: 2px solid transparent;
-    }
-    .tab-item:hover {
-        color: #dc2626;
-        background: #fef2f2;
-    }
-    .tab-item.active {
-        color: #dc2626;
-        border-bottom-color: #dc2626;
-        background: white;
-    }
-    .tab-item .badge {
-        position: absolute;
-        top: 0.5rem;
-        right: 0.5rem;
-        width: 8px;
-        height: 8px;
-        background: #dc2626;
-        border-radius: 50%;
-    }
-    
-    /* Tab Content */
-    .tab-content {
-        display: none;
-    }
-    .tab-content.active {
-        display: block;
-        animation: fadeIn 0.3s ease;
-    }
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(8px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    
-    /* Form Input */
-    .form-input {
-        font-size: 0.875rem;
-    }
-    .form-input:focus {
-        border-color: #dc2626;
-        box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.08);
-        outline: none;
-    }
-    
-    /* Accordion */
-    .accordion-header {
-        cursor: pointer;
-        transition: background 0.2s;
-    }
-    .accordion-header:hover {
-        background: #f9fafb;
-    }
-    .accordion-content {
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height 0.3s ease;
-    }
-    .accordion-content.active {
-        max-height: 2000px;
-    }
-    
-    /* Gallery Item */
-    .gallery-item {
-        position: relative;
-        border-radius: 0.5rem;
-        overflow: hidden;
-        background: #f9fafb;
-        border: 2px solid #e5e7eb;
-        transition: all 0.2s;
-    }
-    .gallery-item:hover {
-        border-color: #dc2626;
-        box-shadow: 0 4px 12px rgba(220, 38, 38, 0.15);
-    }
-    .gallery-item img {
-        transition: transform 0.2s;
-    }
-    .gallery-item:hover img {
-        transform: scale(1.05);
-    }
-    .gallery-item .delete-btn {
-        position: absolute;
-        top: 4px;
-        right: 4px;
-        background: rgba(220, 38, 38, 0.95);
-        color: white;
-        border-radius: 0.375rem;
-        padding: 4px;
-        cursor: pointer;
-        opacity: 0;
-        transition: all 0.2s;
-    }
-    .gallery-item:hover .delete-btn {
-        opacity: 1;
-    }
-    .gallery-item .delete-btn:hover {
-        background: #b91c1c;
-        transform: scale(1.1);
-    }
+    /* Tab btn active */
+    .vehicle-tab-btn.active { background-color:#dc2626!important; color:#fff!important; border-bottom-color:#dc2626!important; }
+    /* Gallery */
+    .gallery-item { position:relative; border-radius:0.5rem; overflow:hidden; background:#f9fafb; border:2px solid #e5e7eb; transition:all 0.2s; }
+    .gallery-item:hover { border-color:#dc2626; }
+    .gallery-item .delete-btn { position:absolute; top:4px; right:4px; background:rgba(220,38,38,0.9); color:#fff; border-radius:0.375rem; padding:4px; cursor:pointer; opacity:0; transition:all 0.2s; }
+    .gallery-item:hover .delete-btn { opacity:1; }
+    /* Disabled cascade */
+    select:disabled { background:#f9fafb; color:#9ca3af; cursor:not-allowed; }
 </style>
 @endpush
 
 @section('content')
 
-<!-- Page Header - Compact -->
-<div class="mb-4 bg-white border-b border-gray-200">
-    <div class="flex items-center justify-between px-6 py-4">
-        <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
-                <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+{{-- Page Header --}}
+<div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden mb-6">
+    <div class="p-6 border-b border-gray-200">
+        <div class="flex items-center justify-between">
+            <h2 class="text-2xl font-bold text-gray-900 flex items-center gap-3">
+                <div class="w-10 h-10 bg-primary-100 rounded-xl flex items-center justify-center">
+                    <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                    </svg>
+                </div>
+                Yeni Araç Ekle
+            </h2>
+            <a href="{{ route('admin.vehicles.index') }}"
+               class="flex items-center gap-2 px-4 py-2 border border-gray-300 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-all text-sm font-medium">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
                 </svg>
-            </div>
-            <div>
-                <h1 class="text-xl font-bold text-gray-900">Yeni Araç Ekle</h1>
-                <p class="text-xs text-gray-500">Detaylı araç bilgilerini girin</p>
-            </div>
+                Geri
+            </a>
         </div>
-        <a href="{{ route('admin.vehicles.index') }}" class="flex items-center space-x-2 px-4 py-2 text-gray-600 hover:text-gray-900 border border-gray-300 rounded-lg hover:bg-gray-50 transition-all text-sm font-medium">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
-            </svg>
-            <span>Geri</span>
-        </a>
+        <p class="text-sm text-gray-500 mt-1 ml-[52px]">Tüm araç bilgilerini eksiksiz doldurun</p>
     </div>
 </div>
 
-<!-- Error Messages -->
+{{-- Error Messages --}}
 @if($errors->any())
-    <div class="mb-4 mx-6 bg-red-50 border-l-4 border-red-500 p-3 rounded-lg">
-        <div class="flex items-start">
-            <svg class="w-4 h-4 text-red-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
-            </svg>
-            <div class="flex-1">
-                <h3 class="text-red-800 font-bold text-xs mb-1">Lütfen hataları düzeltin:</h3>
-                <ul class="list-disc list-inside text-red-700 text-xs space-y-0.5">
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        </div>
+    <div class="mb-6 bg-red-50 border-l-4 border-red-500 p-4 rounded-lg">
+        <h3 class="text-red-800 font-bold text-sm mb-1">Lütfen hataları düzeltin:</h3>
+        <ul class="list-disc list-inside text-red-700 text-sm space-y-0.5">
+            @foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach
+        </ul>
     </div>
 @endif
 
-<form action="{{ route('admin.vehicles.store') }}" method="POST" enctype="multipart/form-data" id="vehicleForm">
-    @csrf
-    
-    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 px-6">
-        <!-- Main Content (3 columns) -->
-        <div class="lg:col-span-3">
-            <!-- Tabs Navigation -->
-            <div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-4">
-                <div class="flex border-b border-gray-200 overflow-x-auto">
-                    <div class="tab-item active" data-tab="genel">
-                        <span>Araç Bilgileri</span>
-                    </div>
-                    <div class="tab-item" data-tab="donanim">
-                        <span>Donanımlar</span>
-                    </div>
-                    <div class="tab-item" data-tab="hasar">
-                        <span>Hasar & Geçmiş</span>
-                    </div>
-                    <div class="tab-item" data-tab="medya">
-                        <span>Medya</span>
-                    </div>
-                    <div class="tab-item" data-tab="diger">
-                        <span>Diğer</span>
-                    </div>
-                </div>
-                
-                <!-- Tab Contents -->
-                <div class="p-6">
-                    
-                    <!-- GENEL TAB -->
-                    <div class="tab-content active" id="tab-genel">
-                        <div class="space-y-4">
-                            <!-- İlan Başlığı -->
-                            <div>
-                                <label class="block text-xs font-semibold text-gray-700 mb-1.5">
-                                    İlan Başlığı <span class="text-red-500">*</span>
-                                </label>
-                                <input type="text" name="title" value="{{ old('title') }}" required 
-                                       placeholder="Örn: Volkswagen Passat 1.6 TDI BlueMotion Comfortline"
-                                       class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg transition-all">
-                            </div>
-                            
-                            <!-- Marka & Yıl (Önce bunlar seçilmeli) -->
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                <div>
-                                    <label class="block text-xs font-semibold text-gray-700 mb-1.5">
-                                        Marka <span class="text-red-500">*</span>
-                                    </label>
-                                    <select name="brand" id="brandSelect" required class="w-full">
-                                        <option value="">Marka Seçiniz</option>
-                                    </select>
-                                    <label class="inline-flex items-center mt-1.5 text-xs text-gray-600 cursor-pointer">
-                                        <input type="checkbox" id="manualBrandToggle" class="w-3 h-3 text-primary-600 border-gray-300 rounded mr-1.5">
-                                        <span>Manuel Gir</span>
-                                    </label>
-                                    <input type="text" id="manualBrandInput" name="brand_manual" class="hidden form-input w-full px-3 py-2 border border-gray-300 rounded-lg transition-all mt-1.5" placeholder="Marka adı yazınız">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-semibold text-gray-700 mb-1.5">
-                                        Model Yılı <span class="text-red-500">*</span>
-                                    </label>
-                                    <select name="year" id="yearSelect" required class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg transition-all" disabled>
-                                        <option value="">Önce marka seçiniz</option>
-                                    </select>
-                                </div>
-                            </div>
-                            
-                            <!-- Model & Gövde Tipi (Cascade) -->
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                <div>
-                                    <label class="block text-xs font-semibold text-gray-700 mb-1.5">
-                                        Model <span class="text-red-500">*</span>
-                                    </label>
-                                    <select name="model" id="modelSelect" required class="w-full" disabled>
-                                        <option value="">Önce yıl seçiniz</option>
-                                    </select>
-                                    <label class="inline-flex items-center mt-1.5 text-xs text-gray-600 cursor-pointer">
-                                        <input type="checkbox" id="manualModelToggle" class="w-3 h-3 text-primary-600 border-gray-300 rounded mr-1.5">
-                                        <span>Manuel Gir</span>
-                                    </label>
-                                    <input type="text" id="manualModelInput" name="model_manual" class="hidden form-input w-full px-3 py-2 border border-gray-300 rounded-lg transition-all mt-1.5" placeholder="Model adı yazınız">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-semibold text-gray-700 mb-1.5">
-                                        Gövde Tipi (Kasa)
-                                    </label>
-                                    <select name="body_type" id="bodyTypeSelect" class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg transition-all" disabled>
-                                        <option value="">Önce model seçiniz</option>
-                                    </select>
-                                </div>
-                            </div>
-                            
-                            <!-- Yakıt & Vites (Cascade) -->
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                <div>
-                                    <label class="block text-xs font-semibold text-gray-700 mb-1.5">
-                                        Yakıt Tipi
-                                    </label>
-                                    <select name="fuel_type" id="fuelTypeSelect" class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg transition-all" disabled>
-                                        <option value="">Önce gövde tipi seçiniz</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-semibold text-gray-700 mb-1.5">
-                                        Vites Tipi
-                                    </label>
-                                    <select name="transmission" id="transmissionSelect" class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg transition-all" disabled>
-                                        <option value="">Önce yakıt tipi seçiniz</option>
-                                    </select>
-                                </div>
-                            </div>
-                            
-                            <!-- Versiyon & Renk (Cascade) -->
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                <div>
-                                    <label class="block text-xs font-semibold text-gray-700 mb-1.5">
-                                        Paket / Versiyon
-                                    </label>
-                                    <select name="package_version" id="versionSelect" class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg transition-all" disabled>
-                                        <option value="">Önce vites tipi seçiniz</option>
-                                    </select>
-                                    <label class="inline-flex items-center mt-1.5 text-xs text-gray-600 cursor-pointer">
-                                        <input type="checkbox" id="manualVersionToggle" class="w-3 h-3 text-primary-600 border-gray-300 rounded mr-1.5">
-                                        <span>Manuel Gir</span>
-                                    </label>
-                                    <input type="text" id="manualVersionInput" name="package_version_manual" class="hidden form-input w-full px-3 py-2 border border-gray-300 rounded-lg transition-all mt-1.5" placeholder="Versiyon yazınız">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-semibold text-gray-700 mb-1.5">
-                                        Renk
-                                    </label>
-                                    <select name="color" id="colorSelect" class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg transition-all" disabled>
-                                        <option value="">Önce versiyon seçiniz</option>
-                                    </select>
-                                </div>
-                            </div>
-                            
-                            <!-- KM & Fiyat -->
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                <div>
-                                    <label class="block text-xs font-semibold text-gray-700 mb-1.5">
-                                        Kilometre <span class="text-red-500">*</span>
-                                    </label>
-                                    <input type="number" name="kilometer" value="{{ old('kilometer', 0) }}" required 
-                                           placeholder="0"
-                                           class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg transition-all">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-semibold text-gray-700 mb-1.5">
-                                        Fiyat (₺) <span class="text-red-500">*</span>
-                                    </label>
-                                    <input type="number" name="price" value="{{ old('price') }}" required 
-                                           placeholder="0"
-                                           class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg transition-all font-bold text-primary-600">
-                                </div>
-                            </div>
-                            
-                            <!-- Motor & Teknik Özellikler -->
-                            <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                                <h3 class="text-sm font-bold text-gray-900 mb-3 flex items-center">
-                                    <svg class="w-4 h-4 mr-2 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                                    </svg>
-                                    Motor Özellikleri
-                                </h3>
-                                <div class="grid grid-cols-3 gap-3">
-                                    <div>
-                                        <label class="block text-xs font-semibold text-gray-700 mb-1.5">Motor Hacmi (cc)</label>
-                                        <input type="number" name="engine_size" value="{{ old('engine_size') }}" 
-                                               placeholder="1600"
-                                               class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg transition-all">
-                                    </div>
-                                    <div>
-                                        <label class="block text-xs font-semibold text-gray-700 mb-1.5">Motor Gücü (HP)</label>
-                                        <input type="number" name="horse_power" value="{{ old('horse_power') }}" 
-                                               placeholder="120"
-                                               class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg transition-all">
-                                    </div>
-                                    <div>
-                                        <label class="block text-xs font-semibold text-gray-700 mb-1.5">Tork (Nm)</label>
-                                        <input type="number" name="torque" value="{{ old('torque') }}" 
-                                               placeholder="250"
-                                               class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg transition-all">
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Diğer Teknik Özellikler -->
-                            <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                                <h3 class="text-sm font-bold text-gray-900 mb-3 flex items-center">
-                                    <svg class="w-4 h-4 mr-2 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                                    </svg>
-                                    Ek Özellikler
-                                </h3>
-                                <div class="grid grid-cols-4 gap-3">
-                                    <div>
-                                        <label class="block text-xs font-semibold text-gray-700 mb-1.5">Çekiş</label>
-                                        <select name="drive_type" class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg transition-all">
-                                            <option value="">Seçiniz</option>
-                                            <option value="Önden Çekiş">Önden Çekiş</option>
-                                            <option value="Arkadan İtiş">Arkadan İtiş</option>
-                                            <option value="4x4">4x4 (AWD)</option>
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <label class="block text-xs font-semibold text-gray-700 mb-1.5">Kapı Sayısı</label>
-                                        <select name="door_count" class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg transition-all">
-                                            <option value="">Seçiniz</option>
-                                            <option value="2">2 Kapı</option>
-                                            <option value="3">3 Kapı</option>
-                                            <option value="4">4 Kapı</option>
-                                            <option value="5">5 Kapı</option>
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <label class="block text-xs font-semibold text-gray-700 mb-1.5">Koltuk Sayısı</label>
-                                        <select name="seat_count" class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg transition-all">
-                                            <option value="">Seçiniz</option>
-                                            <option value="2">2 Koltuk</option>
-                                            <option value="4">4 Koltuk</option>
-                                            <option value="5">5 Koltuk</option>
-                                            <option value="7">7 Koltuk</option>
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <label class="block text-xs font-semibold text-gray-700 mb-1.5">Renk Tipi</label>
-                                        <select name="color_type" class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg transition-all">
-                                            <option value="">Seçiniz</option>
-                                            <option value="Metalik">Metalik</option>
-                                            <option value="Mat">Mat</option>
-                                            <option value="İnci">İnci</option>
-                                            <option value="Normal">Normal</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Açıklama -->
-                            <div>
-                                <label class="block text-xs font-semibold text-gray-700 mb-1.5">Açıklama</label>
-                                <textarea name="description" rows="5" 
-                                          placeholder="Aracınız hakkında detaylı bilgi verin..."
-                                          class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg transition-all resize-none">{{ old('description') }}</textarea>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- DONANIM TAB -->
-                    <div class="tab-content" id="tab-donanim">
-                        <!-- Arama -->
-                        <div class="mb-4">
-                            <input type="text" id="featureSearch" placeholder="Donanım ara..." 
-                                   class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg transition-all">
-                        </div>
-                        
-                        @php
-                            $allFeatures = \App\Data\VehicleFeatures::all();
-                        @endphp
-                        
-                        <div class="space-y-2">
-                            @foreach($allFeatures as $category => $features)
-                                <div class="border border-gray-200 rounded-lg">
-                                    <div class="accordion-header flex items-center justify-between p-3 bg-gray-50" onclick="toggleAccordion(this)">
-                                        <span class="text-xs font-bold text-gray-700">{{ $category }}</span>
-                                        <svg class="w-4 h-4 text-gray-600 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                                        </svg>
-                                    </div>
-                                    <div class="accordion-content p-3">
-                                        <div class="grid grid-cols-2 gap-1.5">
-                                            @foreach($features as $feature)
-                                                <label class="feature-item flex items-center space-x-1.5 p-2 border border-gray-200 rounded hover:bg-gray-50 cursor-pointer transition-all text-xs">
-                                                    <input type="checkbox" name="features[]" value="{{ $feature }}" 
-                                                           class="w-3.5 h-3.5 text-primary-600 border-gray-300 rounded focus:ring-primary-500">
-                                                    <span class="text-gray-700">{{ $feature }}</span>
-                                                </label>
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
-                    
-                    <!-- HASAR & GEÇMİŞ TAB -->
-                    <div class="tab-content" id="tab-hasar">
-                        <div class="space-y-4">
-                            <!-- Tramer, Sahip, Muayene -->
-                            <div class="grid grid-cols-3 gap-3">
-                                <div>
-                                    <label class="block text-xs font-semibold text-gray-700 mb-1.5">Tramer</label>
-                                    <select name="tramer_status" class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg transition-all">
-                                        <option value="">Seçiniz</option>
-                                        <option value="Yok">Yok (Temiz)</option>
-                                        <option value="Var">Var</option>
-                                        <option value="Bilinmiyor">Bilinmiyor</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-semibold text-gray-700 mb-1.5">Tramer Tutarı (₺)</label>
-                                    <input type="number" name="tramer_amount" value="{{ old('tramer_amount') }}" 
-                                           placeholder="0" step="0.01"
-                                           class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg transition-all">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-semibold text-gray-700 mb-1.5">Kaçıncı Sahip</label>
-                                    <input type="number" name="owner_number" value="{{ old('owner_number') }}" 
-                                           placeholder="1" min="1"
-                                           class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg transition-all">
-                                </div>
-                            </div>
-                            
-                            <!-- Muayene & Garanti -->
-                            <div class="grid grid-cols-2 gap-3">
-                                <div>
-                                    <label class="block text-xs font-semibold text-gray-700 mb-1.5">Muayene Tarihi</label>
-                                    <input type="date" name="inspection_date" value="{{ old('inspection_date') }}" 
-                                           class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg transition-all">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-semibold text-gray-700 mb-1.5">Garanti Bitiş Tarihi</label>
-                                    <input type="date" name="warranty_end_date" value="{{ old('warranty_end_date') }}" 
-                                           class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg transition-all">
-                                </div>
-                            </div>
-                            
-                            <!-- Boyalı/Değişen Parçalar (Accordion) -->
-                            @php
-                                $parts = ['Kaput', 'Ön Tampon', 'Arka Tampon', 'Sağ Ön', 'Sol Ön', 'Sağ Arka', 'Sol Arka', 'Tavan'];
-                            @endphp
-                            
-                            <div class="border border-gray-200 rounded-lg">
-                                <div class="accordion-header flex items-center justify-between p-3 bg-gray-50" onclick="toggleAccordion(this)">
-                                    <span class="text-xs font-bold text-gray-700">Boyalı Parçalar</span>
-                                    <svg class="w-4 h-4 text-gray-600 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                                    </svg>
-                                </div>
-                                <div class="accordion-content p-3">
-                                    <div class="grid grid-cols-4 gap-1.5">
-                                        @foreach($parts as $part)
-                                            <label class="flex items-center space-x-1.5 p-2 border border-gray-200 rounded hover:bg-gray-50 cursor-pointer transition-all text-xs">
-                                                <input type="checkbox" name="painted_parts[]" value="{{ $part }}" 
-                                                       class="w-3.5 h-3.5 text-primary-600 border-gray-300 rounded">
-                                                <span class="text-gray-700">{{ $part }}</span>
-                                            </label>
-                                        @endforeach
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="border border-gray-200 rounded-lg">
-                                <div class="accordion-header flex items-center justify-between p-3 bg-gray-50" onclick="toggleAccordion(this)">
-                                    <span class="text-xs font-bold text-gray-700">Değişen Parçalar</span>
-                                    <svg class="w-4 h-4 text-gray-600 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                                    </svg>
-                                </div>
-                                <div class="accordion-content p-3">
-                                    <div class="grid grid-cols-4 gap-1.5">
-                                        @foreach($parts as $part)
-                                            <label class="flex items-center space-x-1.5 p-2 border border-gray-200 rounded hover:bg-gray-50 cursor-pointer transition-all text-xs">
-                                                <input type="checkbox" name="replaced_parts[]" value="{{ $part }}" 
-                                                       class="w-3.5 h-3.5 text-primary-600 border-gray-300 rounded">
-                                                <span class="text-gray-700">{{ $part }}</span>
-                                            </label>
-                                        @endforeach
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- MEDYA TAB -->
-                    <div class="tab-content" id="tab-medya">
-                        <div class="space-y-4">
-                            <!-- Ana Görsel -->
-                            <div>
-                                <label class="block text-xs font-semibold text-gray-700 mb-2">
-                                    Ana Görsel <span class="text-red-500">*</span>
-                                </label>
-                                <input type="file" name="main_image" id="mainImageInput" accept="image/*" required class="hidden">
-                                <label for="mainImageInput" class="block border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-primary-500 hover:bg-primary-50 transition-all cursor-pointer group">
-                                    <svg class="w-10 h-10 mx-auto text-gray-400 group-hover:text-primary-500 mb-2 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                                    </svg>
-                                    <p class="text-xs font-medium text-gray-700 group-hover:text-primary-600 mb-0.5">Tıklayın veya sürükleyin</p>
-                                    <p class="text-xs text-gray-500">PNG, JPG (Maks. 5MB)</p>
-                                </label>
-                                <div id="mainPreview" class="mt-3 hidden">
-                                    <div class="relative rounded-lg overflow-hidden border-2 border-primary-500">
-                                        <img id="mainPreviewImg" src="" alt="Ana Görsel" class="w-full h-40 object-cover">
-                                        <button type="button" onclick="removeMainImage()" class="absolute top-2 right-2 bg-red-600 hover:bg-red-700 text-white rounded p-1.5 shadow-lg transition-all">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Galeri -->
-                            <div>
-                                <div class="flex items-center justify-between mb-2">
-                                    <label class="text-xs font-semibold text-gray-700">Galeri Görselleri</label>
-                                    <span class="text-xs text-gray-500" id="galleryCount">0/15</span>
-                                </div>
-                                <input type="file" id="singleImageInput" accept="image/*" class="hidden">
-                                <button type="button" onclick="document.getElementById('singleImageInput').click()" class="w-full border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-primary-500 hover:bg-primary-50 transition-all group">
-                                    <svg class="w-8 h-8 mx-auto text-gray-400 group-hover:text-primary-500 mb-1.5 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                                    </svg>
-                                    <p class="text-xs font-medium text-gray-700 group-hover:text-primary-600">Görsel Ekle</p>
-                                </button>
-                                <div id="galleryPreview" class="grid grid-cols-3 gap-2 mt-3"></div>
-                                <input type="file" name="images[]" id="galleryInput" multiple class="hidden">
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- DİĞER TAB -->
-                    <div class="tab-content" id="tab-diger">
-                        <div class="space-y-4">
-                            <!-- Sahibinden.com -->
-                            <div class="border border-gray-200 rounded-lg">
-                                <div class="accordion-header flex items-center justify-between p-3 bg-gray-50" onclick="toggleAccordion(this)">
-                                    <span class="text-xs font-bold text-gray-700">Sahibinden.com Entegrasyonu</span>
-                                    <svg class="w-4 h-4 text-gray-600 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                                    </svg>
-                                </div>
-                                <div class="accordion-content p-3">
-                                    <div class="space-y-3">
-                                        <div>
-                                            <label class="block text-xs font-semibold text-gray-700 mb-1.5">İlan Linki</label>
-                                            <input type="url" name="sahibinden_url" value="{{ old('sahibinden_url') }}" 
-                                                   placeholder="https://www.sahibinden.com/..."
-                                                   class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg transition-all">
-                                        </div>
-                                        <div>
-                                            <label class="block text-xs font-semibold text-gray-700 mb-1.5">İlan No</label>
-                                            <input type="text" name="sahibinden_id" value="{{ old('sahibinden_id') }}" 
-                                                   placeholder="123456789"
-                                                   class="form-input w-full px-3 py-2 border border-gray-300 rounded-lg transition-all">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                </div>
+{{-- Sahibinden.com Import Card --}}
+<div class="mb-6 bg-white rounded-xl border-2 border-blue-200 shadow-sm overflow-hidden" id="sahibindenImportCard">
+    <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-5 py-3 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+                </svg>
+            </div>
+            <div>
+                <h3 class="text-sm font-bold text-white">Sahibinden.com'dan İçe Aktar</h3>
+                <p class="text-xs text-blue-100">İlan linkini yapıştır, veriler otomatik doldurulsun</p>
             </div>
         </div>
-        
-        <!-- Sidebar (1 column) - Sticky -->
+        <button type="button" onclick="toggleImportCard()" class="text-blue-200 hover:text-white transition-colors">
+            <svg class="w-4 h-4" id="importCardChevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+        </button>
+    </div>
+    <div id="importCardBody" class="p-5">
+        <div class="flex gap-3">
+            <input type="url" id="sahibindenImportUrl" placeholder="https://www.sahibinden.com/ilan/vasita-..."
+                   class="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
+                   onkeydown="if(event.key==='Enter'){event.preventDefault();triggerSahibindenImport();}">
+            <button type="button" onclick="triggerSahibindenImport()" id="importBtn"
+                    class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg text-sm transition-all flex items-center gap-2">
+                <svg class="w-4 h-4" id="importBtnIcon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+                </svg>
+                <span id="importBtnText">Veriyi Çek</span>
+            </button>
+        </div>
+        <div id="importMessage" class="hidden mt-3 text-sm rounded-lg px-4 py-3"></div>
+        <div id="importImagePreview" class="hidden mt-4">
+            <p class="text-xs font-semibold text-gray-600 mb-2">İçe Aktarılan Görseller:</p>
+            <div id="importImageGrid" class="flex gap-2 flex-wrap"></div>
+        </div>
+        <div id="importDuplicateWarning" class="hidden mt-3 bg-yellow-50 border border-yellow-300 rounded-lg px-4 py-3 text-sm text-yellow-800"></div>
+        <div id="importResultSummary" class="hidden mt-3 bg-green-50 border border-green-200 rounded-lg px-4 py-3">
+            <p class="text-xs font-bold text-green-700 mb-1">✓ Aşağıdaki alanlar dolduruldu:</p>
+            <div id="importFilledFields" class="flex flex-wrap gap-1.5"></div>
+        </div>
+        <p class="mt-3 text-xs text-gray-400">Tüm alanlar içe aktarma sonrasında manuel olarak düzenlenebilir.</p>
+    </div>
+</div>
+
+<form action="{{ route('admin.vehicles.store') }}" method="POST" enctype="multipart/form-data" id="vehicleForm">
+    @csrf
+
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+
+        {{-- ════════════════════════════════════
+             MAIN CONTENT — Settings-style Tabs
+             ════════════════════════════════════ --}}
+        <div class="lg:col-span-3">
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden mb-20">
+
+                {{-- Tab Navigation --}}
+                <div class="flex border-b border-gray-200 overflow-x-auto" id="vehicleTabBtns">
+                    @php
+                        $tabs = [
+                            ['id'=>'temel',    'icon'=>'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z',       'label'=>'Temel Bilgiler'],
+                            ['id'=>'teknik',   'icon'=>'M13 10V3L4 14h7v7l9-11h-7z',                                         'label'=>'Teknik Özellikler'],
+                            ['id'=>'donanim',  'icon'=>'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4', 'label'=>'Donanımlar'],
+                            ['id'=>'hasar',    'icon'=>'M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z', 'label'=>'Hasar & Geçmiş'],
+                            ['id'=>'gorseller','icon'=>'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z', 'label'=>'Görseller'],
+                            ['id'=>'diger',    'icon'=>'M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14', 'label'=>'Entegrasyon'],
+                        ];
+                    @endphp
+                    @foreach($tabs as $i => $tab)
+                    <button type="button"
+                            data-tab="{{ $tab['id'] }}"
+                            onclick="switchVehicleTab('{{ $tab['id'] }}')"
+                            class="vehicle-tab-btn {{ $i===0 ? 'active' : '' }} flex-1 min-w-[120px] px-4 py-4 text-sm font-semibold transition-colors {{ $i>0 ? 'border-l border-gray-200' : '' }} bg-white text-gray-700 hover:bg-gray-50">
+                        <svg class="w-4 h-4 inline-block mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $tab['icon'] }}"/>
+                        </svg>
+                        {{ $tab['label'] }}
+                    </button>
+                    @endforeach
+                </div>
+
+                {{-- ─── Tab 1: TEMEL BİLGİLER ──────────────────────────────── --}}
+                <div id="vtab-temel" class="vehicle-tab-content p-6 space-y-6">
+
+                    <h3 class="text-lg font-bold text-gray-900">İlan Bilgileri</h3>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">İlan Başlığı <span class="text-red-500">*</span></label>
+                        <input type="text" name="title" value="{{ old('title') }}" required
+                               placeholder="Örn: Volkswagen Passat 1.6 TDI BlueMotion Comfortline"
+                               class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors">
+                        <p class="mt-1 text-xs text-gray-500">Marka, model ve özelliklerini içeren açıklayıcı başlık yazın</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            SEO Slug
+                            <span class="ml-1 text-xs font-normal text-gray-400">(opsiyonel — boş bırakılırsa başlıktan üretilir)</span>
+                        </label>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs text-gray-400 whitespace-nowrap">/araclar/</span>
+                            <input type="text" name="slug" id="slug-input" value="{{ old('slug') }}" placeholder="ornek-arac-adi"
+                                   class="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors font-mono text-sm">
+                        </div>
+                        @error('slug')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
+                        <p class="mt-1 text-xs text-gray-500">Yalnızca küçük harf, rakam ve tire kullanın</p>
+                    </div>
+
+                    <div class="border-t pt-6">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4">Marka & Model (Basamaklı Seçim)</h3>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Marka <span class="text-red-500">*</span></label>
+                                <select name="brand" id="brandSelect" required class="w-full">
+                                    <option value="">Marka Seçiniz</option>
+                                </select>
+                                <label class="inline-flex items-center mt-2 text-xs text-gray-600 cursor-pointer">
+                                    <input type="checkbox" id="manualBrandToggle" class="w-3 h-3 text-red-600 border-gray-300 rounded mr-1.5">
+                                    <span>Manuel Gir</span>
+                                </label>
+                                <input type="text" id="manualBrandInput" name="brand_manual" disabled class="hidden w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors mt-1.5" placeholder="Marka adı yazınız">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Model Yılı <span class="text-red-500">*</span></label>
+                                <select name="year" id="yearSelect" required class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm" disabled>
+                                    <option value="">Önce marka seçiniz</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-5">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Model <span class="text-red-500">*</span></label>
+                                <select name="model" id="modelSelect" required class="w-full" disabled>
+                                    <option value="">Önce yıl seçiniz</option>
+                                </select>
+                                <label class="inline-flex items-center mt-2 text-xs text-gray-600 cursor-pointer">
+                                    <input type="checkbox" id="manualModelToggle" class="w-3 h-3 text-red-600 border-gray-300 rounded mr-1.5">
+                                    <span>Manuel Gir</span>
+                                </label>
+                                <input type="text" id="manualModelInput" name="model_manual" disabled class="hidden w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors mt-1.5" placeholder="Model adı yazınız">
+                            </div>
+                            <div></div>
+                        </div>
+                    </div>
+
+                    <div class="border-t pt-6">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4">Fiyat & Kilometre</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Kilometre <span class="text-red-500">*</span></label>
+                                <input type="number" name="kilometer" value="{{ old('kilometer', 0) }}" required placeholder="0"
+                                       class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors">
+                                <p class="mt-1 text-xs text-gray-500">Araç toplam kilometre değeri</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Fiyat (₺) <span class="text-red-500">*</span></label>
+                                <input type="number" name="price" value="{{ old('price') }}" required placeholder="0"
+                                       class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors font-bold text-lg">
+                                <p class="mt-1 text-xs text-gray-500">Satış fiyatı (KDV dahil)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                {{-- ─── Tab 2: TEKNİK ÖZELLİKLER ────────────────────────────── --}}
+                <div id="vtab-teknik" class="vehicle-tab-content p-6 space-y-6 hidden">
+
+                    <h3 class="text-lg font-bold text-gray-900">Kasa & Yakıt (Basamaklı)</h3>
+                    <p class="text-xs text-gray-500 -mt-4">Temel Bilgiler sekmesinde marka/model/yıl seçildikten sonra bu değerler otomatik dolar.</p>
+
+                    <div class="bg-gray-50 border border-gray-200 rounded-lg p-5 space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Gövde / Kasa Tipi</label>
+                                <select name="body_type" id="bodyTypeSelect" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm" disabled>
+                                    <option value="">Önce model seçiniz</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Yakıt Tipi</label>
+                                <select name="fuel_type" id="fuelTypeSelect" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm" disabled>
+                                    <option value="">Önce gövde tipi seçiniz</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Vites Tipi</label>
+                                <select name="transmission" id="transmissionSelect" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm" disabled>
+                                    <option value="">Önce yakıt tipi seçiniz</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Paket / Versiyon</label>
+                                <select name="package_version" id="versionSelect" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm" disabled>
+                                    <option value="">Önce vites tipi seçiniz</option>
+                                </select>
+                                <label class="inline-flex items-center mt-2 text-xs text-gray-600 cursor-pointer">
+                                    <input type="checkbox" id="manualVersionToggle" class="w-3 h-3 text-red-600 border-gray-300 rounded mr-1.5">
+                                    <span>Manuel Gir</span>
+                                </label>
+                                <input type="text" id="manualVersionInput" name="package_version_manual" disabled class="hidden w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors mt-1.5 text-sm" placeholder="Versiyon yazınız">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Renk</label>
+                                <select name="color" id="colorSelect" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm" disabled>
+                                    <option value="">Önce versiyon seçiniz</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="border-t pt-6">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4">Araç Detayları</h3>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Çekiş</label>
+                                <select name="drive_type" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm">
+                                    <option value="">Seçiniz</option>
+                                    @foreach(['Önden Çekiş','Arkadan İtiş','4x4'] as $dr)
+                                        <option value="{{ $dr }}" {{ old('drive_type')===$dr?'selected':'' }}>{{ $dr }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Renk Tipi</label>
+                                <select name="color_type" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm">
+                                    <option value="">Seçiniz</option>
+                                    @foreach(['Metalik','Mat','İnci','Normal'] as $ct)
+                                        <option value="{{ $ct }}" {{ old('color_type')===$ct?'selected':'' }}>{{ $ct }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Kapı Sayısı</label>
+                                <select name="door_count" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm">
+                                    <option value="">Seçiniz</option>
+                                    @foreach([2,3,4,5,6,7,8] as $d)
+                                        <option value="{{ $d }}" {{ (int)old('door_count')===$d?'selected':'' }}>{{ $d }} Kapı</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Koltuk Sayısı</label>
+                                <select name="seat_count" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm">
+                                    <option value="">Seçiniz</option>
+                                    @foreach([2,4,5,6,7,8,9,10,12,15] as $s)
+                                        <option value="{{ $s }}" {{ (int)old('seat_count')===$s?'selected':'' }}>{{ $s }} Koltuk</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="border-t pt-6">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4">Motor Özellikleri</h3>
+                        <div class="bg-gray-50 border border-gray-200 rounded-lg p-5">
+                            <div class="grid grid-cols-3 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Motor Hacmi (cc)</label>
+                                    <input type="number" name="engine_size" value="{{ old('engine_size') }}" placeholder="1600" min="0"
+                                           class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Motor Gücü (HP)</label>
+                                    <input type="number" name="horse_power" value="{{ old('horse_power') }}" placeholder="120" min="0"
+                                           class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Tork (Nm)</label>
+                                    <input type="number" name="torque" value="{{ old('torque') }}" placeholder="250" min="0"
+                                           class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="border-t pt-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Açıklama</label>
+                        <textarea name="description" rows="6" placeholder="Aracınız hakkında detaylı bilgi verin..."
+                                  class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors resize-none">{{ old('description') }}</textarea>
+                        <p class="mt-1 text-xs text-gray-500">Araç özellikleri, bakım geçmişi, ekstralar hakkında bilgi verin</p>
+                    </div>
+
+                </div>
+
+                {{-- ─── Tab 3: DONANIMLAR ────────────────────────────────────── --}}
+                <div id="vtab-donanim" class="vehicle-tab-content p-6 space-y-4 hidden">
+
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-lg font-bold text-gray-900">Donanım & Özellikler</h3>
+                        <span class="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full" id="selectedCount">0 özellik seçili</span>
+                    </div>
+
+                    <input type="text" id="featureSearch" placeholder="Donanım ara..."
+                           class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm">
+
+                    <div class="space-y-2" id="featuresContainer">
+                        @foreach($featureCategories as $category => $features)
+                        <div class="border border-gray-200 rounded-lg">
+                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-t-lg cursor-pointer select-none"
+                                 onclick="this.nextElementSibling.classList.toggle('hidden')">
+                                <span class="text-sm font-semibold text-gray-700">{{ $category }}</span>
+                                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                </svg>
+                            </div>
+                            <div class="p-3">
+                                <div class="grid grid-cols-2 gap-1.5">
+                                    @foreach($features as $feature)
+                                    <label class="feature-item flex items-center space-x-2 p-2 border border-gray-200 rounded hover:bg-gray-50 cursor-pointer transition-all text-sm">
+                                        <input type="checkbox" name="features[]" value="{{ $feature }}"
+                                               class="w-3.5 h-3.5 text-red-600 border-gray-300 rounded focus:ring-red-500"
+                                               onchange="updateFeatureCount()"
+                                               {{ in_array($feature, old('features', [])) ? 'checked' : '' }}>
+                                        <span class="text-gray-700">{{ $feature }}</span>
+                                    </label>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+
+                </div>
+
+                {{-- ─── Tab 4: HASAR & GEÇMİŞ ──────────────────────────────── --}}
+                <div id="vtab-hasar" class="vehicle-tab-content p-6 space-y-6 hidden">
+
+                    <h3 class="text-lg font-bold text-gray-900">Hasar & Geçmiş Bilgileri</h3>
+
+                    <div class="bg-gray-50 border border-gray-200 rounded-lg p-5">
+                        <h4 class="font-semibold text-gray-900 mb-4">Tramer & Sahip Bilgisi</h4>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Tramer Kaydı</label>
+                                <select name="tramer_status" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm">
+                                    <option value="">Seçiniz</option>
+                                    @foreach(['Yok'=>'Yok (Temiz)','Var'=>'Var','Bilinmiyor'=>'Bilinmiyor'] as $v=>$l)
+                                        <option value="{{ $v }}" {{ old('tramer_status')===$v?'selected':'' }}>{{ $l }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Tramer Tutarı (₺)</label>
+                                <input type="number" name="tramer_amount" value="{{ old('tramer_amount') }}" placeholder="0" step="0.01" min="0"
+                                       class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Kaçıncı Sahip</label>
+                                <input type="number" name="owner_number" value="{{ old('owner_number') }}" placeholder="1" min="1"
+                                       class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm">
+                            </div>
+                            <div class="flex items-end pb-1">
+                                <label class="flex items-center space-x-2 cursor-pointer">
+                                    <input type="checkbox" name="has_warranty" value="1" class="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500" {{ old('has_warranty')?'checked':'' }}>
+                                    <span class="text-sm font-medium text-gray-700">Garantisi Var</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 border border-gray-200 rounded-lg p-5">
+                        <h4 class="font-semibold text-gray-900 mb-4">Muayene & Garanti Tarihleri</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Muayene Tarihi</label>
+                                <input type="date" name="inspection_date" value="{{ old('inspection_date') }}"
+                                       class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Garanti Bitiş Tarihi</label>
+                                <input type="date" name="warranty_end_date" value="{{ old('warranty_end_date') }}"
+                                       class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors">
+                            </div>
+                        </div>
+                    </div>
+
+                    @php $parts = ['Kaput','Ön Tampon','Arka Tampon','Sağ Ön','Sol Ön','Sağ Arka','Sol Arka','Tavan']; @endphp
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="border border-gray-200 rounded-lg">
+                            <div class="bg-yellow-50 px-4 py-3 rounded-t-lg">
+                                <h4 class="font-semibold text-yellow-800 text-sm">Boyalı Parçalar</h4>
+                                <p class="text-xs text-yellow-600 mt-0.5">Boyalı olan parçaları işaretleyin</p>
+                            </div>
+                            <div class="p-3 grid grid-cols-2 gap-1.5">
+                                @foreach($parts as $part)
+                                <label class="flex items-center space-x-2 p-2 border border-gray-200 rounded hover:bg-yellow-50 cursor-pointer text-sm">
+                                    <input type="checkbox" name="painted_parts[]" value="{{ $part }}" class="w-3.5 h-3.5 text-yellow-600 border-gray-300 rounded" {{ in_array($part, old('painted_parts',[])) ? 'checked' : '' }}>
+                                    <span class="text-gray-700">{{ $part }}</span>
+                                </label>
+                                @endforeach
+                            </div>
+                        </div>
+                        <div class="border border-gray-200 rounded-lg">
+                            <div class="bg-red-50 px-4 py-3 rounded-t-lg">
+                                <h4 class="font-semibold text-red-800 text-sm">Değişen Parçalar</h4>
+                                <p class="text-xs text-red-600 mt-0.5">Değişmiş olan parçaları işaretleyin</p>
+                            </div>
+                            <div class="p-3 grid grid-cols-2 gap-1.5">
+                                @foreach($parts as $part)
+                                <label class="flex items-center space-x-2 p-2 border border-gray-200 rounded hover:bg-red-50 cursor-pointer text-sm">
+                                    <input type="checkbox" name="replaced_parts[]" value="{{ $part }}" class="w-3.5 h-3.5 text-red-600 border-gray-300 rounded" {{ in_array($part, old('replaced_parts',[])) ? 'checked' : '' }}>
+                                    <span class="text-gray-700">{{ $part }}</span>
+                                </label>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                {{-- ─── Tab 5: GÖRSELLER ─────────────────────────────────────── --}}
+                <div id="vtab-gorseller" class="vehicle-tab-content p-6 space-y-6 hidden">
+
+                    <h3 class="text-lg font-bold text-gray-900">Araç Görselleri</h3>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Ana Görsel <span class="text-xs font-normal text-gray-400 ml-1">(yayınlamak için gerekli)</span></label>
+                        <input type="file" name="main_image" id="mainImageInput" accept="image/*" class="hidden">
+                        <label for="mainImageInput"
+                               class="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-red-400 hover:bg-red-50 transition-all cursor-pointer group">
+                            <svg class="w-12 h-12 text-gray-400 group-hover:text-red-500 mb-2 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
+                            <p class="text-sm font-medium text-gray-700 group-hover:text-red-600">Tıklayın veya görseli sürükleyin</p>
+                            <p class="text-xs text-gray-500 mt-1">PNG, JPG — Maks. 5MB</p>
+                        </label>
+                        <div id="mainPreview" class="mt-3 hidden">
+                            <div class="relative inline-block rounded-lg overflow-hidden border-2 border-red-500">
+                                <img id="mainPreviewImg" src="" alt="Ana Görsel" class="h-48 w-auto object-cover max-w-full">
+                                <button type="button" onclick="removeMainImage()" class="absolute top-2 right-2 bg-red-600 hover:bg-red-700 text-white rounded-lg p-1.5 shadow-lg transition-all">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mt-2 flex items-start gap-2 px-3 py-2 bg-amber-50 border border-amber-200 rounded-lg">
+                            <svg class="w-4 h-4 text-amber-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            <p class="text-xs text-amber-700"><span class="font-bold">Önerilen:</span> 1200 × 800 piksel (3:2 oran)</p>
+                        </div>
+                    </div>
+
+                    <div class="border-t pt-6">
+                        <div class="flex items-center justify-between mb-3">
+                            <label class="text-sm font-medium text-gray-700">Galeri Görselleri <span class="ml-1 text-xs font-normal text-gray-400">(sürükleyerek sıralayabilirsiniz)</span></label>
+                            <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full" id="galleryCount">0/15</span>
+                        </div>
+                        <input type="file" id="singleImageInput" accept="image/*" class="hidden">
+                        <button type="button" onclick="document.getElementById('singleImageInput').click()"
+                                class="w-full border-2 border-dashed border-gray-300 rounded-lg p-5 text-center hover:border-red-400 hover:bg-red-50 transition-all group">
+                            <svg class="w-8 h-8 mx-auto text-gray-400 group-hover:text-red-500 mb-1.5 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                            </svg>
+                            <p class="text-xs font-medium text-gray-700 group-hover:text-red-600">Görsel Ekle</p>
+                        </button>
+                        <div id="galleryPreview" class="grid grid-cols-3 sm:grid-cols-5 gap-2 mt-3"></div>
+                        <input type="file" name="images[]" id="galleryInput" multiple class="hidden">
+                    </div>
+
+                </div>
+
+                {{-- ─── Tab 6: ENTEGRASYON ──────────────────────────────────── --}}
+                <div id="vtab-diger" class="vehicle-tab-content p-6 space-y-6 hidden">
+
+                    <h3 class="text-lg font-bold text-gray-900">Entegrasyon</h3>
+                    <p class="text-sm text-gray-500 -mt-4">Sahibinden.com üzerinden aktarılan ilanlar için bağlantı bilgilerini girin.</p>
+
+                    <div class="bg-gray-50 border border-gray-200 rounded-lg p-5 space-y-4">
+                        <h4 class="font-semibold text-gray-900 flex items-center gap-2">
+                            <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                            Sahibinden.com
+                        </h4>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">İlan Linki</label>
+                            <input type="url" name="sahibinden_url" value="{{ old('sahibinden_url') }}" placeholder="https://www.sahibinden.com/..."
+                                   class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">İlan No</label>
+                            <input type="text" name="sahibinden_id" value="{{ old('sahibinden_id') }}" placeholder="123456789"
+                                   class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors font-mono">
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        {{-- ════════════════════════════════
+             SIDEBAR — Yayın & Araç Durumu
+             ════════════════════════════════ --}}
         <div class="lg:col-span-1">
             <div class="sticky top-6 space-y-4">
-                <!-- Yayın Durumu -->
-                <div class="bg-white rounded-lg shadow-sm border border-gray-200">
-                    <div class="border-b border-gray-200 px-4 py-3">
-                        <h3 class="text-sm font-bold text-gray-900">Yayın Durumu</h3>
+
+                <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+                    <div class="p-4 border-b border-gray-200">
+                        <h3 class="text-sm font-bold text-gray-900">Yayın & Araç Durumu</h3>
                     </div>
-                    <div class="p-4 space-y-2">
-                        <label class="flex items-center space-x-2 p-3 border border-gray-200 rounded-lg hover:border-primary-500 hover:bg-primary-50 cursor-pointer transition-all">
-                            <input type="checkbox" name="is_active" value="1" checked 
-                                   class="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500">
+                    <div class="p-4 space-y-3">
+                        <label class="flex items-center space-x-2 p-3 border border-gray-200 rounded-lg hover:border-red-400 hover:bg-red-50 cursor-pointer transition-all">
+                            <input type="checkbox" name="is_active" value="1" checked class="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500">
                             <div class="flex-1">
-                                <p class="font-bold text-gray-900 text-xs">Aktif</p>
-                                <p class="text-xs text-gray-500">Web sitesinde yayında</p>
+                                <p class="font-bold text-gray-900 text-xs">Aktif (Yayında)</p>
+                                <p class="text-xs text-gray-500">Web sitesinde görünür</p>
                             </div>
                         </label>
-                        
-                        <label class="flex items-center space-x-2 p-3 border border-gray-200 rounded-lg hover:border-primary-500 hover:bg-primary-50 cursor-pointer transition-all">
-                            <input type="checkbox" name="is_featured" value="1" 
-                                   class="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500">
+                        <label class="flex items-center space-x-2 p-3 border border-gray-200 rounded-lg hover:border-yellow-400 hover:bg-yellow-50 cursor-pointer transition-all">
+                            <input type="checkbox" name="is_featured" value="1" class="w-4 h-4 text-yellow-500 border-gray-300 rounded focus:ring-yellow-400">
                             <div class="flex-1">
                                 <p class="font-bold text-gray-900 text-xs">Öne Çıkarılmış</p>
                                 <p class="text-xs text-gray-500">Anasayfada gösterilsin</p>
                             </div>
                         </label>
+                        <div class="pt-1">
+                            <label class="block text-xs font-bold text-gray-700 mb-1.5">Araç Durumu</label>
+                            <select name="vehicle_status" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors">
+                                @foreach(\App\Models\Vehicle::STATUSES as $val => $label)
+                                    <option value="{{ $val }}" {{ old('vehicle_status','available')===$val?'selected':'' }}>{{ $label }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                 </div>
-                
-                <!-- Action Buttons -->
-                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 space-y-2">
+
+                <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-4 space-y-2">
                     <input type="hidden" name="action" id="formAction" value="publish">
-                    
-                    <button type="submit" data-action="publish" class="submit-btn w-full px-4 py-3 bg-primary-600 hover:bg-primary-700 text-white font-bold rounded-lg shadow-md transition-all text-sm flex items-center justify-center">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                        </svg>
+                    <button type="submit" data-action="publish"
+                            class="submit-btn w-full px-4 py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg transition-all text-sm flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                         Kaydet ve Yayınla
                     </button>
-                    
-                    <button type="submit" data-action="draft" class="submit-btn w-full px-4 py-3 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-all text-sm flex items-center justify-center">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/>
-                        </svg>
+                    <button type="submit" data-action="draft"
+                            class="submit-btn w-full px-4 py-3 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-all text-sm flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/></svg>
                         Taslak Kaydet
                     </button>
                 </div>
+
             </div>
         </div>
+
     </div>
 </form>
 
@@ -702,645 +628,289 @@
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 
 <script>
-$(document).ready(function() {
-    // Tab Switching
-    $('.tab-item').on('click', function() {
-        const tabId = $(this).data('tab');
-        
-        $('.tab-item').removeClass('active');
-        $(this).addClass('active');
-        
-        $('.tab-content').removeClass('active');
-        $('#tab-' + tabId).addClass('active');
+// ─── Tab Switching ────────────────────────────────────────────────────────────
+function switchVehicleTab(tabId) {
+    document.querySelectorAll('.vehicle-tab-btn').forEach(btn => {
+        const isActive = btn.dataset.tab === tabId;
+        btn.classList.toggle('active', isActive);
+        btn.classList.toggle('bg-white', !isActive);
+        btn.classList.toggle('text-gray-700', !isActive);
     });
-    
-    // Accordion Toggle
-    window.toggleAccordion = function(header) {
-        const content = $(header).next('.accordion-content');
-        const icon = $(header).find('svg');
-        
-        content.toggleClass('active');
-        icon.toggleClass('rotate-180');
-    };
-    
-    // Select2 Init
-    $('#brandSelect, #modelSelect').select2({
-        placeholder: 'Seçiniz',
-        allowClear: true,
-        tags: true,
-        width: '100%'
+    document.querySelectorAll('.vehicle-tab-content').forEach(c => {
+        c.classList.toggle('hidden', c.id !== 'vtab-' + tabId);
     });
-    
-    // ============================================================
-    // CASCADE SYSTEM - Web sitesindeki gibi basamaklı yükleme
-    // ============================================================
-    
-    let cascadeData = {
-        brandId: null,
-        year: null,
-        modelId: null,
-        bodyTypeId: null,
-        fuelTypeId: null,
-        transmissionId: null,
-        versionId: null
-    };
-    
-    // Load Brands (Database)
+}
+
+// ─── Sahibinden Import ────────────────────────────────────────────────────────
+const IMPORT_URL  = '{{ route('admin.vehicles.import.sahibinden') }}';
+const IMPORT_CSRF = '{{ csrf_token() }}';
+const FIELD_LABELS = {
+    title:'Başlık', brand:'Marka', model:'Model', package_version:'Paket',
+    year:'Yıl', price:'Fiyat', kilometer:'KM', fuel_type:'Yakıt',
+    transmission:'Vites', body_type:'Kasa', color:'Renk',
+    engine_size:'Motor', horse_power:'Beygir', description:'Açıklama',
+    sahibinden_url:'İlan Linki', sahibinden_id:'İlan No',
+};
+
+function toggleImportCard() {
+    const body=document.getElementById('importCardBody');
+    const chevron=document.getElementById('importCardChevron');
+    body.classList.toggle('hidden');
+    chevron.style.transform=body.classList.contains('hidden')?'rotate(-90deg)':'';
+}
+
+function triggerSahibindenImport() {
+    const url=document.getElementById('sahibindenImportUrl').value.trim();
+    if(!url){showImportMessage('Lütfen bir Sahibinden.com linki girin.','warning');return;}
+    const btn=document.getElementById('importBtn');
+    btn.disabled=true; btn.classList.replace('bg-blue-600','bg-blue-400');
+    document.getElementById('importBtnIcon').innerHTML='<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>';
+    document.getElementById('importBtnText').textContent='Yükleniyor...';
+    clearImportUI();
+    fetch(IMPORT_URL,{method:'POST',headers:{'Content-Type':'application/json','X-CSRF-TOKEN':IMPORT_CSRF,'Accept':'application/json'},body:JSON.stringify({url})})
+    .then(r=>r.json()).then(json=>{
+        resetImportBtn();
+        if(!json.success){showImportMessage('⚠ '+(json.message||'İlan çekilemedi.'),'error');return;}
+        const data=json.data||{};
+        if(json.duplicate){const d=json.duplicate;document.getElementById('importDuplicateWarning').innerHTML=`⚠ Bu ilan daha önce "<strong>${d.title}</strong>" olarak eklenmiş. <a href="${d.url}" target="_blank" class="underline font-bold">Mevcut kaydı görüntüle →</a>`;document.getElementById('importDuplicateWarning').classList.remove('hidden');}
+        const warnings=json.warnings||[];
+        warnings.length>0?showImportMessage('⚠ '+warnings.join(' | '),'warning'):showImportMessage('✓ İlan başarıyla çekildi.','success');
+        const catalogMatch=json.catalog_match||{};
+        if(catalogMatch.brand_match){$('#manualBrandToggle').prop('checked',true).trigger('change');$('#manualBrandInput').val(catalogMatch.brand_match);}
+        else if(data.brand){$('#manualBrandToggle').prop('checked',true).trigger('change');$('#manualBrandInput').val(data.brand);}
+        if(catalogMatch.model_match){$('#manualModelToggle').prop('checked',true).trigger('change');$('#manualModelInput').val(catalogMatch.model_match);}
+        else if(data.model){$('#manualModelToggle').prop('checked',true).trigger('change');$('#manualModelInput').val(data.model);}
+        const filled=populateForm(data,['brand','model']);
+        if(filled.length>0){
+            const allFilled=filled.slice();
+            if(catalogMatch.brand_match)allFilled.unshift('Marka ✓');
+            if(catalogMatch.model_match)allFilled.unshift('Model ✓');
+            else if(data.brand)allFilled.unshift('Marka (ham)');
+            document.getElementById('importFilledFields').innerHTML=allFilled.map(f=>`<span class="text-xs bg-green-100 text-green-700 border border-green-200 px-2 py-0.5 rounded-full">${f}</span>`).join('');
+            document.getElementById('importResultSummary').classList.remove('hidden');
+        }
+        const imgs=json.resolved_images||[];
+        if(imgs.length>0){
+            document.getElementById('importImageGrid').innerHTML=imgs.map(u=>`<img src="${u}" class="h-20 w-28 object-cover rounded-lg border-2 border-green-300" onerror="this.style.display='none'">`).join('');
+            document.getElementById('importImagePreview').classList.remove('hidden');
+        }
+    }).catch(()=>{resetImportBtn();showImportMessage('Bağlantı hatası oluştu.','error');});
+}
+
+function populateForm(data, extraSkip) {
+    const filled=[];
+    const skip=['images','images_meta','image','_warnings','source'].concat(extraSkip||[]);
+    Object.entries(data).forEach(([key,val])=>{
+        if(skip.includes(key)||val===null||val===undefined||val==='')return;
+        const el=document.querySelector(`[name="${key}"]`);
+        if(!el)return;
+        if(el.tagName==='SELECT'){el.value=val;$(el).trigger('change');}
+        else if(el.type==='checkbox'){el.checked=!!val;}
+        else{el.value=val;$(el).trigger('input').trigger('change');}
+        if(FIELD_LABELS[key])filled.push(FIELD_LABELS[key]);
+    });
+    return filled;
+}
+
+function showImportMessage(msg,type){
+    const el=document.getElementById('importMessage');
+    el.textContent=msg;
+    el.className='mt-3 text-sm rounded-lg px-4 py-3 '+(type==='success'?'bg-green-50 text-green-700 border border-green-200':type==='warning'?'bg-yellow-50 text-yellow-700 border border-yellow-200':'bg-red-50 text-red-700 border border-red-200');
+    el.classList.remove('hidden');
+}
+function clearImportUI(){
+    ['importMessage','importImagePreview','importDuplicateWarning','importResultSummary'].forEach(id=>document.getElementById(id)?.classList.add('hidden'));
+    document.getElementById('importImageGrid').innerHTML='';
+    document.getElementById('importFilledFields').innerHTML='';
+}
+function resetImportBtn(){
+    const btn=document.getElementById('importBtn');
+    btn.disabled=false;btn.classList.replace('bg-blue-400','bg-blue-600');
+    document.getElementById('importBtnIcon').innerHTML='<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>';
+    document.getElementById('importBtnText').textContent='Veriyi Çek';
+}
+
+// ─── Document Ready ───────────────────────────────────────────────────────────
+$(document).ready(function(){
+
+    // Select2
+    $('#brandSelect,#modelSelect').select2({placeholder:'Seçiniz',allowClear:true,tags:true,width:'100%'});
+
+    // ── CASCADE ──────────────────────────────────────────────────────────────
+    let cascadeData={brandId:null,year:null,modelId:null,bodyTypeId:null,fuelTypeId:null,transmissionId:null,versionId:null};
     loadBrands();
-    
-    function loadBrands() {
-        $.ajax({
-            url: '{{ route("admin.vehicles.api.brands") }}',
-            method: 'GET',
-            timeout: 5000,
-            success: function(response) {
-                if (response.success && response.data && response.data.Items) {
+
+    function loadBrands(){
+        $.ajax({url:'{{ route("admin.vehicles.api.brands") }}',method:'GET',timeout:5000,
+            success:function(r){
+                if(r.success&&r.data&&r.data.Items){
                     $('#brandSelect').empty().append('<option value="">Marka Seçiniz</option>');
-                    response.data.Items.forEach(function(brand) {
-                        // value'ya ID, data-name'e Name koy
-                        $('#brandSelect').append($('<option></option>')
-                            .attr('value', brand.Id)
-                            .attr('data-name', brand.Name)
-                            .attr('data-arabam-id', brand.ArabamId || '')
-                            .text(brand.Name));
-                    });
-                } else {
-                    $('#brandSelect').empty().append('<option value="">Marka yüklenemedi</option>');
-                }
+                    r.data.Items.forEach(b=>$('#brandSelect').append($('<option>').attr('value',b.Id).attr('data-name',b.Name).attr('data-arabam-id',b.ArabamId||'').text(b.Name)));
+                }else $('#brandSelect').empty().append('<option value="">Marka yüklenemedi</option>');
             },
-            error: function(xhr, status, error) {
-                $('#brandSelect').empty().append('<option value="">Hata oluştu</option>');
-            }
+            error:function(){$('#brandSelect').empty().append('<option value="">Hata oluştu</option>');}
         });
     }
-    
-    // Load Years (after brand selection)
-    function loadYears(brandId) {
-        const currentYear = new Date().getFullYear();
-        const years = [];
-        for (let y = currentYear + 1; y >= 1990; y--) {
-            years.push(y);
-        }
-        
+
+    function loadYears(){
+        const y=new Date().getFullYear();
         $('#yearSelect').empty().append('<option value="">Yıl Seçiniz</option>');
-        years.forEach(function(year) {
-            $('#yearSelect').append($('<option></option>').attr('value', year).text(year));
-        });
-        
-        $('#yearSelect').prop('disabled', false);
+        for(let i=y+1;i>=1990;i--)$('#yearSelect').append($('<option>').val(i).text(i));
+        $('#yearSelect').prop('disabled',false);
     }
-    
-    // ============================================================
-    // CASCADE EVENT LISTENERS (Web sitesindeki gibi)
-    // ============================================================
-    
-    // 1. MARKA SEÇİMİ → YIL DROPDOWN AKTİF
-    $('#brandSelect').on('change', function() {
-        cascadeData.brandId = $(this).val(); // value artık ID
-        const brandName = $(this).find(':selected').data('name') || $(this).find(':selected').text();
-        
-        // Reset sonraki alanlar
-        resetCascadeFrom('year');
-        
-        if (cascadeData.brandId) {
-            loadYears(cascadeData.brandId);
-        }
-    });
-    
-    // 2. YIL SEÇİMİ → MODEL YÜKLE
-    $('#yearSelect').on('change', function() {
-        cascadeData.year = $(this).val();
-        
-        // Reset sonraki alanlar
-        resetCascadeFrom('model');
-        
-        if (cascadeData.year && cascadeData.brandId) {
-            // Veritabanından model yükle (yıl filtrelemesi olmadan, tüm modeller gelir)
-            loadModels(cascadeData.brandId, cascadeData.year);
-        }
-    });
-    
-    // 3. MODEL SEÇİMİ → GÖVDE TİPİ YÜKLE
-    $('#modelSelect').on('change', function() {
-        cascadeData.modelId = $(this).val(); // value artık ID (database ID)
-        const modelName = $(this).find(':selected').data('name') || $(this).find(':selected').text();
-        const arabamId = $('#brandSelect option:selected').data('arabam-id');
-        
-        // Reset sonraki alanlar
-        resetCascadeFrom('bodyType');
-        
-        if (cascadeData.modelId && arabamId) {
-            // Arabam.com API'sine arabam_id ile gövde tipi iste
-            loadBodyTypes(arabamId, cascadeData.year, cascadeData.modelId);
-        }
-    });
-    
-    // 4. GÖVDE TİPİ SEÇİMİ → YAKIT TİPİ YÜKLE
-    $('#bodyTypeSelect').on('change', function() {
-        cascadeData.bodyTypeId = $(this).val(); // value artık ID
-        const bodyTypeName = $(this).find(':selected').data('name') || $(this).find(':selected').text();
-        
-        // Reset sonraki alanlar
-        resetCascadeFrom('fuelType');
-        
-        if (cascadeData.bodyTypeId) {
-            loadFuelTypes(cascadeData.brandId, cascadeData.year, cascadeData.modelId, cascadeData.bodyTypeId);
-        }
-    });
-    
-    // 5. YAKIT TİPİ SEÇİMİ → VİTES TİPİ YÜKLE
-    $('#fuelTypeSelect').on('change', function() {
-        cascadeData.fuelTypeId = $(this).val(); // value artık ID
-        const fuelTypeName = $(this).find(':selected').data('name') || $(this).find(':selected').text();
-        
-        // Reset sonraki alanlar
-        resetCascadeFrom('transmission');
-        
-        if (cascadeData.fuelTypeId) {
-            loadTransmissions(cascadeData.brandId, cascadeData.year, cascadeData.modelId, cascadeData.bodyTypeId, cascadeData.fuelTypeId);
-        }
-    });
-    
-    // 6. VİTES TİPİ SEÇİMİ → VERSİYON YÜKLE
-    $('#transmissionSelect').on('change', function() {
-        cascadeData.transmissionId = $(this).val(); // value artık ID
-        const transmissionName = $(this).find(':selected').data('name') || $(this).find(':selected').text();
-        
-        // Reset sonraki alanlar
-        resetCascadeFrom('version');
-        
-        if (cascadeData.transmissionId) {
-            loadVersions(cascadeData.brandId, cascadeData.year, cascadeData.modelId, cascadeData.bodyTypeId, cascadeData.fuelTypeId, cascadeData.transmissionId);
-        }
-    });
-    
-    // 7. VERSİYON SEÇİMİ → RENK YÜKLE (Opsiyonel)
-    $('#versionSelect').on('change', function() {
-        cascadeData.versionId = $(this).val(); // value artık ID
-        const versionName = $(this).find(':selected').data('name') || $(this).find(':selected').text();
-        
-        if (cascadeData.versionId) {
-            loadColors(cascadeData.brandId, cascadeData.year, cascadeData.modelId, cascadeData.bodyTypeId, cascadeData.fuelTypeId, cascadeData.transmissionId, cascadeData.versionId);
-        }
-    });
-    
-    // Reset cascade from a specific point
-    function resetCascadeFrom(step) {
-        const steps = ['year', 'model', 'bodyType', 'fuelType', 'transmission', 'version', 'color'];
-        const startIndex = steps.indexOf(step);
-        
-        for (let i = startIndex; i < steps.length; i++) {
-            const stepName = steps[i];
-            
-            switch(stepName) {
-                case 'year':
-                    $('#yearSelect').prop('disabled', true).empty().append('<option value="">Önce marka seçiniz</option>');
-                    cascadeData.year = null;
-                    break;
-                case 'model':
-                    $('#modelSelect').prop('disabled', true).empty().append('<option value="">Önce yıl seçiniz</option>');
-                    cascadeData.modelId = null;
-                    break;
-                case 'bodyType':
-                    $('#bodyTypeSelect').prop('disabled', true).empty().append('<option value="">Önce model seçiniz</option>');
-                    cascadeData.bodyTypeId = null;
-                    break;
-                case 'fuelType':
-                    $('#fuelTypeSelect').prop('disabled', true).empty().append('<option value="">Önce gövde tipi seçiniz</option>');
-                    cascadeData.fuelTypeId = null;
-                    break;
-                case 'transmission':
-                    $('#transmissionSelect').prop('disabled', true).empty().append('<option value="">Önce yakıt tipi seçiniz</option>');
-                    cascadeData.transmissionId = null;
-                    break;
-                case 'version':
-                    $('#versionSelect').prop('disabled', true).empty().append('<option value="">Önce vites tipi seçiniz</option>');
-                    cascadeData.versionId = null;
-                    break;
-                case 'color':
-                    $('#colorSelect').prop('disabled', true).empty().append('<option value="">Önce versiyon seçiniz</option>');
-                    break;
+
+    $('#brandSelect').on('change',function(){cascadeData.brandId=$(this).val();resetCascadeFrom('year');if(cascadeData.brandId)loadYears();});
+    $('#yearSelect').on('change',function(){cascadeData.year=$(this).val();resetCascadeFrom('model');if(cascadeData.year&&cascadeData.brandId)loadModels(cascadeData.brandId,cascadeData.year);});
+    $('#modelSelect').on('change',function(){cascadeData.modelId=$(this).val();const arabamId=$('#brandSelect option:selected').data('arabam-id');resetCascadeFrom('bodyType');if(cascadeData.modelId&&arabamId)loadBodyTypes(arabamId,cascadeData.year,cascadeData.modelId);});
+    $('#bodyTypeSelect').on('change',function(){cascadeData.bodyTypeId=$(this).val();resetCascadeFrom('fuelType');if(cascadeData.bodyTypeId)loadFuelTypes(cascadeData.brandId,cascadeData.year,cascadeData.modelId,cascadeData.bodyTypeId);});
+    $('#fuelTypeSelect').on('change',function(){cascadeData.fuelTypeId=$(this).val();resetCascadeFrom('transmission');if(cascadeData.fuelTypeId)loadTransmissions(cascadeData.brandId,cascadeData.year,cascadeData.modelId,cascadeData.bodyTypeId,cascadeData.fuelTypeId);});
+    $('#transmissionSelect').on('change',function(){cascadeData.transmissionId=$(this).val();resetCascadeFrom('version');if(cascadeData.transmissionId)loadVersions(cascadeData.brandId,cascadeData.year,cascadeData.modelId,cascadeData.bodyTypeId,cascadeData.fuelTypeId,cascadeData.transmissionId);});
+    $('#versionSelect').on('change',function(){cascadeData.versionId=$(this).val();if(cascadeData.versionId)loadColors(cascadeData.brandId,cascadeData.year,cascadeData.modelId,cascadeData.bodyTypeId,cascadeData.fuelTypeId,cascadeData.transmissionId,cascadeData.versionId);});
+
+    function resetCascadeFrom(step){
+        const steps=['year','model','bodyType','fuelType','transmission','version','color'];
+        for(let i=steps.indexOf(step);i<steps.length;i++){
+            switch(steps[i]){
+                case 'year':$('#yearSelect').prop('disabled',true).empty().append('<option>Önce marka seçiniz</option>');cascadeData.year=null;break;
+                case 'model':$('#modelSelect').prop('disabled',true).empty().append('<option>Önce yıl seçiniz</option>');cascadeData.modelId=null;break;
+                case 'bodyType':$('#bodyTypeSelect').prop('disabled',true).empty().append('<option>Önce model seçiniz</option>');cascadeData.bodyTypeId=null;break;
+                case 'fuelType':$('#fuelTypeSelect').prop('disabled',true).empty().append('<option>Önce gövde tipi seçiniz</option>');cascadeData.fuelTypeId=null;break;
+                case 'transmission':$('#transmissionSelect').prop('disabled',true).empty().append('<option>Önce yakıt tipi seçiniz</option>');cascadeData.transmissionId=null;break;
+                case 'version':$('#versionSelect').prop('disabled',true).empty().append('<option>Önce vites tipi seçiniz</option>');cascadeData.versionId=null;break;
+                case 'color':$('#colorSelect').prop('disabled',true).empty().append('<option>Önce versiyon seçiniz</option>');break;
             }
         }
     }
-    
-    // ============================================================
-    // CASCADE LOAD FUNCTIONS (Web sitesindeki gibi API çağrıları)
-    // ============================================================
-    
-    // Load Models (from database)
-    function loadModels(brandId, year) {
-        $('#modelSelect').prop('disabled', false).empty().append('<option value="">Yükleniyor...</option>');
-        
-        $.ajax({
-            url: '{{ route("admin.vehicles.api.models") }}',
-            method: 'GET',
-            data: { brandId: brandId },
-            success: function(response) {
-                if (response.success && response.data && response.data.Items) {
-                    populateSelect('#modelSelect', response.data.Items, 'Model Seçiniz');
-                    // Auto-select if only 1 option
-                    if (response.data.Items.length === 1) {
-                        $('#modelSelect').val(response.data.Items[0].Id).trigger('change');
-                    }
-                } else {
-                    $('#modelSelect').empty().append('<option value="">Model bulunamadı</option>');
-                }
+
+    function apiStep(step,data,selector,placeholder){
+        $(selector).prop('disabled',false).empty().append(`<option>${placeholder}</option>`);
+        $.ajax({url:'/api/arabam/step',method:'GET',data:Object.assign({step},data),
+            success:function(r){
+                if(r.success&&r.data&&r.data.Items){
+                    populateSelect(selector,r.data.Items,placeholder);
+                    if(r.data.Items.length===1)$(selector).val(r.data.Items[0].Id||r.data.Items[0].Name).trigger('change');
+                }else $(selector).empty().append(`<option>Bulunamadı</option>`);
             },
-            error: function(xhr, status, error) {
-                $('#modelSelect').empty().append('<option value="">Hata oluştu</option>');
-            }
+            error:function(){$(selector).empty().append(`<option>Hata</option>`);}
         });
     }
-    
-    // Load Body Types (step 30) - Arabam.com API
-    function loadBodyTypes(arabamBrandId, year, modelId) {
-        $('#bodyTypeSelect').prop('disabled', false).empty().append('<option value="">Yükleniyor...</option>');
-        
-        // Model'in arabam_id'sini al
-        const modelArabamId = $('#modelSelect option:selected').data('arabam-id');
-        
-        $.ajax({
-            url: '/api/arabam/step',
-            method: 'GET',
-            data: { 
-                step: '30', 
-                brandId: arabamBrandId, 
-                modelYear: year, 
-                modelGroupId: modelArabamId || modelId 
+
+    function loadModels(brandId,year){
+        $('#modelSelect').prop('disabled',false).empty().append('<option>Yükleniyor...</option>');
+        $.ajax({url:'{{ route("admin.vehicles.api.models") }}',method:'GET',data:{brandId},
+            success:function(r){
+                if(r.success&&r.data&&r.data.Items){populateSelect('#modelSelect',r.data.Items,'Model Seçiniz');if(r.data.Items.length===1)$('#modelSelect').val(r.data.Items[0].Id).trigger('change');}
+                else $('#modelSelect').empty().append('<option>Model bulunamadı</option>');
             },
-            success: function(response) {
-                if (response.success && response.data && response.data.Items) {
-                    populateSelect('#bodyTypeSelect', response.data.Items, 'Gövde Tipi Seçiniz');
-                    if (response.data.Items.length === 1) {
-                        $('#bodyTypeSelect').val(response.data.Items[0].Id).trigger('change');
-                    }
-                } else {
-                    $('#bodyTypeSelect').empty().append('<option value="">Gövde tipi bulunamadı</option>');
-                }
-            },
-            error: function() {
-                $('#bodyTypeSelect').empty().append('<option value="">Hata oluştu</option>');
-            }
+            error:function(){$('#modelSelect').empty().append('<option>Hata</option>');}
         });
     }
-    
-    // Load Fuel Types (step 40)
-    function loadFuelTypes(brandId, year, modelId, bodyTypeId) {
-        $('#fuelTypeSelect').prop('disabled', false).empty().append('<option value="">Yükleniyor...</option>');
-        
-        $.ajax({
-            url: '/api/arabam/step',
-            method: 'GET',
-            data: { step: '40', brandId: brandId, modelYear: year, modelGroupId: modelId, bodyTypeId: bodyTypeId },
-            success: function(response) {
-                if (response.success && response.data && response.data.Items) {
-                    populateSelect('#fuelTypeSelect', response.data.Items, 'Yakıt Tipi Seçiniz');
-                    if (response.data.Items.length === 1) {
-                        $('#fuelTypeSelect').val(response.data.Items[0].Name).trigger('change');
-                    }
-                } else {
-                    $('#fuelTypeSelect').empty().append('<option value="">Yakıt tipi bulunamadı</option>');
-                }
-            },
-            error: function() {
-                $('#fuelTypeSelect').empty().append('<option value="">Hata oluştu</option>');
-            }
-        });
-    }
-    
-    // Load Transmissions (step 50)
-    function loadTransmissions(brandId, year, modelId, bodyTypeId, fuelTypeId) {
-        $('#transmissionSelect').prop('disabled', false).empty().append('<option value="">Yükleniyor...</option>');
-        
-        $.ajax({
-            url: '/api/arabam/step',
-            method: 'GET',
-            data: { step: '50', brandId: brandId, modelYear: year, modelGroupId: modelId, bodyTypeId: bodyTypeId, fuelTypeId: fuelTypeId },
-            success: function(response) {
-                if (response.success && response.data && response.data.Items) {
-                    populateSelect('#transmissionSelect', response.data.Items, 'Vites Tipi Seçiniz');
-                    if (response.data.Items.length === 1) {
-                        $('#transmissionSelect').val(response.data.Items[0].Name).trigger('change');
-                    }
-                } else {
-                    $('#transmissionSelect').empty().append('<option value="">Vites tipi bulunamadı</option>');
-                }
-            },
-            error: function() {
-                $('#transmissionSelect').empty().append('<option value="">Hata oluştu</option>');
-            }
-        });
-    }
-    
-    // Load Versions (step 60)
-    function loadVersions(brandId, year, modelId, bodyTypeId, fuelTypeId, transmissionId) {
-        $('#versionSelect').prop('disabled', false).empty().append('<option value="">Yükleniyor...</option>');
-        
-        $.ajax({
-            url: '/api/arabam/step',
-            method: 'GET',
-            data: { step: '60', brandId: brandId, modelYear: year, modelGroupId: modelId, bodyTypeId: bodyTypeId, fuelTypeId: fuelTypeId, transmissionTypeId: transmissionId },
-            success: function(response) {
-                if (response.success && response.data && response.data.Items) {
-                    populateSelect('#versionSelect', response.data.Items, 'Versiyon Seçiniz');
-                    if (response.data.Items.length === 1) {
-                        $('#versionSelect').val(response.data.Items[0].Name).trigger('change');
-                    }
-                } else {
-                    $('#versionSelect').empty().append('<option value="">Versiyon bulunamadı</option>');
-                }
-            },
-            error: function() {
-                $('#versionSelect').empty().append('<option value="">Hata oluştu</option>');
-            }
-        });
-    }
-    
-    // Load Colors (step 70) - Opsiyonel
-    function loadColors(brandId, year, modelId, bodyTypeId, fuelTypeId, transmissionId, versionId) {
-        $('#colorSelect').prop('disabled', false).empty().append('<option value="">Yükleniyor...</option>');
-        
-        $.ajax({
-            url: '/api/arabam/step',
-            method: 'GET',
-            data: { step: '70', brandId: brandId, modelYear: year, modelGroupId: modelId, bodyTypeId: bodyTypeId, fuelTypeId: fuelTypeId, transmissionTypeId: transmissionId, modelId: versionId },
-            success: function(response) {
-                if (response.success && response.data && response.data.Items) {
-                    populateSelect('#colorSelect', response.data.Items, 'Renk Seçiniz');
-                    if (response.data.Items.length === 1) {
-                        $('#colorSelect').val(response.data.Items[0].Name);
-                    }
-                } else {
-                    $('#colorSelect').empty().append('<option value="">Renk bulunamadı</option>');
-                }
-            },
-            error: function() {
-                $('#colorSelect').empty().append('<option value="">Hata oluştu</option>');
-            }
-        });
-    }
-    
-    // Helper: Populate select with items
-    function populateSelect(selector, items, placeholder) {
+    function loadBodyTypes(arabamId,year,modelId){apiStep('30',{brandId:arabamId,modelYear:year,modelGroupId:$('#modelSelect option:selected').data('arabam-id')||modelId},'#bodyTypeSelect','Gövde Tipi Seçiniz');}
+    function loadFuelTypes(bId,y,mId,btId){apiStep('40',{brandId:bId,modelYear:y,modelGroupId:mId,bodyTypeId:btId},'#fuelTypeSelect','Yakıt Tipi Seçiniz');}
+    function loadTransmissions(bId,y,mId,btId,ftId){apiStep('50',{brandId:bId,modelYear:y,modelGroupId:mId,bodyTypeId:btId,fuelTypeId:ftId},'#transmissionSelect','Vites Tipi Seçiniz');}
+    function loadVersions(bId,y,mId,btId,ftId,trId){apiStep('60',{brandId:bId,modelYear:y,modelGroupId:mId,bodyTypeId:btId,fuelTypeId:ftId,transmissionTypeId:trId},'#versionSelect','Versiyon Seçiniz');}
+    function loadColors(bId,y,mId,btId,ftId,trId,vId){apiStep('70',{brandId:bId,modelYear:y,modelGroupId:mId,bodyTypeId:btId,fuelTypeId:ftId,transmissionTypeId:trId,modelId:vId},'#colorSelect','Renk Seçiniz');}
+
+    function populateSelect(selector,items,placeholder){
         $(selector).empty().append(`<option value="">${placeholder}</option>`);
-        items.forEach(function(item) {
-            const option = $('<option></option>')
-                .attr('value', item.Id) // value artık ID
-                .attr('data-name', item.Name) // data-name'de Name
-                .text(item.Name);
-            
-            // Eğer ArabamId varsa ekle
-            if (item.ArabamId) {
-                option.attr('data-arabam-id', item.ArabamId);
-            }
-            
-            $(selector).append(option);
-        });
+        items.forEach(item=>{const o=$('<option>').attr('value',item.Id).attr('data-name',item.Name).text(item.Name);if(item.ArabamId)o.attr('data-arabam-id',item.ArabamId);$(selector).append(o);});
     }
-    
-    // ============================================================
-    // MANUEL GİRİŞ TOGGLE (Checkbox)
-    // ============================================================
-    
-    $('#manualBrandToggle').on('change', function() {
-        if ($(this).is(':checked')) {
-            $('#brandSelect').hide().prop('disabled', true);
-            $('#manualBrandInput').show().removeClass('hidden').prop('disabled', false);
-        } else {
-            $('#brandSelect').show().prop('disabled', false);
-            $('#manualBrandInput').hide().addClass('hidden').prop('disabled', true).val('');
-        }
+
+    // ── MANUEL GİRİŞ ─────────────────────────────────────────────────────────
+    $('#manualBrandToggle').on('change',function(){
+        if($(this).is(':checked')){$('#brandSelect').hide().prop('disabled',true);$('#manualBrandInput').show().removeClass('hidden').prop('disabled',false);}
+        else{$('#brandSelect').show().prop('disabled',false);$('#manualBrandInput').hide().addClass('hidden').prop('disabled',true).val('');}
     });
-    
-    $('#manualModelToggle').on('change', function() {
-        if ($(this).is(':checked')) {
-            $('#modelSelect').hide().prop('disabled', true);
-            $('#manualModelInput').show().removeClass('hidden').prop('disabled', false);
-        } else {
-            $('#modelSelect').show().prop('disabled', false);
-            $('#manualModelInput').hide().addClass('hidden').prop('disabled', true).val('');
-        }
+    $('#manualModelToggle').on('change',function(){
+        if($(this).is(':checked')){$('#modelSelect').hide().prop('disabled',true);$('#manualModelInput').show().removeClass('hidden').prop('disabled',false);}
+        else{$('#modelSelect').show().prop('disabled',false);$('#manualModelInput').hide().addClass('hidden').prop('disabled',true).val('');}
     });
-    
-    $('#manualVersionToggle').on('change', function() {
-        if ($(this).is(':checked')) {
-            $('#versionSelect').hide().prop('disabled', true);
-            $('#manualVersionInput').show().removeClass('hidden').prop('disabled', false);
-        } else {
-            $('#versionSelect').show().prop('disabled', false);
-            $('#manualVersionInput').hide().addClass('hidden').prop('disabled', true).val('');
-        }
+    $('#manualVersionToggle').on('change',function(){
+        if($(this).is(':checked')){$('#versionSelect').hide().prop('disabled',true);$('#manualVersionInput').show().removeClass('hidden').prop('disabled',false);}
+        else{$('#versionSelect').show().prop('disabled',false);$('#manualVersionInput').hide().addClass('hidden').prop('disabled',true).val('');}
     });
-    
-    // Feature Search
-    $('#featureSearch').on('keyup', function() {
-        const searchText = $(this).val().toLowerCase();
-        $('.feature-item').each(function() {
-            const text = $(this).text().toLowerCase();
-            $(this).toggle(text.indexOf(searchText) > -1);
-        });
+
+    // ── DONANIM SAYACI & ARAMA ─────────────────────────────────────────────
+    window.updateFeatureCount=function(){
+        document.getElementById('selectedCount').textContent=document.querySelectorAll('#featuresContainer input[type="checkbox"]:checked').length+' özellik seçili';
+    };
+    $('#featureSearch').on('keyup',function(){
+        const q=$(this).val().toLowerCase();
+        $('.feature-item').each(function(){$(this).toggle($(this).text().toLowerCase().indexOf(q)>-1);});
     });
-    
-    // Main Image Preview
-    $('#mainImageInput').on('change', function(e) {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                $('#mainPreviewImg').attr('src', event.target.result);
-                $('#mainPreview').removeClass('hidden');
-            }
-            reader.readAsDataURL(file);
-        }
+
+    // ── ANA GÖRSEL ────────────────────────────────────────────────────────────
+    $('#mainImageInput').on('change',function(e){
+        const file=e.target.files[0];
+        if(!file)return;
+        const reader=new FileReader();
+        reader.onload=function(ev){$('#mainPreviewImg').attr('src',ev.target.result);$('#mainPreview').removeClass('hidden');};
+        reader.readAsDataURL(file);
     });
-    
-    window.removeMainImage = function() {
-        $('#mainImageInput').val('');
-        $('#mainPreview').addClass('hidden');
-    }
-    
-    // Gallery Management
-    let galleryFiles = [];
-    const MAX_GALLERY_IMAGES = 15;
-    
-    $('#singleImageInput').on('change', function(e) {
-        const file = e.target.files[0];
-        if (!file) return;
-        
-        if (galleryFiles.length >= MAX_GALLERY_IMAGES) {
-            alert(`Maksimum ${MAX_GALLERY_IMAGES} görsel yükleyebilirsiniz.`);
-            $(this).val('');
-            return;
-        }
-        
-        if (file.size > 5 * 1024 * 1024) {
-            alert('Görsel boyutu 5MB\'dan küçük olmalıdır.');
-            $(this).val('');
-            return;
-        }
-        
-        galleryFiles.push(file);
-        $(this).val('');
-        renderGallery();
+    window.removeMainImage=function(){$('#mainImageInput').val('');$('#mainPreview').addClass('hidden');};
+
+    // ── GALERİ ────────────────────────────────────────────────────────────────
+    let galleryFiles=[]; const MAX_G=15;
+    $('#singleImageInput').on('change',function(e){
+        const file=e.target.files[0]; if(!file)return;
+        if(galleryFiles.length>=MAX_G){Swal.fire({title:'Limit Aşıldı',text:`Maks. ${MAX_G} görsel.`,icon:'warning',confirmButtonColor:'#dc2626'});$(this).val('');return;}
+        if(file.size>5*1024*1024){Swal.fire({title:'Görsel Çok Büyük',text:"5MB'dan küçük olmalı.",icon:'warning',confirmButtonColor:'#dc2626'});$(this).val('');return;}
+        galleryFiles.push(file);$(this).val('');renderGallery();
     });
-    
-    function renderGallery() {
-        $('#galleryPreview').empty();
-        $('#galleryCount').text(`${galleryFiles.length}/${MAX_GALLERY_IMAGES}`);
-        
-        if (galleryFiles.length === 0) return;
-        
-        galleryFiles.forEach((file, index) => {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const itemHtml = `
-                    <div class="gallery-item" data-index="${index}">
-                        <img src="${e.target.result}" class="w-full h-24 object-cover">
-                        <button type="button" onclick="removeGalleryItem(${index})" class="delete-btn">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                            </svg>
-                        </button>
-                        <div class="absolute bottom-1 left-1 bg-black/70 text-white text-xs font-bold px-1.5 py-0.5 rounded">${index + 1}</div>
-                    </div>
-                `;
-                $('#galleryPreview').append(itemHtml);
+    function renderGallery(){
+        $('#galleryPreview').empty(); $('#galleryCount').text(galleryFiles.length+'/'+MAX_G);
+        if(!galleryFiles.length)return;
+        galleryFiles.forEach((file,i)=>{
+            const reader=new FileReader();
+            reader.onload=function(e){
+                $('#galleryPreview').append(`<div class="gallery-item" data-index="${i}"><img src="${e.target.result}" class="w-full h-24 object-cover"><button type="button" onclick="removeGalleryItem(${i})" class="delete-btn"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button><div class="absolute bottom-1 left-1 bg-black/70 text-white text-xs font-bold px-1.5 py-0.5 rounded">${i+1}</div></div>`);
             };
             reader.readAsDataURL(file);
         });
-        
-        setTimeout(() => {
-            if (galleryFiles.length > 1) {
-                new Sortable(document.getElementById('galleryPreview'), {
-                    animation: 200,
-                    onEnd: function(evt) {
-                        const movedItem = galleryFiles.splice(evt.oldIndex, 1)[0];
-                        galleryFiles.splice(evt.newIndex, 0, movedItem);
-                        renderGallery();
-                    }
-                });
-            }
-        }, 100);
+        setTimeout(()=>{if(galleryFiles.length>1)new Sortable(document.getElementById('galleryPreview'),{animation:200,onEnd:function(evt){const m=galleryFiles.splice(evt.oldIndex,1)[0];galleryFiles.splice(evt.newIndex,0,m);renderGallery();}});},100);
     }
-    
-    window.removeGalleryItem = function(index) {
-        if (confirm('Bu görseli silmek istediğinize emin misiniz?')) {
-            galleryFiles.splice(index, 1);
-            renderGallery();
-        }
-    }
-    
-    // Button Click Handler
-    $('.submit-btn').on('click', function(e) {
-        const action = $(this).data('action');
-        $('#formAction').val(action);
-    });
-    
-    // Form Submit
-    $('#vehicleForm').on('submit', function(e) {
-        // Gallery images
-        const dt = new DataTransfer();
-        galleryFiles.forEach(file => dt.items.add(file));
-        document.getElementById('galleryInput').files = dt.files;
-        
-        // Manuel girişleri handle et
-        if ($('#manualBrandToggle').is(':checked')) {
-            const manualBrand = $('#manualBrandInput').val();
-            $('#brandSelect').append($('<option></option>').attr('value', manualBrand).attr('selected', true).text(manualBrand));
-        } else {
-            // Normal seçim: value'da ID var, data-name'de Name var
-            // Backend'e Name göndermek için hidden input oluştur
-            const selectedBrand = $('#brandSelect option:selected');
-            if (selectedBrand.val()) {
-                const brandName = selectedBrand.data('name') || selectedBrand.text();
-                $('#brandSelect').after('<input type="hidden" name="brand" value="' + brandName + '">');
-                $('#brandSelect').prop('disabled', true);
-            }
-        }
-        
-        if ($('#manualModelToggle').is(':checked')) {
-            const manualModel = $('#manualModelInput').val();
-            $('#modelSelect').append($('<option></option>').attr('value', manualModel).attr('selected', true).text(manualModel));
-        } else {
-            // Normal seçim: value'da ID var, data-name'de Name var
-            const selectedModel = $('#modelSelect option:selected');
-            if (selectedModel.val()) {
-                const modelName = selectedModel.data('name') || selectedModel.text();
-                $('#modelSelect').after('<input type="hidden" name="model" value="' + modelName + '">');
-                $('#modelSelect').prop('disabled', true);
-            }
-        }
-        
-        if ($('#manualVersionToggle').is(':checked')) {
-            const manualVersion = $('#manualVersionInput').val();
-            $('#versionSelect').append($('<option></option>').attr('value', manualVersion).attr('selected', true).text(manualVersion));
-        } else {
-            // Normal seçim
-            const selectedVersion = $('#versionSelect option:selected');
-            if (selectedVersion.val()) {
-                const versionName = selectedVersion.data('name') || selectedVersion.text();
-                $('#versionSelect').after('<input type="hidden" name="package_version" value="' + versionName + '">');
-                $('#versionSelect').prop('disabled', true);
-            }
-        }
-        
-        // Diğer seçimleri de hidden input olarak ekle
-        ['body_type', 'fuel_type', 'transmission', 'color'].forEach(function(fieldName) {
-            const selectId = fieldName === 'body_type' ? '#bodyTypeSelect' : 
-                            fieldName === 'fuel_type' ? '#fuelTypeSelect' : 
-                            fieldName === 'transmission' ? '#transmissionSelect' : 
-                            '#colorSelect';
-            const selected = $(selectId + ' option:selected');
-            if (selected.val()) {
-                const fieldValue = selected.data('name') || selected.text();
-                $(selectId).after('<input type="hidden" name="' + fieldName + '" value="' + fieldValue + '">');
-                $(selectId).prop('disabled', true);
-            }
+    window.removeGalleryItem=function(i){
+        Swal.fire({title:'Görseli Kaldır?',text:'Bu görseli galeriden kaldırmak istediğinize emin misiniz?',icon:'question',showCancelButton:true,confirmButtonColor:'#dc2626',cancelButtonColor:'#6b7280',confirmButtonText:'Evet, Kaldır',cancelButtonText:'İptal'})
+        .then(r=>{if(r.isConfirmed){galleryFiles.splice(i,1);renderGallery();}});
+    };
+
+    // ── FORM SUBMIT ───────────────────────────────────────────────────────────
+    $('.submit-btn').on('click',function(){$('#formAction').val($(this).data('action'));});
+
+    $('#vehicleForm').on('submit',function(e){
+        const dt=new DataTransfer();galleryFiles.forEach(f=>dt.items.add(f));document.getElementById('galleryInput').files=dt.files;
+
+        if($('#manualBrandToggle').is(':checked')){const v=$('#manualBrandInput').val().trim();if(v)$('<input type="hidden" name="brand">').val(v).appendTo('#vehicleForm');}
+        else{const s=$('#brandSelect option:selected');if(s.val()){$('#brandSelect').after('<input type="hidden" name="brand" value="'+(s.data('name')||s.text())+'">');$('#brandSelect').prop('disabled',true);}}
+
+        if($('#manualModelToggle').is(':checked')){const v=$('#manualModelInput').val().trim();if(v)$('<input type="hidden" name="model">').val(v).appendTo('#vehicleForm');}
+        else{const s=$('#modelSelect option:selected');if(s.val()){$('#modelSelect').after('<input type="hidden" name="model" value="'+(s.data('name')||s.text())+'">');$('#modelSelect').prop('disabled',true);}}
+
+        if($('#manualVersionToggle').is(':checked')){const v=$('#manualVersionInput').val().trim();if(v)$('<input type="hidden" name="package_version">').val(v).appendTo('#vehicleForm');}
+        else{const s=$('#versionSelect option:selected');if(s.val()){$('#versionSelect').after('<input type="hidden" name="package_version" value="'+(s.data('name')||s.text())+'">');$('#versionSelect').prop('disabled',true);}}
+
+        [['body_type','#bodyTypeSelect'],['fuel_type','#fuelTypeSelect'],['transmission','#transmissionSelect'],['color','#colorSelect']].forEach(([fn,si])=>{
+            const s=$(si+' option:selected');if(s.val()){$(si).after('<input type="hidden" name="'+fn+'" value="'+(s.data('name')||s.text())+'">');$(si).prop('disabled',true);}
         });
-        
-        const action = $('#formAction').val();
-        if (action === 'publish') {
-            const requiredFields = [
-                { name: 'title', label: 'Başlık' },
-                { selector: '#brandSelect, #manualBrandInput', label: 'Marka' },
-                { selector: '#modelSelect, #manualModelInput', label: 'Model' },
-                { name: 'year', label: 'Yıl' },
-                { name: 'kilometer', label: 'Kilometre' },
-                { name: 'price', label: 'Fiyat' },
-            ];
-            
-            let missing = [];
-            requiredFields.forEach(field => {
-                let value = '';
-                if (field.selector) {
-                    value = $(field.selector).filter(':visible').val();
-                } else {
-                    value = $(`[name="${field.name}"]`).val();
-                }
-                
-                if (!value || value.trim() === '') {
-                    missing.push(field.label);
-                }
+
+        const action=$('#formAction').val();
+        if(action==='publish'){
+            const required=[{name:'title',label:'Başlık'},{selector:'#brandSelect,#manualBrandInput',label:'Marka'},{selector:'#modelSelect,#manualModelInput',label:'Model'},{name:'year',label:'Yıl'},{name:'kilometer',label:'Kilometre'},{name:'price',label:'Fiyat'}];
+            let missing=[];
+            required.forEach(f=>{
+                let val=f.selector?$(f.selector).filter(':visible').val():$(`[name="${f.name}"]`).val();
+                if(!val||val.trim()==='')missing.push(f.label);
             });
-            
-            if (!$('#mainImageInput')[0].files.length) {
-                missing.push('Ana Görsel');
-            }
-            
-            if (missing.length > 0) {
+            const hasImported=document.querySelectorAll('#importImageGrid img').length>0;
+            if(!$('#mainImageInput')[0].files.length&&!hasImported)missing.push('Ana Görsel');
+            if(missing.length>0){
                 e.preventDefault();
-                alert('❌ Yayınlamak için şu alanları doldurun:\n\n• ' + missing.join('\n• '));
+                Swal.fire({title:'Eksik Alanlar',html:'<p class="text-sm text-gray-600 mb-2">Yayınlamak için şu alanları doldurun:</p><ul class="text-left text-sm list-disc pl-5">'+missing.map(f=>`<li class="text-red-600">${f}</li>`).join('')+'</ul>',icon:'error',confirmButtonColor:'#dc2626',confirmButtonText:'Tamam'});
                 return false;
             }
         }
-        
-        // Set is_active based on action
-        if (action === 'draft') {
-            $('[name="is_active"]').prop('checked', false);
-        } else if (action === 'publish') {
-            $('[name="is_active"]').prop('checked', true);
-        }
+        if(action==='draft')$('[name="is_active"]').prop('checked',false);
+        else if(action==='publish')$('[name="is_active"]').prop('checked',true);
     });
 });
 </script>

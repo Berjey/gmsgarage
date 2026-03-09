@@ -12,12 +12,13 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            AdminUserSeeder::class, // Admin kullanıcıları oluştur
-            LegalPagesSeeder::class, // Yasal sayfalar oluştur
-            CarBrandSeeder::class, // Arabam.com'dan marka ve modelleri çek
+            AdminUserSeeder::class,
+            LegalPagesSeeder::class,
+            CarBrandSeeder::class,
             VehicleSeeder::class,
             BlogPostSeeder::class,
             ContactSettingsSeeder::class,
+            FeaturesCatalogSeeder::class,
         ]);
     }
 }

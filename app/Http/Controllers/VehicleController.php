@@ -144,13 +144,43 @@ class VehicleController extends Controller
     }
 
     /**
-     * Araç detay sayfası (slug ile)
+     * Araç detay sayfası (slug ile; eski ID tabanlı kayıtlar için fallback)
      */
     public function show($slug)
     {
+        // Önce slug ile ara (normal durum)
         $vehicle = Vehicle::where('slug', $slug)
             ->where('is_active', true)
-            ->firstOrFail();
+            ->first();
+
+        // Slug eşleşmedi ve parametre sayısal ise ID ile dene (geriye dönük uyumluluk)
+        if (!$vehicle && ctype_digit((string) $slug)) {
+            $vehicle = Vehicle::where('id', $slug)
+                ->where('is_active', true)
+                ->first();
+
+            // ID ile bulunduysa ve slug'ı varsa SEO için kalıcı yönlendir
+            if ($vehicle && !empty($vehicle->slug)) {
+                return redirect()->route('vehicles.show', $vehicle->slug, 301);
+            }
+        }
+
+        if (!$vehicle) {
+            abort(404);
+        }
+
+        // Görüntülenme sayacı — aynı session içinde 30 dakikada bir artırılır
+        $sessionKey = 'viewed_vehicle_' . $vehicle->id;
+        if (!session()->has($sessionKey)) {
+            $vehicle->increment('views');
+            session()->put($sessionKey, now()->timestamp);
+        } else {
+            $lastViewed = session()->get($sessionKey);
+            if (now()->timestamp - $lastViewed > 1800) {
+                $vehicle->increment('views');
+                session()->put($sessionKey, now()->timestamp);
+            }
+        }
 
         // Benzer araçlar (aynı marka)
         $relatedVehicles = Vehicle::active()
@@ -159,7 +189,30 @@ class VehicleController extends Controller
             ->limit(4)
             ->get();
 
-        return view('pages.vehicles.show', compact('vehicle', 'relatedVehicles'));
+        // Donanımları katalog kategorilerine göre grupla
+        $featureGroups = [];
+        if (is_array($vehicle->features) && count($vehicle->features) > 0) {
+            $catalog = \App\Models\FeaturesCatalog::where('is_active', true)
+                ->orderBy('sort_order')
+                ->get()
+                ->keyBy('name');
+
+            $grouped = [];
+            $orphans = [];
+            foreach ($vehicle->features as $feat) {
+                if (isset($catalog[$feat])) {
+                    $grouped[$catalog[$feat]->category][] = $feat;
+                } else {
+                    $orphans[] = $feat;
+                }
+            }
+            $featureGroups = $grouped;
+            if (!empty($orphans)) {
+                $featureGroups['Diğer'] = $orphans;
+            }
+        }
+
+        return view('pages.vehicles.show', compact('vehicle', 'relatedVehicles', 'featureGroups'));
     }
 
     /**

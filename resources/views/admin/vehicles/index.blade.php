@@ -9,12 +9,6 @@
 @endsection
 
 @section('content')
-<!-- İstatistik Kartları -->
-@php
-    $activeCount = \App\Models\Vehicle::where('is_active', true)->count();
-    $passiveCount = \App\Models\Vehicle::where('is_active', false)->count();
-    $featuredCount = \App\Models\Vehicle::where('is_featured', true)->count();
-@endphp
 
 <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
     <a href="{{ route('admin.vehicles.index') }}" class="bg-white rounded-xl p-6 border-2 border-primary-100 shadow-sm hover:shadow-lg hover:border-primary-300 transition-all cursor-pointer group">
@@ -222,7 +216,7 @@
                                     <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                                     </svg>
-                                    <span>{{ number_format($vehicle->km, 0, ',', '.') }} km</span>
+                                    <span>{{ number_format($vehicle->kilometer ?? 0, 0, ',', '.') }} km</span>
                                 </div>
                             </div>
                         </td>
@@ -231,6 +225,13 @@
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="text-lg font-bold text-primary-600">
                                 {{ number_format($vehicle->price, 0, ',', '.') }} ₺
+                            </div>
+                            <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                </svg>
+                                {{ number_format($vehicle->views ?? 0) }}
                             </div>
                         </td>
 
@@ -249,6 +250,14 @@
                                     </label>
                                     <span class="text-xs font-bold px-2 py-1 rounded {{ $vehicle->is_active ? 'text-green-700 bg-green-50' : 'text-gray-600 bg-gray-100' }}">
                                         {{ $vehicle->is_active ? 'Yayında' : 'Yayında Değil' }}
+                                    </span>
+                                </div>
+
+                                <!-- Araç Durumu (vehicle_status) -->
+                                <div class="flex items-center gap-3 w-full">
+                                    <span class="text-xs font-semibold text-gray-700 w-20">Durum:</span>
+                                    <span class="text-xs font-bold px-2 py-1 rounded border {{ $vehicle->status_badge_class }}">
+                                        {{ $vehicle->status_label }}
                                     </span>
                                 </div>
 
@@ -279,7 +288,7 @@
                         <!-- İşlemler -->
                         <td class="px-6 py-4 whitespace-nowrap text-right">
                             <div class="flex items-center justify-end gap-2">
-                                <a href="{{ route('vehicles.show', $vehicle->slug) }}" 
+                                <a href="{{ route('vehicles.show', $vehicle->slug ?: $vehicle->id) }}" 
                                    target="_blank"
                                    class="p-2.5 text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-600 hover:text-white transition-all border border-blue-200 shadow-sm hover:shadow-md" 
                                    title="Ön İzleme">
