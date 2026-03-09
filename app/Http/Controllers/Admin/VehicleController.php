@@ -46,11 +46,12 @@ class VehicleController extends Controller
 
         $vehicles = $query->orderBy('created_at', 'desc')->paginate(15);
 
+        $totalCount    = Vehicle::count();
         $activeCount   = Vehicle::where('is_active', true)->count();
         $passiveCount  = Vehicle::where('is_active', false)->count();
         $featuredCount = Vehicle::where('is_featured', true)->count();
 
-        return view('admin.vehicles.index', compact('vehicles', 'activeCount', 'passiveCount', 'featuredCount'));
+        return view('admin.vehicles.index', compact('vehicles', 'totalCount', 'activeCount', 'passiveCount', 'featuredCount'));
     }
 
     /**

@@ -15,7 +15,7 @@
         <div class="flex items-center justify-between">
             <div>
                 <p class="text-gray-600 text-sm font-medium mb-1">Toplam Araç</p>
-                <p class="text-3xl font-bold text-gray-900 group-hover:text-primary-600 transition-colors">{{ \App\Models\Vehicle::count() }}</p>
+                <p class="text-3xl font-bold text-gray-900 group-hover:text-primary-600 transition-colors">{{ $totalCount }}</p>
             </div>
             <div class="w-14 h-14 bg-primary-50 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
                 <svg class="w-7 h-7 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
