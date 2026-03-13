@@ -94,52 +94,104 @@
         </div>
     </div>
 
-    <!-- Gelişmiş Filtreleme -->
+    <!-- Filtreleme -->
     <div class="p-6 bg-gray-50 border-b border-gray-200">
         <form id="vehicles-filter-form" action="{{ route('admin.vehicles.index') }}" method="GET">
-            <div class="flex flex-col md:flex-row gap-4">
-                <!-- Arama -->
-                <div class="flex-1">
-                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Marka, model veya başlık ara..." 
-                           class="w-full px-4 py-3 border border-gray-300 rounded-xl bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all">
-                </div>
-
-                <!-- Durum Filtresi -->
-                <div class="w-full md:w-48">
-                    <div class="adm-dd" data-adm-dd data-submit="vehicles-filter-form">
-                        <input type="hidden" name="status" value="{{ request('status') }}">
-                        <button type="button" class="adm-dd-btn" data-adm-trigger>
-                            <span data-adm-label>
-                                @if(request('status') == 'active') Aktif
-                                @elseif(request('status') == 'passive') Pasif
-                                @else Tüm Durumlar
-                                @endif
-                            </span>
-                            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            <div class="flex flex-col gap-3">
+                <!-- Üst Satır: Arama + Butonlar -->
+                <div class="flex flex-col md:flex-row gap-3">
+                    <div class="flex-1">
+                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Marka, model veya başlık ara..."
+                               class="w-full px-4 py-2.5 border border-gray-300 rounded-xl bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all">
+                    </div>
+                    <div class="flex gap-2 shrink-0">
+                        <button type="submit" class="px-5 py-2.5 bg-gray-800 text-white font-bold rounded-xl hover:bg-gray-900 transition-all shadow-md flex items-center gap-2 text-sm">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                            </svg>
+                            Filtrele
                         </button>
-                        <ul class="adm-dd-list" data-adm-list>
-                            <li data-value="" class="{{ !request('status') ? 'selected' : '' }}">Tüm Durumlar</li>
-                            <li data-value="active" class="{{ request('status') == 'active' ? 'selected' : '' }}">Aktif</li>
-                            <li data-value="passive" class="{{ request('status') == 'passive' ? 'selected' : '' }}">Pasif</li>
-                        </ul>
+                        @if(request('search') || request('status') || request('vehicle_status') || request('condition'))
+                            <a href="{{ route('admin.vehicles.index') }}" title="Filtreleri Temizle"
+                               class="px-4 py-2.5 bg-white text-gray-600 font-bold rounded-xl border border-gray-300 hover:bg-red-50 hover:text-red-600 hover:border-red-300 transition-all shadow-sm flex items-center gap-2 text-sm">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                </svg>
+                                Temizle
+                            </a>
+                        @endif
                     </div>
                 </div>
+                <!-- Alt Satır: Dropdown Filtreler -->
+                <div class="flex flex-wrap gap-3">
+                    <!-- Aktif/Pasif -->
+                    <div class="w-44">
+                        <div class="adm-dd" data-adm-dd data-submit="vehicles-filter-form">
+                            <input type="hidden" name="status" value="{{ request('status') }}">
+                            <button type="button" class="adm-dd-btn" data-adm-trigger>
+                                <span data-adm-label>
+                                    @if(request('status') == 'active') Aktif İlanlar
+                                    @elseif(request('status') == 'passive') Pasif İlanlar
+                                    @elseif(request('status') == 'featured') Öne Çıkanlar
+                                    @else Yayın Durumu
+                                    @endif
+                                </span>
+                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                            </button>
+                            <ul class="adm-dd-list" data-adm-list>
+                                <li data-value="" class="{{ !request('status') ? 'selected' : '' }}">Yayın Durumu</li>
+                                <li data-value="active" class="{{ request('status') == 'active' ? 'selected' : '' }}">Aktif İlanlar</li>
+                                <li data-value="passive" class="{{ request('status') == 'passive' ? 'selected' : '' }}">Pasif İlanlar</li>
+                                <li data-value="featured" class="{{ request('status') == 'featured' ? 'selected' : '' }}">Öne Çıkanlar</li>
+                            </ul>
+                        </div>
+                    </div>
 
-                <!-- Butonlar -->
-                <div class="flex gap-3">
-                    <button type="submit" class="px-6 py-3 bg-gray-800 text-white font-bold rounded-xl hover:bg-gray-900 transition-all shadow-md hover:shadow-lg flex items-center gap-2">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                        </svg>
-                        Ara
-                    </button>
-                    @if(request('search') || request('status'))
-                        <a href="{{ route('admin.vehicles.index') }}" class="px-6 py-3 bg-white text-gray-700 font-bold rounded-xl border border-gray-300 hover:bg-gray-50 transition-all shadow-sm flex items-center gap-2">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                            </svg>
-                        </a>
-                    @endif
+                    <!-- İlan Durumu (vehicle_status) -->
+                    <div class="w-44">
+                        <div class="adm-dd" data-adm-dd data-submit="vehicles-filter-form">
+                            <input type="hidden" name="vehicle_status" value="{{ request('vehicle_status') }}">
+                            <button type="button" class="adm-dd-btn" data-adm-trigger>
+                                <span data-adm-label>
+                                    @if(request('vehicle_status') == 'available') Satılık
+                                    @elseif(request('vehicle_status') == 'sold') Satıldı
+                                    @elseif(request('vehicle_status') == 'reserved') Rezerve
+                                    @elseif(request('vehicle_status') == 'opportunity') Fırsat
+                                    @else İlan Durumu
+                                    @endif
+                                </span>
+                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                            </button>
+                            <ul class="adm-dd-list" data-adm-list>
+                                <li data-value="" class="{{ !request('vehicle_status') ? 'selected' : '' }}">İlan Durumu</li>
+                                <li data-value="available" class="{{ request('vehicle_status') == 'available' ? 'selected' : '' }}">Satılık</li>
+                                <li data-value="sold" class="{{ request('vehicle_status') == 'sold' ? 'selected' : '' }}">Satıldı</li>
+                                <li data-value="reserved" class="{{ request('vehicle_status') == 'reserved' ? 'selected' : '' }}">Rezerve</li>
+                                <li data-value="opportunity" class="{{ request('vehicle_status') == 'opportunity' ? 'selected' : '' }}">Fırsat</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Araç Durumu (condition) -->
+                    <div class="w-44">
+                        <div class="adm-dd" data-adm-dd data-submit="vehicles-filter-form">
+                            <input type="hidden" name="condition" value="{{ request('condition') }}">
+                            <button type="button" class="adm-dd-btn" data-adm-trigger>
+                                <span data-adm-label>
+                                    @if(request('condition') == 'zero_km') Sıfır Araç
+                                    @elseif(request('condition') == 'second_hand') İkinci El
+                                    @else Araç Durumu
+                                    @endif
+                                </span>
+                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                            </button>
+                            <ul class="adm-dd-list" data-adm-list>
+                                <li data-value="" class="{{ !request('condition') ? 'selected' : '' }}">Araç Durumu</li>
+                                <li data-value="zero_km" class="{{ request('condition') == 'zero_km' ? 'selected' : '' }}">Sıfır Araç</li>
+                                <li data-value="second_hand" class="{{ request('condition') == 'second_hand' ? 'selected' : '' }}">İkinci El</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </form>
@@ -178,6 +230,14 @@
                         <th class="px-6 py-4 text-center text-xs font-bold text-gray-700 uppercase tracking-wider">
                             <div class="flex items-center justify-center gap-2">
                                 <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+                                </svg>
+                                Durum
+                            </div>
+                        </th>
+                        <th class="px-6 py-4 text-center text-xs font-bold text-gray-700 uppercase tracking-wider">
+                            <div class="flex items-center justify-center gap-2">
+                                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                                 </svg>
@@ -199,25 +259,57 @@
                     <tr class="hover:bg-blue-50/30 transition-all duration-200 border-l-4 border-transparent hover:border-primary-500 hover:shadow-sm">
                         <!-- Araç Bilgisi -->
                         <td class="px-6 py-4">
-                            <div class="text-sm font-bold text-gray-900">{{ $vehicle->brand }} {{ $vehicle->model }}</div>
-                            <div class="text-xs text-gray-500 mt-0.5">{{ $vehicle->created_at->format('d.m.Y') }} tarihinde eklendi</div>
+                            <div class="flex items-center gap-3">
+                                <!-- Thumbnail -->
+                                <div class="shrink-0 w-14 h-14 rounded-lg overflow-hidden border border-gray-200 bg-gray-100">
+                                    <img src="{{ $vehicle->first_image }}"
+                                         alt="{{ $vehicle->brand }} {{ $vehicle->model }}"
+                                         class="w-full h-full object-cover"
+                                         onerror="this.src='{{ asset('images/vehicles/default.jpg') }}'">
+                                </div>
+                                <!-- Metin -->
+                                <div class="min-w-0">
+                                    <a href="{{ route('admin.vehicles.edit', $vehicle->id) }}"
+                                       class="text-sm font-bold text-gray-900 hover:text-primary-600 transition-colors leading-tight block truncate max-w-[180px]"
+                                       title="{{ $vehicle->title }}">
+                                        {{ $vehicle->title ?: ($vehicle->brand . ' ' . $vehicle->model) }}
+                                    </a>
+                                    <div class="text-xs text-gray-500 mt-0.5 font-medium">
+                                        {{ $vehicle->brand }} {{ $vehicle->model }}
+                                        @if($vehicle->year) &bull; {{ $vehicle->year }} @endif
+                                    </div>
+                                    <div class="text-xs text-gray-400 mt-0.5">{{ $vehicle->created_at->format('d.m.Y') }}</div>
+                                </div>
+                            </div>
                         </td>
 
                         <!-- Özellikler -->
                         <td class="px-6 py-4">
-                            <div class="space-y-1">
+                            <div class="space-y-1.5">
                                 <div class="flex items-center gap-2 text-sm text-gray-700">
-                                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                                    </svg>
-                                    <span>{{ $vehicle->year }}</span>
-                                </div>
-                                <div class="flex items-center gap-2 text-sm text-gray-700">
-                                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-4 h-4 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                                     </svg>
                                     <span>{{ number_format($vehicle->kilometer ?? 0, 0, ',', '.') }} km</span>
                                 </div>
+                                @if($vehicle->fuel_type)
+                                <div class="flex items-center gap-2 text-xs text-gray-500">
+                                    <svg class="w-3.5 h-3.5 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h2l2 10h10l2-10h2M3 10l2-6h14l2 6"/>
+                                    </svg>
+                                    <span>{{ $vehicle->fuel_type }}</span>
+                                    @if($vehicle->transmission)
+                                        <span class="text-gray-300">•</span>
+                                        <span>{{ $vehicle->transmission }}</span>
+                                    @endif
+                                </div>
+                                @endif
+                                @if($vehicle->condition)
+                                    <span class="inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full
+                                        {{ $vehicle->condition === 'zero_km' ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-gray-100 text-gray-600 border border-gray-200' }}">
+                                        {{ $vehicle->condition === 'zero_km' ? 'Sıfır' : 'İkinci El' }}
+                                    </span>
+                                @endif
                             </div>
                         </td>
 
@@ -226,20 +318,30 @@
                             <div class="text-lg font-bold text-primary-600">
                                 {{ number_format($vehicle->price, 0, ',', '.') }} ₺
                             </div>
-                            <div class="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                            @if($vehicle->price_negotiable)
+                                <div class="text-xs text-amber-600 font-semibold mt-0.5">Pazarlıklı</div>
+                            @endif
+                            <div class="flex items-center gap-1 mt-1 text-xs text-gray-400" title="Görüntülenme sayısı">
+                                <!-- bar-chart ikonu — göz ikonuyla karışmasın -->
                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
                                 </svg>
-                                {{ number_format($vehicle->views ?? 0) }}
+                                {{ number_format($vehicle->views ?? 0) }} görüntülenme
                             </div>
                         </td>
 
-                        <!-- Durum & Ayarlar -->
+                        <!-- Durum (vehicle_status) -->
+                        <td class="px-6 py-4 text-center">
+                            <span class="inline-flex items-center text-xs font-bold px-3 py-1.5 rounded-full border {{ $vehicle->status_badge_class }}">
+                                {{ $vehicle->status_label }}
+                            </span>
+                        </td>
+
+                        <!-- Ayarlar -->
                         <td class="px-6 py-4">
-                            <div class="flex flex-col items-start gap-3 min-w-[180px]">
+                            <div class="flex flex-col items-start gap-3">
                                 <!-- Yayın Durumu -->
-                                <div class="flex items-center gap-3 w-full">
+                                <div class="flex items-center gap-3">
                                     <span class="text-xs font-semibold text-gray-700 w-20">Yayın:</span>
                                     <label class="relative inline-flex items-center cursor-pointer">
                                         <input type="checkbox" 
@@ -249,20 +351,12 @@
                                         <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
                                     </label>
                                     <span class="text-xs font-bold px-2 py-1 rounded {{ $vehicle->is_active ? 'text-green-700 bg-green-50' : 'text-gray-600 bg-gray-100' }}">
-                                        {{ $vehicle->is_active ? 'Yayında' : 'Yayında Değil' }}
-                                    </span>
-                                </div>
-
-                                <!-- Araç Durumu (vehicle_status) -->
-                                <div class="flex items-center gap-3 w-full">
-                                    <span class="text-xs font-semibold text-gray-700 w-20">Durum:</span>
-                                    <span class="text-xs font-bold px-2 py-1 rounded border {{ $vehicle->status_badge_class }}">
-                                        {{ $vehicle->status_label }}
+                                        {{ $vehicle->is_active ? 'Yayında' : 'Değil' }}
                                     </span>
                                 </div>
 
                                 <!-- Öne Çıkan -->
-                                <div class="flex items-center gap-3 w-full">
+                                <div class="flex items-center gap-3">
                                     <span class="text-xs font-semibold text-gray-700 w-20">Öne Çıkan:</span>
                                     <label class="relative inline-flex items-center cursor-pointer">
                                         <input type="checkbox" 
@@ -291,10 +385,10 @@
                                 <a href="{{ route('vehicles.show', $vehicle->slug ?: $vehicle->id) }}" 
                                    target="_blank"
                                    class="p-2.5 text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-600 hover:text-white transition-all border border-blue-200 shadow-sm hover:shadow-md" 
-                                   title="Ön İzleme">
+                                   title="Web Sitesinde Görüntüle (yeni sekme)">
+                                    <!-- external-link ikonu — göz ikonuyla karışmaz -->
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
                                     </svg>
                                 </a>
                                 <a href="{{ route('admin.vehicles.edit', $vehicle->id) }}" 

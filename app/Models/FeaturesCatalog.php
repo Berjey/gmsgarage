@@ -36,16 +36,4 @@ class FeaturesCatalog extends Model
             ->toArray();
     }
 
-    /**
-     * Aktif özelliklerin düz listesini döner.
-     *
-     * @return string[]
-     */
-    public static function flatList(): array
-    {
-        return static::where('is_active', true)
-            ->orderBy('sort_order')
-            ->pluck('name')
-            ->toArray();
-    }
 }

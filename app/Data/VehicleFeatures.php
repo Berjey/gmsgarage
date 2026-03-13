@@ -109,13 +109,4 @@ class VehicleFeatures
         ];
     }
 
-    /**
-     * Düz liste olarak tüm özellikleri döndürür.
-     *
-     * @return array<string>
-     */
-    public static function flat(): array
-    {
-        return array_merge(...array_values(static::all()));
-    }
 }

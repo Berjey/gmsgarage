@@ -58,6 +58,10 @@ class Vehicle extends Model
         'is_featured',
         'is_active',
         'vehicle_status',
+        'condition',
+        'city',
+        'swap',
+        'price_negotiable',
         'views',
         
         // Entegrasyon
@@ -75,6 +79,8 @@ class Vehicle extends Model
         'images_meta' => 'array',
         'is_featured'    => 'boolean',
         'is_active'      => 'boolean',
+        'swap'            => 'boolean',
+        'price_negotiable'=> 'boolean',
         'vehicle_status' => 'string',
         'views'          => 'integer',
         'has_warranty' => 'boolean',
@@ -82,6 +88,7 @@ class Vehicle extends Model
         'tramer_amount' => 'decimal:2',
         'kilometer' => 'integer',
         'year' => 'integer',
+        'engine_size' => 'integer',
         'horse_power' => 'integer',
         'torque' => 'integer',
         'door_count' => 'integer',
@@ -141,6 +148,35 @@ class Vehicle extends Model
     public function getRouteKeyName()
     {
         return 'slug';
+    }
+
+    /** Türkiye'nin 81 ili (alfabetik) */
+    public const CITIES = [
+        'Adana','Adıyaman','Afyonkarahisar','Ağrı','Aksaray','Amasya','Ankara','Antalya',
+        'Ardahan','Artvin','Aydın','Balıkesir','Bartın','Batman','Bayburt','Bilecik',
+        'Bingöl','Bitlis','Bolu','Burdur','Bursa','Çanakkale','Çankırı','Çorum',
+        'Denizli','Diyarbakır','Düzce','Edirne','Elazığ','Erzincan','Erzurum','Eskişehir',
+        'Gaziantep','Giresun','Gümüşhane','Hakkari','Hatay','Iğdır','Isparta','İstanbul',
+        'İzmir','Kahramanmaraş','Karabük','Karaman','Kars','Kastamonu','Kayseri','Kilis',
+        'Kırıkkale','Kırklareli','Kırşehir','Kocaeli','Konya','Kütahya','Malatya','Manisa',
+        'Mardin','Mersin','Muğla','Muş','Nevşehir','Niğde','Ordu','Osmaniye','Rize',
+        'Sakarya','Samsun','Siirt','Sinop','Sivas','Şanlıurfa','Şırnak','Tekirdağ',
+        'Tokat','Trabzon','Tunceli','Uşak','Van','Yalova','Yozgat','Zonguldak','Diğer',
+    ];
+
+    /** Geçerli condition değerleri ve Türkçe etiketleri */
+    public const CONDITIONS = [
+        'second_hand' => 'İkinci El',
+        'zero_km'     => 'Sıfır',
+    ];
+
+    /** Condition için Türkçe etiket */
+    public function getConditionLabelAttribute(): ?string
+    {
+        if (empty($this->condition)) {
+            return null;
+        }
+        return self::CONDITIONS[$this->condition] ?? $this->condition;
     }
 
     /** Geçerli vehicle_status değerleri */

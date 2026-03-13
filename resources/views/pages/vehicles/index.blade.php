@@ -495,7 +495,50 @@
                                 </div>
                             </div>
                             
-                            <!-- 2) Fiyat -->
+                            <!-- 2) Araç Durumu (Sıfır / İkinci El) -->
+                            <div class="filter-accordion-item">
+                                <div class="filter-accordion-header" onclick="toggleFilter(this)">
+                                    <span class="filter-accordion-title">Araç Durumu</span>
+                                    <div class="flex items-center">
+                                        <span class="filter-accordion-summary" id="condition-summary">
+                                            @if(request('condition') == 'zero_km') Sıfır
+                                            @elseif(request('condition') == 'second_hand') İkinci El
+                                            @else Seçiniz
+                                            @endif
+                                        </span>
+                                        <svg class="filter-accordion-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="filter-accordion-content">
+                                    <div class="hero-custom-dropdown" data-dropdown="condition-filter">
+                                        <button type="button" class="hero-custom-dropdown-trigger" data-value="{{ request('condition') ?? '' }}">
+                                            <span class="selected-text {{ !request('condition') ? 'placeholder' : '' }}">
+                                                @if(request('condition') == 'zero_km') Sıfır
+                                                @elseif(request('condition') == 'second_hand') İkinci El
+                                                @else Araç durumu seçin
+                                                @endif
+                                            </span>
+                                            <svg class="arrow w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                            </svg>
+                                        </button>
+                                        <div class="hero-custom-dropdown-panel">
+                                            <div class="hero-custom-dropdown-option {{ !request('condition') ? 'selected' : '' }}" data-value="">Araç durumu seçin</div>
+                                            <div class="hero-custom-dropdown-option {{ request('condition') == 'zero_km' ? 'selected' : '' }}" data-value="zero_km">Sıfır</div>
+                                            <div class="hero-custom-dropdown-option {{ request('condition') == 'second_hand' ? 'selected' : '' }}" data-value="second_hand">İkinci El</div>
+                                        </div>
+                                        <select name="condition" class="hero-custom-dropdown-native">
+                                            <option value="">Araç durumu seçin</option>
+                                            <option value="zero_km" {{ request('condition') == 'zero_km' ? 'selected' : '' }}>Sıfır</option>
+                                            <option value="second_hand" {{ request('condition') == 'second_hand' ? 'selected' : '' }}>İkinci El</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 3) Fiyat -->
                             <div class="filter-accordion-item">
                                 <div class="filter-accordion-header" onclick="toggleFilter(this)">
                                     <span class="filter-accordion-title">Fiyat</span>
@@ -529,7 +572,7 @@
                                 </div>
                             </div>
                             
-                            <!-- 3) Yıl -->
+                            <!-- 4) Yıl -->
                             <div class="filter-accordion-item">
                                 <div class="filter-accordion-header" onclick="toggleFilter(this)">
                                     <span class="filter-accordion-title">Yıl</span>
@@ -592,7 +635,7 @@
                                 </div>
                             </div>
                             
-                            <!-- 4) Yakıt Tipi -->
+                            <!-- 5) Yakıt Tipi -->
                             <div class="filter-accordion-item">
                                 <div class="filter-accordion-header" onclick="toggleFilter(this)">
                                     <span class="filter-accordion-title">Yakıt Tipi</span>
@@ -615,23 +658,23 @@
                                             <div class="hero-custom-dropdown-option {{ !request('fuel_type') ? 'selected' : '' }}" data-value="">Yakıt tipi seçin</div>
                                             <div class="hero-custom-dropdown-option {{ request('fuel_type') == 'Benzin' ? 'selected' : '' }}" data-value="Benzin">Benzin</div>
                                             <div class="hero-custom-dropdown-option {{ request('fuel_type') == 'Dizel' ? 'selected' : '' }}" data-value="Dizel">Dizel</div>
+                                            <div class="hero-custom-dropdown-option {{ request('fuel_type') == 'LPG/Benzin' ? 'selected' : '' }}" data-value="LPG/Benzin">LPG / Benzin</div>
                                             <div class="hero-custom-dropdown-option {{ request('fuel_type') == 'Hibrit' ? 'selected' : '' }}" data-value="Hibrit">Hibrit</div>
-                                            <div class="hero-custom-dropdown-option {{ request('fuel_type') == 'Elektrik' ? 'selected' : '' }}" data-value="Elektrik">Elektrik</div>
-                                            <div class="hero-custom-dropdown-option {{ request('fuel_type') == 'LPG' ? 'selected' : '' }}" data-value="LPG">LPG</div>
+                                            <div class="hero-custom-dropdown-option {{ request('fuel_type') == 'Elektrikli' ? 'selected' : '' }}" data-value="Elektrikli">Elektrikli</div>
                                         </div>
                                         <select name="fuel_type" class="hero-custom-dropdown-native">
                                             <option value="">Yakıt tipi seçin</option>
                                             <option value="Benzin" {{ request('fuel_type') == 'Benzin' ? 'selected' : '' }}>Benzin</option>
                                             <option value="Dizel" {{ request('fuel_type') == 'Dizel' ? 'selected' : '' }}>Dizel</option>
+                                            <option value="LPG/Benzin" {{ request('fuel_type') == 'LPG/Benzin' ? 'selected' : '' }}>LPG / Benzin</option>
                                             <option value="Hibrit" {{ request('fuel_type') == 'Hibrit' ? 'selected' : '' }}>Hibrit</option>
-                                            <option value="Elektrik" {{ request('fuel_type') == 'Elektrik' ? 'selected' : '' }}>Elektrik</option>
-                                            <option value="LPG" {{ request('fuel_type') == 'LPG' ? 'selected' : '' }}>LPG</option>
+                                            <option value="Elektrikli" {{ request('fuel_type') == 'Elektrikli' ? 'selected' : '' }}>Elektrikli</option>
                                         </select>
                                     </div>
                                 </div>
                             </div>
                             
-                            <!-- 5) Vites -->
+                            <!-- 6) Vites -->
                             <div class="filter-accordion-item">
                                 <div class="filter-accordion-header" onclick="toggleFilter(this)">
                                     <span class="filter-accordion-title">Vites</span>
@@ -666,7 +709,7 @@
                                 </div>
                             </div>
                             
-                            <!-- 6) KM -->
+                            <!-- 7) KM -->
                             <div class="filter-accordion-item">
                                 <div class="filter-accordion-header" onclick="toggleFilter(this)">
                                     <span class="filter-accordion-title">KM</span>
@@ -702,7 +745,7 @@
                                 </div>
                             </div>
                             
-                            <!-- 7) Kasa Tipi -->
+                            <!-- 8) Kasa Tipi -->
                             <div class="filter-accordion-item">
                                 <div class="filter-accordion-header" onclick="toggleFilter(this)">
                                     <span class="filter-accordion-title">Kasa Tipi</span>
@@ -726,30 +769,34 @@
                                             <div class="hero-custom-dropdown-option {{ request('body_type') == 'Sedan' ? 'selected' : '' }}" data-value="Sedan">Sedan</div>
                                             <div class="hero-custom-dropdown-option {{ request('body_type') == 'SUV' ? 'selected' : '' }}" data-value="SUV">SUV</div>
                                             <div class="hero-custom-dropdown-option {{ request('body_type') == 'Hatchback' ? 'selected' : '' }}" data-value="Hatchback">Hatchback</div>
+                                            <div class="hero-custom-dropdown-option {{ request('body_type') == 'Station Wagon' ? 'selected' : '' }}" data-value="Station Wagon">Station Wagon</div>
                                             <div class="hero-custom-dropdown-option {{ request('body_type') == 'Coupe' ? 'selected' : '' }}" data-value="Coupe">Coupe</div>
                                             <div class="hero-custom-dropdown-option {{ request('body_type') == 'Cabrio' ? 'selected' : '' }}" data-value="Cabrio">Cabrio</div>
-                                            <div class="hero-custom-dropdown-option {{ request('body_type') == 'Pickup' ? 'selected' : '' }}" data-value="Pickup">Pickup</div>
-                                            <div class="hero-custom-dropdown-option {{ request('body_type') == 'MPV' ? 'selected' : '' }}" data-value="MPV">MPV</div>
-                                            <div class="hero-custom-dropdown-option {{ request('body_type') == 'StationWagon' ? 'selected' : '' }}" data-value="StationWagon">Station Wagon</div>
-                                            <div class="hero-custom-dropdown-option {{ request('body_type') == 'Camlı van' ? 'selected' : '' }}" data-value="Camlı van">Camlı van</div>
+                                            <div class="hero-custom-dropdown-option {{ request('body_type') == 'Van' ? 'selected' : '' }}" data-value="Van">Van</div>
+                                            <div class="hero-custom-dropdown-option {{ request('body_type') == 'Minibüs' ? 'selected' : '' }}" data-value="Minibüs">Minibüs</div>
+                                            <div class="hero-custom-dropdown-option {{ request('body_type') == 'Pikap' ? 'selected' : '' }}" data-value="Pikap">Pikap</div>
+                                            <div class="hero-custom-dropdown-option {{ request('body_type') == 'Kamyonet' ? 'selected' : '' }}" data-value="Kamyonet">Kamyonet</div>
+                                            <div class="hero-custom-dropdown-option {{ request('body_type') == 'Diğer' ? 'selected' : '' }}" data-value="Diğer">Diğer</div>
                                         </div>
                                         <select name="body_type" class="hero-custom-dropdown-native">
                                             <option value="">Kasa tipi seçin</option>
                                             <option value="Sedan" {{ request('body_type') == 'Sedan' ? 'selected' : '' }}>Sedan</option>
                                             <option value="SUV" {{ request('body_type') == 'SUV' ? 'selected' : '' }}>SUV</option>
                                             <option value="Hatchback" {{ request('body_type') == 'Hatchback' ? 'selected' : '' }}>Hatchback</option>
+                                            <option value="Station Wagon" {{ request('body_type') == 'Station Wagon' ? 'selected' : '' }}>Station Wagon</option>
                                             <option value="Coupe" {{ request('body_type') == 'Coupe' ? 'selected' : '' }}>Coupe</option>
                                             <option value="Cabrio" {{ request('body_type') == 'Cabrio' ? 'selected' : '' }}>Cabrio</option>
-                                            <option value="Pickup" {{ request('body_type') == 'Pickup' ? 'selected' : '' }}>Pickup</option>
-                                            <option value="MPV" {{ request('body_type') == 'MPV' ? 'selected' : '' }}>MPV</option>
-                                            <option value="StationWagon" {{ request('body_type') == 'StationWagon' ? 'selected' : '' }}>Station Wagon</option>
-                                            <option value="Camlı van" {{ request('body_type') == 'Camlı van' ? 'selected' : '' }}>Camlı van</option>
+                                            <option value="Van" {{ request('body_type') == 'Van' ? 'selected' : '' }}>Van</option>
+                                            <option value="Minibüs" {{ request('body_type') == 'Minibüs' ? 'selected' : '' }}>Minibüs</option>
+                                            <option value="Pikap" {{ request('body_type') == 'Pikap' ? 'selected' : '' }}>Pikap</option>
+                                            <option value="Kamyonet" {{ request('body_type') == 'Kamyonet' ? 'selected' : '' }}>Kamyonet</option>
+                                            <option value="Diğer" {{ request('body_type') == 'Diğer' ? 'selected' : '' }}>Diğer</option>
                                         </select>
                                     </div>
                                 </div>
                             </div>
                             
-                            <!-- 8) Motor Hacmi -->
+                            <!-- 9) Motor Hacmi -->
                             <div class="filter-accordion-item">
                                 <div class="filter-accordion-header" onclick="toggleFilter(this)">
                                     <span class="filter-accordion-title">Motor Hacmi</span>
@@ -802,42 +849,42 @@
                                 </div>
                             </div>
                             
-                            <!-- 9) Çekiş -->
+                            <!-- 10) Çekiş -->
                             <div class="filter-accordion-item">
                                 <div class="filter-accordion-header" onclick="toggleFilter(this)">
                                     <span class="filter-accordion-title">Çekiş</span>
                                     <div class="flex items-center">
-                                        <span class="filter-accordion-summary" id="traction-summary">{{ request('traction') ?: 'Seçiniz' }}</span>
+                                        <span class="filter-accordion-summary" id="drive-type-summary">{{ request('drive_type') ?: 'Seçiniz' }}</span>
                                         <svg class="filter-accordion-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                                         </svg>
                                     </div>
                                 </div>
                                 <div class="filter-accordion-content">
-                                    <div class="hero-custom-dropdown" data-dropdown="traction-filter">
-                                        <button type="button" class="hero-custom-dropdown-trigger" data-value="{{ request('traction') ?? '' }}">
-                                            <span class="selected-text {{ !request('traction') ? 'placeholder' : '' }}">{{ request('traction') ?: 'Çekiş tipi seçin' }}</span>
+                                    <div class="hero-custom-dropdown" data-dropdown="drive-type-filter">
+                                        <button type="button" class="hero-custom-dropdown-trigger" data-value="{{ request('drive_type') ?? '' }}">
+                                            <span class="selected-text {{ !request('drive_type') ? 'placeholder' : '' }}">{{ request('drive_type') ?: 'Çekiş tipi seçin' }}</span>
                                             <svg class="arrow w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                                             </svg>
                                         </button>
                                         <div class="hero-custom-dropdown-panel">
-                                            <div class="hero-custom-dropdown-option {{ !request('traction') ? 'selected' : '' }}" data-value="">Çekiş tipi seçin</div>
-                                            <div class="hero-custom-dropdown-option {{ request('traction') == 'Önden' ? 'selected' : '' }}" data-value="Önden">Önden</div>
-                                            <div class="hero-custom-dropdown-option {{ request('traction') == 'Arkadan' ? 'selected' : '' }}" data-value="Arkadan">Arkadan</div>
-                                            <div class="hero-custom-dropdown-option {{ request('traction') == '4x4' ? 'selected' : '' }}" data-value="4x4">4x4 / AWD</div>
+                                            <div class="hero-custom-dropdown-option {{ !request('drive_type') ? 'selected' : '' }}" data-value="">Çekiş tipi seçin</div>
+                                            <div class="hero-custom-dropdown-option {{ request('drive_type') == 'Önden Çekiş' ? 'selected' : '' }}" data-value="Önden Çekiş">Önden Çekiş</div>
+                                            <div class="hero-custom-dropdown-option {{ request('drive_type') == 'Arkadan İtiş' ? 'selected' : '' }}" data-value="Arkadan İtiş">Arkadan İtiş</div>
+                                            <div class="hero-custom-dropdown-option {{ request('drive_type') == '4x4' ? 'selected' : '' }}" data-value="4x4">4x4 / AWD</div>
                                         </div>
-                                        <select name="traction" class="hero-custom-dropdown-native">
+                                        <select name="drive_type" class="hero-custom-dropdown-native">
                                             <option value="">Çekiş tipi seçin</option>
-                                            <option value="Önden" {{ request('traction') == 'Önden' ? 'selected' : '' }}>Önden</option>
-                                            <option value="Arkadan" {{ request('traction') == 'Arkadan' ? 'selected' : '' }}>Arkadan</option>
-                                            <option value="4x4" {{ request('traction') == '4x4' ? 'selected' : '' }}>4x4 / AWD</option>
+                                            <option value="Önden Çekiş" {{ request('drive_type') == 'Önden Çekiş' ? 'selected' : '' }}>Önden Çekiş</option>
+                                            <option value="Arkadan İtiş" {{ request('drive_type') == 'Arkadan İtiş' ? 'selected' : '' }}>Arkadan İtiş</option>
+                                            <option value="4x4" {{ request('drive_type') == '4x4' ? 'selected' : '' }}>4x4 / AWD</option>
                                         </select>
                                     </div>
                                 </div>
                             </div>
                             
-                            <!-- 10) Renk -->
+                            <!-- 11) Renk -->
                             <div class="filter-accordion-item">
                                 <div class="filter-accordion-header" onclick="toggleFilter(this)">
                                     <span class="filter-accordion-title">Renk</span>
@@ -885,39 +932,6 @@
                                             <option value="Kahverengi" {{ request('color') == 'Kahverengi' ? 'selected' : '' }}>Kahverengi</option>
                                             <option value="Bej" {{ request('color') == 'Bej' ? 'selected' : '' }}>Bej</option>
                                             <option value="Bordo" {{ request('color') == 'Bordo' ? 'selected' : '' }}>Bordo</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- 11) Ağır Hasar Kayıtlı -->
-                            <div class="filter-accordion-item">
-                                <div class="filter-accordion-header" onclick="toggleFilter(this)">
-                                    <span class="filter-accordion-title">Ağır Hasar Kayıtlı</span>
-                                    <div class="flex items-center">
-                                        <span class="filter-accordion-summary" id="heavy-damage-summary">{{ request('heavy_damage') ?: 'Seçiniz' }}</span>
-                                        <svg class="filter-accordion-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                        </svg>
-                                    </div>
-                                </div>
-                                <div class="filter-accordion-content">
-                                    <div class="hero-custom-dropdown" data-dropdown="heavy-damage-filter">
-                                        <button type="button" class="hero-custom-dropdown-trigger" data-value="{{ request('heavy_damage') ?? '' }}">
-                                            <span class="selected-text {{ !request('heavy_damage') ? 'placeholder' : '' }}">{{ request('heavy_damage') ? (request('heavy_damage') == 'yes' ? 'Evet' : 'Hayır') : 'Seçiniz' }}</span>
-                                            <svg class="arrow w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                            </svg>
-                                        </button>
-                                        <div class="hero-custom-dropdown-panel">
-                                            <div class="hero-custom-dropdown-option {{ !request('heavy_damage') ? 'selected' : '' }}" data-value="">Seçiniz</div>
-                                            <div class="hero-custom-dropdown-option {{ request('heavy_damage') == 'yes' ? 'selected' : '' }}" data-value="yes">Evet</div>
-                                            <div class="hero-custom-dropdown-option {{ request('heavy_damage') == 'no' ? 'selected' : '' }}" data-value="no">Hayır</div>
-                                        </div>
-                                        <select name="heavy_damage" class="hero-custom-dropdown-native">
-                                            <option value="">Seçiniz</option>
-                                            <option value="yes" {{ request('heavy_damage') == 'yes' ? 'selected' : '' }}>Evet</option>
-                                            <option value="no" {{ request('heavy_damage') == 'no' ? 'selected' : '' }}>Hayır</option>
                                         </select>
                                     </div>
                                 </div>
@@ -974,58 +988,7 @@
                                 </div>
                             </div>
                             
-                            <!-- 13) Boya, Değişen Parça -->
-                            <div class="filter-accordion-item">
-                                <div class="filter-accordion-header" onclick="toggleFilter(this)">
-                                    <span class="filter-accordion-title">Boya, Değişen Parça</span>
-                                    <div class="flex items-center">
-                                        <span class="filter-accordion-summary" id="paint-parts-summary">
-                                            @if(request('paint_parts'))
-                                                @php
-                                                    $paintPartsMap = [
-                                                        'none' => 'Yok',
-                                                        'paint' => 'Boya Var',
-                                                        'replaced' => 'Değişen Var',
-                                                        'both' => 'Boya + Değişen'
-                                                    ];
-                                                @endphp
-                                                {{ $paintPartsMap[request('paint_parts')] ?? 'Seçiniz' }}
-                                            @else
-                                                Seçiniz
-                                            @endif
-                                        </span>
-                                        <svg class="filter-accordion-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                        </svg>
-                                    </div>
-                                </div>
-                                <div class="filter-accordion-content">
-                                    <div class="hero-custom-dropdown" data-dropdown="paint-parts-filter">
-                                        <button type="button" class="hero-custom-dropdown-trigger" data-value="{{ request('paint_parts') ?? '' }}">
-                                            <span class="selected-text {{ !request('paint_parts') ? 'placeholder' : '' }}">{{ request('paint_parts') ?: 'Seçiniz' }}</span>
-                                            <svg class="arrow w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                            </svg>
-                                        </button>
-                                        <div class="hero-custom-dropdown-panel">
-                                            <div class="hero-custom-dropdown-option {{ !request('paint_parts') ? 'selected' : '' }}" data-value="">Seçiniz</div>
-                                            <div class="hero-custom-dropdown-option {{ request('paint_parts') == 'none' ? 'selected' : '' }}" data-value="none">Yok</div>
-                                            <div class="hero-custom-dropdown-option {{ request('paint_parts') == 'paint' ? 'selected' : '' }}" data-value="paint">Boya Var</div>
-                                            <div class="hero-custom-dropdown-option {{ request('paint_parts') == 'replaced' ? 'selected' : '' }}" data-value="replaced">Değişen Var</div>
-                                            <div class="hero-custom-dropdown-option {{ request('paint_parts') == 'both' ? 'selected' : '' }}" data-value="both">Boya + Değişen</div>
-                                        </div>
-                                        <select name="paint_parts" class="hero-custom-dropdown-native">
-                                            <option value="">Seçiniz</option>
-                                            <option value="none" {{ request('paint_parts') == 'none' ? 'selected' : '' }}>Yok</option>
-                                            <option value="paint" {{ request('paint_parts') == 'paint' ? 'selected' : '' }}>Boya Var</option>
-                                            <option value="replaced" {{ request('paint_parts') == 'replaced' ? 'selected' : '' }}>Değişen Var</option>
-                                            <option value="both" {{ request('paint_parts') == 'both' ? 'selected' : '' }}>Boya + Değişen</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- 14) Kelime ile Filtre -->
+                            <!-- 13) Araç Arama -->
                             <div class="filter-accordion-item">
                                 <div class="filter-accordion-header" onclick="toggleFilter(this)">
                                     <span class="filter-accordion-title">Kelime ile Filtre</span>
@@ -1253,15 +1216,13 @@
                         }
                     }
                     
-                    // Update summary for paint_parts
-                    if (dropdown.dataset.dropdown === 'paint-parts-filter') {
+                    // Update summary for condition
+                    if (dropdown.dataset.dropdown === 'condition-filter') {
                         const summaryMap = {
-                            'none': 'Yok',
-                            'paint': 'Boya Var',
-                            'replaced': 'Değişen Var',
-                            'both': 'Boya + Değişen'
+                            'zero_km': 'Sıfır',
+                            'second_hand': 'İkinci El'
                         };
-                        const summaryEl = document.getElementById('paint-parts-summary');
+                        const summaryEl = document.getElementById('condition-summary');
                         if (summaryEl) {
                             summaryEl.textContent = value ? (summaryMap[value] || 'Seçiniz') : 'Seçiniz';
                         }
@@ -1324,13 +1285,13 @@
         const dropdownId = dropdown.dataset.dropdown;
         const summaryMap = {
             'brand-filter': 'brand-summary',
+            'condition-filter': 'condition-summary',
             'fuel-filter': 'fuel-summary',
             'transmission-filter': 'transmission-summary',
             'body-type-filter': 'body-type-summary',
             'engine-size-filter': 'engine-size-summary',
-            'traction-filter': 'traction-summary',
-            'color-filter': 'color-summary',
-            'heavy-damage-filter': 'heavy-damage-summary'
+            'drive-type-filter': 'drive-type-summary',
+            'color-filter': 'color-summary'
         };
         
         const summaryId = summaryMap[dropdownId];
@@ -1339,8 +1300,9 @@
             if (summaryEl) {
                 if (dropdownId === 'engine-size-filter' && value) {
                     summaryEl.textContent = value + 'L';
-                } else if (dropdownId === 'heavy-damage-filter') {
-                    summaryEl.textContent = value === 'yes' ? 'Evet' : (value === 'no' ? 'Hayır' : 'Seçiniz');
+                } else if (dropdownId === 'condition-filter') {
+                    const condMap = { 'zero_km': 'Sıfır', 'second_hand': 'İkinci El' };
+                    summaryEl.textContent = value ? (condMap[value] || 'Seçiniz') : 'Seçiniz';
                 } else {
                     summaryEl.textContent = value ? text : 'Seçiniz';
                 }

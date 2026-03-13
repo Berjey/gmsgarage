@@ -12,7 +12,6 @@ use App\Services\SahibindenImporterService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\Rule;
 
 class VehicleController extends Controller
 {
@@ -33,7 +32,7 @@ class VehicleController extends Controller
             });
         }
 
-        // Filtreleme
+        // Aktif/Pasif/Öne Çıkan filtresi
         if ($request->has('status') && $request->status !== '') {
             if ($request->status === 'active') {
                 $query->where('is_active', true);
@@ -42,6 +41,16 @@ class VehicleController extends Controller
             } elseif ($request->status === 'featured') {
                 $query->where('is_featured', true);
             }
+        }
+
+        // İlan Durumu filtresi (Satılık / Satıldı / Rezerve / Fırsat)
+        if ($request->has('vehicle_status') && $request->vehicle_status !== '') {
+            $query->where('vehicle_status', $request->vehicle_status);
+        }
+
+        // Araç Durumu filtresi (Sıfır / İkinci El)
+        if ($request->has('condition') && $request->condition !== '') {
+            $query->where('condition', $request->condition);
         }
 
         $vehicles = $query->orderBy('created_at', 'desc')->paginate(15);
@@ -130,6 +139,10 @@ class VehicleController extends Controller
             'is_featured'    => 'nullable|boolean',
             'is_active'      => 'nullable|boolean',
             'vehicle_status' => 'nullable|in:available,sold,reserved,opportunity',
+            'condition'      => 'nullable|in:second_hand,zero_km',
+            'city'           => 'nullable|string|max:100',
+            'swap'             => 'nullable|boolean',
+            'price_negotiable' => 'nullable|boolean',
 
             // Entegrasyon
             'sahibinden_url' => 'nullable|url|max:500',
@@ -147,12 +160,15 @@ class VehicleController extends Controller
             'kilometer.required'  => 'Kilometre zorunludur.',
             'main_image.required' => 'Ana görsel zorunludur.',
             'slug.alpha_dash'     => 'Slug yalnızca harf, rakam, tire ve alt çizgi içerebilir.',
+            'condition.in'        => 'Araç durumu geçersiz.',
         ]);
 
         // Boolean değerleri: unchecked checkbox = false
         $validated['is_featured']  = $request->has('is_featured')  ? true : false;
         $validated['is_active']    = $request->has('is_active')    ? true : false;
         $validated['has_warranty'] = $request->has('has_warranty') ? true : false;
+        $validated['swap']             = $request->has('swap')             ? true : false;
+        $validated['price_negotiable'] = $request->has('price_negotiable') ? true : false;
 
         // vehicle_status default
         $validated['vehicle_status'] = $validated['vehicle_status'] ?? 'available';
@@ -279,6 +295,10 @@ class VehicleController extends Controller
             'is_featured'    => 'nullable|boolean',
             'is_active'      => 'nullable|boolean',
             'vehicle_status' => 'nullable|in:available,sold,reserved,opportunity',
+            'condition'      => 'nullable|in:second_hand,zero_km',
+            'city'           => 'nullable|string|max:100',
+            'swap'             => 'nullable|boolean',
+            'price_negotiable' => 'nullable|boolean',
 
             // Entegrasyon
             'sahibinden_url' => 'nullable|url|max:500',
@@ -300,12 +320,15 @@ class VehicleController extends Controller
             'price.required'     => 'Fiyat zorunludur.',
             'kilometer.required' => 'Kilometre zorunludur.',
             'slug.alpha_dash'    => 'Slug yalnızca harf, rakam, tire ve alt çizgi içerebilir.',
+            'condition.in'       => 'Araç durumu geçersiz.',
         ]);
 
         // Boolean değerleri: unchecked = false
         $validated['is_featured']  = $request->has('is_featured')  ? true : false;
         $validated['is_active']    = $request->has('is_active')    ? true : false;
         $validated['has_warranty'] = $request->has('has_warranty') ? true : false;
+        $validated['swap']             = $request->has('swap')             ? true : false;
+        $validated['price_negotiable'] = $request->has('price_negotiable') ? true : false;
 
         // vehicle_status: formdan gelmezse mevcut değer korunsun
         $validated['vehicle_status'] = $validated['vehicle_status'] ?? $vehicle->vehicle_status ?? 'available';

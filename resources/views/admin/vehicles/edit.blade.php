@@ -63,18 +63,23 @@
     @csrf
     @method('PUT')
 
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+
+    {{-- ═══════════════ MAIN TABS ═══════════════ --}}
+    <div class="lg:col-span-3">
     <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden mb-6">
 
         {{-- Tab Navigation --}}
         <div class="flex border-b border-gray-200 overflow-x-auto">
             @php
                 $tabs = [
-                    ['id'=>'temel',    'icon'=>'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z',       'label'=>'Temel Bilgiler'],
-                    ['id'=>'teknik',   'icon'=>'M13 10V3L4 14h7v7l9-11h-7z',                                        'label'=>'Teknik Özellikler'],
+                    ['id'=>'kimlik',   'icon'=>'M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10', 'label'=>'Araç Kimliği'],
+                    ['id'=>'ilan',     'icon'=>'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z', 'label'=>'İlan Bilgileri'],
+                    ['id'=>'teknik',   'icon'=>'M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4', 'label'=>'Teknik Detaylar'],
+                    ['id'=>'gorseller','icon'=>'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z', 'label'=>'Görseller'],
                     ['id'=>'donanim',  'icon'=>'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4', 'label'=>'Donanımlar'],
                     ['id'=>'hasar',    'icon'=>'M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z', 'label'=>'Hasar & Geçmiş'],
-                    ['id'=>'gorseller','icon'=>'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z', 'label'=>'Görseller'],
-                    ['id'=>'yayin',    'icon'=>'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z',                    'label'=>'Yayın & Durum'],
+                    ['id'=>'diger',    'icon'=>'M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14', 'label'=>'Entegrasyon'],
                 ];
             @endphp
             @foreach($tabs as $i => $tab)
@@ -90,11 +95,145 @@
             @endforeach
         </div>
 
-        {{-- ─── Tab 1: TEMEL BİLGİLER ────────────────────────────────────── --}}
-        <div id="vtab-temel" class="vehicle-tab-content p-6 space-y-6">
+        {{-- ─── Tab 1: ARAÇ KİMLİĞİ ──────────────────────────────────────── --}}
+        <div id="vtab-kimlik" class="vehicle-tab-content p-6 space-y-6">
+
+            <div>
+                <h3 class="text-lg font-bold text-gray-900">Araç Kimliği</h3>
+                <p class="text-xs text-gray-500 mt-1">Araç tanımlama bilgileri. Kasa / Yakıt / Vites için katalogda olmayan değerler için Manuel Gir'i kullanın.</p>
+            </div>
+
+            {{-- Yıl + Marka + Model --}}
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Model Yılı <span class="text-red-500">*</span></label>
+                    <input type="number" name="year" value="{{ old('year', $vehicle->year) }}" required
+                           min="1900" max="{{ date('Y')+1 }}" placeholder="{{ date('Y') }}"
+                           class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Marka <span class="text-red-500">*</span></label>
+                    <input type="text" name="brand" value="{{ old('brand', $vehicle->brand) }}" required placeholder="Volkswagen"
+                           class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Model / Seri <span class="text-red-500">*</span></label>
+                    <input type="text" name="model" value="{{ old('model', $vehicle->model) }}" required placeholder="Passat"
+                           class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors">
+                </div>
+            </div>
+
+            {{-- Kasa + Yakıt + Vites --}}
+            @php
+                $bodyTypeOptions    = ['Sedan','SUV','Hatchback','Station Wagon','Coupe','Cabrio','Van','Minibüs','Pikap','Kamyonet','Diğer'];
+                $fuelTypeOptions    = ['Benzin','Dizel','LPG/Benzin','Hibrit','Elektrikli'];
+                $transmissionOptions= ['Manuel','Otomatik','Yarı Otomatik'];
+                $colorOptions       = ['Beyaz','Siyah','Gri','Gümüş Gri','Kırmızı','Mavi','Lacivert','Yeşil','Bej','Kahverengi','Sarı','Turuncu','Bordo','Mor','Altın','Bronz','Diğer'];
+
+                $curBodyType    = old('body_type',    $vehicle->body_type    ?? '');
+                $curFuelType    = old('fuel_type',    $vehicle->fuel_type    ?? '');
+                $curTransmission= old('transmission', $vehicle->transmission ?? '');
+                $curColor       = old('color',        $vehicle->color        ?? '');
+
+                $bodyTypeManual    = $curBodyType     !== '' && !in_array($curBodyType,     $bodyTypeOptions);
+                $fuelTypeManual    = $curFuelType     !== '' && !in_array($curFuelType,     $fuelTypeOptions);
+                $transmissionManual= $curTransmission !== '' && !in_array($curTransmission, $transmissionOptions);
+                $colorManual       = $curColor        !== '' && !in_array($curColor,        $colorOptions);
+            @endphp
+
+            <div class="bg-gray-50 border border-gray-200 rounded-lg p-5 space-y-4">
+                <p class="text-xs text-gray-500 font-medium">Kasa, Yakıt ve Vites Bilgileri</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+                    {{-- Kasa Tipi --}}
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Kasa Tipi</label>
+                        <select name="body_type" id="editBodyTypeSelect"
+                                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm {{ $bodyTypeManual ? 'hidden' : '' }}"
+                                {{ $bodyTypeManual ? 'disabled' : '' }}>
+                            <option value="">Seçiniz</option>
+                            @foreach($bodyTypeOptions as $bt)
+                                <option value="{{ $bt }}" {{ $curBodyType === $bt ? 'selected' : '' }}>{{ $bt }}</option>
+                            @endforeach
+                        </select>
+                        <label class="inline-flex items-center mt-2 text-xs text-gray-600 cursor-pointer">
+                            <input type="checkbox" id="editManualBodyTypeToggle" class="w-3 h-3 text-red-600 border-gray-300 rounded mr-1.5" {{ $bodyTypeManual ? 'checked' : '' }}>
+                            <span>Manuel Gir</span>
+                        </label>
+                        <input type="text" name="body_type" id="editManualBodyTypeInput"
+                               value="{{ $bodyTypeManual ? $curBodyType : '' }}"
+                               placeholder="Örn: Sedan, SUV"
+                               class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm mt-1.5 {{ $bodyTypeManual ? '' : 'hidden' }}"
+                               {{ $bodyTypeManual ? '' : 'disabled' }}>
+                        @if($bodyTypeManual)<p class="mt-1 text-xs text-amber-600">⚠ "<strong>{{ $curBodyType }}</strong>" listede yok.</p>@endif
+                    </div>
+
+                    {{-- Yakıt Tipi --}}
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Yakıt Tipi</label>
+                        <select name="fuel_type" id="editFuelTypeSelect"
+                                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm {{ $fuelTypeManual ? 'hidden' : '' }}"
+                                {{ $fuelTypeManual ? 'disabled' : '' }}>
+                            <option value="">Seçiniz</option>
+                            @foreach($fuelTypeOptions as $ft)
+                                <option value="{{ $ft }}" {{ $curFuelType === $ft ? 'selected' : '' }}>{{ $ft }}</option>
+                            @endforeach
+                        </select>
+                        <label class="inline-flex items-center mt-2 text-xs text-gray-600 cursor-pointer">
+                            <input type="checkbox" id="editManualFuelTypeToggle" class="w-3 h-3 text-red-600 border-gray-300 rounded mr-1.5" {{ $fuelTypeManual ? 'checked' : '' }}>
+                            <span>Manuel Gir</span>
+                        </label>
+                        <input type="text" name="fuel_type" id="editManualFuelTypeInput"
+                               value="{{ $fuelTypeManual ? $curFuelType : '' }}"
+                               placeholder="Örn: Benzin, Dizel"
+                               class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm mt-1.5 {{ $fuelTypeManual ? '' : 'hidden' }}"
+                               {{ $fuelTypeManual ? '' : 'disabled' }}>
+                        @if($fuelTypeManual)<p class="mt-1 text-xs text-amber-600">⚠ "<strong>{{ $curFuelType }}</strong>" listede yok.</p>@endif
+                    </div>
+
+                    {{-- Vites Tipi --}}
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Vites Tipi</label>
+                        <select name="transmission" id="editTransmissionSelect"
+                                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm {{ $transmissionManual ? 'hidden' : '' }}"
+                                {{ $transmissionManual ? 'disabled' : '' }}>
+                            <option value="">Seçiniz</option>
+                            @foreach($transmissionOptions as $tr)
+                                <option value="{{ $tr }}" {{ $curTransmission === $tr ? 'selected' : '' }}>{{ $tr }}</option>
+                            @endforeach
+                        </select>
+                        <label class="inline-flex items-center mt-2 text-xs text-gray-600 cursor-pointer">
+                            <input type="checkbox" id="editManualTransmissionToggle" class="w-3 h-3 text-red-600 border-gray-300 rounded mr-1.5" {{ $transmissionManual ? 'checked' : '' }}>
+                            <span>Manuel Gir</span>
+                        </label>
+                        <input type="text" name="transmission" id="editManualTransmissionInput"
+                               value="{{ $transmissionManual ? $curTransmission : '' }}"
+                               placeholder="Örn: Otomatik, Manuel"
+                               class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm mt-1.5 {{ $transmissionManual ? '' : 'hidden' }}"
+                               {{ $transmissionManual ? '' : 'disabled' }}>
+                        @if($transmissionManual)<p class="mt-1 text-xs text-amber-600">⚠ "<strong>{{ $curTransmission }}</strong>" listede yok.</p>@endif
+                    </div>
+                </div>
+
+                {{-- Paket / Versiyon --}}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Paket / Versiyon</label>
+                        <input type="text" name="package_version" value="{{ old('package_version', $vehicle->package_version) }}"
+                               placeholder="1.6 TDI Comfortline"
+                               class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        {{-- ─── Tab 2: İLAN BİLGİLERİ ──────────────────────────────────────── --}}
+        <div id="vtab-ilan" class="vehicle-tab-content p-6 space-y-6 hidden">
 
             <h3 class="text-lg font-bold text-gray-900">İlan Bilgileri</h3>
 
+            {{-- Başlık --}}
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">İlan Başlığı <span class="text-red-500">*</span></label>
                 <input type="text" name="title" value="{{ old('title', $vehicle->title) }}" required
@@ -103,10 +242,10 @@
                 <p class="mt-1 text-xs text-gray-500">Marka, model ve özelliklerini içeren açıklayıcı başlık yazın</p>
             </div>
 
+            {{-- Slug --}}
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">
-                    SEO Slug
-                    <span class="ml-1 text-xs font-normal text-gray-400">(boş bırakılırsa mevcut slug korunur)</span>
+                    SEO Slug <span class="ml-1 text-xs font-normal text-gray-400">(boş bırakılırsa mevcut slug korunur)</span>
                 </label>
                 <div class="flex items-center gap-2">
                     <span class="text-xs text-gray-400 whitespace-nowrap">/araclar/</span>
@@ -115,107 +254,151 @@
                 </div>
                 @error('slug')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
                 <p class="mt-1 text-xs text-gray-500">
-                    Yalnızca küçük harf, rakam ve tire.
-                    <a href="{{ route('vehicles.show', $vehicle->slug ?: $vehicle->id) }}" target="_blank" class="text-primary-600 hover:underline ml-1">Mevcut URL →</a>
+                    <a href="{{ route('vehicles.show', $vehicle->slug ?: $vehicle->id) }}" target="_blank" class="text-red-600 hover:underline">Mevcut URL →</a>
                 </p>
             </div>
 
+            {{-- Fiyat + Km --}}
             <div class="border-t pt-6">
-                <h3 class="text-lg font-bold text-gray-900 mb-4">Marka & Model</h3>
-                <div class="bg-gray-50 border border-gray-200 rounded-lg p-5 space-y-4">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Marka <span class="text-red-500">*</span></label>
-                            <input type="text" name="brand" value="{{ old('brand', $vehicle->brand) }}" required placeholder="Volkswagen"
-                                   class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Model <span class="text-red-500">*</span></label>
-                            <input type="text" name="model" value="{{ old('model', $vehicle->model) }}" required placeholder="Passat"
-                                   class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Paket / Versiyon</label>
-                            <input type="text" name="package_version" value="{{ old('package_version', $vehicle->package_version) }}" placeholder="1.6 TDI Comfortline"
-                                   class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="border-t pt-6">
-                <h3 class="text-lg font-bold text-gray-900 mb-4">Fiyat & Kilometre</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <h4 class="text-sm font-bold text-gray-700 mb-4">Fiyat & Kilometre</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Model Yılı <span class="text-red-500">*</span></label>
-                        <input type="number" name="year" value="{{ old('year', $vehicle->year) }}" required min="1900" max="{{ date('Y')+1 }}"
-                               class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Fiyat (₺) <span class="text-red-500">*</span></label>
+                        <input type="number" name="price" value="{{ old('price', $vehicle->price) }}" required placeholder="0"
+                               class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors font-bold text-lg">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Kilometre <span class="text-red-500">*</span></label>
                         <input type="number" name="kilometer" value="{{ old('kilometer', $vehicle->kilometer) }}" required placeholder="0"
                                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors">
                     </div>
+                </div>
+            </div>
+
+            {{-- Şehir + Takas + Pazarlık --}}
+            <div class="border-t pt-6">
+                <h4 class="text-sm font-bold text-gray-700 mb-4">Konum & Tercihler</h4>
+                @php
+                    $curCity    = old('city', $vehicle->city ?? '');
+                    $cityInList = $curCity !== '' && in_array($curCity, \App\Models\Vehicle::CITIES);
+                    $cityManual = $curCity !== '' && !$cityInList;
+                @endphp
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Fiyat (₺) <span class="text-red-500">*</span></label>
-                        <input type="number" name="price" value="{{ old('price', $vehicle->price) }}" required placeholder="0"
-                               class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors font-bold text-lg">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            <svg class="w-4 h-4 inline-block mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                            Şehir / Konum
+                        </label>
+                        <select name="city" id="editCitySelect"
+                                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm {{ $cityManual ? 'hidden' : '' }}"
+                                {{ $cityManual ? 'disabled' : '' }}>
+                            <option value="">Seçiniz</option>
+                            @foreach(\App\Models\Vehicle::CITIES as $c)
+                                <option value="{{ $c }}" {{ $curCity === $c ? 'selected' : '' }}>{{ $c }}</option>
+                            @endforeach
+                        </select>
+                        <label class="inline-flex items-center mt-2 text-xs text-gray-600 cursor-pointer">
+                            <input type="checkbox" id="editManualCityToggle" class="w-3 h-3 text-red-600 border-gray-300 rounded mr-1.5"
+                                   {{ $cityManual ? 'checked' : '' }}>
+                            <span>Manuel Gir</span>
+                        </label>
+                        <input type="text" name="city" id="editManualCityInput"
+                               value="{{ $cityManual ? $curCity : '' }}"
+                               placeholder="Şehir adı yazın"
+                               class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm mt-1.5 {{ $cityManual ? '' : 'hidden' }}"
+                               {{ $cityManual ? '' : 'disabled' }}>
+                        @if($cityManual)<p class="mt-1 text-xs text-amber-600">⚠ "<strong>{{ $curCity }}</strong>" listede yok.</p>@endif
+                    </div>
+                    <div class="flex items-end pb-1">
+                        <label class="flex items-start gap-3 p-4 border-2 rounded-lg cursor-pointer transition-all w-full
+                            {{ old('swap', $vehicle->swap) ? 'border-green-400 bg-green-50' : 'border-gray-200 hover:border-green-300 hover:bg-green-50/50' }}">
+                            <input type="checkbox" name="swap" value="1"
+                                   class="w-4 h-4 mt-0.5 text-green-600 border-gray-300 rounded focus:ring-green-500"
+                                   {{ old('swap', $vehicle->swap) ? 'checked' : '' }}>
+                            <div>
+                                <p class="font-bold text-gray-900 text-sm">Takasa Uygun</p>
+                                <p class="text-xs text-gray-500 mt-0.5">Araç için takas kabul edilir</p>
+                            </div>
+                        </label>
+                    </div>
+                    <div class="flex items-end pb-1">
+                        <label class="flex items-start gap-3 p-4 border-2 rounded-lg cursor-pointer transition-all w-full
+                            {{ old('price_negotiable', $vehicle->price_negotiable) ? 'border-amber-400 bg-amber-50' : 'border-gray-200 hover:border-amber-300 hover:bg-amber-50/50' }}">
+                            <input type="checkbox" name="price_negotiable" value="1"
+                                   class="w-4 h-4 mt-0.5 text-amber-600 border-gray-300 rounded focus:ring-amber-500"
+                                   {{ old('price_negotiable', $vehicle->price_negotiable) ? 'checked' : '' }}>
+                            <div>
+                                <p class="font-bold text-gray-900 text-sm">Pazarlık Payı Var</p>
+                                <p class="text-xs text-gray-500 mt-0.5">Fiyat pazarlığa açıktır</p>
+                            </div>
+                        </label>
                     </div>
                 </div>
+            </div>
+
+            {{-- Araç Durumu (Sıfır / İkinci El) --}}
+            <div class="border-t pt-6">
+                @php $curCondition = old('condition', $vehicle->condition ?? ''); @endphp
+                <label class="block text-sm font-medium text-gray-700 mb-3">Araç Durumu <span class="text-xs font-normal text-gray-400">(Sıfır / İkinci El)</span></label>
+                <div class="flex gap-3">
+                    @foreach(\App\Models\Vehicle::CONDITIONS as $val => $label)
+                    <label class="flex-1 flex items-center gap-3 p-3 border-2 rounded-lg cursor-pointer transition-all
+                        {{ $curCondition === $val ? 'border-red-500 bg-red-50' : 'border-gray-200 hover:border-red-300 hover:bg-red-50/50' }}">
+                        <input type="radio" name="condition" value="{{ $val }}"
+                               class="w-4 h-4 text-red-600 border-gray-300 focus:ring-red-500"
+                               {{ $curCondition === $val ? 'checked' : '' }}>
+                        <span class="font-semibold text-sm text-gray-800">{{ $label }}</span>
+                    </label>
+                    @endforeach
+                    <label class="flex-1 flex items-center gap-3 p-3 border-2 rounded-lg cursor-pointer transition-all
+                        {{ !$curCondition ? 'border-gray-300 bg-gray-50' : 'border-gray-200 hover:border-gray-300' }}">
+                        <input type="radio" name="condition" value=""
+                               class="w-4 h-4 text-gray-400 border-gray-300 focus:ring-gray-300"
+                               {{ !$curCondition ? 'checked' : '' }}>
+                        <span class="font-medium text-sm text-gray-500">Belirtme</span>
+                    </label>
+                </div>
+            </div>
+
+            {{-- Açıklama --}}
+            <div class="border-t pt-6">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Açıklama</label>
+                <textarea name="description" rows="6" placeholder="Aracınız hakkında detaylı bilgi verin..."
+                          class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors resize-none">{{ old('description', $vehicle->description) }}</textarea>
+                <p class="mt-1 text-xs text-gray-500">Araç özellikleri, bakım geçmişi, ekstralar hakkında bilgi verin</p>
             </div>
 
         </div>
 
-        {{-- ─── Tab 2: TEKNİK ÖZELLİKLER ──────────────────────────────────── --}}
+        {{-- ─── Tab 3: TEKNİK DETAYLAR ──────────────────────────────────────── --}}
         <div id="vtab-teknik" class="vehicle-tab-content p-6 space-y-6 hidden">
 
-            <h3 class="text-lg font-bold text-gray-900">Teknik Özellikler</h3>
+            <h3 class="text-lg font-bold text-gray-900">Teknik Detaylar</h3>
 
-            <div class="bg-gray-50 border border-gray-200 rounded-lg p-5">
-                <h4 class="font-semibold text-gray-900 mb-4">Kasa, Yakıt & Vites</h4>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Kasa Tipi</label>
-                        <input type="text" name="body_type" value="{{ old('body_type', $vehicle->body_type) }}" placeholder="Sedan, SUV..."
-                               class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Yakıt Tipi</label>
-                        <select name="fuel_type" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm">
-                            <option value="">Seçiniz</option>
-                            @foreach(['Benzin','Dizel','LPG/Benzin','Hibrit','Elektrikli'] as $ft)
-                                <option value="{{ $ft }}" {{ old('fuel_type',$vehicle->fuel_type)===$ft?'selected':'' }}>{{ $ft }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Vites Tipi</label>
-                        <select name="transmission" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm">
-                            <option value="">Seçiniz</option>
-                            @foreach(['Manuel','Otomatik','Yarı Otomatik'] as $tr)
-                                <option value="{{ $tr }}" {{ old('transmission',$vehicle->transmission)===$tr?'selected':'' }}>{{ $tr }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Çekiş</label>
-                        <select name="drive_type" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm">
-                            <option value="">Seçiniz</option>
-                            @foreach(['Önden Çekiş','Arkadan İtiş','4x4'] as $dr)
-                                <option value="{{ $dr }}" {{ old('drive_type',$vehicle->drive_type)===$dr?'selected':'' }}>{{ $dr }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-gray-50 border border-gray-200 rounded-lg p-5">
-                <h4 class="font-semibold text-gray-900 mb-4">Renk & Kapasite</h4>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {{-- Renk + Renk Tipi --}}
+            <div>
+                <h4 class="text-sm font-bold text-gray-700 mb-4">Renk</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Renk</label>
-                        <input type="text" name="color" value="{{ old('color',$vehicle->color) }}" placeholder="Beyaz, Siyah..."
-                               class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm">
+                        <select name="color" id="editColorSelect"
+                                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm {{ $colorManual ? 'hidden' : '' }}"
+                                {{ $colorManual ? 'disabled' : '' }}>
+                            <option value="">Seçiniz</option>
+                            @foreach($colorOptions as $c)
+                                <option value="{{ $c }}" {{ $curColor === $c ? 'selected' : '' }}>{{ $c }}</option>
+                            @endforeach
+                        </select>
+                        <label class="inline-flex items-center mt-2 text-xs text-gray-600 cursor-pointer">
+                            <input type="checkbox" id="editManualColorToggle" class="w-3 h-3 text-red-600 border-gray-300 rounded mr-1.5" {{ $colorManual ? 'checked' : '' }}>
+                            <span>Manuel Gir</span>
+                        </label>
+                        <input type="text" name="color" id="editManualColorInput"
+                               value="{{ $colorManual ? $curColor : '' }}"
+                               placeholder="Beyaz, Siyah..."
+                               class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm mt-1.5 {{ $colorManual ? '' : 'hidden' }}"
+                               {{ $colorManual ? '' : 'disabled' }}>
+                        @if($colorManual)<p class="mt-1 text-xs text-amber-600">⚠ "<strong>{{ $curColor }}</strong>" listede yok.</p>@endif
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Renk Tipi</label>
@@ -223,6 +406,22 @@
                             <option value="">Seçiniz</option>
                             @foreach(['Metalik','Mat','İnci','Normal'] as $ct)
                                 <option value="{{ $ct }}" {{ old('color_type',$vehicle->color_type)===$ct?'selected':'' }}>{{ $ct }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Çekiş + Kapı + Koltuk --}}
+            <div class="border-t pt-6">
+                <h4 class="text-sm font-bold text-gray-700 mb-4">Şasi & Kapasite</h4>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Çekiş</label>
+                        <select name="drive_type" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm">
+                            <option value="">Seçiniz</option>
+                            @foreach(['Önden Çekiş','Arkadan İtiş','4x4'] as $dr)
+                                <option value="{{ $dr }}" {{ old('drive_type',$vehicle->drive_type)===$dr?'selected':'' }}>{{ $dr }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -247,8 +446,9 @@
                 </div>
             </div>
 
+            {{-- Motor --}}
             <div class="border-t pt-6">
-                <h3 class="text-lg font-bold text-gray-900 mb-4">Motor Özellikleri</h3>
+                <h4 class="text-sm font-bold text-gray-700 mb-4">Motor Özellikleri</h4>
                 <div class="bg-gray-50 border border-gray-200 rounded-lg p-5">
                     <div class="grid grid-cols-3 gap-4">
                         <div>
@@ -270,16 +470,9 @@
                 </div>
             </div>
 
-            <div class="border-t pt-6">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Açıklama</label>
-                <textarea name="description" rows="6" placeholder="Aracınız hakkında detaylı bilgi verin..."
-                          class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors resize-none">{{ old('description',$vehicle->description) }}</textarea>
-                <p class="mt-1 text-xs text-gray-500">Araç özellikleri, bakım geçmişi, ekstralar hakkında bilgi verin</p>
-            </div>
-
         </div>
 
-        {{-- ─── Tab 3: DONANIMLAR ───────────────────────────────────────────── --}}
+        {{-- ─── Tab 5: DONANIMLAR ───────────────────────────────────────────── --}}
         <div id="vtab-donanim" class="vehicle-tab-content p-6 space-y-4 hidden">
 
             <div class="flex items-center justify-between">
@@ -349,7 +542,7 @@
 
         </div>
 
-        {{-- ─── Tab 4: HASAR & GEÇMİŞ ─────────────────────────────────────── --}}
+        {{-- ─── Tab 6: HASAR & GEÇMİŞ ─────────────────────────────────────── --}}
         <div id="vtab-hasar" class="vehicle-tab-content p-6 space-y-6 hidden">
 
             <h3 class="text-lg font-bold text-gray-900">Hasar & Geçmiş Bilgileri</h3>
@@ -442,7 +635,7 @@
 
         </div>
 
-        {{-- ─── Tab 5: GÖRSELLER ───────────────────────────────────────────── --}}
+        {{-- ─── Tab 4: GÖRSELLER ───────────────────────────────────────────── --}}
         <div id="vtab-gorseller" class="vehicle-tab-content p-6 space-y-6 hidden">
 
             <h3 class="text-lg font-bold text-gray-900">Araç Görselleri</h3>
@@ -523,76 +716,89 @@
 
         </div>
 
-        {{-- ─── Tab 6: YAYIN & DURUM ────────────────────────────────────────── --}}
-        <div id="vtab-yayin" class="vehicle-tab-content p-6 space-y-6 hidden">
+        {{-- ─── Tab 7: ENTEGRASYON ──────────────────────────────────────────── --}}
+        <div id="vtab-diger" class="vehicle-tab-content p-6 space-y-6 hidden">
 
-            <h3 class="text-lg font-bold text-gray-900">Yayın & Araç Durumu</h3>
+            <h3 class="text-lg font-bold text-gray-900">Entegrasyon</h3>
+            <p class="text-sm text-gray-500 -mt-4">Sahibinden.com üzerinden aktarılan ilanlar için bağlantı bilgileri.</p>
 
-            <div class="bg-gray-50 border border-gray-200 rounded-lg p-5">
-                <h4 class="font-semibold text-gray-900 mb-4">Görünürlük</h4>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <label class="flex items-start space-x-3 p-4 border border-gray-200 rounded-lg hover:border-red-400 hover:bg-red-50 cursor-pointer transition-all bg-white">
-                        <input type="checkbox" name="is_active" value="1" class="w-4 h-4 mt-0.5 text-red-600 border-gray-300 rounded focus:ring-red-500"
-                               {{ old('is_active',$vehicle->is_active)?'checked':'' }}>
-                        <div>
-                            <p class="font-bold text-gray-900 text-sm">Aktif (Yayında)</p>
-                            <p class="text-xs text-gray-500 mt-0.5">Web sitesinde görünür</p>
-                        </div>
-                    </label>
-                    <label class="flex items-start space-x-3 p-4 border border-gray-200 rounded-lg hover:border-yellow-400 hover:bg-yellow-50 cursor-pointer transition-all bg-white">
-                        <input type="checkbox" name="is_featured" value="1" class="w-4 h-4 mt-0.5 text-yellow-500 border-gray-300 rounded focus:ring-yellow-400"
-                               {{ old('is_featured',$vehicle->is_featured)?'checked':'' }}>
-                        <div>
-                            <p class="font-bold text-gray-900 text-sm">Öne Çıkarılmış</p>
-                            <p class="text-xs text-gray-500 mt-0.5">Anasayfada gösterilsin</p>
-                        </div>
-                    </label>
+            <div class="bg-gray-50 border border-gray-200 rounded-lg p-5 space-y-4">
+                <h4 class="font-semibold text-gray-900 flex items-center gap-2">
+                    <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                    Sahibinden.com
+                </h4>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">İlan Linki</label>
+                    <input type="url" name="sahibinden_url" value="{{ old('sahibinden_url',$vehicle->sahibinden_url) }}" placeholder="https://www.sahibinden.com/ilan/..."
+                           class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors">
                 </div>
-            </div>
-
-            <div class="bg-gray-50 border border-gray-200 rounded-lg p-5">
-                <h4 class="font-semibold text-gray-900 mb-2">Araç Satış Durumu</h4>
-                <p class="text-xs text-gray-500 mb-4">Araçın satış sürecindeki iş durumu</p>
-                <select name="vehicle_status" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors">
-                    @foreach(\App\Models\Vehicle::STATUSES as $val => $label)
-                        <option value="{{ $val }}" {{ old('vehicle_status',$vehicle->vehicle_status??'available')===$val?'selected':'' }}>{{ $label }}</option>
-                    @endforeach
-                </select>
-            </div>
-
-            <div class="border-t pt-6">
-                <h3 class="text-lg font-bold text-gray-900 mb-4">Sahibinden.com Entegrasyonu</h3>
-                <div class="bg-gray-50 border border-gray-200 rounded-lg p-5 space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">İlan Linki</label>
-                        <input type="url" name="sahibinden_url" value="{{ old('sahibinden_url',$vehicle->sahibinden_url) }}" placeholder="https://www.sahibinden.com/ilan/..."
-                               class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">İlan No</label>
-                        <input type="text" name="sahibinden_id" value="{{ old('sahibinden_id',$vehicle->sahibinden_id) }}" placeholder="1234567890"
-                               class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors font-mono">
-                    </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">İlan No</label>
+                    <input type="text" name="sahibinden_id" value="{{ old('sahibinden_id',$vehicle->sahibinden_id) }}" placeholder="1234567890"
+                           class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors font-mono">
                 </div>
             </div>
 
         </div>
 
     </div>{{-- /tabs card --}}
+    </div>{{-- /lg:col-span-3 --}}
 
-    {{-- Form Butonları --}}
-    <div class="flex items-center justify-between bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
-        <a href="{{ route('admin.vehicles.index') }}"
-           class="px-6 py-2.5 border-2 border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 hover:border-gray-400 transition-all inline-flex items-center gap-2">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-            İptal
-        </a>
-        <button type="submit"
-                class="px-8 py-2.5 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg shadow transition-all inline-flex items-center gap-2">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-            Değişiklikleri Kaydet
-        </button>
-    </div>
+    {{-- ═══════════════ SIDEBAR ═══════════════ --}}
+    <div class="lg:col-span-1">
+        <div class="sticky top-6 space-y-4">
+
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+                <div class="p-4 border-b border-gray-200">
+                    <h3 class="text-sm font-bold text-gray-900">Yayın & Araç Durumu</h3>
+                </div>
+                <div class="p-4 space-y-3">
+                    <label class="flex items-center space-x-2 p-3 border border-gray-200 rounded-lg hover:border-red-400 hover:bg-red-50 cursor-pointer transition-all">
+                        <input type="checkbox" name="is_active" value="1"
+                               class="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500"
+                               {{ old('is_active',$vehicle->is_active)?'checked':'' }}>
+                        <div class="flex-1">
+                            <p class="font-bold text-gray-900 text-xs">Aktif (Yayında)</p>
+                            <p class="text-xs text-gray-500">Web sitesinde görünür</p>
+                        </div>
+                    </label>
+                    <label class="flex items-center space-x-2 p-3 border border-gray-200 rounded-lg hover:border-yellow-400 hover:bg-yellow-50 cursor-pointer transition-all">
+                        <input type="checkbox" name="is_featured" value="1"
+                               class="w-4 h-4 text-yellow-500 border-gray-300 rounded focus:ring-yellow-400"
+                               {{ old('is_featured',$vehicle->is_featured)?'checked':'' }}>
+                        <div class="flex-1">
+                            <p class="font-bold text-gray-900 text-xs">Öne Çıkarılmış</p>
+                            <p class="text-xs text-gray-500">Anasayfada gösterilsin</p>
+                        </div>
+                    </label>
+                    <div class="pt-1">
+                        <label class="block text-xs font-bold text-gray-700 mb-1.5">Araç Durumu</label>
+                        <select name="vehicle_status" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors">
+                            @foreach(\App\Models\Vehicle::STATUSES as $val => $label)
+                                <option value="{{ $val }}" {{ old('vehicle_status',$vehicle->vehicle_status??'available')===$val?'selected':'' }}>{{ $label }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-4 space-y-2">
+                <button type="submit"
+                        class="w-full px-4 py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg transition-all text-sm flex items-center justify-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                    Değişiklikleri Kaydet
+                </button>
+                <a href="{{ route('admin.vehicles.index') }}"
+                   class="w-full px-4 py-2.5 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-all text-sm flex items-center justify-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                    İptal
+                </a>
+            </div>
+
+        </div>
+    </div>{{-- /sidebar --}}
+
+    </div>{{-- /grid --}}
 
 </form>
 
@@ -666,6 +872,35 @@ function updateEditFeatureCount() {
     const el = document.getElementById('editSelectedCount');
     if (el) el.textContent = count + ' özellik seçili';
 }
+
+// ─── Manuel Gir Toggle'ları ─────────────────────────────────────────────────────
+(function () {
+    const pairs = [
+        { toggle: 'editManualBodyTypeToggle',     select: 'editBodyTypeSelect',     input: 'editManualBodyTypeInput' },
+        { toggle: 'editManualFuelTypeToggle',     select: 'editFuelTypeSelect',     input: 'editManualFuelTypeInput' },
+        { toggle: 'editManualTransmissionToggle', select: 'editTransmissionSelect', input: 'editManualTransmissionInput' },
+        { toggle: 'editManualColorToggle',        select: 'editColorSelect',        input: 'editManualColorInput' },
+        { toggle: 'editManualCityToggle',         select: 'editCitySelect',          input: 'editManualCityInput' },
+    ];
+    pairs.forEach(({ toggle, select, input }) => {
+        const toggleEl = document.getElementById(toggle);
+        const selectEl = document.getElementById(select);
+        const inputEl  = document.getElementById(input);
+        if (!toggleEl || !selectEl || !inputEl) return;
+        toggleEl.addEventListener('change', function () {
+            const isManual = this.checked;
+            selectEl.disabled = isManual;
+            selectEl.classList.toggle('hidden', isManual);
+            inputEl.disabled = !isManual;
+            inputEl.classList.toggle('hidden', !isManual);
+            if (isManual) {
+                inputEl.focus();
+            } else {
+                inputEl.value = '';
+            }
+        });
+    });
+})();
 
 // ─── Form Validasyon ────────────────────────────────────────────────────────────
 document.getElementById('vehicleForm').addEventListener('submit', function (e) {

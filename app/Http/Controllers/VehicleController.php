@@ -65,11 +65,23 @@ class VehicleController extends Controller
         }
 
         if ($request->has('engine_size') && $request->engine_size) {
-            $query->where('engine_size', $request->engine_size);
+            // UI litre cinsinden gönderir (1.6), DB cc olarak saklar (1600) — ±100cc aralık toleransı
+            $engineCc = (float) $request->engine_size * 1000;
+            $query->whereBetween('engine_size', [$engineCc - 100, $engineCc + 100]);
         }
 
         if ($request->has('color') && $request->color) {
             $query->where('color', $request->color);
+        }
+
+        // Çekiş (drive_type)
+        if ($request->has('drive_type') && $request->drive_type) {
+            $query->where('drive_type', $request->drive_type);
+        }
+
+        // Araç Durumu (Sıfır / İkinci El)
+        if ($request->has('condition') && $request->condition) {
+            $query->where('condition', $request->condition);
         }
 
         // İlan Tarihi
@@ -132,15 +144,11 @@ class VehicleController extends Controller
 
         // Filtreler için veriler
         $brands = CarBrand::orderBy('name')->get();
-        
-        // Türk şehirleri (başlıca büyük şehirler)
-        $cities = ['İstanbul', 'Ankara', 'İzmir', 'Bursa', 'Antalya', 'Adana', 'Konya', 'Gaziantep', 'Mersin', 'Kayseri'];
-        
-        // Model yılları
+
         $currentYear = (int) date('Y');
         $years = range($currentYear + 1, 1990);
 
-        return view('pages.vehicles.index', compact('vehicles', 'brands', 'cities', 'years'));
+        return view('pages.vehicles.index', compact('vehicles', 'brands', 'years'));
     }
 
     /**

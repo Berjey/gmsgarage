@@ -166,6 +166,17 @@
                             </div>
                         @endif
 
+                        <!-- Konum -->
+                        @if($vehicle->city)
+                            <div class="flex items-center gap-1.5 text-sm text-white/80 mb-2">
+                                <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                </svg>
+                                <span>{{ $vehicle->city }}</span>
+                            </div>
+                        @endif
+
                         <!-- Görüntülenme -->
                         @if(($vehicle->views ?? 0) > 0)
                             <div class="flex items-center gap-1.5 text-xs text-white/60 mb-6">
@@ -205,6 +216,16 @@
                         <div class="text-4xl md:text-5xl font-bold">
                             {{ $vehicle->formatted_price }}
                         </div>
+                        @if($vehicle->price_negotiable)
+                            <div class="mt-2">
+                                <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full bg-amber-100 text-amber-700 border border-amber-200">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                                    </svg>
+                                    Pazarlık Payı Var
+                                </span>
+                            </div>
+                        @endif
                     </div>
                     
                     <!-- Action Buttons -->
@@ -247,85 +268,87 @@
                         </a>
                     </div>
                     
-                    <!-- Satıcı Temsilcisi Bilgi Kartı -->
+                    <!-- Galeri İletişim Kartı -->
                     @php
-                        // İleride bu bilgiler vehicle->seller veya vehicle->sales_representative ilişkisinden gelecek
-                        // Şimdilik placeholder veriler
-                        $sellerName = 'Ali Yılmaz'; // $vehicle->seller->name ?? 'Satıcı Temsilcisi'
-                        $sellerPosition = 'Kıdemli Satış Danışmanı'; // $vehicle->seller->position ?? 'Satış Temsilcisi'
-                        $nameParts = explode(' ', $sellerName);
-                        $sellerInitials = strtoupper(substr($sellerName, 0, 1) . (isset($nameParts[1]) ? substr($nameParts[1], 0, 1) : '')); // İlk harfler
-                        $sellerProfileSlug = 'ali-yilmaz'; // $vehicle->seller->slug ?? 'seller'
-                        $sellerIsVerified = true; // $vehicle->seller->is_verified ?? false
-                        $sellerResponseTime = '2 saat'; // $vehicle->seller->avg_response_time ?? 'Hızlı Yanıt'
-                        $sellerTotalListings = 45; // $vehicle->seller->vehicles_count ?? 0
+                        $siteName    = $settings['site_title']   ?? 'GMS Garage';
+                        $sitePhone   = $settings['contact_phone'] ?? null;
+                        $siteEmail   = $settings['contact_email'] ?? null;
+                        $totalActive = \App\Models\Vehicle::where('is_active', true)->count();
                     @endphp
-                    
+
                     <div class="bg-white dark:bg-[#252525] rounded-2xl border border-gray-200 dark:border-gray-800 shadow-md dark:shadow-xl hover:shadow-lg transition-all duration-300 overflow-hidden">
                         <!-- Header Section -->
                         <div class="p-5 pb-4">
                             <div class="flex items-start gap-3 mb-4">
-                                <!-- Avatar -->
+                                <!-- Logo / Amblem -->
                                 <div class="relative flex-shrink-0">
                                     <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center shadow-md ring-2 ring-primary-100">
-                                        <span class="text-white font-bold text-xl">{{ $sellerInitials }}</span>
+                                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                                        </svg>
                                     </div>
-                                    @if($sellerIsVerified)
-                                        <!-- Verified Badge -->
-                                        <div class="absolute -bottom-1 -right-1 bg-green-500 rounded-full p-1.5 shadow-md ring-2 ring-white">
-                                            <svg class="w-3.5 h-3.5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                                            </svg>
-                                        </div>
-                                    @endif
+                                    <!-- Onaylı Galeri Rozeti -->
+                                    <div class="absolute -bottom-1 -right-1 bg-green-500 rounded-full p-1.5 shadow-md ring-2 ring-white">
+                                        <svg class="w-3.5 h-3.5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                        </svg>
+                                    </div>
                                 </div>
-                                
-                                <!-- Info -->
+
+                                <!-- Galeri Adı ve Rozeti -->
                                 <div class="flex-1 min-w-0">
                                     <div class="flex items-center gap-2 mb-1 flex-wrap">
-                                        <h3 class="font-bold text-gray-900 dark:text-gray-100 text-base leading-tight">{{ $sellerName }}</h3>
+                                        <h3 class="font-bold text-gray-900 dark:text-gray-100 text-base leading-tight">{{ $siteName }}</h3>
                                         <span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold bg-primary-50 text-primary-700 border border-primary-200">
-                                            GMSGARAGE
+                                            Resmi Galeri
                                         </span>
                                     </div>
-                                    <p class="text-xs text-gray-600 dark:text-gray-300 mb-3">{{ $sellerPosition }}</p>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">Satış Danışmanı</p>
                                 </div>
                             </div>
-                            
-                            <!-- Seller Info Badges -->
+
+                            <!-- Galeri Bilgi Rozetleri -->
                             <div class="flex items-center gap-3 flex-wrap">
                                 <div class="flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
                                     <svg class="w-4 h-4 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                     </svg>
-                                    <span class="text-xs font-medium text-gray-700 dark:text-gray-300">Güvenilir</span>
+                                    <span class="text-xs font-medium text-gray-700 dark:text-gray-300">Güvenilir Satıcı</span>
                                 </div>
+                                @if($totalActive > 0)
                                 <div class="flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
                                     <svg class="w-4 h-4 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
                                     </svg>
-                                    <span class="text-xs font-medium text-gray-700 dark:text-gray-300">{{ $sellerResponseTime }}</span>
+                                    <span class="text-xs font-medium text-gray-700 dark:text-gray-300">{{ $totalActive }} Aktif İlan</span>
                                 </div>
-                                <div class="flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
-                                    <svg class="w-4 h-4 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-                                    </svg>
-                                    <span class="text-xs font-medium text-gray-700 dark:text-gray-300">{{ $sellerTotalListings }} İlan</span>
-                                </div>
+                                @endif
                             </div>
                         </div>
-                        
+
                         <!-- Divider -->
                         <div class="border-t border-gray-200 dark:border-gray-800"></div>
-                        
-                        <!-- Actions -->
+
+                        <!-- İletişim Aksiyonları -->
                         <div class="p-5 pt-4 space-y-2.5">
-                            <a href="{{ route('seller.profile', $sellerProfileSlug) }}" class="block w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-4 rounded-lg text-center transition-colors text-sm shadow-sm hover:shadow-md">
-                                Satıcı Profilini Gör
+                            <a href="{{ route('contact') }}"
+                               class="block w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-4 rounded-lg text-center transition-colors text-sm shadow-sm hover:shadow-md">
+                                İletişime Geç
                             </a>
-                            <a href="{{ route('vehicles.index', ['seller' => $sellerProfileSlug]) }}" class="block w-full text-center text-xs text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-semibold py-2.5 border border-primary-200 dark:border-primary-800 rounded-lg hover:bg-primary-50 dark:hover:bg-primary-900/30 transition-colors">
-                                Tüm İlanlar ({{ $sellerTotalListings }})
-                            </a>
+                            @if($sitePhone)
+                                <a href="tel:{{ preg_replace('/[^0-9+]/', '', $sitePhone) }}"
+                                   class="flex items-center justify-center gap-2 w-full text-center text-xs text-primary-600 dark:text-primary-400 hover:text-primary-700 font-semibold py-2.5 border border-primary-200 dark:border-primary-800 rounded-lg hover:bg-primary-50 dark:hover:bg-primary-900/30 transition-colors">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                                    </svg>
+                                    {{ $sitePhone }}
+                                </a>
+                            @else
+                                <a href="{{ route('vehicles.index') }}"
+                                   class="block w-full text-center text-xs text-primary-600 dark:text-primary-400 hover:text-primary-700 font-semibold py-2.5 border border-primary-200 dark:border-primary-800 rounded-lg hover:bg-primary-50 dark:hover:bg-primary-900/30 transition-colors">
+                                    Tüm İlanları Gör
+                                </a>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -390,13 +413,40 @@
             <!-- Araç Özellikleri -->
             <div class="bg-white dark:bg-[#252525] rounded-2xl shadow-xl dark:shadow-2xl p-8 mb-8 border border-gray-100 dark:border-gray-800 transition-colors duration-200">
                 <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Araç Özellikleri</h2>
+                {{--
+                    SOL: Kimlik / Genel bilgiler (condition, marka, model, kasa, renk, kapı, koltuk)
+                    SAĞ: Teknik + Geçmiş (motor, güç, tork, çekiş, paket, garanti, tramer, sahip, muayene, takas, pazarlık)
+                    Konum: üst info kartında gösteriliyor, burada tekrar etmiyoruz.
+                --}}
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- SOL: Genel / Kimlik Bilgileri -->
                     <div class="space-y-4">
+                        <!-- Araç Durumu (Sıfır / İkinci El) -->
+                        @if($vehicle->condition)
+                        <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
+                            <span class="text-gray-600 dark:text-gray-300 font-medium">Araç Durumu</span>
+                            <span class="inline-flex items-center font-bold text-sm px-3 py-1 rounded-full
+                                {{ $vehicle->condition === 'zero_km'
+                                    ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+                                    : 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' }}">
+                                {{ $vehicle->condition_label }}
+                            </span>
+                        </div>
+                        @endif
+
                         <!-- Marka -->
                         @if($vehicle->brand)
                         <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
                             <span class="text-gray-600 dark:text-gray-300 font-medium">Marka</span>
                             <span class="font-bold text-gray-900 dark:text-gray-100 text-right">{{ $vehicle->brand }}</span>
+                        </div>
+                        @endif
+
+                        <!-- Model -->
+                        @if($vehicle->model)
+                        <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
+                            <span class="text-gray-600 dark:text-gray-300 font-medium">Model</span>
+                            <span class="font-bold text-gray-900 dark:text-gray-100 text-right">{{ $vehicle->model }}</span>
                         </div>
                         @endif
 
@@ -407,31 +457,7 @@
                             <span class="font-bold text-gray-900 dark:text-gray-100 text-right">{{ $vehicle->body_type }}</span>
                         </div>
                         @endif
-                        
-                        <!-- Paket / Versiyon -->
-                        @if($vehicle->package_version)
-                        <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
-                            <span class="text-gray-600 dark:text-gray-300 font-medium">Paket / Versiyon</span>
-                            <span class="font-bold text-gray-900 dark:text-gray-100 text-right">{{ $vehicle->package_version }}</span>
-                        </div>
-                        @endif
-                        
-                        <!-- Motor Gücü -->
-                        @if($vehicle->horse_power)
-                        <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
-                            <span class="text-gray-600 dark:text-gray-300 font-medium">Motor Gücü</span>
-                            <span class="font-bold text-gray-900 dark:text-gray-100 text-right">{{ $vehicle->horse_power }} HP</span>
-                        </div>
-                        @endif
-                        
-                        <!-- Tork -->
-                        @if($vehicle->torque)
-                        <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
-                            <span class="text-gray-600 dark:text-gray-300 font-medium">Tork</span>
-                            <span class="font-bold text-gray-900 dark:text-gray-100 text-right">{{ $vehicle->torque }} Nm</span>
-                        </div>
-                        @endif
-                        
+
                         <!-- Renk -->
                         @if($vehicle->color)
                         <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
@@ -442,7 +468,7 @@
                             </span>
                         </div>
                         @endif
-                        
+
                         <!-- Kapı Sayısı -->
                         @if($vehicle->door_count)
                         <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
@@ -450,41 +476,7 @@
                             <span class="font-bold text-gray-900 dark:text-gray-100 text-right">{{ $vehicle->door_count }} Kapı</span>
                         </div>
                         @endif
-                    </div>
-                    <div class="space-y-4">
-                        <!-- Model -->
-                        @if($vehicle->model)
-                        <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
-                            <span class="text-gray-600 dark:text-gray-300 font-medium">Model</span>
-                            <span class="font-bold text-gray-900 dark:text-gray-100 text-right">{{ $vehicle->model }}</span>
-                        </div>
-                        @endif
-                        
-                        <!-- Motor Hacmi -->
-                        @if($vehicle->engine_size)
-                        <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
-                            <span class="text-gray-600 dark:text-gray-300 font-medium">Motor Hacmi</span>
-                            <span class="font-bold text-gray-900 dark:text-gray-100 text-right">
-                                @php
-                                    $engineSize = (float) $vehicle->engine_size;
-                                    if ($engineSize >= 1000) {
-                                        echo number_format($engineSize / 1000, 1, ',', '.') . ' L';
-                                    } else {
-                                        echo number_format($engineSize, 0, ',', '.') . ' cc';
-                                    }
-                                @endphp
-                            </span>
-                        </div>
-                        @endif
-                        
-                        <!-- Çekiş -->
-                        @if($vehicle->drive_type)
-                        <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
-                            <span class="text-gray-600 dark:text-gray-300 font-medium">Çekiş</span>
-                            <span class="font-bold text-gray-900 dark:text-gray-100 text-right">{{ $vehicle->drive_type }}</span>
-                        </div>
-                        @endif
-                        
+
                         <!-- Koltuk Sayısı -->
                         @if($vehicle->seat_count)
                         <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
@@ -492,21 +484,84 @@
                             <span class="font-bold text-gray-900 dark:text-gray-100 text-right">{{ $vehicle->seat_count }} Kişilik</span>
                         </div>
                         @endif
-                        
+
+                        <!-- Takas -->
+                        @if($vehicle->swap)
+                        <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
+                            <span class="text-gray-600 dark:text-gray-300 font-medium">Takas</span>
+                            <span class="inline-flex items-center gap-1.5 font-bold text-sm px-3 py-1 rounded-full bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
+                                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                </svg>
+                                Takasa Uygun
+                            </span>
+                        </div>
+                        @endif
+                    </div>
+
+                    <!-- SAĞ: Teknik + Geçmiş Bilgileri -->
+                    <div class="space-y-4">
+                        <!-- Motor Hacmi -->
+                        @if($vehicle->engine_size)
+                        <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
+                            <span class="text-gray-600 dark:text-gray-300 font-medium">Motor Hacmi</span>
+                            <span class="font-bold text-gray-900 dark:text-gray-100 text-right">
+                                @php
+                                    $engineSize = (float) $vehicle->engine_size;
+                                    echo $engineSize >= 1000
+                                        ? number_format($engineSize / 1000, 1, ',', '.') . ' L'
+                                        : number_format($engineSize, 0, ',', '.') . ' cc';
+                                @endphp
+                            </span>
+                        </div>
+                        @endif
+
+                        <!-- Motor Gücü -->
+                        @if($vehicle->horse_power)
+                        <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
+                            <span class="text-gray-600 dark:text-gray-300 font-medium">Motor Gücü</span>
+                            <span class="font-bold text-gray-900 dark:text-gray-100 text-right">{{ $vehicle->horse_power }} HP</span>
+                        </div>
+                        @endif
+
+                        <!-- Tork -->
+                        @if($vehicle->torque)
+                        <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
+                            <span class="text-gray-600 dark:text-gray-300 font-medium">Tork</span>
+                            <span class="font-bold text-gray-900 dark:text-gray-100 text-right">{{ $vehicle->torque }} Nm</span>
+                        </div>
+                        @endif
+
+                        <!-- Çekiş -->
+                        @if($vehicle->drive_type)
+                        <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
+                            <span class="text-gray-600 dark:text-gray-300 font-medium">Çekiş</span>
+                            <span class="font-bold text-gray-900 dark:text-gray-100 text-right">{{ $vehicle->drive_type }}</span>
+                        </div>
+                        @endif
+
+                        <!-- Paket / Versiyon -->
+                        @if($vehicle->package_version)
+                        <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
+                            <span class="text-gray-600 dark:text-gray-300 font-medium">Paket / Versiyon</span>
+                            <span class="font-bold text-gray-900 dark:text-gray-100 text-right">{{ $vehicle->package_version }}</span>
+                        </div>
+                        @endif
+
                         <!-- Garanti -->
                         @if($vehicle->has_warranty)
                         <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
                             <span class="text-gray-600 dark:text-gray-300 font-medium">Garanti</span>
                             <span class="font-bold text-green-600 dark:text-green-400 text-right">
                                 Var
-                                @if($vehicle->warranty_end_date) 
-                                    ({{ \Carbon\Carbon::parse($vehicle->warranty_end_date)->format('d.m.Y') }}'e kadar)
+                                @if($vehicle->warranty_end_date)
+                                    ({{ $vehicle->warranty_end_date->format('d.m.Y') }}'e kadar)
                                 @endif
                             </span>
                         </div>
                         @endif
-                        
-                        <!-- Tramer (Opsiyonel - sadece doluysa) -->
+
+                        <!-- Tramer (sadece bilinen değerlerde) -->
                         @if($vehicle->tramer_status && $vehicle->tramer_status !== 'Bilinmiyor')
                         <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
                             <span class="text-gray-600 dark:text-gray-300 font-medium">Tramer Kaydı</span>
@@ -518,7 +573,7 @@
                             </span>
                         </div>
                         @endif
-                        
+
                         <!-- Kaçıncı Sahip -->
                         @if($vehicle->owner_number)
                         <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
@@ -526,12 +581,25 @@
                             <span class="font-bold text-gray-900 dark:text-gray-100 text-right">{{ $vehicle->owner_number }}. Sahip</span>
                         </div>
                         @endif
-                        
+
                         <!-- Muayene Tarihi -->
                         @if($vehicle->inspection_date)
                         <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
                             <span class="text-gray-600 dark:text-gray-300 font-medium">Muayene Tarihi</span>
-                            <span class="font-bold text-gray-900 dark:text-gray-100 text-right">{{ \Carbon\Carbon::parse($vehicle->inspection_date)->format('d.m.Y') }}</span>
+                            <span class="font-bold text-gray-900 dark:text-gray-100 text-right">{{ $vehicle->inspection_date->format('d.m.Y') }}</span>
+                        </div>
+                        @endif
+
+                        <!-- Pazarlık -->
+                        @if($vehicle->price_negotiable)
+                        <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
+                            <span class="text-gray-600 dark:text-gray-300 font-medium">Pazarlık</span>
+                            <span class="inline-flex items-center gap-1.5 font-bold text-sm px-3 py-1 rounded-full bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                                </svg>
+                                Pazarlık Payı Var
+                            </span>
                         </div>
                         @endif
                     </div>
