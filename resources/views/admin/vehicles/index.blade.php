@@ -256,30 +256,20 @@
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     @foreach($vehicles as $vehicle)
-                    <tr class="hover:bg-blue-50/30 transition-all duration-200 border-l-4 border-transparent hover:border-primary-500 hover:shadow-sm">
+                    <tr class="hover:bg-blue-50/30 transition-all duration-200 border-l-4 border-l-transparent hover:border-l-primary-500 hover:shadow-sm">
                         <!-- Araç Bilgisi -->
                         <td class="px-6 py-4">
-                            <div class="flex items-center gap-3">
-                                <!-- Thumbnail -->
-                                <div class="shrink-0 w-14 h-14 rounded-lg overflow-hidden border border-gray-200 bg-gray-100">
-                                    <img src="{{ $vehicle->first_image }}"
-                                         alt="{{ $vehicle->brand }} {{ $vehicle->model }}"
-                                         class="w-full h-full object-cover"
-                                         onerror="this.src='{{ asset('images/vehicles/default.jpg') }}'">
+                            <div class="min-w-0">
+                                <a href="{{ route('admin.vehicles.edit', $vehicle->id) }}"
+                                   class="text-sm font-bold text-gray-900 hover:text-primary-600 transition-colors leading-tight block truncate max-w-[240px]"
+                                   title="{{ $vehicle->title }}">
+                                    {{ $vehicle->title ?: ($vehicle->brand . ' ' . $vehicle->model) }}
+                                </a>
+                                <div class="text-xs text-gray-500 mt-0.5 font-medium">
+                                    {{ $vehicle->brand }} {{ $vehicle->model }}
+                                    @if($vehicle->year) &bull; {{ $vehicle->year }} @endif
                                 </div>
-                                <!-- Metin -->
-                                <div class="min-w-0">
-                                    <a href="{{ route('admin.vehicles.edit', $vehicle->id) }}"
-                                       class="text-sm font-bold text-gray-900 hover:text-primary-600 transition-colors leading-tight block truncate max-w-[180px]"
-                                       title="{{ $vehicle->title }}">
-                                        {{ $vehicle->title ?: ($vehicle->brand . ' ' . $vehicle->model) }}
-                                    </a>
-                                    <div class="text-xs text-gray-500 mt-0.5 font-medium">
-                                        {{ $vehicle->brand }} {{ $vehicle->model }}
-                                        @if($vehicle->year) &bull; {{ $vehicle->year }} @endif
-                                    </div>
-                                    <div class="text-xs text-gray-400 mt-0.5">{{ $vehicle->created_at->format('d.m.Y') }}</div>
-                                </div>
+                                <div class="text-xs text-gray-400 mt-0.5">{{ $vehicle->created_at->format('d.m.Y') }}</div>
                             </div>
                         </td>
 

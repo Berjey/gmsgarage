@@ -610,7 +610,11 @@
             @php
                 $paintedParts   = is_array($vehicle->painted_parts)  ? $vehicle->painted_parts  : [];
                 $replacedParts  = is_array($vehicle->replaced_parts) ? $vehicle->replaced_parts : [];
-                $allParts       = ['Kaput','Ön Tampon','Arka Tampon','Sağ Ön','Sol Ön','Sağ Arka','Sol Arka','Tavan'];
+                $allParts       = [
+                    'Motor Kaputu','Ön Tampon','Arka Tampon','Arka Kaput','Tavan',
+                    'Sağ Ön Kapı','Sağ Arka Kapı','Sol Ön Kapı','Sol Arka Kapı',
+                    'Sağ Ön Çamurluk','Sağ Arka Çamurluk','Sol Ön Çamurluk','Sol Arka Çamurluk'
+                ];
                 $hasDamageData  = count($paintedParts) > 0 || count($replacedParts) > 0;
             @endphp
             @if($hasDamageData)

@@ -12,9 +12,72 @@
 
 @push('styles')
 <style>
-    .vehicle-tab-btn.active { background-color:#dc2626!important; color:#fff!important; border-bottom: 2px solid #dc2626; }
-    .vehicle-tab-btn:not(.active) { background:#fff; color:#374151; }
-    .vehicle-tab-btn:not(.active):hover { background:#f9fafb; }
+    /* ─── Step Navigation ─── */
+    .step-nav { display:flex; position:relative; background:#f9fafb; border-bottom:2px solid #e5e7eb; }
+    .step-nav::after { content:''; position:absolute; bottom:-2px; left:0; height:2px; background:#dc2626; transition:left 0.35s ease,width 0.35s ease; }
+    .step-btn {
+        flex:1; display:flex; align-items:center; justify-content:center; gap:0.5rem;
+        padding:0.875rem 0.5rem; font-size:0.8rem; font-weight:600;
+        color:#6b7280; background:transparent; border:none; cursor:pointer;
+        transition:color 0.2s,background 0.2s; position:relative; white-space:nowrap;
+    }
+    .step-btn:hover { color:#374151; background:rgba(0,0,0,0.02); }
+    .step-btn.active { color:#dc2626; background:#fff; }
+    .step-btn .step-status {
+        width:18px; height:18px; border-radius:50%; display:none; align-items:center; justify-content:center;
+        flex-shrink:0;
+    }
+    .step-btn.done .step-status { display:inline-flex; background:#16a34a; }
+    .step-btn.warn .step-status { display:inline-flex; background:#f59e0b; }
+    .step-btn.done { color:#16a34a; }
+    .step-btn.warn { color:#f59e0b; }
+    .step-btn.done .step-icon-done { display:block; }
+    .step-btn.done .step-icon-warn { display:none; }
+    .step-btn.warn .step-icon-done { display:none; }
+    .step-btn.warn .step-icon-warn { display:block; }
+
+    /* ─── Step Footer Navigation ─── */
+    .step-footer { display:flex; align-items:center; justify-content:space-between; border-top:1px solid #e5e7eb; padding:1rem 1.5rem; background:#fafafa; }
+    .step-footer-btn {
+        display:inline-flex; align-items:center; gap:0.375rem; padding:0.625rem 1.25rem;
+        font-size:0.8125rem; font-weight:600; border-radius:0.5rem; transition:all 0.2s; cursor:pointer; border:none;
+    }
+    .step-footer-btn.primary { background:#dc2626; color:#fff; }
+    .step-footer-btn.primary:hover { background:#b91c1c; }
+    .step-footer-btn.secondary { background:#fff; color:#374151; border:1px solid #d1d5db; }
+    .step-footer-btn.secondary:hover { background:#f3f4f6; }
+
+    .vehicle-form-card { overflow:visible!important; }
+    .vehicle-tab-nav { overflow:hidden; border-radius:0.75rem 0.75rem 0 0; }
+    .adm-dd-list { z-index:9999!important; }
+
+    /* ─── Car Diagram Tooltip ─── */
+    .car-part { transition:fill 0.2s ease; cursor:pointer; }
+    .car-part:hover { opacity:0.8; }
+    .admin-car-tooltip {
+        position:absolute; background:#fff; border-radius:8px;
+        box-shadow:0 4px 20px rgba(0,0,0,0.15); padding:12px;
+        z-index:1000; min-width:140px; display:none;
+    }
+    .admin-car-tooltip.active { display:block; }
+    .admin-car-tooltip-title {
+        font-weight:600; font-size:13px; color:#111827;
+        margin-bottom:10px; padding-bottom:8px; border-bottom:1px solid #e5e7eb;
+    }
+    .admin-car-tooltip-opt {
+        display:flex; align-items:center; gap:8px; padding:6px 0;
+        cursor:pointer; font-size:13px; color:#374151; transition:color 0.15s;
+    }
+    .admin-car-tooltip-opt:hover { color:#111827; }
+    .admin-car-tooltip-opt.selected { font-weight:600; }
+    .admin-tt-dot {
+        width:16px; height:16px; border-radius:3px; border:2px solid #d1d5db; flex-shrink:0;
+    }
+    .admin-tt-dot.dot-orijinal { background:#fff; border-color:#d1d5db; }
+    .admin-tt-dot.dot-boyali   { background:#3b82f6; border-color:#3b82f6; }
+    .admin-tt-dot.dot-lokal    { background:#fbbf24; border-color:#fbbf24; }
+    .admin-tt-dot.dot-degismis { background:#dc2626; border-color:#dc2626; }
+    .admin-car-tooltip-opt.selected .admin-tt-dot { box-shadow:0 0 0 2px #3b82f6; }
 </style>
 @endpush
 
@@ -63,37 +126,39 @@
     @csrf
     @method('PUT')
 
-    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+    <div>
 
-    {{-- ═══════════════ MAIN TABS ═══════════════ --}}
-    <div class="lg:col-span-3">
-    <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden mb-6">
+    {{-- ═══════════════ MAIN CONTENT — Step-by-step form ═══════════════ --}}
+    <div>
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm mb-6 vehicle-form-card">
 
-        {{-- Tab Navigation --}}
-        <div class="flex border-b border-gray-200 overflow-x-auto">
+        {{-- Step Navigation --}}
+        <div class="vehicle-tab-nav">
             @php
-                $tabs = [
-                    ['id'=>'kimlik',   'icon'=>'M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10', 'label'=>'Araç Kimliği'],
-                    ['id'=>'ilan',     'icon'=>'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z', 'label'=>'İlan Bilgileri'],
-                    ['id'=>'teknik',   'icon'=>'M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4', 'label'=>'Teknik Detaylar'],
-                    ['id'=>'gorseller','icon'=>'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z', 'label'=>'Görseller'],
-                    ['id'=>'donanim',  'icon'=>'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4', 'label'=>'Donanımlar'],
-                    ['id'=>'hasar',    'icon'=>'M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z', 'label'=>'Hasar & Geçmiş'],
-                    ['id'=>'diger',    'icon'=>'M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14', 'label'=>'Entegrasyon'],
+                $steps = [
+                    ['id'=>'kimlik',    'label'=>'Araç Kimliği'],
+                    ['id'=>'ilan',      'label'=>'İlan Bilgileri'],
+                    ['id'=>'teknik',    'label'=>'Teknik Detaylar'],
+                    ['id'=>'gorseller', 'label'=>'Görseller'],
+                    ['id'=>'donanim',   'label'=>'Donanımlar'],
+                    ['id'=>'hasar',     'label'=>'Hasar & Geçmiş'],
+                    ['id'=>'yayin',     'label'=>'Yayın Ayarları'],
                 ];
             @endphp
-            @foreach($tabs as $i => $tab)
-            <button type="button"
-                    data-tab="{{ $tab['id'] }}"
-                    onclick="switchVehicleTab('{{ $tab['id'] }}')"
-                    class="vehicle-tab-btn {{ $i===0?'active':'' }} flex-1 min-w-[120px] px-4 py-4 text-sm font-semibold transition-colors {{ $i>0?'border-l border-gray-200':'' }}">
-                <svg class="w-4 h-4 inline-block mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $tab['icon'] }}"/>
-                </svg>
-                {{ $tab['label'] }}
-            </button>
-            @endforeach
-        </div>
+            <nav class="step-nav" id="stepNav">
+                @foreach($steps as $i => $step)
+                <button type="button" data-tab="{{ $step['id'] }}" data-step="{{ $i }}"
+                        onclick="goToStep('{{ $step['id'] }}')"
+                        class="step-btn {{ $i===0 ? 'active' : '' }}" id="stepBtn-{{ $step['id'] }}">
+                    <span class="step-status">
+                        <svg class="step-icon-done w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                        <svg class="step-icon-warn w-2.5 h-2.5 text-white hidden" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01"/></svg>
+                    </span>
+                    {{ $step['label'] }}
+                </button>
+                @endforeach
+            </nav>
+        </div>{{-- /vehicle-tab-nav --}}
 
         {{-- ─── Tab 1: ARAÇ KİMLİĞİ ──────────────────────────────────────── --}}
         <div id="vtab-kimlik" class="vehicle-tab-content p-6 space-y-6">
@@ -226,6 +291,15 @@
                 </div>
             </div>
 
+            {{-- Step Footer --}}
+            <div class="step-footer mt-6">
+                <div></div>
+                <button type="button" onclick="goToStep('ilan', true)" class="step-footer-btn primary">
+                    Devam: İlan Bilgileri
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                </button>
+            </div>
+
         </div>
 
         {{-- ─── Tab 2: İLAN BİLGİLERİ ──────────────────────────────────────── --}}
@@ -266,49 +340,21 @@
                         <label class="block text-sm font-medium text-gray-700 mb-2">Fiyat (₺) <span class="text-red-500">*</span></label>
                         <input type="number" name="price" value="{{ old('price', $vehicle->price) }}" required placeholder="0"
                                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors font-bold text-lg">
+                        <p class="mt-1 text-xs text-gray-500">Satış fiyatı (KDV dahil)</p>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Kilometre <span class="text-red-500">*</span></label>
                         <input type="number" name="kilometer" value="{{ old('kilometer', $vehicle->kilometer) }}" required placeholder="0"
                                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors">
+                        <p class="mt-1 text-xs text-gray-500">Araç toplam kilometre değeri</p>
                     </div>
                 </div>
             </div>
 
-            {{-- Şehir + Takas + Pazarlık --}}
+            {{-- Takas + Pazarlık --}}
             <div class="border-t pt-6">
-                <h4 class="text-sm font-bold text-gray-700 mb-4">Konum & Tercihler</h4>
-                @php
-                    $curCity    = old('city', $vehicle->city ?? '');
-                    $cityInList = $curCity !== '' && in_array($curCity, \App\Models\Vehicle::CITIES);
-                    $cityManual = $curCity !== '' && !$cityInList;
-                @endphp
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
-                            <svg class="w-4 h-4 inline-block mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                            Şehir / Konum
-                        </label>
-                        <select name="city" id="editCitySelect"
-                                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm {{ $cityManual ? 'hidden' : '' }}"
-                                {{ $cityManual ? 'disabled' : '' }}>
-                            <option value="">Seçiniz</option>
-                            @foreach(\App\Models\Vehicle::CITIES as $c)
-                                <option value="{{ $c }}" {{ $curCity === $c ? 'selected' : '' }}>{{ $c }}</option>
-                            @endforeach
-                        </select>
-                        <label class="inline-flex items-center mt-2 text-xs text-gray-600 cursor-pointer">
-                            <input type="checkbox" id="editManualCityToggle" class="w-3 h-3 text-red-600 border-gray-300 rounded mr-1.5"
-                                   {{ $cityManual ? 'checked' : '' }}>
-                            <span>Manuel Gir</span>
-                        </label>
-                        <input type="text" name="city" id="editManualCityInput"
-                               value="{{ $cityManual ? $curCity : '' }}"
-                               placeholder="Şehir adı yazın"
-                               class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm mt-1.5 {{ $cityManual ? '' : 'hidden' }}"
-                               {{ $cityManual ? '' : 'disabled' }}>
-                        @if($cityManual)<p class="mt-1 text-xs text-amber-600">⚠ "<strong>{{ $curCity }}</strong>" listede yok.</p>@endif
-                    </div>
+                <h4 class="text-sm font-bold text-gray-700 mb-4">Tercihler</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div class="flex items-end pb-1">
                         <label class="flex items-start gap-3 p-4 border-2 rounded-lg cursor-pointer transition-all w-full
                             {{ old('swap', $vehicle->swap) ? 'border-green-400 bg-green-50' : 'border-gray-200 hover:border-green-300 hover:bg-green-50/50' }}">
@@ -368,6 +414,18 @@
                 <p class="mt-1 text-xs text-gray-500">Araç özellikleri, bakım geçmişi, ekstralar hakkında bilgi verin</p>
             </div>
 
+            {{-- Step Footer --}}
+            <div class="step-footer mt-6">
+                <button type="button" onclick="goToStep('kimlik')" class="step-footer-btn secondary">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                    Araç Kimliği
+                </button>
+                <button type="button" onclick="goToStep('teknik', true)" class="step-footer-btn primary">
+                    Devam: Teknik Detaylar
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                </button>
+            </div>
+
         </div>
 
         {{-- ─── Tab 3: TEKNİK DETAYLAR ──────────────────────────────────────── --}}
@@ -376,72 +434,119 @@
             <h3 class="text-lg font-bold text-gray-900">Teknik Detaylar</h3>
 
             {{-- Renk + Renk Tipi --}}
+            @php
+                $editColorOptions     = ['Beyaz','Siyah','Gri','Gümüş Gri','Kırmızı','Mavi','Lacivert','Yeşil','Bej','Kahverengi','Sarı','Turuncu','Bordo','Mor','Altın','Bronz','Diğer'];
+                $editColorTypeOptions = ['Metalik','Mat','İnci','Normal'];
+                $curColorEdit     = $vehicle->color ?? old('color', '');
+                $curColorTypeEdit = $vehicle->color_type ?? old('color_type', '');
+            @endphp
             <div>
                 <h4 class="text-sm font-bold text-gray-700 mb-4">Renk</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Renk</label>
-                        <select name="color" id="editColorSelect"
-                                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm {{ $colorManual ? 'hidden' : '' }}"
-                                {{ $colorManual ? 'disabled' : '' }}>
-                            <option value="">Seçiniz</option>
-                            @foreach($colorOptions as $c)
-                                <option value="{{ $c }}" {{ $curColor === $c ? 'selected' : '' }}>{{ $c }}</option>
-                            @endforeach
-                        </select>
+                        <div class="adm-dd {{ $colorManual ? 'hidden' : '' }}" id="ddWrap-editColor">
+                            <input type="hidden" name="color" id="ddVal-editColor" value="{{ $curColorEdit }}">
+                            <button type="button" class="adm-dd-btn" id="ddBtn-editColor" onclick="toggleStaticDD('editColor')">
+                                <span id="ddLabel-editColor">{{ $curColorEdit ?: 'Seçiniz' }}</span>
+                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                            </button>
+                            <ul class="adm-dd-list" id="ddList-editColor">
+                                <li data-val="" onclick="selectStaticDD('editColor','','Seçiniz')">Seçiniz</li>
+                                @foreach($editColorOptions as $c)
+                                    <li data-val="{{ $c }}" onclick="selectStaticDD('editColor','{{ $c }}','{{ $c }}')" class="{{ $curColorEdit===$c?'selected':'' }}">{{ $c }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
                         <label class="inline-flex items-center mt-2 text-xs text-gray-600 cursor-pointer">
                             <input type="checkbox" id="editManualColorToggle" class="w-3 h-3 text-red-600 border-gray-300 rounded mr-1.5" {{ $colorManual ? 'checked' : '' }}>
                             <span>Manuel Gir</span>
                         </label>
                         <input type="text" name="color" id="editManualColorInput"
-                               value="{{ $colorManual ? $curColor : '' }}"
+                               value="{{ $colorManual ? $curColorEdit : '' }}"
                                placeholder="Beyaz, Siyah..."
                                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm mt-1.5 {{ $colorManual ? '' : 'hidden' }}"
                                {{ $colorManual ? '' : 'disabled' }}>
-                        @if($colorManual)<p class="mt-1 text-xs text-amber-600">⚠ "<strong>{{ $curColor }}</strong>" listede yok.</p>@endif
+                        @if($colorManual)<p class="mt-1 text-xs text-amber-600">⚠ "<strong>{{ $curColorEdit }}</strong>" listede yok.</p>@endif
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Renk Tipi</label>
-                        <select name="color_type" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm">
-                            <option value="">Seçiniz</option>
-                            @foreach(['Metalik','Mat','İnci','Normal'] as $ct)
-                                <option value="{{ $ct }}" {{ old('color_type',$vehicle->color_type)===$ct?'selected':'' }}>{{ $ct }}</option>
-                            @endforeach
-                        </select>
+                        <div class="adm-dd" id="ddWrap-editColorType">
+                            <input type="hidden" name="color_type" id="ddVal-editColorType" value="{{ $curColorTypeEdit }}">
+                            <button type="button" class="adm-dd-btn" id="ddBtn-editColorType" onclick="toggleStaticDD('editColorType')">
+                                <span id="ddLabel-editColorType">{{ $curColorTypeEdit ?: 'Seçiniz' }}</span>
+                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                            </button>
+                            <ul class="adm-dd-list" id="ddList-editColorType">
+                                <li data-val="" onclick="selectStaticDD('editColorType','','Seçiniz')">Seçiniz</li>
+                                @foreach($editColorTypeOptions as $ct)
+                                    <li data-val="{{ $ct }}" onclick="selectStaticDD('editColorType','{{ $ct }}','{{ $ct }}')" class="{{ $curColorTypeEdit===$ct?'selected':'' }}">{{ $ct }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
 
             {{-- Çekiş + Kapı + Koltuk --}}
+            @php
+                $editDriveOptions = ['Önden Çekiş','Arkadan İtiş','4x4'];
+                $editDoorOptions  = [2,3,4,5,6,7,8];
+                $editSeatOptions  = [2,4,5,6,7,8,9,10,12,15];
+                $curDriveEdit = $vehicle->drive_type ?? old('drive_type', '');
+                $curDoorEdit  = $vehicle->door_count ?? old('door_count', '');
+                $curSeatEdit  = $vehicle->seat_count ?? old('seat_count', '');
+            @endphp
             <div class="border-t pt-6">
                 <h4 class="text-sm font-bold text-gray-700 mb-4">Şasi & Kapasite</h4>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Çekiş</label>
-                        <select name="drive_type" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm">
-                            <option value="">Seçiniz</option>
-                            @foreach(['Önden Çekiş','Arkadan İtiş','4x4'] as $dr)
-                                <option value="{{ $dr }}" {{ old('drive_type',$vehicle->drive_type)===$dr?'selected':'' }}>{{ $dr }}</option>
-                            @endforeach
-                        </select>
+                        <div class="adm-dd" id="ddWrap-editDriveType">
+                            <input type="hidden" name="drive_type" id="ddVal-editDriveType" value="{{ $curDriveEdit }}">
+                            <button type="button" class="adm-dd-btn" id="ddBtn-editDriveType" onclick="toggleStaticDD('editDriveType')">
+                                <span id="ddLabel-editDriveType">{{ $curDriveEdit ?: 'Seçiniz' }}</span>
+                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                            </button>
+                            <ul class="adm-dd-list" id="ddList-editDriveType">
+                                <li data-val="" onclick="selectStaticDD('editDriveType','','Seçiniz')">Seçiniz</li>
+                                @foreach($editDriveOptions as $dr)
+                                    <li data-val="{{ $dr }}" onclick="selectStaticDD('editDriveType','{{ $dr }}','{{ $dr }}')" class="{{ $curDriveEdit===$dr?'selected':'' }}">{{ $dr }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Kapı Sayısı</label>
-                        <select name="door_count" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm">
-                            <option value="">Seçiniz</option>
-                            @foreach([2,3,4,5,6,7,8] as $d)
-                                <option value="{{ $d }}" {{ (int)old('door_count',$vehicle->door_count)===$d?'selected':'' }}>{{ $d }} Kapı</option>
-                            @endforeach
-                        </select>
+                        <div class="adm-dd" id="ddWrap-editDoorCount">
+                            <input type="hidden" name="door_count" id="ddVal-editDoorCount" value="{{ $curDoorEdit }}">
+                            <button type="button" class="adm-dd-btn" id="ddBtn-editDoorCount" onclick="toggleStaticDD('editDoorCount')">
+                                <span id="ddLabel-editDoorCount">{{ $curDoorEdit ? $curDoorEdit.' Kapı' : 'Seçiniz' }}</span>
+                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                            </button>
+                            <ul class="adm-dd-list" id="ddList-editDoorCount">
+                                <li data-val="" onclick="selectStaticDD('editDoorCount','','Seçiniz')">Seçiniz</li>
+                                @foreach($editDoorOptions as $d)
+                                    <li data-val="{{ $d }}" onclick="selectStaticDD('editDoorCount','{{ $d }}','{{ $d }} Kapı')" class="{{ (int)$curDoorEdit===$d?'selected':'' }}">{{ $d }} Kapı</li>
+                                @endforeach
+                            </ul>
+                        </div>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Koltuk Sayısı</label>
-                        <select name="seat_count" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm">
-                            <option value="">Seçiniz</option>
-                            @foreach([2,4,5,6,7,8,9,10,12,15] as $s)
-                                <option value="{{ $s }}" {{ (int)old('seat_count',$vehicle->seat_count)===$s?'selected':'' }}>{{ $s }} Koltuk</option>
-                            @endforeach
-                        </select>
+                        <div class="adm-dd" id="ddWrap-editSeatCount">
+                            <input type="hidden" name="seat_count" id="ddVal-editSeatCount" value="{{ $curSeatEdit }}">
+                            <button type="button" class="adm-dd-btn" id="ddBtn-editSeatCount" onclick="toggleStaticDD('editSeatCount')">
+                                <span id="ddLabel-editSeatCount">{{ $curSeatEdit ? $curSeatEdit.' Koltuk' : 'Seçiniz' }}</span>
+                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                            </button>
+                            <ul class="adm-dd-list" id="ddList-editSeatCount">
+                                <li data-val="" onclick="selectStaticDD('editSeatCount','','Seçiniz')">Seçiniz</li>
+                                @foreach($editSeatOptions as $s)
+                                    <li data-val="{{ $s }}" onclick="selectStaticDD('editSeatCount','{{ $s }}','{{ $s }} Koltuk')" class="{{ (int)$curSeatEdit===$s?'selected':'' }}">{{ $s }} Koltuk</li>
+                                @endforeach
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -470,167 +575,16 @@
                 </div>
             </div>
 
-        </div>
-
-        {{-- ─── Tab 5: DONANIMLAR ───────────────────────────────────────────── --}}
-        <div id="vtab-donanim" class="vehicle-tab-content p-6 space-y-4 hidden">
-
-            <div class="flex items-center justify-between">
-                <h3 class="text-lg font-bold text-gray-900">Donanım & Özellikler</h3>
-                <span class="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full" id="editSelectedCount">
-                    @php $currentFeatures = old('features', $vehicle->features ?? []); @endphp
-                    {{ count($currentFeatures) }} özellik seçili
-                </span>
-            </div>
-
-            <input type="text" id="editFeatureSearch" placeholder="Donanım ara..."
-                   class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm"
-                   oninput="filterEditFeatures(this.value)">
-
-            <div class="space-y-2" id="editFeaturesContainer">
-                @foreach($featureCategories as $category => $features)
-                <div class="border border-gray-200 rounded-lg">
-                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-t-lg cursor-pointer select-none"
-                         onclick="this.nextElementSibling.classList.toggle('hidden')">
-                        <span class="text-sm font-semibold text-gray-700">{{ $category }}</span>
-                        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-                    </div>
-                    <div class="p-3">
-                        <div class="grid grid-cols-2 gap-1.5">
-                            @foreach($features as $feature)
-                            <label class="edit-feature-item flex items-center space-x-2 p-2 border border-gray-200 rounded hover:bg-gray-50 cursor-pointer transition-all text-sm">
-                                <input type="checkbox" name="features[]" value="{{ $feature }}"
-                                       class="w-3.5 h-3.5 text-red-600 border-gray-300 rounded focus:ring-red-500"
-                                       onchange="updateEditFeatureCount()"
-                                       {{ in_array($feature,$currentFeatures)?'checked':'' }}>
-                                <span class="text-gray-700">{{ $feature }}</span>
-                            </label>
-                            @endforeach
-                        </div>
-                    </div>
-                </div>
-                @endforeach
-
-                {{-- Orphan features --}}
-                @php
-                    $allCatalogFeatures = collect($featureCategories)->flatten()->toArray();
-                    $orphanFeatures = array_filter($currentFeatures, fn($f) => !in_array($f, $allCatalogFeatures));
-                @endphp
-                @if(count($orphanFeatures) > 0)
-                <div class="border border-amber-200 rounded-lg">
-                    <div class="flex items-center justify-between p-3 bg-amber-50 rounded-t-lg cursor-pointer select-none"
-                         onclick="this.nextElementSibling.classList.toggle('hidden')">
-                        <span class="text-sm font-semibold text-amber-700">Diğer (Katalog Dışı)</span>
-                        <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-                    </div>
-                    <div class="p-3">
-                        <p class="text-xs text-amber-600 mb-2">Katalogda yer almayan eski özellikler. Korumak istiyorsanız işaretli bırakın.</p>
-                        <div class="grid grid-cols-2 gap-1.5">
-                            @foreach($orphanFeatures as $feature)
-                            <label class="edit-feature-item flex items-center space-x-2 p-2 border border-amber-200 rounded bg-amber-50 cursor-pointer text-sm">
-                                <input type="checkbox" name="features[]" value="{{ $feature }}"
-                                       class="w-3.5 h-3.5 text-amber-600 border-amber-300 rounded"
-                                       onchange="updateEditFeatureCount()" checked>
-                                <span class="text-amber-800">{{ $feature }}</span>
-                            </label>
-                            @endforeach
-                        </div>
-                    </div>
-                </div>
-                @endif
-            </div>
-
-        </div>
-
-        {{-- ─── Tab 6: HASAR & GEÇMİŞ ─────────────────────────────────────── --}}
-        <div id="vtab-hasar" class="vehicle-tab-content p-6 space-y-6 hidden">
-
-            <h3 class="text-lg font-bold text-gray-900">Hasar & Geçmiş Bilgileri</h3>
-
-            <div class="bg-gray-50 border border-gray-200 rounded-lg p-5">
-                <h4 class="font-semibold text-gray-900 mb-4">Tramer & Sahip Bilgisi</h4>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Tramer Kaydı</label>
-                        <select name="tramer_status" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm">
-                            <option value="">Seçiniz</option>
-                            @foreach(['Yok'=>'Yok (Temiz)','Var'=>'Var','Bilinmiyor'=>'Bilinmiyor'] as $v=>$l)
-                                <option value="{{ $v }}" {{ old('tramer_status',$vehicle->tramer_status)===$v?'selected':'' }}>{{ $l }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Tramer Tutarı (₺)</label>
-                        <input type="number" name="tramer_amount" value="{{ old('tramer_amount',$vehicle->tramer_amount) }}" placeholder="0" step="0.01" min="0"
-                               class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Kaçıncı Sahip</label>
-                        <input type="number" name="owner_number" value="{{ old('owner_number',$vehicle->owner_number) }}" placeholder="1" min="1"
-                               class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm">
-                    </div>
-                    <div class="flex items-end pb-1">
-                        <label class="flex items-center space-x-2 cursor-pointer">
-                            <input type="checkbox" name="has_warranty" value="1" class="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500"
-                                   {{ old('has_warranty',$vehicle->has_warranty)?'checked':'' }}>
-                            <span class="text-sm font-medium text-gray-700">Garantisi Var</span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-gray-50 border border-gray-200 rounded-lg p-5">
-                <h4 class="font-semibold text-gray-900 mb-4">Muayene & Garanti Tarihleri</h4>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Muayene Tarihi</label>
-                        <input type="date" name="inspection_date"
-                               value="{{ old('inspection_date', $vehicle->inspection_date ? $vehicle->inspection_date->format('Y-m-d') : '') }}"
-                               class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Garanti Bitiş Tarihi</label>
-                        <input type="date" name="warranty_end_date"
-                               value="{{ old('warranty_end_date', $vehicle->warranty_end_date ? $vehicle->warranty_end_date->format('Y-m-d') : '') }}"
-                               class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors">
-                    </div>
-                </div>
-            </div>
-
-            @php
-                $editParts     = ['Kaput','Ön Tampon','Arka Tampon','Sağ Ön','Sol Ön','Sağ Arka','Sol Arka','Tavan'];
-                $paintedParts  = old('painted_parts', $vehicle->painted_parts ?? []);
-                $replacedParts = old('replaced_parts', $vehicle->replaced_parts ?? []);
-            @endphp
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="border border-gray-200 rounded-lg">
-                    <div class="bg-yellow-50 px-4 py-3 rounded-t-lg">
-                        <h4 class="font-semibold text-yellow-800 text-sm">Boyalı Parçalar</h4>
-                        <p class="text-xs text-yellow-600 mt-0.5">Boyalı olan parçaları işaretleyin</p>
-                    </div>
-                    <div class="p-3 grid grid-cols-2 gap-1.5">
-                        @foreach($editParts as $part)
-                        <label class="flex items-center space-x-2 p-2 border border-gray-200 rounded hover:bg-yellow-50 cursor-pointer text-sm">
-                            <input type="checkbox" name="painted_parts[]" value="{{ $part }}" class="w-3.5 h-3.5 text-yellow-600 border-gray-300 rounded" {{ in_array($part,$paintedParts)?'checked':'' }}>
-                            <span class="text-gray-700">{{ $part }}</span>
-                        </label>
-                        @endforeach
-                    </div>
-                </div>
-                <div class="border border-gray-200 rounded-lg">
-                    <div class="bg-red-50 px-4 py-3 rounded-t-lg">
-                        <h4 class="font-semibold text-red-800 text-sm">Değişen Parçalar</h4>
-                        <p class="text-xs text-red-600 mt-0.5">Değişmiş olan parçaları işaretleyin</p>
-                    </div>
-                    <div class="p-3 grid grid-cols-2 gap-1.5">
-                        @foreach($editParts as $part)
-                        <label class="flex items-center space-x-2 p-2 border border-gray-200 rounded hover:bg-red-50 cursor-pointer text-sm">
-                            <input type="checkbox" name="replaced_parts[]" value="{{ $part }}" class="w-3.5 h-3.5 text-red-600 border-gray-300 rounded" {{ in_array($part,$replacedParts)?'checked':'' }}>
-                            <span class="text-gray-700">{{ $part }}</span>
-                        </label>
-                        @endforeach
-                    </div>
-                </div>
+            {{-- Step Footer --}}
+            <div class="step-footer mt-6">
+                <button type="button" onclick="goToStep('ilan')" class="step-footer-btn secondary">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                    İlan Bilgileri
+                </button>
+                <button type="button" onclick="goToStep('gorseller', true)" class="step-footer-btn primary">
+                    Devam: Görseller
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                </button>
             </div>
 
         </div>
@@ -714,107 +668,425 @@
                 <div id="editGalleryPreview" class="grid grid-cols-4 sm:grid-cols-6 gap-2 mt-3"></div>
             </div>
 
+            {{-- Step Footer --}}
+            <div class="step-footer mt-6">
+                <button type="button" onclick="goToStep('teknik')" class="step-footer-btn secondary">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                    Teknik Detaylar
+                </button>
+                <button type="button" onclick="goToStep('donanim', true)" class="step-footer-btn primary">
+                    Devam: Donanımlar
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                </button>
+            </div>
+
         </div>
 
-        {{-- ─── Tab 7: ENTEGRASYON ──────────────────────────────────────────── --}}
-        <div id="vtab-diger" class="vehicle-tab-content p-6 space-y-6 hidden">
+        {{-- ─── Tab 5: DONANIMLAR ───────────────────────────────────────────── --}}
+        <div id="vtab-donanim" class="vehicle-tab-content p-6 space-y-4 hidden">
 
-            <h3 class="text-lg font-bold text-gray-900">Entegrasyon</h3>
-            <p class="text-sm text-gray-500 -mt-4">Sahibinden.com üzerinden aktarılan ilanlar için bağlantı bilgileri.</p>
+            <div class="flex items-center justify-between">
+                <h3 class="text-lg font-bold text-gray-900">Donanım & Özellikler</h3>
+                <span class="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full" id="editSelectedCount">
+                    @php $currentFeatures = old('features', $vehicle->features ?? []); @endphp
+                    {{ count($currentFeatures) }} özellik seçili
+                </span>
+            </div>
 
-            <div class="bg-gray-50 border border-gray-200 rounded-lg p-5 space-y-4">
-                <h4 class="font-semibold text-gray-900 flex items-center gap-2">
-                    <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-                    Sahibinden.com
+            <input type="text" id="editFeatureSearch" placeholder="Donanım ara..."
+                   class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm"
+                   oninput="filterEditFeatures(this.value)">
+
+            <div class="space-y-2" id="editFeaturesContainer">
+                @foreach($featureCategories as $category => $features)
+                <div class="border border-gray-200 rounded-lg">
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-t-lg cursor-pointer select-none"
+                         onclick="this.nextElementSibling.classList.toggle('hidden')">
+                        <span class="text-sm font-semibold text-gray-700">{{ $category }}</span>
+                        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </div>
+                    <div class="p-3">
+                        <div class="grid grid-cols-2 gap-1.5">
+                            @foreach($features as $feature)
+                            <label class="edit-feature-item flex items-center space-x-2 p-2 border border-gray-200 rounded hover:bg-gray-50 cursor-pointer transition-all text-sm">
+                                <input type="checkbox" name="features[]" value="{{ $feature }}"
+                                       class="w-3.5 h-3.5 text-red-600 border-gray-300 rounded focus:ring-red-500"
+                                       onchange="updateEditFeatureCount()"
+                                       {{ in_array($feature,$currentFeatures)?'checked':'' }}>
+                                <span class="text-gray-700">{{ $feature }}</span>
+                            </label>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+
+                {{-- Orphan features --}}
+                @php
+                    $allCatalogFeatures = collect($featureCategories)->flatten()->toArray();
+                    $orphanFeatures = array_filter($currentFeatures, fn($f) => !in_array($f, $allCatalogFeatures));
+                @endphp
+                @if(count($orphanFeatures) > 0)
+                <div class="border border-amber-200 rounded-lg">
+                    <div class="flex items-center justify-between p-3 bg-amber-50 rounded-t-lg cursor-pointer select-none"
+                         onclick="this.nextElementSibling.classList.toggle('hidden')">
+                        <span class="text-sm font-semibold text-amber-700">Diğer (Katalog Dışı)</span>
+                        <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </div>
+                    <div class="p-3">
+                        <p class="text-xs text-amber-600 mb-2">Katalogda yer almayan eski özellikler. Korumak istiyorsanız işaretli bırakın.</p>
+                        <div class="grid grid-cols-2 gap-1.5">
+                            @foreach($orphanFeatures as $feature)
+                            <label class="edit-feature-item flex items-center space-x-2 p-2 border border-amber-200 rounded bg-amber-50 cursor-pointer text-sm">
+                                <input type="checkbox" name="features[]" value="{{ $feature }}"
+                                       class="w-3.5 h-3.5 text-amber-600 border-amber-300 rounded"
+                                       onchange="updateEditFeatureCount()" checked>
+                                <span class="text-amber-800">{{ $feature }}</span>
+                            </label>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+                @endif
+            </div>
+
+            {{-- Step Footer --}}
+            <div class="step-footer mt-6">
+                <button type="button" onclick="goToStep('gorseller')" class="step-footer-btn secondary">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                    Görseller
+                </button>
+                <button type="button" onclick="goToStep('hasar', true)" class="step-footer-btn primary">
+                    Devam: Hasar & Geçmiş
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                </button>
+            </div>
+
+        </div>
+
+        {{-- ─── Tab 6: HASAR & GEÇMİŞ ─────────────────────────────────────── --}}
+        <div id="vtab-hasar" class="vehicle-tab-content p-6 space-y-6 hidden">
+
+            <h3 class="text-lg font-bold text-gray-900">Hasar & Geçmiş Bilgileri</h3>
+
+            @php
+                $editTramerOptions = ['Yok'=>'Yok (Temiz)','Var'=>'Var','Bilinmiyor'=>'Bilinmiyor'];
+                $curTramerEdit = $vehicle->tramer_status ?? old('tramer_status', '');
+            @endphp
+            <div class="bg-gray-50 border border-gray-200 rounded-lg p-5">
+                <h4 class="font-semibold text-gray-900 mb-4">Tramer & Sahip Bilgisi</h4>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Tramer Kaydı</label>
+                        <div class="adm-dd" id="ddWrap-editTramerStatus">
+                            <input type="hidden" name="tramer_status" id="ddVal-editTramerStatus" value="{{ $curTramerEdit }}">
+                            <button type="button" class="adm-dd-btn" id="ddBtn-editTramerStatus" onclick="toggleStaticDD('editTramerStatus')">
+                                <span id="ddLabel-editTramerStatus">{{ $editTramerOptions[$curTramerEdit] ?? 'Seçiniz' }}</span>
+                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                            </button>
+                            <ul class="adm-dd-list" id="ddList-editTramerStatus">
+                                <li data-val="" onclick="selectStaticDD('editTramerStatus','','Seçiniz')">Seçiniz</li>
+                                @foreach($editTramerOptions as $v=>$l)
+                                    <li data-val="{{ $v }}" onclick="selectStaticDD('editTramerStatus','{{ $v }}','{{ $l }}')" class="{{ $curTramerEdit===$v?'selected':'' }}">{{ $l }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Tramer Tutarı (₺)</label>
+                        <input type="number" name="tramer_amount" value="{{ old('tramer_amount',$vehicle->tramer_amount) }}" placeholder="0" step="0.01" min="0"
+                               class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Kaçıncı Sahip</label>
+                        <input type="number" name="owner_number" value="{{ old('owner_number',$vehicle->owner_number) }}" placeholder="1" min="1"
+                               class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm">
+                    </div>
+                </div>
+            </div>
+
+            {{-- Garanti & Muayene --}}
+            <div class="bg-gray-50 border border-gray-200 rounded-lg p-5">
+                <h4 class="font-semibold text-gray-900 mb-4">Garanti & Muayene</h4>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Garanti Durumu</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <label class="flex items-center justify-center gap-2 p-3 border-2 rounded-lg cursor-pointer transition-all text-sm font-medium
+                                {{ $vehicle->has_warranty ? 'border-green-500 bg-green-50 text-green-700' : 'border-gray-200 hover:border-green-300 text-gray-600' }}" id="editWarrantyYesLabel">
+                                <input type="radio" name="has_warranty" value="1" class="sr-only" {{ $vehicle->has_warranty ? 'checked' : '' }}
+                                       onchange="document.getElementById('editWarrantyYesLabel').classList.add('border-green-500','bg-green-50','text-green-700');document.getElementById('editWarrantyNoLabel').classList.remove('border-red-500','bg-red-50','text-red-700');document.getElementById('editWarrantyNoLabel').classList.add('border-gray-200','text-gray-600');">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                Var
+                            </label>
+                            <label class="flex items-center justify-center gap-2 p-3 border-2 rounded-lg cursor-pointer transition-all text-sm font-medium
+                                {{ !$vehicle->has_warranty ? 'border-red-500 bg-red-50 text-red-700' : 'border-gray-200 hover:border-red-300 text-gray-600' }}" id="editWarrantyNoLabel">
+                                <input type="radio" name="has_warranty" value="0" class="sr-only" {{ !$vehicle->has_warranty ? 'checked' : '' }}
+                                       onchange="document.getElementById('editWarrantyNoLabel').classList.add('border-red-500','bg-red-50','text-red-700');document.getElementById('editWarrantyYesLabel').classList.remove('border-green-500','bg-green-50','text-green-700');document.getElementById('editWarrantyYesLabel').classList.add('border-gray-200','text-gray-600');">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                                Yok
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Muayene Tarihi</label>
+                        <input type="date" name="inspection_date"
+                               value="{{ old('inspection_date', $vehicle->inspection_date ? $vehicle->inspection_date->format('Y-m-d') : '') }}"
+                               class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Garanti Bitiş Tarihi</label>
+                        <input type="date" name="warranty_end_date"
+                               value="{{ old('warranty_end_date', $vehicle->warranty_end_date ? $vehicle->warranty_end_date->format('Y-m-d') : '') }}"
+                               class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm">
+                    </div>
+                </div>
+            </div>
+
+            {{-- Ekspertiz Araç Diyagramı --}}
+            <div class="border border-gray-200 rounded-lg overflow-hidden">
+                <div class="bg-gray-50 px-5 py-3 border-b border-gray-200">
+                    <h4 class="font-semibold text-gray-900 text-sm">Boya & Parça Durumu</h4>
+                    <p class="text-xs text-gray-500 mt-0.5">Araç üzerinde tıklayarak parça durumunu belirleyin</p>
+                </div>
+                <div class="p-5">
+                    <div class="flex flex-col items-center" style="position:relative;" id="editCarDiagramWrapper">
+                        <div class="admin-car-tooltip" id="editCarTooltip">
+                            <div class="admin-car-tooltip-title" id="editTooltipTitle">Parça</div>
+                            <div class="admin-car-tooltip-opt" data-val="ORIJINAL"><span class="admin-tt-dot dot-orijinal"></span>Orijinal</div>
+                            <div class="admin-car-tooltip-opt" data-val="BOYALI"><span class="admin-tt-dot dot-boyali"></span>Boyalı</div>
+                            <div class="admin-car-tooltip-opt" data-val="LOKAL_BOYALI"><span class="admin-tt-dot dot-lokal"></span>Lokal Boyalı</div>
+                            <div class="admin-car-tooltip-opt" data-val="DEGISMIS"><span class="admin-tt-dot dot-degismis"></span>Değişmiş</div>
+                        </div>
+                        <div style="max-width:320px;width:100%;">
+                            @include('admin.vehicles._car_diagram_svg')
+                        </div>
+                        <div class="flex gap-4 mt-3 text-xs text-gray-500">
+                            <span class="flex items-center gap-1"><span class="inline-block w-3 h-3 rounded-full bg-blue-500"></span> Boyalı</span>
+                            <span class="flex items-center gap-1"><span class="inline-block w-3 h-3 rounded-full bg-amber-400"></span> Lokal Boyalı</span>
+                            <span class="flex items-center gap-1"><span class="inline-block w-3 h-3 rounded-full bg-red-600"></span> Değişmiş</span>
+                        </div>
+                    </div>
+                    <div id="editPartInputs"></div>
+                </div>
+            </div>
+
+            {{-- Step Footer --}}
+            <div class="step-footer mt-6">
+                <button type="button" onclick="goToStep('donanim')" class="step-footer-btn secondary">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                    Donanımlar
+                </button>
+                <button type="button" onclick="goToStep('yayin', true)" class="step-footer-btn primary">
+                    Devam: Yayın Ayarları
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                </button>
+            </div>
+
+        </div>
+
+        {{-- ─── Tab 7: YAYIN AYARLARI (Son Adım) ──────────────────────────── --}}
+        <div id="vtab-yayin" class="vehicle-tab-content p-6 space-y-6 hidden">
+
+            <div>
+                <h3 class="text-lg font-bold text-gray-900">Yayın Ayarları</h3>
+                <p class="text-xs text-gray-500 mt-1">Araç bilgilerinizi güncellediniz. Yayın durumunu belirleyin ve kaydedin.</p>
+            </div>
+
+            {{-- Yayın Durumu --}}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <label class="flex items-start gap-4 p-5 border-2 rounded-xl cursor-pointer transition-all hover:border-red-400 hover:bg-red-50/50
+                    {{ old('is_active', $vehicle->is_active) ? 'border-red-500 bg-red-50' : 'border-gray-200' }}">
+                    <input type="checkbox" name="is_active" value="1" class="w-5 h-5 mt-0.5 text-red-600 border-gray-300 rounded focus:ring-red-500"
+                           {{ old('is_active', $vehicle->is_active) ? 'checked' : '' }}>
+                    <div>
+                        <p class="font-bold text-gray-900">Aktif (Yayında)</p>
+                        <p class="text-sm text-gray-500 mt-1">Araç web sitesinde ziyaretçilere görünür olacak</p>
+                    </div>
+                </label>
+                <label class="flex items-start gap-4 p-5 border-2 rounded-xl cursor-pointer transition-all hover:border-yellow-400 hover:bg-yellow-50/50
+                    {{ old('is_featured', $vehicle->is_featured) ? 'border-yellow-500 bg-yellow-50' : 'border-gray-200' }}">
+                    <input type="checkbox" name="is_featured" value="1" class="w-5 h-5 mt-0.5 text-yellow-500 border-gray-300 rounded focus:ring-yellow-400"
+                           {{ old('is_featured', $vehicle->is_featured) ? 'checked' : '' }}>
+                    <div>
+                        <p class="font-bold text-gray-900">Öne Çıkarılmış</p>
+                        <p class="text-sm text-gray-500 mt-1">Anasayfada vitrin bölümünde gösterilir</p>
+                    </div>
+                </label>
+            </div>
+
+            {{-- Araç Satış Durumu --}}
+            <div class="border-t pt-6">
+                <label class="block text-sm font-bold text-gray-700 mb-3">Araç Durumu</label>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    @foreach(\App\Models\Vehicle::STATUSES as $val => $label)
+                    <label class="flex items-center gap-3 p-3 border-2 rounded-lg cursor-pointer transition-all
+                        {{ old('vehicle_status',$vehicle->vehicle_status??'available')===$val ? 'border-red-500 bg-red-50' : 'border-gray-200 hover:border-red-300 hover:bg-red-50/50' }}">
+                        <input type="radio" name="vehicle_status" value="{{ $val }}"
+                               class="w-4 h-4 text-red-600 border-gray-300 focus:ring-red-500"
+                               {{ old('vehicle_status',$vehicle->vehicle_status??'available')===$val ? 'checked' : '' }}>
+                        <span class="text-sm font-semibold text-gray-800">{{ $label }}</span>
+                    </label>
+                    @endforeach
+                </div>
+            </div>
+
+            {{-- Entegrasyon --}}
+            <div class="border-t pt-6">
+                <h4 class="text-sm font-bold text-gray-700 mb-3 flex items-center gap-2">
+                    <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                    Sahibinden.com Entegrasyonu
+                    <span class="text-xs font-normal text-gray-400">(opsiyonel)</span>
                 </h4>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">İlan Linki</label>
-                    <input type="url" name="sahibinden_url" value="{{ old('sahibinden_url',$vehicle->sahibinden_url) }}" placeholder="https://www.sahibinden.com/ilan/..."
-                           class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">İlan Linki</label>
+                        <input type="url" name="sahibinden_url" value="{{ old('sahibinden_url', $vehicle->sahibinden_url) }}" placeholder="https://www.sahibinden.com/..."
+                               class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">İlan No</label>
+                        <input type="text" name="sahibinden_id" value="{{ old('sahibinden_id', $vehicle->sahibinden_id) }}" placeholder="123456789"
+                               class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors font-mono text-sm">
+                    </div>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">İlan No</label>
-                    <input type="text" name="sahibinden_id" value="{{ old('sahibinden_id',$vehicle->sahibinden_id) }}" placeholder="1234567890"
-                           class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors font-mono">
+            </div>
+
+            {{-- Kaydet Butonları --}}
+            <div class="border-t pt-6">
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <button type="submit"
+                            class="flex-1 px-6 py-4 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl transition-all text-sm flex items-center justify-center gap-2 shadow-sm">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                        Değişiklikleri Kaydet
+                    </button>
+                    <a href="{{ route('admin.vehicles.index') }}"
+                       class="px-6 py-4 border-2 border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition-all text-sm flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                        İptal
+                    </a>
                 </div>
+            </div>
+
+            {{-- Step Footer --}}
+            <div class="step-footer mt-2">
+                <button type="button" onclick="goToStep('hasar')" class="step-footer-btn secondary">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                    Hasar & Geçmiş
+                </button>
+                <div></div>
             </div>
 
         </div>
 
     </div>{{-- /tabs card --}}
-    </div>{{-- /lg:col-span-3 --}}
+    </div>
 
-    {{-- ═══════════════ SIDEBAR ═══════════════ --}}
-    <div class="lg:col-span-1">
-        <div class="sticky top-6 space-y-4">
-
-            <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-                <div class="p-4 border-b border-gray-200">
-                    <h3 class="text-sm font-bold text-gray-900">Yayın & Araç Durumu</h3>
-                </div>
-                <div class="p-4 space-y-3">
-                    <label class="flex items-center space-x-2 p-3 border border-gray-200 rounded-lg hover:border-red-400 hover:bg-red-50 cursor-pointer transition-all">
-                        <input type="checkbox" name="is_active" value="1"
-                               class="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500"
-                               {{ old('is_active',$vehicle->is_active)?'checked':'' }}>
-                        <div class="flex-1">
-                            <p class="font-bold text-gray-900 text-xs">Aktif (Yayında)</p>
-                            <p class="text-xs text-gray-500">Web sitesinde görünür</p>
-                        </div>
-                    </label>
-                    <label class="flex items-center space-x-2 p-3 border border-gray-200 rounded-lg hover:border-yellow-400 hover:bg-yellow-50 cursor-pointer transition-all">
-                        <input type="checkbox" name="is_featured" value="1"
-                               class="w-4 h-4 text-yellow-500 border-gray-300 rounded focus:ring-yellow-400"
-                               {{ old('is_featured',$vehicle->is_featured)?'checked':'' }}>
-                        <div class="flex-1">
-                            <p class="font-bold text-gray-900 text-xs">Öne Çıkarılmış</p>
-                            <p class="text-xs text-gray-500">Anasayfada gösterilsin</p>
-                        </div>
-                    </label>
-                    <div class="pt-1">
-                        <label class="block text-xs font-bold text-gray-700 mb-1.5">Araç Durumu</label>
-                        <select name="vehicle_status" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors">
-                            @foreach(\App\Models\Vehicle::STATUSES as $val => $label)
-                                <option value="{{ $val }}" {{ old('vehicle_status',$vehicle->vehicle_status??'available')===$val?'selected':'' }}>{{ $label }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-4 space-y-2">
-                <button type="submit"
-                        class="w-full px-4 py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg transition-all text-sm flex items-center justify-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                    Değişiklikleri Kaydet
-                </button>
-                <a href="{{ route('admin.vehicles.index') }}"
-                   class="w-full px-4 py-2.5 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-all text-sm flex items-center justify-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-                    İptal
-                </a>
-            </div>
-
-        </div>
-    </div>{{-- /sidebar --}}
-
-    </div>{{-- /grid --}}
+    </div>
 
 </form>
 
 @push('scripts')
 <script>
-// ─── Tab Switching ─────────────────────────────────────────────────────────────
-function switchVehicleTab(tabId) {
-    document.querySelectorAll('.vehicle-tab-btn').forEach(btn => {
+// ═══════════════════════════════════════════════════════════════════════════════
+// STEP SYSTEM
+// ═══════════════════════════════════════════════════════════════════════════════
+const STEP_ORDER = ['kimlik','ilan','teknik','gorseller','donanim','hasar','yayin'];
+let currentStep = 'kimlik';
+let stepVisited = { kimlik: true };
+
+function goToStep(tabId, validate) {
+    if (validate && currentStep !== tabId) {
+        const warnings = checkStepCompletion(currentStep);
+        if (warnings.length > 0) {
+            Swal.fire({
+                icon: 'info',
+                title: 'Eksik Alanlar',
+                html: '<p class="text-sm text-gray-600 mb-2">Şu alanlar henüz doldurulmadı:</p><ul class="text-sm text-left list-disc pl-5">' +
+                      warnings.map(w => '<li>' + w + '</li>').join('') + '</ul>',
+                confirmButtonText: 'Yine de devam et',
+                showCancelButton: true,
+                cancelButtonText: 'Düzelt',
+                confirmButtonColor: '#dc2626'
+            }).then(r => { if (r.isConfirmed) activateStep(tabId); });
+            return;
+        }
+    }
+    activateStep(tabId);
+}
+
+function activateStep(tabId) {
+    currentStep = tabId;
+    stepVisited[tabId] = true;
+    document.querySelectorAll('.step-btn').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.tab === tabId);
     });
     document.querySelectorAll('.vehicle-tab-content').forEach(c => {
         c.classList.toggle('hidden', c.id !== 'vtab-' + tabId);
     });
+    updateAllStepStatuses();
+    window.scrollTo({ top: document.querySelector('.vehicle-form-card').offsetTop - 20, behavior: 'smooth' });
 }
 
-// ─── Ana Görsel Önizleme ────────────────────────────────────────────────────────
+function switchVehicleTab(tabId) { goToStep(tabId); }
+
+function checkStepCompletion(stepId) {
+    const w = [];
+    switch (stepId) {
+        case 'kimlik':
+            if (!val('year'))  w.push('Model Yılı');
+            if (!val('brand')) w.push('Marka');
+            if (!val('model')) w.push('Model / Seri');
+            break;
+        case 'ilan':
+            if (!val('title'))     w.push('İlan Başlığı');
+            if (!val('price'))     w.push('Fiyat');
+            if (!val('kilometer')) w.push('Kilometre');
+            break;
+        case 'gorseller':
+            const hasExisting = document.querySelectorAll('.existing-image-item').length > 0;
+            const hasNew = (document.getElementById('editMainImageInput') || {}).files;
+            if (!hasExisting && !(hasNew && hasNew.length > 0)) w.push('Görsel');
+            break;
+    }
+    return w;
+}
+
+function val(name) {
+    const el = document.querySelector('[name="' + name + '"]');
+    return el ? String(el.value).trim() : '';
+}
+
+function getStepStatus(stepId) {
+    if (!stepVisited[stepId]) return 'pending';
+    return checkStepCompletion(stepId).length > 0 ? 'warn' : 'done';
+}
+
+function updateAllStepStatuses() {
+    STEP_ORDER.forEach(function(id) {
+        const btn = document.getElementById('stepBtn-' + id);
+        if (!btn) return;
+        btn.classList.remove('done', 'warn');
+        if (btn.classList.contains('active')) return;
+        const status = getStepStatus(id);
+        if (status === 'done') btn.classList.add('done');
+        else if (status === 'warn') btn.classList.add('warn');
+    });
+}
+
+function debounce(fn, ms) {
+    let t; return function() { clearTimeout(t); t = setTimeout(fn, ms); };
+}
+document.addEventListener('input', debounce(updateAllStepStatuses, 300));
+document.addEventListener('change', debounce(updateAllStepStatuses, 300));
+
+// Edit sayfasında mevcut veriler olduğu için tüm adımları "ziyaret edilmiş" say
+STEP_ORDER.forEach(function(id) { stepVisited[id] = true; });
+updateAllStepStatuses();
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// IMAGE HANDLING
+// ═══════════════════════════════════════════════════════════════════════════════
 document.getElementById('editMainImageInput').addEventListener('change', function () {
     const file = this.files[0];
     if (!file) return;
@@ -830,7 +1102,6 @@ function clearEditMain() {
     document.getElementById('editMainPreview').classList.add('hidden');
 }
 
-// ─── Galeri Önizleme ────────────────────────────────────────────────────────────
 document.getElementById('editGalleryInput').addEventListener('change', function () {
     const preview = document.getElementById('editGalleryPreview');
     preview.innerHTML = '';
@@ -847,7 +1118,6 @@ document.getElementById('editGalleryInput').addEventListener('change', function 
     });
 });
 
-// ─── Görsel Silme Toggle ────────────────────────────────────────────────────────
 function toggleRemoveImage(cb, index) {
     const item = document.getElementById('imgItem_' + index);
     const btn  = document.getElementById('removeBtn_' + index);
@@ -860,7 +1130,9 @@ function toggleRemoveImage(cb, index) {
     }
 }
 
-// ─── Donanım Arama & Sayaç ──────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════════════════
+// FEATURES
+// ═══════════════════════════════════════════════════════════════════════════════
 function filterEditFeatures(query) {
     query = query.toLowerCase().trim();
     document.querySelectorAll('.edit-feature-item').forEach(label => {
@@ -873,14 +1145,56 @@ function updateEditFeatureCount() {
     if (el) el.textContent = count + ' özellik seçili';
 }
 
-// ─── Manuel Gir Toggle'ları ─────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════════════════
+// STATIC DROPDOWN FUNCTIONS
+// ═══════════════════════════════════════════════════════════════════════════════
+window.toggleStaticDD = function(id) {
+    const btn  = document.getElementById('ddBtn-' + id);
+    const list = document.getElementById('ddList-' + id);
+    if (!btn || !list) return;
+    const isOpen = list.classList.contains('open');
+    document.querySelectorAll('.adm-dd-list.open').forEach(function(l) {
+        l.classList.remove('open');
+        const wrap = l.closest('.adm-dd');
+        if (wrap) { const b = wrap.querySelector('.adm-dd-btn'); if (b) b.classList.remove('open'); }
+    });
+    if (!isOpen) { list.classList.add('open'); btn.classList.add('open'); }
+};
+
+window.selectStaticDD = function(id, val, label) {
+    var valEl   = document.getElementById('ddVal-' + id);
+    var labelEl = document.getElementById('ddLabel-' + id);
+    var list    = document.getElementById('ddList-' + id);
+    var btn     = document.getElementById('ddBtn-' + id);
+    if (valEl)   valEl.value = val;
+    if (labelEl) { labelEl.textContent = label; labelEl.style.color = val ? '#111827' : '#9ca3af'; }
+    if (list) {
+        list.querySelectorAll('li').forEach(function(l) { l.classList.remove('selected'); });
+        var selected = list.querySelector('li[data-val="' + val + '"]');
+        if (selected) selected.classList.add('selected');
+        list.classList.remove('open');
+    }
+    if (btn) btn.classList.remove('open');
+};
+
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('.adm-dd')) {
+        document.querySelectorAll('.adm-dd-list.open').forEach(function(l) {
+            l.classList.remove('open');
+            var wrap = l.closest('.adm-dd');
+            if (wrap) { var b = wrap.querySelector('.adm-dd-btn'); if (b) b.classList.remove('open'); }
+        });
+    }
+});
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// MANUAL INPUT TOGGLES
+// ═══════════════════════════════════════════════════════════════════════════════
 (function () {
     const pairs = [
         { toggle: 'editManualBodyTypeToggle',     select: 'editBodyTypeSelect',     input: 'editManualBodyTypeInput' },
         { toggle: 'editManualFuelTypeToggle',     select: 'editFuelTypeSelect',     input: 'editManualFuelTypeInput' },
         { toggle: 'editManualTransmissionToggle', select: 'editTransmissionSelect', input: 'editManualTransmissionInput' },
-        { toggle: 'editManualColorToggle',        select: 'editColorSelect',        input: 'editManualColorInput' },
-        { toggle: 'editManualCityToggle',         select: 'editCitySelect',          input: 'editManualCityInput' },
     ];
     pairs.forEach(({ toggle, select, input }) => {
         const toggleEl = document.getElementById(toggle);
@@ -893,21 +1207,148 @@ function updateEditFeatureCount() {
             selectEl.classList.toggle('hidden', isManual);
             inputEl.disabled = !isManual;
             inputEl.classList.toggle('hidden', !isManual);
-            if (isManual) {
-                inputEl.focus();
+            if (isManual) inputEl.focus();
+            else inputEl.value = '';
+        });
+    });
+
+    // Color manual toggle (uses adm-dd wrapper instead of select)
+    var colorToggle = document.getElementById('editManualColorToggle');
+    var colorWrap   = document.getElementById('ddWrap-editColor');
+    var colorInput  = document.getElementById('editManualColorInput');
+    var colorHidden = document.getElementById('ddVal-editColor');
+    if (colorToggle && colorWrap && colorInput) {
+        colorToggle.addEventListener('change', function () {
+            if (this.checked) {
+                colorWrap.classList.add('hidden');
+                colorInput.classList.remove('hidden');
+                colorInput.disabled = false;
+                colorInput.focus();
+                if (colorHidden) colorHidden.disabled = true;
             } else {
-                inputEl.value = '';
+                colorWrap.classList.remove('hidden');
+                colorInput.classList.add('hidden');
+                colorInput.disabled = true;
+                colorInput.value = '';
+                if (colorHidden) colorHidden.disabled = false;
             }
         });
+    }
+})();
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// CAR DIAGRAM (HASAR)
+// ═══════════════════════════════════════════════════════════════════════════════
+(function() {
+    var partStates = {};
+    var svgPartNames = {
+        'on_tampon': 'Ön Tampon', 'arka_tampon': 'Arka Tampon',
+        'motor_kaputu': 'Motor Kaputu', 'arka_kaput': 'Arka Kaput',
+        'tavan': 'Tavan',
+        'sag_on_kapi': 'Sağ Ön Kapı', 'sag_arka_kapi': 'Sağ Arka Kapı',
+        'sol_on_kapi': 'Sol Ön Kapı', 'sol_arka_kapi': 'Sol Arka Kapı',
+        'sag_on_camurluk': 'Sağ Ön Çamurluk', 'sag_arka_camurluk': 'Sağ Arka Çamurluk',
+        'sol_on_camurluk': 'Sol Ön Çamurluk', 'sol_arka_camurluk': 'Sol Arka Çamurluk'
+    };
+    var tooltip = document.getElementById('editCarTooltip');
+    var tooltipTitle = document.getElementById('editTooltipTitle');
+    var currentPart = null;
+
+    function getColor(val) {
+        if (val === 'BOYALI')       return '#3b82f6';
+        if (val === 'LOKAL_BOYALI') return '#fbbf24';
+        if (val === 'DEGISMIS')     return '#dc2626';
+        return '#FFFFFF';
+    }
+
+    function updatePartColor(partKey) {
+        var el = document.getElementById('svg-' + partKey);
+        if (el) el.style.fill = getColor(partStates[partKey] || 'ORIJINAL');
+    }
+
+    function syncHiddenInputs() {
+        var container = document.getElementById('editPartInputs');
+        container.innerHTML = '';
+        Object.keys(partStates).forEach(function(k) {
+            var val = partStates[k];
+            var displayName = svgPartNames[k] || k;
+            if (val === 'BOYALI' || val === 'LOKAL_BOYALI') {
+                var inp = document.createElement('input');
+                inp.type = 'hidden'; inp.name = 'painted_parts[]'; inp.value = displayName;
+                container.appendChild(inp);
+            } else if (val === 'DEGISMIS') {
+                var inp = document.createElement('input');
+                inp.type = 'hidden'; inp.name = 'replaced_parts[]'; inp.value = displayName;
+                container.appendChild(inp);
+            }
+        });
+    }
+
+    // Initialize from existing data
+    var existingPainted = @json($vehicle->painted_parts ?? []);
+    var existingReplaced = @json($vehicle->replaced_parts ?? []);
+    var nameToKey = {};
+    Object.keys(svgPartNames).forEach(function(k) { nameToKey[svgPartNames[k]] = k; });
+    existingPainted.forEach(function(name) { var k = nameToKey[name]; if(k) partStates[k] = 'BOYALI'; });
+    existingReplaced.forEach(function(name) { var k = nameToKey[name]; if(k) partStates[k] = 'DEGISMIS'; });
+    Object.keys(partStates).forEach(updatePartColor);
+    syncHiddenInputs();
+
+    document.querySelectorAll('#editCarDiagramWrapper .car-part').forEach(function(part) {
+        part.addEventListener('click', function(e) {
+            e.stopPropagation();
+            var svgId = this.id;
+            var partKey = svgId.replace('svg-', '');
+            currentPart = partKey;
+            tooltipTitle.textContent = svgPartNames[partKey] || partKey;
+
+            var curVal = partStates[partKey] || 'ORIJINAL';
+            tooltip.querySelectorAll('.admin-car-tooltip-opt').forEach(function(opt) {
+                opt.classList.toggle('selected', opt.dataset.val === curVal);
+            });
+
+            var wrapper = document.getElementById('editCarDiagramWrapper');
+            var rect = wrapper.getBoundingClientRect();
+            var x = e.clientX - rect.left;
+            var y = e.clientY - rect.top;
+            tooltip.style.left = Math.min(x, rect.offsetWidth - 160) + 'px';
+            tooltip.style.top = Math.min(y, rect.offsetHeight - 120) + 'px';
+            tooltip.classList.add('active');
+        });
+    });
+
+    tooltip.querySelectorAll('.admin-car-tooltip-opt').forEach(function(opt) {
+        opt.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (!currentPart) return;
+            var val = this.dataset.val;
+            if (val === 'ORIJINAL') { delete partStates[currentPart]; }
+            else { partStates[currentPart] = val; }
+            updatePartColor(currentPart);
+            syncHiddenInputs();
+            tooltip.querySelectorAll('.admin-car-tooltip-opt').forEach(function(o) {
+                o.classList.toggle('selected', o.dataset.val === val);
+            });
+            setTimeout(function() { tooltip.classList.remove('active'); currentPart = null; }, 150);
+        });
+    });
+
+    document.addEventListener('click', function(e) {
+        if (!tooltip.contains(e.target) && !e.target.classList.contains('car-part')) {
+            tooltip.classList.remove('active');
+            currentPart = null;
+        }
     });
 })();
 
-// ─── Form Validasyon ────────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════════════════
+// FORM VALIDATION
+// ═══════════════════════════════════════════════════════════════════════════════
 document.getElementById('vehicleForm').addEventListener('submit', function (e) {
     const required = ['title', 'brand', 'model', 'year', 'kilometer', 'price'];
     let missing = [];
     required.forEach(field => {
-        const input = document.querySelector(`[name="${field}"]`);
+        const input = document.querySelector('[name="' + field + '"]');
         if (!input || !String(input.value).trim()) missing.push(field);
     });
     if (missing.length > 0) {

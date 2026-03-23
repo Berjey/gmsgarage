@@ -8,7 +8,6 @@ use App\Data\VehicleFeatures;
 use App\Models\CarBrand;
 use App\Models\CarModel;
 use App\Models\FeaturesCatalog;
-use App\Services\SahibindenImporterService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
@@ -82,15 +81,8 @@ class VehicleController extends Controller
         $action       = $request->input('action', 'draft');
         $isPublishing = ($action === 'publish');
 
-        // Importer'dan önceden indirilen görsel yolları
-        $importedImages = session()->get(SahibindenImporterService::SESSION_KEY, []);
-        $hasImportedImages = !empty($importedImages);
-
-        // Publish için: imported görsel varsa main_image upload zorunlu değil
         $requiredRule  = $isPublishing ? 'required' : 'nullable';
-        $mainImageRule = ($isPublishing && !$hasImportedImages)
-            ? 'required|image|max:5120'
-            : 'nullable|image|max:5120';
+        $mainImageRule = $isPublishing ? 'required|image|max:5120' : 'nullable|image|max:5120';
 
         $validated = $request->validate([
             // Temel Bilgiler
@@ -166,7 +158,7 @@ class VehicleController extends Controller
         // Boolean değerleri: unchecked checkbox = false
         $validated['is_featured']  = $request->has('is_featured')  ? true : false;
         $validated['is_active']    = $request->has('is_active')    ? true : false;
-        $validated['has_warranty'] = $request->has('has_warranty') ? true : false;
+        $validated['has_warranty'] = $request->input('has_warranty') == '1';
         $validated['swap']             = $request->has('swap')             ? true : false;
         $validated['price_negotiable'] = $request->has('price_negotiable') ? true : false;
 
@@ -185,23 +177,16 @@ class VehicleController extends Controller
             : Vehicle::generateUniqueSlug($validated['title'] ?? '');
 
         // ─── Görsel işleme ────────────────────────────────────────────────────
-        // Importer'dan gelen pathler base olarak kullanılır
-        $images = array_values(array_filter($importedImages));
+        $images = [];
 
-        // Yeni ana görsel yüklendi → position 0'a al
         if ($request->hasFile('main_image')) {
             $img      = $request->file('main_image');
             $imgName  = time() . '_main_' . Str::random(10) . '.' . $img->getClientOriginalExtension();
             $imgPath  = $img->storeAs('vehicles', $imgName, 'public');
-            // Imported ilk görsel varsa onu çıkar (main upload onun yerini alır)
-            if (!empty($images)) array_shift($images);
             array_unshift($images, $imgPath);
             $validated['image'] = $imgPath;
-        } elseif (!empty($images)) {
-            $validated['image'] = $images[0];
         }
 
-        // Ek galeri görselleri yüklendi
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $index => $img) {
                 $imgName = time() . '_' . $index . '_' . Str::random(10) . '.' . $img->getClientOriginalExtension();
@@ -209,7 +194,6 @@ class VehicleController extends Controller
             }
         }
 
-        // Main görseli images[0]'da garantile
         if (isset($validated['image']) && (empty($images) || $images[0] !== $validated['image'])) {
             $images = array_values(array_filter($images, fn ($p) => $p !== $validated['image']));
             array_unshift($images, $validated['image']);
@@ -220,9 +204,6 @@ class VehicleController extends Controller
         // ─────────────────────────────────────────────────────────────────────
 
         Vehicle::create($validated);
-
-        // Importer session'ını temizle (orphan koruması)
-        app(SahibindenImporterService::class)->confirmSave();
 
         $message = $isPublishing
             ? 'Araç başarıyla kaydedildi ve yayınlandı.'
@@ -326,7 +307,7 @@ class VehicleController extends Controller
         // Boolean değerleri: unchecked = false
         $validated['is_featured']  = $request->has('is_featured')  ? true : false;
         $validated['is_active']    = $request->has('is_active')    ? true : false;
-        $validated['has_warranty'] = $request->has('has_warranty') ? true : false;
+        $validated['has_warranty'] = $request->input('has_warranty') == '1';
         $validated['swap']             = $request->has('swap')             ? true : false;
         $validated['price_negotiable'] = $request->has('price_negotiable') ? true : false;
 
