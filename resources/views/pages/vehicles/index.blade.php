@@ -1316,11 +1316,39 @@
         const isOpen = content.classList.contains('open');
         
         if (isOpen) {
+            // Accordion kapanıyor — içindeki açık dropdown'ı da kapat
+            const openPanel = content.querySelector('.hero-custom-dropdown-panel.open');
+            if (openPanel) {
+                openPanel.classList.remove('open');
+                const dd = openPanel.closest('.hero-custom-dropdown');
+                if (dd) {
+                    dd.querySelector('.hero-custom-dropdown-trigger')?.classList.remove('open');
+                    dd.classList.remove('dropdown-open');
+                }
+                const item = header.closest('.filter-accordion-item');
+                if (item) item.classList.remove('dropdown-active');
+            }
             content.classList.remove('open');
             header.classList.remove('active');
         } else {
             content.classList.add('open');
             header.classList.add('active');
+            
+            // Accordion açılıyor — içinde dropdown varsa otomatik aç
+            const dropdown = content.querySelector('.hero-custom-dropdown');
+            if (dropdown) {
+                const trigger = dropdown.querySelector('.hero-custom-dropdown-trigger');
+                if (trigger) {
+                    // Kısa gecikme: accordion animasyonu tamamlansın
+                    setTimeout(() => { trigger.click(); }, 80);
+                }
+            } else {
+                // Dropdown yoksa (input alanları), ilk input'a odaklan
+                const firstInput = content.querySelector('input, select');
+                if (firstInput) {
+                    setTimeout(() => { firstInput.focus(); }, 80);
+                }
+            }
         }
     }
     
