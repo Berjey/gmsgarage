@@ -90,6 +90,12 @@
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
+        <url>
+        <loc>http://127.0.0.1:8000/araclar/bmw</loc>
+        <lastmod>2026-03-23T15:44:02+03:00</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
     
     
         <url>
@@ -227,7 +233,7 @@
     </url>
         <url>
         <loc>http://127.0.0.1:8000/blog/test</loc>
-        <lastmod>2026-02-27T14:40:00+03:00</lastmod>
+        <lastmod>2026-03-23T15:26:36+03:00</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>

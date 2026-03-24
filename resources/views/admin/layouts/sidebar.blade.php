@@ -59,7 +59,7 @@
                 </svg>
                 <span>İletişim</span>
             </div>
-            @php $unreadContactCount = \App\Models\ContactMessage::where('is_read', false)->count(); @endphp
+            @php $unreadContactCount = \Illuminate\Support\Facades\Cache::remember('sidebar.unread_contacts', 30, fn() => \App\Models\ContactMessage::where('is_read', false)->count()); @endphp
             @if($unreadContactCount > 0)
                 <span class="bg-primary-600 text-white text-xs font-bold px-2 py-1 rounded-full animate-pulse">{{ $unreadContactCount }}</span>
             @endif
@@ -73,7 +73,7 @@
                 </svg>
                 <span>Değerleme İstekleri</span>
             </div>
-            @php $unreadEvalCount = \App\Models\EvaluationRequest::where('is_read', false)->count(); @endphp
+            @php $unreadEvalCount = \Illuminate\Support\Facades\Cache::remember('sidebar.unread_evals', 30, fn() => \App\Models\EvaluationRequest::where('is_read', false)->count()); @endphp
             @if($unreadEvalCount > 0)
                 <span class="bg-primary-600 text-white text-xs font-bold px-2 py-1 rounded-full animate-pulse">{{ $unreadEvalCount }}</span>
             @endif
@@ -92,7 +92,7 @@
                 </svg>
                 <span>Müşteri Listesi</span>
             </div>
-            @php $newCustomers = \App\Models\Customer::where('is_new', true)->count(); @endphp
+            @php $newCustomers = \Illuminate\Support\Facades\Cache::remember('sidebar.new_customers', 30, fn() => \App\Models\Customer::where('is_new', true)->count()); @endphp
             @if($newCustomers > 0)
                 <span class="bg-primary-600 text-white text-xs font-bold px-2 py-1 rounded-full animate-pulse">{{ $newCustomers }}</span>
             @endif

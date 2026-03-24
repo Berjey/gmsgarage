@@ -31,15 +31,11 @@ Route::get('/api/legal/{slug}', [LegalPageController::class, 'getContent'])->nam
 
 // Geriye uyumluluk için redirect'ler
 Route::redirect('/kvkk', '/sayfa/kvkk-aydinlatma-metni');
-Route::redirect('/gizlilik-politikasi', '/sayfa/gizlilik-politikasi');
 Route::redirect('/kullanim-sartlari', '/sayfa/kullanim-sartlari');
 
 // Araçlar
 Route::get('/araclar', [VehicleController::class, 'index'])->name('vehicles.index');
 Route::get('/araclar/{slug}', [VehicleController::class, 'show'])->name('vehicles.show');
-
-// Satıcı Profili
-Route::get('/satıcı/{slug}', [VehicleController::class, 'sellerProfile'])->name('seller.profile');
 
 // Araç Değerleme
 Route::get('/aracimi-degerle', [VehicleEvaluationController::class, 'index'])->name('evaluation.index');

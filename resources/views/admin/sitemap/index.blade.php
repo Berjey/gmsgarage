@@ -37,23 +37,15 @@
             </div>
         </div>
 
-        @if(session('success'))
-        <div class="px-6 py-3 bg-green-50 border-b border-green-100 text-green-700 text-sm font-medium flex items-center gap-2">
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-            </svg>
-            {{ session('success') }}
-        </div>
-        @endif
     </div>
 
     <!-- İstatistik Kartları -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-        <div class="bg-white rounded-xl p-6 border-2 border-primary-100 shadow-sm group">
+    <div class="grid grid-cols-2 lg:grid-cols-5 gap-4">
+        <div class="bg-white rounded-xl p-5 border-2 border-primary-100 shadow-sm group">
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Toplam URL</p>
-                    <p class="text-2xl font-bold text-gray-900">{{ $stats['total'] }}</p>
+                    <p class="text-3xl font-bold text-gray-900">{{ $stats['total'] }}</p>
                 </div>
                 <div class="w-12 h-12 bg-primary-50 rounded-xl flex items-center justify-center">
                     <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -62,11 +54,11 @@
                 </div>
             </div>
         </div>
-        <div class="bg-white rounded-xl p-6 border-2 border-gray-100 shadow-sm hover:border-blue-300 transition-all group">
+        <div class="bg-white rounded-xl p-5 border-2 border-gray-100 shadow-sm hover:border-blue-300 transition-all group">
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Araçlar</p>
-                    <p class="text-2xl font-bold text-blue-600">{{ $stats['vehicles'] }}</p>
+                    <p class="text-3xl font-bold text-blue-600">{{ $stats['vehicles'] }}</p>
                 </div>
                 <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
                     <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -75,11 +67,11 @@
                 </div>
             </div>
         </div>
-        <div class="bg-white rounded-xl p-6 border-2 border-gray-100 shadow-sm hover:border-green-300 transition-all group">
+        <div class="bg-white rounded-xl p-5 border-2 border-gray-100 shadow-sm hover:border-green-300 transition-all group">
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Blog Yazıları</p>
-                    <p class="text-2xl font-bold text-green-600">{{ $stats['blogPosts'] }}</p>
+                    <p class="text-3xl font-bold text-green-600">{{ $stats['blogPosts'] }}</p>
                 </div>
                 <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
                     <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -88,11 +80,11 @@
                 </div>
             </div>
         </div>
-        <div class="bg-white rounded-xl p-6 border-2 border-gray-100 shadow-sm hover:border-purple-300 transition-all group">
+        <div class="bg-white rounded-xl p-5 border-2 border-gray-100 shadow-sm hover:border-purple-300 transition-all group">
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Kategoriler</p>
-                    <p class="text-2xl font-bold text-purple-600">{{ $stats['blogCategories'] }}</p>
+                    <p class="text-3xl font-bold text-purple-600">{{ $stats['blogCategories'] }}</p>
                 </div>
                 <div class="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
                     <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -101,11 +93,11 @@
                 </div>
             </div>
         </div>
-        <div class="bg-white rounded-xl p-6 border-2 border-gray-100 shadow-sm hover:border-orange-300 transition-all group">
+        <div class="bg-white rounded-xl p-5 border-2 border-gray-100 shadow-sm hover:border-orange-300 transition-all group">
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Statik Sayfalar</p>
-                    <p class="text-2xl font-bold text-orange-600">{{ $stats['staticPages'] }}</p>
+                    <p class="text-3xl font-bold text-orange-600">{{ $stats['staticPages'] }}</p>
                 </div>
                 <div class="w-12 h-12 bg-orange-50 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
                     <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -188,11 +180,11 @@
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">URL</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tür</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Öncelik</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Güncelleme Sıklığı</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Son Değişiklik</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">URL</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Tür</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Öncelik</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Güncelleme Sıklığı</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Son Değişiklik</th>
                         </tr>
                     </thead>
                     <tbody id="previewBody" class="bg-white divide-y divide-gray-200">

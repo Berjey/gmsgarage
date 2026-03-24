@@ -204,6 +204,60 @@ class ContactMessageController extends Controller
     }
 
     /**
+     * Export contact messages as CSV
+     */
+    public function export(Request $request)
+    {
+        $query = ContactMessage::query();
+
+        if ($request->filled('search')) {
+            $search = $request->get('search');
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('subject', 'like', "%{$search}%");
+            });
+        }
+
+        $filter = $request->get('filter', 'all');
+        if ($filter === 'read') {
+            $query->where('is_read', true);
+        } elseif ($filter === 'unread') {
+            $query->where('is_read', false);
+        }
+
+        $messages = $query->orderBy('created_at', 'desc')->get();
+
+        $filename = 'iletisim_mesajlari_' . date('Y-m-d_His') . '.csv';
+
+        $headers = [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => "attachment; filename=\"{$filename}\"",
+        ];
+
+        $callback = function() use ($messages) {
+            $file = fopen('php://output', 'w');
+            fwrite($file, "\xEF\xBB\xBF");
+            fputcsv($file, ['Ad Soyad', 'E-posta', 'Konu', 'Mesaj', 'Durum', 'Tarih'], ';');
+
+            foreach ($messages as $msg) {
+                fputcsv($file, [
+                    $msg->name,
+                    $msg->email,
+                    $msg->subject ?? '',
+                    $msg->message,
+                    $msg->is_read ? 'Okundu' : 'Okunmamış',
+                    $msg->created_at->format('d.m.Y H:i'),
+                ], ';');
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
+    /**
      * Delete all contact messages
      */
     public function destroyAll()

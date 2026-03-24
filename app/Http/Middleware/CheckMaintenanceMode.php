@@ -23,10 +23,8 @@ class CheckMaintenanceMode
             return $next($request);
         }
 
-        // Bakım modu kontrolü (10 saniye cache - hızlı güncelleme için)
-        $maintenanceMode = Cache::remember('maintenance_mode', 10, function () {
-            return Setting::get('maintenance_mode', '0');
-        });
+        // Bakım modu kontrolü (cache kullanmadan, anında yansıması için)
+        $maintenanceMode = Setting::get('maintenance_mode', '0');
 
         // Bakım modu aktif mi?
         if ($maintenanceMode == '1') {

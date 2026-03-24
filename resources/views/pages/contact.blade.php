@@ -3,6 +3,22 @@
 @section('title', 'İletişim - ' . ($settings['site_title'] ?? 'GMSGARAGE'))
 @section('description', ($settings['site_title'] ?? 'GMSGARAGE') . ' ile iletişime geçin. Sorularınız ve önerileriniz için bize ulaşın.')
 
+@push('styles')
+<style>
+    @keyframes patternMove {
+        0% { transform: translate(0, 0); }
+        100% { transform: translate(40px, 40px); }
+    }
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+    }
+    .animate-float {
+        animation: float 3s ease-in-out infinite;
+    }
+</style>
+@endpush
+
 @section('content')
     <!-- Page Header (Hakkımızda sayfasındaki gibi) -->
     <section class="bg-gradient-to-br from-primary-800 via-primary-700 to-primary-900 dark:from-primary-900 dark:via-primary-800 dark:to-primary-900 text-white py-16 relative overflow-hidden">

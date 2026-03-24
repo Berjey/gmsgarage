@@ -8,6 +8,7 @@ use App\Models\LegalPage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class SettingController extends Controller
 {
@@ -17,7 +18,6 @@ class SettingController extends Controller
     public function index()
     {
         // View'da $settings['key'] formatında kullanılıyor
-        // Bu yüzden key-value array olarak gönd eriyoruz
         $settings = Setting::pluck('value', 'key')->toArray();
         
         // Footer sekmesi için legal pages'leri de gönder
@@ -41,10 +41,10 @@ class SettingController extends Controller
             'maintenance_message' => 'nullable|string|max:1000',
             
             // SEO & Kod Yönetimi
-            'google_analytics_id' => 'nullable|string|max:50',
+            'google_analytics_id' => ['nullable', 'string', 'max:50', 'regex:/^(G-[A-Z0-9]+|UA-\d+-\d+)$/'],
             'og_title' => 'nullable|string|max:255',
             'og_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'robots_index' => 'nullable|string',
+            'robots_index' => ['nullable', Rule::in(['index,follow', 'noindex,nofollow'])],
             
             // İletişim
             'contact_phone' => 'nullable|string|max:50',
@@ -84,8 +84,8 @@ class SettingController extends Controller
             Setting::set('og_image', null);
         }
 
-        // Tüm request verilerini işle
-        $data = $request->except(['_token', '_method', 'og_image']); // Resimleri exclude et (yukarıda işledik)
+        // Tüm request verilerini işle (form-only ve dosya alanlarını hariç tut)
+        $data = $request->except(['_token', '_method', 'og_image', 'og_image_delete', '_active_tab']);
         
         foreach ($data as $key => $value) {
             // Array değerleri JSON olarak kaydet (footer_bottom_links gibi)
@@ -102,14 +102,8 @@ class SettingController extends Controller
             Setting::set($key, $value);
         }
         
-        // Cache'i tamamen temizle ki değişiklikler anında yansısın
-        Cache::forget('app.settings');
-        Cache::forget('maintenance_mode');
-        Cache::forget('maintenance_message');
-        
-        // Tüm cache'leri temizle (özellikle bakım modu için kritik)
+        // Tüm cache'leri temizle ki değişiklikler anında yansısın
         \Artisan::call('cache:clear');
-        \Artisan::call('view:clear');
         
         $activeTab = $request->input('_active_tab', 'general');
 

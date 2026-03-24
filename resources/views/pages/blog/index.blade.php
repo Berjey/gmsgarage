@@ -15,6 +15,8 @@
 @section('og_url', route('blog.index', request()->query()))
 @section('og_title', $pageTitle)
 @section('og_description', $pageDescription)
+@section('og_image', asset('images/light-mode-logo.png'))
+@section('canonical', route('blog.index', request()->query()))
 
 @push('meta')
 <!-- Structured Data - Blog Listing -->

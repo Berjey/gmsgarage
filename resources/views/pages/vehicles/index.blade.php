@@ -482,13 +482,13 @@
                                         <div class="hero-custom-dropdown-panel">
                                             <div class="hero-custom-dropdown-option {{ !request('brand') ? 'selected' : '' }}" data-value="">Marka seçin</div>
                                             @foreach($brands as $brand)
-                                                <div class="hero-custom-dropdown-option {{ request('brand') == $brand ? 'selected' : '' }}" data-value="{{ $brand }}">{{ $brand }}</div>
+                                                <div class="hero-custom-dropdown-option {{ request('brand') == $brand->name ? 'selected' : '' }}" data-value="{{ $brand->name }}">{{ $brand->name }}</div>
                                             @endforeach
                                         </div>
                                         <select name="brand" class="hero-custom-dropdown-native">
                                             <option value="">Marka seçin</option>
                                             @foreach($brands as $brand)
-                                                <option value="{{ $brand }}" {{ request('brand') == $brand ? 'selected' : '' }}>{{ $brand }}</option>
+                                                <option value="{{ $brand->name }}" {{ request('brand') == $brand->name ? 'selected' : '' }}>{{ $brand->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>

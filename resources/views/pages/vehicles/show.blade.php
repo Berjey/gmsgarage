@@ -1,7 +1,41 @@
 @extends('layouts.app')
 
 @section('title', $vehicle->title . ' - ' . ($settings['site_title'] ?? 'GMSGARAGE'))
-@section('description', $vehicle->description ?? $vehicle->title)
+@section('description', Str::limit(strip_tags($vehicle->description ?? $vehicle->title), 160))
+@section('keywords', implode(', ', array_filter([$vehicle->brand, $vehicle->model, $vehicle->year, $vehicle->fuel_type, $vehicle->transmission, 'ikinci el araç', 'oto galeri'])))
+@section('og_type', 'product')
+@section('og_url', route('vehicles.show', $vehicle->slug ?: $vehicle->id))
+@section('og_title', $vehicle->title . ' - ' . $vehicle->formatted_price)
+@section('og_description', Str::limit(strip_tags($vehicle->description ?? $vehicle->title), 160))
+@section('og_image', count($vehicle->all_images) > 0 ? $vehicle->all_images[0] : asset('images/light-mode-logo.png'))
+@section('canonical', route('vehicles.show', $vehicle->slug ?: $vehicle->id))
+
+@push('meta')
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Car",
+    "name": "{{ $vehicle->title }}",
+    "description": "{{ Str::limit(strip_tags($vehicle->description ?? ''), 300) }}",
+    "brand": { "@type": "Brand", "name": "{{ $vehicle->brand }}" },
+    "model": "{{ $vehicle->model }}",
+    "vehicleModelDate": "{{ $vehicle->year }}",
+    "fuelType": "{{ $vehicle->fuel_type }}",
+    "vehicleTransmission": "{{ $vehicle->transmission }}",
+    "mileageFromOdometer": { "@type": "QuantitativeValue", "value": "{{ $vehicle->kilometer }}", "unitCode": "KMT" },
+    "color": "{{ $vehicle->color }}",
+    "image": @json(count($vehicle->all_images) > 0 ? $vehicle->all_images : [asset('images/light-mode-logo.png')]),
+    "offers": {
+        "@type": "Offer",
+        "price": "{{ $vehicle->price }}",
+        "priceCurrency": "TRY",
+        "availability": "https://schema.org/InStock",
+        "url": "{{ route('vehicles.show', $vehicle->slug ?: $vehicle->id) }}"
+    },
+    "url": "{{ route('vehicles.show', $vehicle->slug ?: $vehicle->id) }}"
+}
+</script>
+@endpush
 
 @section('content')
     <!-- Breadcrumb -->
@@ -242,7 +276,7 @@
                             <a href="{{ $vehicle->sahibinden_url }}" 
                                target="_blank"
                                style="background: linear-gradient(135deg, #FFD400 0%, #FFDB4D 50%, #FFD400 100%);"
-                               class="w-full hover:opacity-90 text-white dark:text-white font-bold py-4 px-6 rounded-xl text-center transition-all duration-300 uppercase text-sm shadow-lg hover:shadow-xl hover:scale-[1.01] relative overflow-hidden group flex items-center justify-center">
+                               class="w-full hover:opacity-90 text-gray-900 dark:text-gray-900 font-bold py-4 px-6 rounded-xl text-center transition-all duration-300 uppercase text-sm shadow-lg hover:shadow-xl hover:scale-[1.01] relative overflow-hidden group flex items-center justify-center">
                                 <span class="relative z-10 flex items-center">
                                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>

@@ -66,14 +66,14 @@
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
     
     <!-- Total Vehicles -->
-    <div class="stat-card bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+    <div class="stat-card bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
         <div class="flex items-center justify-between">
             <div class="flex-1">
-                <p class="text-sm font-semibold text-gray-600 mb-2">Toplam Araç</p>
+                <p class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Toplam Araç</p>
                 <p class="text-3xl font-bold text-gray-900">{{ $stats['total_vehicles'] }}</p>
             </div>
-            <div class="w-14 h-14 bg-primary-100 rounded-xl flex items-center justify-center">
-                <svg class="w-7 h-7 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center">
+                <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
                 </svg>
             </div>
@@ -81,14 +81,14 @@
     </div>
 
     <!-- Active Vehicles -->
-    <div class="stat-card bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+    <div class="stat-card bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
         <div class="flex items-center justify-between">
             <div class="flex-1">
-                <p class="text-sm font-semibold text-gray-600 mb-2">Aktif Araçlar</p>
+                <p class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Aktif Araçlar</p>
                 <p class="text-3xl font-bold text-green-600">{{ $stats['active_vehicles'] }}</p>
             </div>
-            <div class="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center">
-                <svg class="w-7 h-7 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
             </div>
@@ -96,14 +96,14 @@
     </div>
 
     <!-- Featured Vehicles -->
-    <div class="stat-card bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+    <div class="stat-card bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
         <div class="flex items-center justify-between">
             <div class="flex-1">
-                <p class="text-sm font-semibold text-gray-600 mb-2">Öne Çıkan Araçlar</p>
+                <p class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Öne Çıkan Araçlar</p>
                 <p class="text-3xl font-bold text-gray-900">{{ $stats['featured_vehicles'] }}</p>
             </div>
-            <div class="w-14 h-14 bg-primary-100 rounded-xl flex items-center justify-center">
-                <svg class="w-7 h-7 text-primary-600" fill="currentColor" viewBox="0 0 20 20">
+            <div class="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center">
+                <svg class="w-6 h-6 text-primary-600" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
                 </svg>
             </div>
@@ -111,15 +111,15 @@
     </div>
 
     <!-- Blog Posts -->
-    <div class="stat-card bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+    <div class="stat-card bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
         <div class="flex items-center justify-between">
             <div class="flex-1">
-                <p class="text-sm font-semibold text-gray-600 mb-2">Blog Yazıları</p>
+                <p class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Blog Yazıları</p>
                 <p class="text-3xl font-bold text-gray-900">{{ $stats['published_blog_posts'] }}</p>
                 <p class="text-xs text-gray-500 mt-1">Toplam: {{ $stats['total_blog_posts'] }}</p>
             </div>
-            <div class="w-14 h-14 bg-primary-100 rounded-xl flex items-center justify-center">
-                <svg class="w-7 h-7 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center">
+                <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                 </svg>
             </div>
@@ -127,15 +127,15 @@
     </div>
 
     <!-- Total Views -->
-    <div class="stat-card bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+    <div class="stat-card bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
         <div class="flex items-center justify-between">
             <div class="flex-1">
-                <p class="text-sm font-semibold text-gray-600 mb-2">Blog Görüntülenme</p>
+                <p class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Blog Görüntülenme</p>
                 <p class="text-3xl font-bold text-primary-600">{{ number_format($stats['total_views']) }}</p>
                 <p class="text-xs text-gray-500 mt-1">Toplam trafik</p>
             </div>
-            <div class="w-14 h-14 bg-primary-100 rounded-xl flex items-center justify-center">
-                <svg class="w-7 h-7 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center">
+                <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                 </svg>
@@ -144,15 +144,15 @@
     </div>
 
     <!-- Total Users -->
-    <div class="stat-card bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+    <div class="stat-card bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
         <div class="flex items-center justify-between">
             <div class="flex-1">
-                <p class="text-sm font-semibold text-gray-600 mb-2">Kullanıcılar</p>
+                <p class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Kullanıcılar</p>
                 <p class="text-3xl font-bold text-gray-900">{{ $stats['total_users'] }}</p>
                 <p class="text-xs text-gray-500 mt-1">Admin: {{ $stats['total_admins'] }}</p>
             </div>
-            <div class="w-14 h-14 bg-primary-100 rounded-xl flex items-center justify-center">
-                <svg class="w-7 h-7 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center">
+                <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
                 </svg>
             </div>
@@ -160,15 +160,15 @@
     </div>
 
     <!-- Müşteri Portföyü (CRM) -->
-    <div class="stat-card bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+    <div class="stat-card bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
         <div class="flex items-center justify-between">
             <div class="flex-1">
-                <p class="text-sm font-semibold text-gray-600 mb-2">Müşteri Portföyü</p>
+                <p class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Müşteri Portföyü</p>
                 <p class="text-3xl font-bold text-blue-600">{{ $stats['total_customers'] }}</p>
                 <p class="text-xs text-gray-500 mt-1">Bu Ay: {{ $stats['this_month_customers'] }} | Bugün: {{ $stats['today_customers'] }}</p>
             </div>
-            <div class="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center">
-                <svg class="w-7 h-7 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
                 </svg>
             </div>
@@ -184,15 +184,15 @@
     </div>
 
     <!-- Messages -->
-    <div class="stat-card bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+    <div class="stat-card bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
         <div class="flex items-center justify-between">
             <div class="flex-1">
-                <p class="text-sm font-semibold text-gray-600 mb-2">Okunmamış Mesajlar</p>
+                <p class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Okunmamış Mesajlar</p>
                 <p class="text-3xl font-bold text-primary-600">{{ $stats['unread_messages'] }}</p>
                 <p class="text-xs text-gray-500 mt-1">Bugün: {{ $stats['today_messages'] }} | Toplam: {{ $stats['total_messages'] }}</p>
             </div>
-            <div class="w-14 h-14 bg-primary-100 rounded-xl flex items-center justify-center">
-                <svg class="w-7 h-7 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center">
+                <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                 </svg>
             </div>
@@ -200,15 +200,15 @@
     </div>
 
     <!-- Evaluation Requests -->
-    <div class="stat-card bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+    <div class="stat-card bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
         <div class="flex items-center justify-between">
             <div class="flex-1">
-                <p class="text-sm font-semibold text-gray-600 mb-2">Değerleme Talepleri</p>
+                <p class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Değerleme Talepleri</p>
                 <p class="text-3xl font-bold text-primary-600">{{ $stats['unread_evaluation_requests'] }}</p>
                 <p class="text-xs text-gray-500 mt-1">Bugün: {{ $stats['today_evaluation_requests'] }} | Toplam: {{ $stats['total_evaluation_requests'] }}</p>
             </div>
-            <div class="w-14 h-14 bg-primary-100 rounded-xl flex items-center justify-center">
-                <svg class="w-7 h-7 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center">
+                <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
                 </svg>
             </div>

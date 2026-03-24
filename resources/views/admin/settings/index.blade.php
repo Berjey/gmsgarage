@@ -630,7 +630,6 @@
                                 <div class="flex-1">
                                     <input type="text" 
                                            id="new-page-title"
-                                           required
                                            placeholder="Sayfa başlığı girin (Örn: KVKK, Gizlilik Politikası)"
                                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
                                            onkeypress="if(event.key === 'Enter') { event.preventDefault(); addNewLegalPage(); }">
@@ -732,46 +731,6 @@
         </div>
     </div>
 
-    <!-- Modal: İçerik Düzenleme -->
-    <div id="contentModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 hidden">
-        
-        <div class="bg-white rounded-lg shadow-2xl w-full max-w-5xl max-h-[90vh] flex flex-col" onclick="event.stopPropagation()">
-            
-            <!-- Modal Header -->
-            <div class="flex items-center justify-between p-6 border-b border-gray-200">
-                <h3 id="modalTitle" class="text-xl font-bold text-gray-900"></h3>
-                <button type="button" 
-                        onclick="closeContentModal()"
-                        class="text-gray-400 hover:text-gray-600 transition-colors">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                </button>
-            </div>
-            
-            <!-- Modal Body -->
-            <div class="flex-1 overflow-auto p-6">
-                <textarea id="contentEditor" name="content"></textarea>
-            </div>
-            
-            <!-- Modal Footer -->
-            <div class="flex items-center justify-end gap-3 p-6 border-t border-gray-200 bg-gray-50">
-                <button type="button" 
-                        onclick="closeContentModal()"
-                        class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors">
-                    İptal
-                </button>
-                <button type="button" 
-                        onclick="saveModalContent()"
-                        class="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center gap-2">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path>
-                    </svg>
-                    İçeriği Kaydet
-                </button>
-            </div>
-        </div>
-    </div>
 </div>
 @endsection
 
@@ -787,6 +746,13 @@ document.addEventListener('DOMContentLoaded', function() {
         window.currentSettingsTab = '{{ request('tab') }}';
     @else
         window.currentSettingsTab = 'general';
+    @endif
+
+    @if(session('success'))
+        Swal.fire({ icon: 'success', title: 'Başarılı', text: '{{ session('success') }}', confirmButtonColor: '#dc2626', timer: 3000, showConfirmButton: false });
+    @endif
+    @if(session('error'))
+        Swal.fire({ icon: 'error', title: 'Hata', text: '{{ session('error') }}', confirmButtonColor: '#dc2626' });
     @endif
 });
 
@@ -850,41 +816,9 @@ function toggleMaintenanceStatus(isActive) {
         alertTitle.classList.add('text-blue-900');
         
         alertText.textContent = 'Bakım modu kapalı. Tüm ziyaretçiler siteye normal şekilde erişebilir.';
-        alertText.classList.remove('text-blue-800');
+        alertText.classList.remove('text-red-800');
         alertText.classList.add('text-blue-800');
     }
-}
-
-// Form gönderilirken: Footer ve Pop-up (form dışındaki tab) alanlarını gizli alanlara kopyala
-function syncFooterFieldsIfActive(form) {
-    if (window.currentSettingsTab === 'footer') {
-        var aboutEl = document.getElementById('textarea_footer_about_text');
-        var copyrightEl = document.getElementById('textarea_footer_copyright');
-        var hiddenAbout = document.getElementById('form_hidden_footer_about_text');
-        var hiddenCopyright = document.getElementById('form_hidden_footer_copyright');
-        if (aboutEl && hiddenAbout) hiddenAbout.value = aboutEl.value;
-        if (copyrightEl && hiddenCopyright) hiddenCopyright.value = copyrightEl.value;
-    }
-    // Pop-up alanları form dışında; her gönderimde güncel değerleri gizli alanlara yaz ki API'ye gitsin
-    var popupCheckbox = document.getElementById('popup_status');
-    var hiddenPopupStatus = document.getElementById('form_hidden_popup_status');
-    if (popupCheckbox && hiddenPopupStatus) hiddenPopupStatus.value = popupCheckbox.checked ? '1' : '0';
-    var popupTitle = document.getElementById('popup_title');
-    var popupText = document.getElementById('popup_text');
-    var popupLink = document.getElementById('popup_link');
-    var popupButtonText = document.getElementById('popup_button_text');
-    var popupFreq = document.getElementById('popup_display_frequency');
-    var hTitle = document.getElementById('form_hidden_popup_title');
-    var hText = document.getElementById('form_hidden_popup_text');
-    var hLink = document.getElementById('form_hidden_popup_link');
-    var hBtn = document.getElementById('form_hidden_popup_button_text');
-    var hFreq = document.getElementById('form_hidden_popup_display_frequency');
-    if (popupTitle && hTitle) hTitle.value = popupTitle.value || '';
-    if (popupText && hText) hText.value = popupText.value || '';
-    if (popupLink && hLink) hLink.value = popupLink.value || '';
-    if (popupButtonText && hBtn) hBtn.value = popupButtonText.value || '';
-    if (popupFreq && hFreq) hFreq.value = popupFreq.value || 'daily';
-    return true;
 }
 
 // Yeni yasal sayfa ekleme fonksiyonu (AJAX)
@@ -980,7 +914,7 @@ async function deleteLegalPage(pageId, pageTitle) {
     
     if (result.isConfirmed) {
         try {
-            const response = await fetch('/admin/settings/delete-legal-page/' + pageId, {
+            const response = await fetch(`{{ url('/admin/settings/delete-legal-page') }}/${pageId}`, {
                 method: 'DELETE',
                 headers: {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
@@ -1096,25 +1030,6 @@ function switchTab(tabName) {
     color: #059669 !important;
 }
 
-.swal-custom-title {
-    padding: 0 1.5rem !important;
-    margin: 0 !important;
-}
-
-.swal-custom-html {
-    padding: 0 1.5rem 1.5rem 1.5rem !important;
-    margin: 0 !important;
-}
-
-.swal-custom-actions {
-    background-color: #F9FAFB !important;
-    padding: 0.75rem 1.5rem !important;
-    margin: 0 !important;
-    border-top: 1px solid #E5E7EB !important;
-    flex-direction: row-reverse !important;
-    gap: 0.75rem !important;
-}
-
 .swal-custom-confirm {
     background-color: #DC2626 !important;
     color: white !important;
@@ -1132,30 +1047,5 @@ function switchTab(tabName) {
     background-color: #B91C1C !important;
 }
 
-.swal-custom-cancel {
-    background-color: white !important;
-    color: #374151 !important;
-    padding: 0.5rem 1rem !important;
-    border-radius: 0.375rem !important;
-    font-size: 0.875rem !important;
-    font-weight: 500 !important;
-    border: 1px solid #D1D5DB !important;
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
-    transition: background-color 0.2s !important;
-    margin: 0 !important;
-}
-
-.swal-custom-cancel:hover {
-    background-color: #F9FAFB !important;
-}
-
-/* Success popup için yeşil buton */
-.swal2-popup.swal-custom-popup .swal2-confirm.swal-custom-confirm[style*="059669"] {
-    background-color: #059669 !important;
-}
-
-.swal2-popup.swal-custom-popup .swal2-confirm.swal-custom-confirm[style*="059669"]:hover {
-    background-color: #047857 !important;
-}
 </style>
 @endpush

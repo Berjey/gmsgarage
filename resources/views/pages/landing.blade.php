@@ -6,8 +6,14 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $settings['site_title'] ?? 'GMSGARAGE' }}</title>
     <meta name="description" content="{{ ($settings['site_title'] ?? 'GMSGARAGE') }} - Premium ikinci el araçlar, garantili ve bakımlı araçlar. En iyi fiyat garantisi.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ route('landing') }}">
+    <meta property="og:title" content="{{ $settings['site_title'] ?? 'GMSGARAGE' }} - Premium İkinci El Araçlar">
+    <meta property="og:description" content="{{ ($settings['site_title'] ?? 'GMSGARAGE') }} - Premium ikinci el araçlar, garantili ve bakımlı araçlar. En iyi fiyat garantisi.">
+    <meta property="og:image" content="{{ asset('images/light-mode-logo.png') }}">
+    <link rel="canonical" href="{{ route('landing') }}">
     
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/legal-modal.js'])
     
     <style>
         html {

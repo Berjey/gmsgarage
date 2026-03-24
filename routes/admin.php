@@ -128,6 +128,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
             // İletişim Mesajları
             Route::prefix('contact-messages')->name('contact-messages.')->group(function () {
                 Route::get('/', [ContactMessageController::class, 'index'])->name('index');
+                Route::get('/export', [ContactMessageController::class, 'export'])->name('export');
                 Route::post('/bulk-action', [ContactMessageController::class, 'bulkAction'])->name('bulk-action');
                 Route::delete('/destroy-all', [ContactMessageController::class, 'destroyAll'])->name('destroy-all');
                 Route::get('/{id}', [ContactMessageController::class, 'show'])->name('show');
@@ -140,6 +141,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
             // Değerleme İstekleri
             Route::prefix('evaluation-requests')->name('evaluation-requests.')->group(function () {
                 Route::get('/', [EvaluationRequestController::class, 'index'])->name('index');
+                Route::get('/export', [EvaluationRequestController::class, 'export'])->name('export');
+                Route::post('/bulk-action', [EvaluationRequestController::class, 'bulkAction'])->name('bulk-action');
+                Route::delete('/destroy-all', [EvaluationRequestController::class, 'destroyAll'])->name('destroy-all');
                 Route::get('/{id}', [EvaluationRequestController::class, 'show'])->name('show');
                 Route::get('/{id}/pdf', [EvaluationRequestController::class, 'downloadPdf'])->name('pdf');
                 Route::post('/{id}/read', [EvaluationRequestController::class, 'markAsRead'])->name('read');

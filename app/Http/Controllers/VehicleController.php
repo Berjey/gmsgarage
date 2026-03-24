@@ -223,41 +223,4 @@ class VehicleController extends Controller
         return view('pages.vehicles.show', compact('vehicle', 'relatedVehicles', 'featureGroups'));
     }
 
-    /**
-     * Satıcı profil sayfası
-     */
-    public function sellerProfile($slug)
-    {
-        // İleride bu bilgiler Seller modelinden gelecek
-        // Şimdilik placeholder veriler
-        $sellerData = [
-            'name' => 'Ali Yılmaz',
-            'slug' => 'ali-yilmaz',
-            'position' => 'Kıdemli Satış Danışmanı',
-            'is_verified' => true,
-            'response_time' => '2 saat',
-            'total_listings' => 45,
-            'location' => 'İstanbul',
-            'joined_date' => '2020-01-15',
-        ];
-
-        // Slug kontrolü
-        if ($slug !== $sellerData['slug']) {
-            abort(404);
-        }
-
-        // Aktif ilanlar (en son yayınlananlar)
-        $activeVehicles = Vehicle::where('is_active', true)
-            ->orderBy('created_at', 'desc')
-            ->limit(20)
-            ->get();
-
-        // Kaldırılan ilanlar (aktif olmayan)
-        $inactiveVehicles = Vehicle::where('is_active', false)
-            ->orderBy('updated_at', 'desc')
-            ->limit(20)
-            ->get();
-
-        return view('pages.seller.profile', compact('sellerData', 'activeVehicles', 'inactiveVehicles'));
-    }
 }
