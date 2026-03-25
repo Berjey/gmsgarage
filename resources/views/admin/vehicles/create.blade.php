@@ -1250,18 +1250,28 @@ $(document).ready(function(){
     }
 
     function loadModels() {
-        // Arabam API step=20: BrandId(arabam) + ModelYear → gerçek model/seri listesi
-        apiStepFill('model', '20',
-            { brandId: cascadeData.brandArabamId, modelYear: cascadeData.year },
-            'Model Seçiniz',
-            function(sel) {
-                cascadeData.modelId       = sel.value;
-                cascadeData.modelName     = sel.name;
-                cascadeData.modelArabamId = sel.value; // step 20 ID = modelGroupId olarak kullanılır
-                resetCascadeFrom('bodyType');
-                if (cascadeData.modelId && cascadeData.brandArabamId) loadBodyTypes();
+        // Veritabanından model listesini çek (arabam.com API yerine)
+        setCascadeState('model', 'Yükleniyor...');
+        $.ajax({
+            url: '{{ route("admin.vehicles.api.models") }}', method: 'GET',
+            data: { brandId: cascadeData.brandId },
+            success: function(r) {
+                if (r.success && r.data && r.data.Items && r.data.Items.length > 0) {
+                    fillCascadeDD('model', r.data.Items, 'Model Seçiniz', function(sel) {
+                        cascadeData.modelId       = sel.value;
+                        cascadeData.modelName     = sel.name;
+                        cascadeData.modelArabamId = sel.arabamId;
+                        resetCascadeFrom('bodyType');
+                        loadBodyTypes();
+                    });
+                } else {
+                    setCascadeState('model', 'Model bulunamadı');
+                }
+            },
+            error: function() {
+                setCascadeState('model', 'Yüklenemedi');
             }
-        );
+        });
     }
 
     function apiStepFill(ddId, step, data, placeholder, onSelect) {

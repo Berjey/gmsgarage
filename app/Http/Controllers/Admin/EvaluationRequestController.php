@@ -177,39 +177,39 @@ class EvaluationRequestController extends Controller
             }
         }
 
-        $items = $query->orderBy('created_at', 'desc')->get();
-
-        $bom = "\xEF\xBB\xBF";
-        $sep = ';';
-        $esc = fn(?string $v): string => '"' . str_replace('"', '""', $v ?? '') . '"';
-
-        $csvData = $bom . implode($sep, [
-            'ID', 'Ad Soyad', 'E-posta', 'Telefon', 'Marka', 'Model', 'Yıl',
-            'Yakıt', 'Vites', 'KM', 'Durum', 'Hasar', 'Tarih', 'Okundu'
-        ]) . "\n";
-
-        foreach ($items as $item) {
-            $csvData .= implode($sep, [
-                $esc((string) $item->id),
-                $esc($item->name),
-                $esc($item->email),
-                $esc($item->phone),
-                $esc($item->brand),
-                $esc($item->model),
-                $esc((string) $item->year),
-                $esc($item->fuel_type),
-                $esc($item->transmission),
-                $esc($item->mileage ? number_format($item->mileage, 0, ',', '.') : ''),
-                $esc($item->version ?? ''),
-                $esc($item->condition ?? ''),
-                $esc($item->created_at->format('d.m.Y H:i')),
-                $esc($item->is_read ? 'Evet' : 'Hayır'),
-            ]) . "\n";
-        }
-
         $fileName = 'degerleme-istekleri_' . now()->format('Y-m-d_His') . '.csv';
+        $sep = ';';
 
-        return Response::make($csvData, 200, [
+        $callback = function () use ($query, $sep) {
+            $file = fopen('php://output', 'w');
+            fwrite($file, "\xEF\xBB\xBF");
+            fputcsv($file, ['ID', 'Ad Soyad', 'E-posta', 'Telefon', 'Marka', 'Model', 'Yıl', 'Yakıt', 'Vites', 'KM', 'Durum', 'Hasar', 'Tarih', 'Okundu'], $sep);
+
+            $query->orderBy('created_at', 'desc')->chunk(500, function ($items) use ($file, $sep) {
+                foreach ($items as $item) {
+                    fputcsv($file, [
+                        $item->id,
+                        $item->name,
+                        $item->email,
+                        $item->phone,
+                        $item->brand,
+                        $item->model,
+                        $item->year,
+                        $item->fuel_type,
+                        $item->transmission,
+                        $item->mileage ? number_format($item->mileage, 0, ',', '.') : '',
+                        $item->version ?? '',
+                        $item->condition ?? '',
+                        $item->created_at->format('d.m.Y H:i'),
+                        $item->is_read ? 'Evet' : 'Hayır',
+                    ], $sep);
+                }
+            });
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, [
             'Content-Type'        => 'text/csv; charset=UTF-8',
             'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
             'Pragma'              => 'no-cache',

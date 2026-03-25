@@ -97,7 +97,7 @@
                         </div>
                         <div>
                             <div class="text-gray-400 text-sm">Adres</div>
-                            <span class="text-white font-semibold">{{ $settings['contact_address'] ?? 'Görsel Mah. Kağıthane Cad. No: 26 /1A KAĞITHANE/İSTANBUL' }}</span>
+                            <span class="text-white font-semibold">{{ $settings['contact_address'] ?? 'Gürsel Mah. Kağıthane Cad. No: 26/1A KAĞITHANE/İSTANBUL' }}</span>
                         </div>
                     </li>
                 </ul>

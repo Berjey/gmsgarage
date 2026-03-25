@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Vehicle;
 use App\Models\CarBrand;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class VehicleController extends Controller
 {
@@ -142,8 +143,8 @@ class VehicleController extends Controller
 
         $vehicles = $query->paginate(12);
 
-        // Filtreler için veriler
-        $brands = CarBrand::orderBy('name')->get();
+        // Filtreler için veriler — markalar cache'leniyor
+        $brands = Cache::remember('car_brands_all', 86400, fn() => CarBrand::orderBy('name')->get());
 
         $currentYear = (int) date('Y');
         $years = range($currentYear + 1, 1990);

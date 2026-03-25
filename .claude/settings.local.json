@@ -1,7 +1,17 @@
 {
   "permissions": {
     "allow": [
-      "Bash(composer require:*)"
+      "Bash(composer require:*)",
+      "Bash(find /c/Users/gmskr/Desktop/gmsgarage_guncel/resources/views -type f -name *.blade.php)",
+      "Bash(find /c/Users/gmskr/Desktop/gmsgarage_guncel -name *.json -type f)",
+      "Bash(grep -r \"TODO\\\\|FIXME\\\\|BUG\\\\|HACK\\\\|XXX\" /c/Users/gmskr/Desktop/gmsgarage_guncel/app --include=*.php)",
+      "Bash(find /c/Users/gmskr/Desktop/gmsgarage_guncel/database/migrations -name *.php -type f)",
+      "Bash(grep -r \"TODO\\\\|FIXME\\\\|HACK\\\\|XXX\\\\|BUG\" /c/Users/gmskr/Desktop/gmsgarage_guncel/resources/views --include=*.blade.php)",
+      "Bash(grep -r \"die\\\\|dd\\\\|var_dump\\\\|echo\" /c/Users/gmskr/Desktop/gmsgarage_guncel/app --include=*.php)",
+      "Bash(find /c/Users/gmskr/Desktop/gmsgarage_guncel/tests -type f -name *.php)",
+      "Bash(grep -r \"axios\\\\|fetch\\\\|http\" /c/Users/gmskr/Desktop/gmsgarage_guncel/resources/js --include=*.js)",
+      "Bash(xargs -I {} basename {})",
+      "Skill(update-config)"
     ]
   }
 }

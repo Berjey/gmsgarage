@@ -304,7 +304,7 @@
                     
                     <!-- Galeri İletişim Kartı -->
                     @php
-                        $siteName    = $settings['site_title']   ?? 'GMS Garage';
+                        $siteName    = $settings['site_title']   ?? 'GMSGARAGE';
                         $sitePhone   = $settings['contact_phone'] ?? null;
                         $siteEmail   = $settings['contact_email'] ?? null;
                         $totalActive = \App\Models\Vehicle::where('is_active', true)->count();

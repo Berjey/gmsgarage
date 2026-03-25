@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Site Ayarları')
+@section('title', 'Site Ayarları - Admin Panel')
 @section('page-title', 'Site Ayarları')
 @section('breadcrumb')
     <a href="{{ route('admin.dashboard') }}" class="hover:text-primary-600">Dashboard</a>

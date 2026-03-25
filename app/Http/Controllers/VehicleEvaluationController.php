@@ -168,9 +168,9 @@ class VehicleEvaluationController extends Controller
         // Cache for 24 hours
         $brands = Cache::remember('arabam_brands', 60 * 60 * 24, function () {
             try {
-                $response = Http::timeout(10)
+                $response = Http::timeout(15)
                     ->withOptions([
-                        'verify' => false, // SSL doğrulamasını geliştirme ortamında devre dışı bırak
+                        'verify' => false,
                     ])
                     ->withHeaders([
                         'Accept' => 'application/json',
@@ -263,9 +263,9 @@ class VehicleEvaluationController extends Controller
                 if ($transmissionTypeId) $params['TransmissionTypeId'] = $transmissionTypeId;
                 if ($versionId) $params['VersionId'] = $versionId;
 
-                $response = Http::timeout(10)
+                $response = Http::timeout(15)
                     ->withOptions([
-                        'verify' => false, // SSL doğrulamasını geliştirme ortamında devre dışı bırak
+                        'verify' => false,
                     ])
                     ->withHeaders([
                         'Accept' => 'application/json',
@@ -305,11 +305,11 @@ class VehicleEvaluationController extends Controller
     public function submit(Request $request)
     {
         try {
-            // Log incoming request data
             \Log::info('Evaluation form submission started', [
-                'all_data' => $request->all(),
+                'marka' => $request->get('marka'),
+                'model' => $request->get('model'),
+                'yil'   => $request->get('yil'),
                 'method' => $request->method(),
-                'ajax' => $request->ajax(),
             ]);
 
             $request->validate([
@@ -437,9 +437,8 @@ class VehicleEvaluationController extends Controller
             ]);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
-            \Log::error('Validation failed', [
+            \Log::warning('Evaluation validation failed', [
                 'errors' => $e->errors(),
-                'input' => $request->all()
             ]);
 
             return response()->json([

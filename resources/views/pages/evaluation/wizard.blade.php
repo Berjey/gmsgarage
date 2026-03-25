@@ -61,7 +61,7 @@
     /* ===== CUSTOM DROPDOWN STYLES - KURUMSAL KİMLİK ===== */
     .eval-custom-dropdown {
         position: relative;
-        z-index: 1;
+        z-index: 10;
     }
 
     .eval-custom-dropdown.dropdown-open {

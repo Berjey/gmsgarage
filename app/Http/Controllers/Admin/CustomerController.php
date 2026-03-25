@@ -137,33 +137,33 @@ class CustomerController extends Controller
             $query->where('source', $source);
         }
 
-        $customers = $query->orderBy('created_at', 'desc')->get();
-
-        // UTF-8 BOM — Excel Türkçe karakter desteği için zorunlu
-        $bom  = "\xEF\xBB\xBF";
-        $sep  = ';';
-
+        $fileName = 'musteriler_' . now()->format('Y-m-d_His') . '.csv';
+        $sep = ';';
         $esc = fn(?string $v): string => '"' . str_replace('"', '""', $v ?? '') . '"';
 
-        $csvData = $bom . implode($sep, [
-            'ID', 'Ad Soyad', 'E-posta', 'Telefon', 'Kaynak', 'Oluşturulma Tarihi', 'Not'
-        ]) . "\n";
+        $callback = function () use ($query, $sep, $esc) {
+            $file = fopen('php://output', 'w');
+            fwrite($file, "\xEF\xBB\xBF");
+            fputcsv($file, ['ID', 'Ad Soyad', 'E-posta', 'Telefon', 'Kaynak', 'Oluşturulma Tarihi', 'Not'], $sep);
 
-        foreach ($customers as $customer) {
-            $csvData .= implode($sep, [
-                $esc((string) $customer->id),
-                $esc($customer->name),
-                $esc($customer->email),
-                $esc($customer->phone),
-                $esc($customer->source_name),
-                $esc($customer->created_at->format('d.m.Y H:i')),
-                $esc($customer->notes),
-            ]) . "\n";
-        }
+            $query->orderBy('created_at', 'desc')->chunk(500, function ($customers) use ($file, $sep, $esc) {
+                foreach ($customers as $customer) {
+                    fputcsv($file, [
+                        $customer->id,
+                        $customer->name,
+                        $customer->email,
+                        $customer->phone,
+                        $customer->source_name,
+                        $customer->created_at->format('d.m.Y H:i'),
+                        $customer->notes,
+                    ], $sep);
+                }
+            });
 
-        $fileName = 'musteriler_' . now()->format('Y-m-d_His') . '.csv';
+            fclose($file);
+        };
 
-        return Response::make($csvData, 200, [
+        return response()->stream($callback, 200, [
             'Content-Type'        => 'text/csv; charset=UTF-8',
             'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
             'Pragma'              => 'no-cache',

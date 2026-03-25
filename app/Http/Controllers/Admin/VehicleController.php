@@ -10,6 +10,7 @@ use App\Models\CarModel;
 use App\Models\FeaturesCatalog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 
 class VehicleController extends Controller
@@ -67,7 +68,7 @@ class VehicleController extends Controller
      */
     public function create()
     {
-        $brands            = CarBrand::orderBy('name')->get();
+        $brands            = Cache::remember('car_brands_all', 86400, fn() => CarBrand::orderBy('name')->get());
         $featureCategories = FeaturesCatalog::grouped() ?: VehicleFeatures::all();
         return view('admin.vehicles.create', compact('brands', 'featureCategories'));
     }
@@ -217,7 +218,7 @@ class VehicleController extends Controller
     public function edit($id)
     {
         $vehicle           = Vehicle::findOrFail($id);
-        $brands            = CarBrand::orderBy('name')->get();
+        $brands            = Cache::remember('car_brands_all', 86400, fn() => CarBrand::orderBy('name')->get());
         $featureCategories = FeaturesCatalog::grouped() ?: VehicleFeatures::all();
         return view('admin.vehicles.edit', compact('vehicle', 'brands', 'featureCategories'));
     }
@@ -442,10 +443,12 @@ class VehicleController extends Controller
      */
     public function getBrands()
     {
-        $brands = CarBrand::where('is_active', true)
-            ->orderBy('order')
-            ->orderBy('name')
-            ->get(['id', 'name', 'arabam_id']);
+        $brands = Cache::remember('car_brands_active', 86400, fn() =>
+            CarBrand::where('is_active', true)
+                ->orderBy('order')
+                ->orderBy('name')
+                ->get(['id', 'name', 'arabam_id'])
+        );
 
         return response()->json([
             'success' => true,

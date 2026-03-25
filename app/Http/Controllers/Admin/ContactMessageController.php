@@ -226,8 +226,6 @@ class ContactMessageController extends Controller
             $query->where('is_read', false);
         }
 
-        $messages = $query->orderBy('created_at', 'desc')->get();
-
         $filename = 'iletisim_mesajlari_' . date('Y-m-d_His') . '.csv';
 
         $headers = [
@@ -235,21 +233,23 @@ class ContactMessageController extends Controller
             'Content-Disposition' => "attachment; filename=\"{$filename}\"",
         ];
 
-        $callback = function() use ($messages) {
+        $callback = function() use ($query) {
             $file = fopen('php://output', 'w');
             fwrite($file, "\xEF\xBB\xBF");
             fputcsv($file, ['Ad Soyad', 'E-posta', 'Konu', 'Mesaj', 'Durum', 'Tarih'], ';');
 
-            foreach ($messages as $msg) {
-                fputcsv($file, [
-                    $msg->name,
-                    $msg->email,
-                    $msg->subject ?? '',
-                    $msg->message,
-                    $msg->is_read ? 'Okundu' : 'Okunmamış',
-                    $msg->created_at->format('d.m.Y H:i'),
-                ], ';');
-            }
+            $query->orderBy('created_at', 'desc')->chunk(500, function ($messages) use ($file) {
+                foreach ($messages as $msg) {
+                    fputcsv($file, [
+                        $msg->name,
+                        $msg->email,
+                        $msg->subject ?? '',
+                        $msg->message,
+                        $msg->is_read ? 'Okundu' : 'Okunmamış',
+                        $msg->created_at->format('d.m.Y H:i'),
+                    ], ';');
+                }
+            });
 
             fclose($file);
         };

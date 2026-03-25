@@ -581,13 +581,13 @@
                                         <div class="hero-custom-dropdown-panel">
                                             <div class="hero-custom-dropdown-option" data-value="">Tüm Markalar</div>
                                             @foreach($brands ?? [] as $brand)
-                                                <div class="hero-custom-dropdown-option" data-value="{{ $brand }}">{{ $brand }}</div>
+                                                <div class="hero-custom-dropdown-option" data-value="{{ $brand->name }}">{{ $brand->name }}</div>
                                             @endforeach
                                         </div>
                                         <select name="brand" class="hero-custom-dropdown-native">
                                             <option value="">Tüm Markalar</option>
                                             @foreach($brands ?? [] as $brand)
-                                                <option value="{{ $brand }}">{{ $brand }}</option>
+                                                <option value="{{ $brand->name }}">{{ $brand->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>

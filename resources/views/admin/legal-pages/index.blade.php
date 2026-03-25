@@ -13,7 +13,7 @@
     $totalPages   = \App\Models\LegalPage::count();
     $activePages  = \App\Models\LegalPage::where('is_active', true)->count();
     $formPages    = \App\Models\LegalPage::where('is_required_in_forms', true)->count();
-    $requiredPages = \App\Models\LegalPage::where('is_required', true)->count();
+    $requiredPages = \App\Models\LegalPage::where('is_required_in_forms', true)->count();
 @endphp
 
 @if(session('success'))
@@ -148,7 +148,7 @@
                             </div>
                             <div>
                                 <div class="font-bold text-gray-900 group-hover:text-primary-600 transition-colors">{{ $page->title }}</div>
-                                @if($page->is_required)
+                                @if($page->is_required_in_forms)
                                 <span class="text-xs font-bold text-red-500">Zorunlu</span>
                                 @endif
                             </div>

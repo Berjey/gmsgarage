@@ -12,13 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('settings', function (Blueprint $table) {
-            $table->boolean('popup_status')->default(false)->after('og_image');
-            $table->string('popup_image')->nullable()->after('popup_status');
-            $table->string('popup_title')->nullable()->after('popup_image');
-            $table->text('popup_text')->nullable()->after('popup_title');
-            $table->string('popup_link')->nullable()->after('popup_text');
-            $table->string('popup_button_text')->default('Detayları İncele')->after('popup_link');
-            $table->enum('popup_display_frequency', ['always', 'daily', 'once'])->default('daily')->after('popup_button_text');
+            $table->boolean('popup_status')->default(false);
+            $table->string('popup_image')->nullable();
+            $table->string('popup_title')->nullable();
+            $table->text('popup_text')->nullable();
+            $table->string('popup_link')->nullable();
+            $table->string('popup_button_text')->default('Detayları İncele');
+            $table->enum('popup_display_frequency', ['always', 'daily', 'once'])->default('daily');
         });
     }
 
