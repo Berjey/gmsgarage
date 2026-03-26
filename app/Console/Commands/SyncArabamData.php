@@ -7,30 +7,47 @@ use App\Services\ArabamApiService;
 
 class SyncArabamData extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'arabam:sync {--brands-only : Sadece markaları senkronize et} {--models-only : Sadece modelleri senkronize et} {--full : Tüm cascade verisini (yıl/kasa/yakıt/şanzıman/versiyon) DB\'ye çek} {--resume : Sadece eksik markaları senkronize et (zaten var olanları atla)}';
+    protected $signature = 'arabam:sync
+        {--brands-only : Sadece markaları senkronize et}
+        {--models-only : Sadece modelleri senkronize et}
+        {--full : Tüm cascade verisini (yıl/kasa/yakıt/şanzıman/versiyon) DB\'ye çek}
+        {--resume : Sadece eksik markaları senkronize et (zaten var olanları atla)}
+        {--proxy= : HTTP proxy adresi (örn: http://ip:port veya socks5://ip:port)}
+        {--proxy-list= : Virgülle ayrılmış proxy listesi (rotasyon için)}
+        {--test-proxy : Proxy bağlantısını test et}';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Arabam.com\'dan araç verilerini senkronize eder (markalar, modeller, tam cascade)';
 
-    /**
-     * Execute the console command.
-     */
     public function handle()
     {
-        $service = new ArabamApiService();
-        
+        $proxy = $this->option('proxy');
+        $proxyList = $this->option('proxy-list');
+
+        $service = new ArabamApiService($proxy);
+
+        if ($proxyList) {
+            $proxies = array_map('trim', explode(',', $proxyList));
+            $service->setProxyList($proxies);
+            $this->info("🔄 " . count($proxies) . " proxy ile rotasyon aktif");
+        } elseif ($proxy) {
+            $this->info("🔄 Proxy: $proxy");
+        }
+
+        // Proxy test
+        if ($this->option('test-proxy')) {
+            $this->info('🧪 Proxy test ediliyor...');
+            $brands = $service->fetchBrands();
+            if ($brands) {
+                $this->info("✅ Proxy çalışıyor! " . count($brands) . " marka bulundu.");
+            } else {
+                $this->error("❌ Proxy ile bağlantı kurulamadı veya Cloudflare engeli devam ediyor.");
+            }
+            return 0;
+        }
+
         $this->info('🚀 Arabam.com veri senkronizasyonu başlatılıyor...');
         $this->newLine();
-        
+
         if ($this->option('full') || $this->option('resume')) {
             $resume = $this->option('resume');
             $this->info($resume ? '🔄 RESUME: Eksik markalar senkronize ediliyor...' : '🔄 TAM CASCADE senkronizasyonu başlatılıyor...');
@@ -44,21 +61,18 @@ class SyncArabamData extends Command
             $this->info("✅ Toplam {$result['rows']} satır, {$result['brands']} marka işlendi.");
 
         } elseif ($this->option('brands-only')) {
-            // Sadece markalar
             $this->info('📦 Markalar çekiliyor...');
             $brandsCount = $service->saveBrandsToDatabase();
             $this->info("✅ {$brandsCount} marka kaydedildi");
-            
+
         } elseif ($this->option('models-only')) {
-            // Sadece modeller
             $this->info('📦 Modeller çekiliyor...');
             $modelsCount = $service->saveModelsToDatabase();
             $this->info("✅ {$modelsCount} model kaydedildi");
-            
+
         } else {
-            // Hem markalar hem modeller
             $result = $service->syncAllData();
-            
+
             if ($result['success']) {
                 $this->info("✅ {$result['brands']} marka kaydedildi");
                 $this->info("✅ {$result['models']} model kaydedildi");
@@ -67,10 +81,10 @@ class SyncArabamData extends Command
                 return 1;
             }
         }
-        
+
         $this->newLine();
         $this->info('🎉 İşlem tamamlandı!');
-        
+
         return 0;
     }
 }

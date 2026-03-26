@@ -17,18 +17,56 @@ use Illuminate\Support\Str;
 class ArabamApiService
 {
     private $baseUrl = 'https://www.arabam.com/PriceOffer';
-    
+    private ?string $proxy = null;
+    private array $proxyList = [];
+    private int $proxyIndex = 0;
+
+    public function __construct(?string $proxy = null)
+    {
+        $this->proxy = $proxy;
+    }
+
+    /**
+     * Proxy listesi ayarla (rotasyon için)
+     */
+    public function setProxyList(array $proxies): self
+    {
+        $this->proxyList = $proxies;
+        $this->proxyIndex = 0;
+        return $this;
+    }
+
+    /**
+     * Sıradaki proxy'yi al (round-robin)
+     */
+    private function getNextProxy(): ?string
+    {
+        if (!empty($this->proxyList)) {
+            $proxy = $this->proxyList[$this->proxyIndex % count($this->proxyList)];
+            $this->proxyIndex++;
+            return $proxy;
+        }
+        return $this->proxy;
+    }
+
     /**
      * Arabam.com'dan tüm markaları çek
      */
     public function fetchBrands(): ?array
     {
         try {
-            $response = Http::timeout(10)
-                ->withOptions(['verify' => true])
+            $proxy = $this->getNextProxy();
+            $options = ['verify' => false];
+            if ($proxy) {
+                $options['proxy'] = $proxy;
+            }
+
+            $response = Http::timeout(15)
+                ->withOptions($options)
                 ->withHeaders([
                     'Accept' => 'application/json',
-                    'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                    'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+                    'Referer' => 'https://www.arabam.com/fiyat-teklifi',
                 ])
                 ->get($this->baseUrl . '/step-definition', [
                     'CurrentStep' => 'null'
@@ -56,11 +94,18 @@ class ArabamApiService
     public function fetchModels(int $brandId): ?array
     {
         try {
-            $response = Http::timeout(10)
-                ->withOptions(['verify' => true])
+            $proxy = $this->getNextProxy();
+            $options = ['verify' => false];
+            if ($proxy) {
+                $options['proxy'] = $proxy;
+            }
+
+            $response = Http::timeout(15)
+                ->withOptions($options)
                 ->withHeaders([
                     'Accept' => 'application/json',
-                    'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                    'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+                    'Referer' => 'https://www.arabam.com/fiyat-teklifi',
                 ])
                 ->get($this->baseUrl . '/step-definition', [
                     'CurrentStep' => 'Brand',
@@ -174,26 +219,50 @@ class ArabamApiService
     /**
      * Arabam.com step-definition API'sine istek at (Cloudflare farkında, retry destekli)
      */
-    private function fetchStep(array $params, int $retries = 2): ?array
+    private function fetchStep(array $params, int $retries = 3): ?array
     {
+        $userAgents = [
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+            'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:125.0) Gecko/20100101 Firefox/125.0',
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 14.4; rv:125.0) Gecko/20100101 Firefox/125.0',
+        ];
+
         for ($attempt = 0; $attempt <= $retries; $attempt++) {
             try {
-                $response = Http::timeout(20)
-                    ->withOptions(['verify' => true])
+                $proxy = $this->getNextProxy();
+                $options = ['verify' => false];
+                if ($proxy) {
+                    $options['proxy'] = $proxy;
+                }
+
+                $response = Http::timeout(25)
+                    ->withOptions($options)
                     ->withHeaders([
-                        'Accept'          => 'application/json',
-                        'Accept-Language' => 'tr-TR,tr;q=0.9,en;q=0.8',
-                        'User-Agent'      => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
-                        'Referer'         => 'https://www.arabam.com/',
+                        'Accept'           => 'application/json, text/plain, */*',
+                        'Accept-Language'  => 'tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7',
+                        'Accept-Encoding'  => 'gzip, deflate, br',
+                        'User-Agent'       => $userAgents[array_rand($userAgents)],
+                        'Referer'          => 'https://www.arabam.com/fiyat-teklifi',
+                        'Origin'           => 'https://www.arabam.com',
+                        'Sec-Ch-Ua'        => '"Chromium";v="124", "Google Chrome";v="124", "Not-A.Brand";v="99"',
+                        'Sec-Ch-Ua-Mobile' => '?0',
+                        'Sec-Ch-Ua-Platform' => '"Windows"',
+                        'Sec-Fetch-Dest'   => 'empty',
+                        'Sec-Fetch-Mode'   => 'cors',
+                        'Sec-Fetch-Site'   => 'same-origin',
                     ])
                     ->get($this->baseUrl . '/step-definition', $params);
 
-                // Cloudflare challenge kontrolü
                 $body = $response->body();
-                if (str_contains($body, 'Just a moment') || str_contains($body, 'cloudflare')) {
-                    Log::warning('Arabam API Cloudflare engeli (deneme ' . ($attempt+1) . ')', $params);
+
+                // Cloudflare challenge kontrolü
+                if (str_contains($body, 'Just a moment') || str_contains($body, 'cloudflare') || $response->status() === 403) {
+                    $proxyInfo = $proxy ? " [proxy: $proxy]" : ' [no proxy]';
+                    Log::warning("Arabam API Cloudflare engeli (deneme " . ($attempt+1) . ")$proxyInfo", $params);
                     if ($attempt < $retries) {
-                        sleep(5 + $attempt * 3); // 5s, 8s bekle
+                        sleep(3 + $attempt * 2);
                         continue;
                     }
                     return null;
@@ -209,7 +278,7 @@ class ArabamApiService
             } catch (\Exception $e) {
                 Log::warning('Arabam step fetch hatası: ' . $e->getMessage(), $params);
                 if ($attempt < $retries) {
-                    sleep(3);
+                    sleep(2 + $attempt);
                     continue;
                 }
                 return null;
