@@ -86,17 +86,24 @@ class SettingController extends Controller
 
         // Sadece izin verilen ayar anahtarları kaydedilir (güvenlik: whitelist)
         $allowedKeys = [
-            'site_name', 'site_description', 'site_keywords', 'site_email', 'site_phone',
-            'site_address', 'site_city', 'site_country',
-            'og_title', 'og_description',
-            'facebook_url', 'instagram_url', 'twitter_url', 'youtube_url', 'linkedin_url', 'whatsapp_number',
-            'google_maps_embed', 'google_analytics_id', 'google_tag_manager_id',
-            'footer_description', 'footer_bottom_links', 'footer_show_social', 'footer_show_map',
-            'maintenance_message', 'contact_email', 'contact_phone_secondary',
-            'meta_robots', 'favicon', 'logo', 'logo_dark',
-            'seo_home_title', 'seo_home_description',
-            'smtp_host', 'smtp_port', 'smtp_username', 'smtp_encryption',
-            'notification_email', 'send_evaluation_email', 'send_contact_email',
+            // Genel
+            'site_title', 'site_description', 'site_keywords',
+            'maintenance_mode', 'maintenance_message',
+            // SEO
+            'google_analytics_id', 'og_title', 'robots_index',
+            // İletişim
+            'contact_phone', 'contact_email', 'contact_whatsapp', 'contact_address',
+            'contact_google_maps_embed', 'contact_form_description', 'contact_mail_recipient',
+            'contact_mail_hostinger_link',
+            // Sosyal Medya
+            'social_instagram', 'social_facebook', 'social_youtube',
+            // Footer
+            'footer_about_text', 'footer_copyright',
+            // Popup
+            'popup_status', 'popup_title', 'popup_text', 'popup_button_text',
+            'popup_link', 'popup_display_frequency',
+            // Eski uyumluluk
+            'title',
         ];
 
         $data = $request->only($allowedKeys);
