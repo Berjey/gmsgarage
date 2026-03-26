@@ -84,9 +84,23 @@ class SettingController extends Controller
             Setting::set('og_image', null);
         }
 
-        // Tüm request verilerini işle (form-only ve dosya alanlarını hariç tut)
-        $data = $request->except(['_token', '_method', 'og_image', 'og_image_delete', '_active_tab']);
-        
+        // Sadece izin verilen ayar anahtarları kaydedilir (güvenlik: whitelist)
+        $allowedKeys = [
+            'site_name', 'site_description', 'site_keywords', 'site_email', 'site_phone',
+            'site_address', 'site_city', 'site_country',
+            'og_title', 'og_description',
+            'facebook_url', 'instagram_url', 'twitter_url', 'youtube_url', 'linkedin_url', 'whatsapp_number',
+            'google_maps_embed', 'google_analytics_id', 'google_tag_manager_id',
+            'footer_description', 'footer_bottom_links', 'footer_show_social', 'footer_show_map',
+            'maintenance_message', 'contact_email', 'contact_phone_secondary',
+            'meta_robots', 'favicon', 'logo', 'logo_dark',
+            'seo_home_title', 'seo_home_description',
+            'smtp_host', 'smtp_port', 'smtp_username', 'smtp_encryption',
+            'notification_email', 'send_evaluation_email', 'send_contact_email',
+        ];
+
+        $data = $request->only($allowedKeys);
+
         foreach ($data as $key => $value) {
             // Array değerleri JSON olarak kaydet (footer_bottom_links gibi)
             if (is_array($value)) {

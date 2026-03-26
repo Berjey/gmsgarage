@@ -63,7 +63,7 @@ class ActivityLogController extends Controller
     {
         $user = User::findOrFail($userId);
 
-        $activities = ActivityLog::where('user_id', $userId)
+        $activities = ActivityLog::with('user')->where('user_id', $userId)
             ->orderBy('created_at', 'desc')
             ->paginate(30);
 

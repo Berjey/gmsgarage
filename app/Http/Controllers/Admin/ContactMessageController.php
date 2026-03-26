@@ -154,9 +154,22 @@ class ContactMessageController extends Controller
      */
     public function bulkAction(Request $request)
     {
+        $request->validate([
+            'action' => 'required|in:mark_read,mark_unread,delete',
+            'ids'    => 'required|array|min:1',
+            'ids.*'  => 'integer|exists:contact_messages,id',
+        ], [
+            'action.required' => 'İşlem seçiniz.',
+            'action.in'       => 'Geçersiz işlem.',
+            'ids.required'    => 'Lütfen en az bir mesaj seçin.',
+            'ids.array'       => 'Geçersiz seçim.',
+            'ids.*.integer'   => 'Geçersiz mesaj ID\'si.',
+            'ids.*.exists'    => 'Seçilen mesajlardan biri bulunamadı.',
+        ]);
+
         $action = $request->get('action');
         $ids = $request->get('ids', []);
-        
+
         if (empty($ids)) {
             return back()->with('error', 'Lütfen en az bir mesaj seçin.');
         }

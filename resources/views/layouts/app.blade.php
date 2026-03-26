@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', $settings['site_title'] ?? 'GMSGARAGE')</title>
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700&display=swap" rel="stylesheet">
     <meta name="description" content="@yield('description', $settings['site_description'] ?? 'GMSGARAGE - Premium ikinci el araçlar, garantili ve bakımlı araçlar. En iyi fiyat garantisi.')">
     <meta name="keywords" content="@yield('keywords', $settings['site_keywords'] ?? 'ikinci el araç, oto galeri, garantili araç, premium araç')">
     <meta name="author" content="{{ $settings['site_title'] ?? 'GMSGARAGE' }}">

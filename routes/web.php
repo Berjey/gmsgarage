@@ -23,7 +23,7 @@ Route::get('/hakkimizda', [PageController::class, 'about'])->name('about');
 
 // İletişim
 Route::get('/iletisim', [PageController::class, 'contact'])->name('contact');
-Route::post('/iletisim', [PageController::class, 'contactSubmit'])->name('contact.submit');
+Route::post('/iletisim', [PageController::class, 'contactSubmit'])->middleware('throttle:5,1')->name('contact.submit');
 
 // Yasal Sayfalar (Merkezi Sistem)
 Route::get('/sayfa/{slug}', [LegalPageController::class, 'show'])->name('legal.show');
@@ -39,10 +39,7 @@ Route::get('/araclar/{slug}', [VehicleController::class, 'show'])->name('vehicle
 
 // Araç Değerleme
 Route::get('/aracimi-degerle', [VehicleEvaluationController::class, 'index'])->name('evaluation.index');
-Route::post('/aracimi-degerle/gonder', [VehicleEvaluationController::class, 'submit'])->name('evaluation.submit');
-Route::get('/api/vehicle-models', [VehicleEvaluationController::class, 'getVehicleModels'])->name('evaluation.models');
-Route::get('/api/vehicle-options', [VehicleEvaluationController::class, 'getVehicleOptions'])->name('evaluation.options');
-Route::get('/api/vehicle-versions', [VehicleEvaluationController::class, 'getVehicleVersions'])->name('evaluation.versions');
+Route::post('/aracimi-degerle/gonder', [VehicleEvaluationController::class, 'submit'])->middleware('throttle:10,1')->name('evaluation.submit');
 Route::get('/api/arabam/brands', [VehicleEvaluationController::class, 'getArabamBrands'])->name('api.arabam.brands');
 Route::get('/api/arabam/step', [VehicleEvaluationController::class, 'getArabamStepData'])->name('api.arabam.step');
 

@@ -92,8 +92,8 @@ class LegalPageController extends Controller
             [
                 'title'       => $request->title,
                 'content'     => $request->content,
-                'is_active'   => true,
-                'is_required' => false,
+                'is_active'            => true,
+                'is_required_in_forms' => false,
             ]
         );
 

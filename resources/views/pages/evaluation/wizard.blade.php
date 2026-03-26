@@ -1323,7 +1323,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             }
         } catch (error) {
-            console.error('Error loading brands:', error);
+            // silently handle
         }
     }
 
@@ -1381,7 +1381,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         } catch (error) {
-            console.error('Error loading years:', error);
+            // silently handle
         }
     }
 
@@ -1439,7 +1439,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         } catch (error) {
-            console.error('Error loading models:', error);
+            // silently handle
         }
     }
 
@@ -1497,7 +1497,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         } catch (error) {
-            console.error('Error loading body types:', error);
+            // silently handle
         }
     }
 
@@ -1555,7 +1555,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         } catch (error) {
-            console.error('Error loading fuel types:', error);
+            // silently handle
         }
     }
 
@@ -1613,7 +1613,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         } catch (error) {
-            console.error('Error loading transmission types:', error);
+            // silently handle
         }
     }
 
@@ -1671,7 +1671,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         } catch (error) {
-            console.error('Error loading versions:', error);
+            // silently handle
         }
     }
 
@@ -1738,7 +1738,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             }
         } catch (error) {
-            console.error('Error loading colors:', error);
+            // silently handle
             // Hata durumunda da manuel giriş göster
             document.getElementById('renk-manuel-input').classList.remove('hidden');
             const manuelInput = document.getElementById('renk-manuel-input');

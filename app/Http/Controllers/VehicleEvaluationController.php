@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\EvaluationRequest;
 use App\Models\CarBrand;
-use App\Models\CarModel;
 use App\Models\ArabamVehicleConfig;
 use App\Models\Customer;
 use Illuminate\Http\Request;
@@ -79,88 +78,7 @@ class VehicleEvaluationController extends Controller
         }
     }
     
-    /**
-     * Get vehicle models for a brand
-     */
-    public function getVehicleModels(Request $request)
-    {
-        $marka = $request->get('marka');
-        
-        if (!$marka) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Marka gerekli'
-            ]);
-        }
-        
-        // Veritabanından marka ve modellerini al
-        $brand = CarBrand::where('name', $marka)->first();
-        
-        if ($brand) {
-            $models = CarModel::where('car_brand_id', $brand->id)
-                ->where('is_active', true)
-                ->orderBy('name')
-                ->pluck('name')
-                ->toArray();
-        } else {
-            $models = [];
-        }
-        
-        return response()->json([
-            'success' => true,
-            'models' => $models
-        ]);
-    }
     
-    /**
-     * Get vehicle options for hybrid system
-     */
-    public function getVehicleOptions(Request $request)
-    {
-        $marka = $request->get('marka');
-        $model = $request->get('model');
-        
-        if (!$marka || !$model) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Marka ve model gerekli'
-            ]);
-        }
-        
-        // Şimdilik boş yapı döndür - kullanıcı manuel girebilir
-        $options = [
-            'paket' => [],
-            'motor' => [],
-            'sanzuman' => ['Manuel', 'Otomatik', 'Yarı Otomatik'],
-            'yakit' => ['Benzin', 'Dizel', 'LPG', 'Hibrit', 'Elektrik']
-        ];
-        
-        return response()->json([
-            'success' => true,
-            'options' => $options
-        ]);
-    }
-    
-    /**
-     * Get vehicle versions for a model
-     */
-    public function getVehicleVersions(Request $request)
-    {
-        $marka = $request->get('marka');
-        $model = $request->get('model');
-        
-        if (!$marka || !$model) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Marka ve model gerekli'
-            ]);
-        }
-        
-        return response()->json([
-            'success' => true,
-            'versions' => []
-        ]);
-    }
     
     /**
      * Markaları döndürür — her zaman DB'den (arabam:sync ile doldurulmuş).
@@ -433,7 +351,7 @@ class VehicleEvaluationController extends Controller
 
             return response()->json([
                 'success' => false,
-                'message' => 'Bir hata oluştu: ' . $e->getMessage()
+                'message' => 'Bir hata oluştu. Lütfen tekrar deneyin veya bizi arayın.'
             ], 500);
         }
     }

@@ -37,11 +37,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/login', [AuthController::class, 'login'])->name('login.post');
     });
     
-    // Logout (auth middleware ile)
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-    
     // Admin paneli (admin middleware ile korumalı)
     Route::middleware(['auth', 'admin'])->group(function () {
+        // Logout
+        Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
         // Dashboard - Herkes erişebilir
         Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
         

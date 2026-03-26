@@ -878,7 +878,7 @@
                 initBrandDropdownOptions(brandDropdown);
             }
         } catch (error) {
-            console.error('Error loading brands:', error);
+            // silently handle
         } finally {
             loading.classList.add('hidden');
         }
@@ -996,7 +996,7 @@
                 initYearDropdownOptions(yearDropdown);
             }
         } catch (error) {
-            console.error('Error loading years:', error);
+            // silently handle
         } finally {
             loading.classList.add('hidden');
             yearList.style.display = '';
@@ -1067,7 +1067,7 @@
                 initModelDropdownOptions(modelDropdown);
             }
         } catch (error) {
-            console.error('Error loading models:', error);
+            // silently handle
         } finally {
             loading.classList.add('hidden');
             modelList.style.display = '';
@@ -1321,7 +1321,7 @@
                 initBodytypeDropdownOptions(bodytypeDropdown);
             }
         } catch (error) {
-            console.error('Error loading body types:', error);
+            // silently handle
         } finally {
             loading.classList.add('hidden');
             bodytypeList.style.display = '';
@@ -1550,7 +1550,7 @@
                 initFueltypeDropdownOptions(fueltypeDropdown);
             }
         } catch (error) {
-            console.error('Error loading fuel types:', error);
+            // silently handle
         } finally {
             loading.classList.add('hidden');
             fueltypeList.style.display = '';
@@ -1772,7 +1772,7 @@
                 initTransmissionDropdownOptions(dropdown);
             }
         } catch (error) {
-            console.error('Error loading transmissions:', error);
+            // silently handle
         } finally {
             loading.classList.add('hidden');
             list.style.display = '';
@@ -1954,7 +1954,7 @@
                 initVersionDropdownOptions(dropdown);
             }
         } catch (error) {
-            console.error('Error loading versions:', error);
+            // silently handle
         } finally {
             loading.classList.add('hidden');
             list.style.display = '';
@@ -2137,7 +2137,7 @@
                 initColorDropdownOptions(dropdown);
             }
         } catch (error) {
-            console.error('Error loading colors:', error);
+            // silently handle
         } finally {
             loading.classList.add('hidden');
             list.style.display = '';
