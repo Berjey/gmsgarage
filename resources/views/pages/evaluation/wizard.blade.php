@@ -793,7 +793,7 @@
                     <span id="kilometre-error" class="hidden mt-1 flex items-center gap-1 text-xs text-red-500"><svg class="w-3.5 h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg><span></span></span>
                 </div>
                 <div>
-                    <label class="form-label">Renk *</label>
+                    <label class="form-label">Renk <span id="renk-label-optional" class="text-gray-400 text-xs font-normal">(isteğe bağlı)</span></label>
                     <div class="eval-custom-dropdown disabled" id="renk-dropdown">
                         <button type="button" class="eval-custom-dropdown-trigger" data-value="" data-id="">
                             <span class="selected-text placeholder">Renk Seçin</span>
@@ -803,6 +803,8 @@
                         </button>
                         <div class="eval-custom-dropdown-panel"></div>
                     </div>
+                    {{-- Manuel renk girişi: dropdown boş kalırsa kullanıcı yazabilir --}}
+                    <input type="text" id="renk-manuel-input" class="form-input mt-2 hidden" placeholder="Veya rengi manuel yazın..." maxlength="255">
                     <input type="hidden" name="renk" id="renk-input" value="">
                     <input type="hidden" name="renk_id" id="renk-id" value="">
                     <span id="renk-error" class="hidden mt-1 flex items-center gap-1 text-xs text-red-500"><svg class="w-3.5 h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg><span></span></span>
@@ -1725,9 +1727,24 @@ document.addEventListener('DOMContentLoaded', function() {
                     const firstOption = panel.querySelector('.eval-custom-dropdown-option');
                     if (firstOption) firstOption.click();
                 }
+                // Dropdown yüklendiyse manuel input'u gizle
+                document.getElementById('renk-manuel-input').classList.add('hidden');
+            } else {
+                // Renk verisi gelmedi — manuel giriş inputunu göster
+                document.getElementById('renk-manuel-input').classList.remove('hidden');
+                const manuelInput = document.getElementById('renk-manuel-input');
+                manuelInput.addEventListener('input', function() {
+                    document.getElementById('renk-input').value = this.value;
+                });
             }
         } catch (error) {
             console.error('Error loading colors:', error);
+            // Hata durumunda da manuel giriş göster
+            document.getElementById('renk-manuel-input').classList.remove('hidden');
+            const manuelInput = document.getElementById('renk-manuel-input');
+            manuelInput.addEventListener('input', function() {
+                document.getElementById('renk-input').value = this.value;
+            });
         }
     }
 
@@ -2153,11 +2170,7 @@ function goToStep(step) {
                 showFieldError(kilometreInput, 'kilometre-error', 'Lütfen kilometre girin.');
                 hasError = true;
             }
-            if (!renkInput.value) {
-                const renkTrigger = document.getElementById('renk-dropdown').querySelector('.eval-custom-dropdown-trigger');
-                showFieldError(renkTrigger, 'renk-error', 'Renk seçimi zorunludur.');
-                hasError = true;
-            }
+            // Renk isteğe bağlı — API veya manuel giriş yüklenmemiş olabilir, engelleme yapma
 
             if (hasError) {
                 const firstError = document.querySelector('#step-1 [id$="-error"]:not(.hidden)');

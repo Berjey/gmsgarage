@@ -118,16 +118,8 @@ class PageController extends Controller
             // Mail gönderme hatası - log'a kaydet ama kullanıcıya hata gösterme
             \Log::error('Contact form email could not be sent', [
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
                 'contact_message_id' => $contactMessage->id,
                 'recipient' => $mailRecipient,
-                'mail_config' => [
-                    'default' => config('mail.default'),
-                    'host' => config('mail.mailers.smtp.host'),
-                    'port' => config('mail.mailers.smtp.port'),
-                    'encryption' => config('mail.mailers.smtp.encryption'),
-                    'username' => config('mail.mailers.smtp.username'),
-                ],
             ]);
             // Mesaj veritabanına kaydedildi, mail gönderilemese bile devam et
         }

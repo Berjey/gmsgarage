@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\EvaluationRequest;
 use App\Models\CarBrand;
 use App\Models\CarModel;
+use App\Models\ArabamVehicleConfig;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -96,7 +97,8 @@ class VehicleEvaluationController extends Controller
         $brand = CarBrand::where('name', $marka)->first();
         
         if ($brand) {
-            $models = CarModel::where('brand_id', $brand->id)
+            $models = CarModel::where('car_brand_id', $brand->id)
+                ->where('is_active', true)
                 ->orderBy('name')
                 ->pluck('name')
                 ->toArray();
@@ -161,142 +163,117 @@ class VehicleEvaluationController extends Controller
     }
     
     /**
-     * Proxy for arabam.com price offer API - Get brands
+     * Markaları döndürür — her zaman DB'den (arabam:sync ile doldurulmuş).
+     * Arabam.com engellemelerinden etkilenmez.
      */
     public function getArabamBrands()
     {
-        // Cache for 24 hours
-        $brands = Cache::remember('arabam_brands', 60 * 60 * 24, function () {
-            try {
-                $response = Http::timeout(15)
-                    ->withOptions([
-                        'verify' => false,
-                    ])
-                    ->withHeaders([
-                        'Accept' => 'application/json',
-                        'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
-                    ])
-                    ->get('https://www.arabam.com/PriceOffer/step-definition', [
-                        'CurrentStep' => 'null'
-                    ]);
-
-                if ($response->successful()) {
-                    $data = $response->json();
-                    if (isset($data['Data']['Items'])) {
-                        \Log::info('Arabam API başarılı - marka sayısı: ' . count($data['Data']['Items']));
-                        return $data['Data'];
-                    }
-                }
-                
-                \Log::warning('Arabam API başarısız, fallback kullanılıyor');
-                return null;
-            } catch (\Exception $e) {
-                \Log::error('Arabam API error: ' . $e->getMessage());
-                return null;
-            }
+        $brands = Cache::remember('arabam_brands_db', 60 * 60 * 24, function () {
+            return CarBrand::where('is_active', true)
+                ->orderBy('name')
+                ->get(['arabam_id', 'name']);
         });
 
-        // Eğer arabam.com API'den veri alınamadıysa, veritabanından markaları kullan
-        if (!$brands) {
-            \Log::info('Fallback: Veritabanından markalar çekiliyor');
-            $dbBrands = CarBrand::orderBy('name')->get();
-            
-            // Arabam.com formatına dönüştür
-            $formattedBrands = [];
-            foreach ($dbBrands as $brand) {
-                $formattedBrands[] = [
-                    'Id' => $brand->id,
-                    'Name' => $brand->name,
-                    'Value' => $brand->id
-                ];
-            }
-            
-            $brands = [
-                'Items' => $formattedBrands,
-                'SelectedItem' => null
-            ];
+        if ($brands->isEmpty()) {
+            return response()->json(['success' => false, 'message' => 'Marka verisi bulunamadı. Lütfen önce arabam:sync komutunu çalıştırın.'], 500);
         }
 
-        if ($brands) {
-            return response()->json([
-                'success' => true,
-                'data' => $brands
-            ]);
-        }
+        $items = $brands->map(fn($b) => [
+            'Id'        => $b->arabam_id,
+            'Name'      => $b->name,
+            'Value'     => $b->arabam_id,
+            'Properties'=> [],
+            'ShortName' => $b->name,
+            'Active'    => true,
+            'LogoPath'  => '',
+        ])->toArray();
 
         return response()->json([
-            'success' => false,
-            'message' => 'Markalar yüklenemedi'
-        ], 500);
+            'success' => true,
+            'data'    => ['Items' => $items, 'SelectedItem' => null],
+        ]);
     }
 
     /**
-     * Proxy for arabam.com price offer API - Get next step data
+     * Cascade adım verilerini döndürür — DB öncelikli, arabam.com yedek.
+     *
+     * step=10 → yıllar      (brandId)
+     * step=20 → model grubu (brandId, modelYear)
+     * step=30 → kasa tipi   (brandId, modelYear, modelGroupId)
+     * step=40 → yakıt tipi  (brandId, modelYear, modelGroupId, bodyTypeId)
+     * step=50 → şanzıman    (brandId, modelYear, modelGroupId, bodyTypeId, fuelTypeId)
+     * step=60 → versiyon    (brandId, modelYear, modelGroupId, bodyTypeId, fuelTypeId, transmissionTypeId)
      */
     public function getArabamStepData(Request $request)
     {
-        $step = $request->get('step');
-        $brandId = $request->get('brandId');
-        $modelId = $request->get('modelId');
-        $yearId = $request->get('yearId');
-        $modelYear = $request->get('modelYear');
-        $modelGroupId = $request->get('modelGroupId');
-        $bodyTypeId = $request->get('bodyTypeId');
-        $fuelTypeId = $request->get('fuelTypeId');
-        $transmissionTypeId = $request->get('transmissionTypeId');
-        $versionId = $request->get('versionId');
+        $step               = (int) $request->get('step');
+        $brandId            = (int) $request->get('brandId');
+        $modelYear          = $request->get('modelYear');
+        $modelGroupId       = (int) $request->get('modelGroupId');
+        $bodyTypeId         = (int) $request->get('bodyTypeId');
+        $fuelTypeId         = (int) $request->get('fuelTypeId');
+        $transmissionTypeId = (int) $request->get('transmissionTypeId');
 
+        // DB'den servis et (arabam:sync --full yapıldıktan sonra)
+        if (ArabamVehicleConfig::isSynced()) {
+            $items = match($step) {
+                10 => array_map(fn($y) => ['Id' => $y, 'Name' => $y, 'Value' => $y, 'Properties' => [], 'Active' => true, 'LogoPath' => ''],
+                         ArabamVehicleConfig::getYears($brandId)),
+
+                20 => ArabamVehicleConfig::getModelGroups($brandId, $modelYear),
+
+                30 => ArabamVehicleConfig::getBodyTypes($brandId, $modelYear, $modelGroupId),
+
+                40 => ArabamVehicleConfig::getFuelTypes($brandId, $modelYear, $modelGroupId, $bodyTypeId),
+
+                50 => ArabamVehicleConfig::getTransmissions($brandId, $modelYear, $modelGroupId, $bodyTypeId, $fuelTypeId),
+
+                60 => ArabamVehicleConfig::getVersions($brandId, $modelYear, $modelGroupId, $bodyTypeId, $fuelTypeId, $transmissionTypeId),
+
+                default => [],
+            };
+
+            if (!empty($items)) {
+                return response()->json([
+                    'success' => true,
+                    'data'    => ['Items' => $items, 'SelectedItem' => null],
+                ]);
+            }
+        }
+
+        // Yedek: DB sync yapılmamışsa arabam.com'dan canlı çek (sadece local/dev ortamında)
         $cacheKey = 'arabam_step_' . md5(json_encode($request->all()));
 
-        // Cache for 1 hour
-        $data = Cache::remember($cacheKey, 60 * 60, function () use ($step, $brandId, $modelId, $yearId, $modelYear, $modelGroupId, $bodyTypeId, $fuelTypeId, $transmissionTypeId, $versionId) {
+        $data = Cache::remember($cacheKey, 3600, function () use ($request, $step) {
             try {
                 $params = ['CurrentStep' => $step];
-
-                if ($brandId) $params['BrandId'] = $brandId;
-                if ($modelId) $params['ModelId'] = $modelId;
-                if ($yearId) $params['YearId'] = $yearId;
-                if ($modelYear) $params['ModelYear'] = $modelYear;
-                if ($modelGroupId) $params['ModelGroupId'] = $modelGroupId;
-                if ($bodyTypeId) $params['BodyTypeId'] = $bodyTypeId;
-                if ($fuelTypeId) $params['FuelTypeId'] = $fuelTypeId;
-                if ($transmissionTypeId) $params['TransmissionTypeId'] = $transmissionTypeId;
-                if ($versionId) $params['VersionId'] = $versionId;
+                foreach (['brandId' => 'BrandId', 'modelYear' => 'ModelYear', 'modelGroupId' => 'ModelGroupId',
+                          'bodyTypeId' => 'BodyTypeId', 'fuelTypeId' => 'FuelTypeId',
+                          'transmissionTypeId' => 'TransmissionTypeId', 'modelId' => 'ModelId'] as $reqKey => $apiKey) {
+                    if ($request->get($reqKey)) $params[$apiKey] = $request->get($reqKey);
+                }
 
                 $response = Http::timeout(15)
-                    ->withOptions([
-                        'verify' => false,
-                    ])
-                    ->withHeaders([
-                        'Accept' => 'application/json',
-                        'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
-                    ])
+                    ->withOptions(['verify' => true])
+                    ->withHeaders(['Accept' => 'application/json', 'User-Agent' => 'Mozilla/5.0'])
                     ->get('https://www.arabam.com/PriceOffer/step-definition', $params);
 
                 if ($response->successful()) {
-                    $data = $response->json();
-                    if (isset($data['Data'])) {
-                        return $data['Data'];
-                    }
+                    $json = $response->json();
+                    if (isset($json['Data'])) return $json['Data'];
                 }
                 return null;
             } catch (\Exception $e) {
-                \Log::error('Arabam API error: ' . $e->getMessage());
+                \Log::error('Arabam API step error: ' . $e->getMessage());
                 return null;
             }
         });
 
         if ($data) {
-            return response()->json([
-                'success' => true,
-                'data' => $data
-            ]);
+            return response()->json(['success' => true, 'data' => $data]);
         }
 
-        return response()->json([
-            'success' => false,
-            'message' => 'Veri yüklenemedi'
-        ]);
+        return response()->json(['success' => false, 'message' => 'Veri bulunamadı. Lütfen arabam:sync --full komutunu çalıştırın.'], 404);
     }
 
     /**
@@ -321,7 +298,7 @@ class VehicleEvaluationController extends Controller
                 'vites_tipi' => 'nullable|string|max:255',
                 'versiyon' => 'nullable|string|max:255',
                 'kilometre' => 'required|string|max:50',
-                'renk' => 'required|string|max:255',
+                'renk' => 'nullable|string|max:255',
                 'tramer' => 'required|in:YOK,VAR,BILMIYORUM,AGIR_HASAR',
                 'tramer_tutari' => 'required_if:tramer,VAR,AGIR_HASAR|nullable|string|max:50',
                 'ekspertiz' => 'nullable|string',
@@ -334,7 +311,7 @@ class VehicleEvaluationController extends Controller
                 'marka.required' => 'Marka alanı zorunludur.',
                 'model.required' => 'Model alanı zorunludur.',
                 'kilometre.required' => 'Kilometre alanı zorunludur.',
-                'renk.required' => 'Renk seçimi zorunludur.',
+                'renk.max' => 'Renk alanı çok uzun.',
                 'tramer.required' => 'Tramer bilgisi zorunludur.',
                 'tramer_tutari.required_if' => 'Hasar/tramer durumunda toplam tutar girilmesi zorunludur.',
                 'ad.required' => 'Ad alanı zorunludur.',

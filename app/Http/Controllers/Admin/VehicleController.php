@@ -55,10 +55,18 @@ class VehicleController extends Controller
 
         $vehicles = $query->orderBy('created_at', 'desc')->paginate(15);
 
-        $totalCount    = Vehicle::count();
-        $activeCount   = Vehicle::where('is_active', true)->count();
-        $passiveCount  = Vehicle::where('is_active', false)->count();
-        $featuredCount = Vehicle::where('is_featured', true)->count();
+        // Tüm sayaçlar tek sorguda
+        $counts = Vehicle::selectRaw('
+            COUNT(*) as total,
+            SUM(CASE WHEN is_active = 1 THEN 1 ELSE 0 END) as active,
+            SUM(CASE WHEN is_active = 0 THEN 1 ELSE 0 END) as passive,
+            SUM(CASE WHEN is_featured = 1 THEN 1 ELSE 0 END) as featured
+        ')->first();
+
+        $totalCount    = $counts->total ?? 0;
+        $activeCount   = $counts->active ?? 0;
+        $passiveCount  = $counts->passive ?? 0;
+        $featuredCount = $counts->featured ?? 0;
 
         return view('admin.vehicles.index', compact('vehicles', 'totalCount', 'activeCount', 'passiveCount', 'featuredCount'));
     }

@@ -23,10 +23,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Tüm view'larda $settings değişkenini kullanılabilir yap.
-        // View Composer kullanılıyor: her request'te render anında cache'den okur,
-        // böylece ayar güncellendikten sonraki ilk request'te değişiklik anında yansır.
-        View::composer('*', function ($view) {
+        // Sadece layout view'larına $settings enjekte et.
+        // Tüm sayfalarda (* wildcard) değil yalnızca layout'larda tetiklenir;
+        // her alt view ayrıca sorgu/cache hit tetiklemez.
+        View::composer(['layouts.app', 'admin.app', 'admin.auth'], function ($view) {
             $settings = Cache::remember('app.settings', 60, function () {
                 return Setting::pluck('value', 'key')->toArray();
             });

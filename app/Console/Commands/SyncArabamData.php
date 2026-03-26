@@ -12,14 +12,14 @@ class SyncArabamData extends Command
      *
      * @var string
      */
-    protected $signature = 'arabam:sync {--brands-only : Sadece markaları senkronize et} {--models-only : Sadece modelleri senkronize et}';
+    protected $signature = 'arabam:sync {--brands-only : Sadece markaları senkronize et} {--models-only : Sadece modelleri senkronize et} {--full : Tüm cascade verisini (yıl/kasa/yakıt/şanzıman/versiyon) DB\'ye çek} {--resume : Sadece eksik markaları senkronize et (zaten var olanları atla)}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Arabam.com\'dan araç marka ve model verilerini senkronize eder';
+    protected $description = 'Arabam.com\'dan araç verilerini senkronize eder (markalar, modeller, tam cascade)';
 
     /**
      * Execute the console command.
@@ -31,7 +31,19 @@ class SyncArabamData extends Command
         $this->info('🚀 Arabam.com veri senkronizasyonu başlatılıyor...');
         $this->newLine();
         
-        if ($this->option('brands-only')) {
+        if ($this->option('full') || $this->option('resume')) {
+            $resume = $this->option('resume');
+            $this->info($resume ? '🔄 RESUME: Eksik markalar senkronize ediliyor...' : '🔄 TAM CASCADE senkronizasyonu başlatılıyor...');
+            $this->warn('  Bu işlem arabam.com\'daki TÜM yıl/kasa/yakıt/şanzıman/versiyon verilerini çeker.');
+            $this->warn('  Süre: markaya göre değişir, saatler alabilir. Ctrl+C ile durdurabilirsiniz.');
+            $this->newLine();
+
+            $result = $service->syncFullCascade($this, $resume);
+
+            $this->newLine();
+            $this->info("✅ Toplam {$result['rows']} satır, {$result['brands']} marka işlendi.");
+
+        } elseif ($this->option('brands-only')) {
             // Sadece markalar
             $this->info('📦 Markalar çekiliyor...');
             $brandsCount = $service->saveBrandsToDatabase();
