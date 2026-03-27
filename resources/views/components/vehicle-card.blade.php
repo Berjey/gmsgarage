@@ -1,6 +1,7 @@
 @props(['vehicle'])
 
-<div class="card-vehicle group bg-white dark:bg-[#252525] rounded-2xl shadow-lg dark:shadow-xl border-2 border-transparent dark:border-[#333333] transition-all duration-300 flex flex-col h-full hover:border-primary-600 dark:hover:border-primary-500 hover:shadow-2xl hover:-translate-y-1">
+<div class="card-vehicle group bg-white dark:bg-[#252525] rounded-2xl shadow-lg dark:shadow-xl border-2 border-transparent dark:border-[#333333] transition-all duration-300 flex flex-col h-full hover:border-primary-600 dark:hover:border-primary-500 hover:shadow-2xl hover:-translate-y-1 cursor-pointer"
+     onclick="window.location.href='{{ route('vehicles.show', $vehicle->slug ?: $vehicle->id) }}'">
     <!-- Temsili Görsel Bölümü -->
         <div class="relative h-56 bg-gradient-to-br from-gray-100 via-gray-50 to-gray-100 dark:from-[#2a2a2a] dark:via-[#1e1e1e] dark:to-[#2a2a2a] overflow-hidden rounded-t-2xl">
             @if(count($vehicle->all_images) > 0)
@@ -133,7 +134,8 @@
             
             <!-- Butonlar -->
             <div class="flex gap-2.5 mt-auto pt-4">
-                <a href="{{ route('vehicles.show', $vehicle->slug ?: $vehicle->id) }}" 
+                <a href="{{ route('vehicles.show', $vehicle->slug ?: $vehicle->id) }}"
+                   onclick="event.stopPropagation()"
                    class="flex-1 px-4 py-3 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white rounded-xl font-semibold transition-all duration-300 text-sm text-center whitespace-nowrap flex items-center justify-center gap-1.5 shadow-md hover:shadow-lg">
                     <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
@@ -142,8 +144,9 @@
                     <span>Detaylar</span>
                 </a>
                 @if($vehicle->sahibinden_url)
-                    <a href="{{ $vehicle->sahibinden_url }}" 
+                    <a href="{{ $vehicle->sahibinden_url }}"
                        target="_blank"
+                       onclick="event.stopPropagation()"
                        class="px-4 py-3 bg-gradient-to-r from-yellow-400/80 via-yellow-500/80 to-yellow-600/80 dark:from-yellow-400/85 dark:via-yellow-500/85 dark:to-yellow-600/85 hover:from-yellow-500 hover:via-yellow-600 hover:to-yellow-700 dark:hover:from-yellow-500 dark:hover:via-yellow-600 dark:hover:to-yellow-700 text-gray-900 dark:text-gray-900 rounded-xl font-semibold transition-all duration-300 text-sm text-center whitespace-nowrap flex items-center justify-center gap-1.5 backdrop-blur-sm border border-yellow-400/30 dark:border-yellow-400/40 shadow-md hover:shadow-lg">
                         <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
