@@ -163,7 +163,7 @@
     }
     
     .dark .hero-custom-dropdown-panel {
-        background: #1f2937;
+        background: #252525;
         border-color: #dc2626;
     }
     
@@ -193,7 +193,7 @@
     }
     
     .dark .hero-custom-dropdown-option:hover {
-        background-color: #374151;
+        background-color: #333333;
     }
     
     .dark .hero-custom-dropdown-option.selected {
@@ -217,7 +217,7 @@
     }
     
     .dark .filter-accordion-item {
-        border-bottom-color: #374151;
+        border-bottom-color: #333333;
     }
     
     /* Ensure dropdown panel is always on top */
