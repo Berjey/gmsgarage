@@ -341,7 +341,7 @@
                                         <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
                                     </label>
                                     <span class="text-xs font-bold px-2 py-1 rounded {{ $vehicle->is_active ? 'text-green-700 bg-green-50' : 'text-gray-600 bg-gray-100' }}">
-                                        {{ $vehicle->is_active ? 'Yayında' : 'Değil' }}
+                                        {{ $vehicle->is_active ? 'Yayında' : 'Yayında Değil' }}
                                     </span>
                                 </div>
 
