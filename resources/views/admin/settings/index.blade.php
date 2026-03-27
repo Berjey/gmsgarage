@@ -474,6 +474,35 @@
                     </div>
                 </div>
 
+                <!-- İletişim Formu Ayarları -->
+                <div class="border-t pt-6 mt-6">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">
+                        <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                        </svg>
+                        İletişim Formu Ayarları
+                    </h3>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Form Açıklama Metni</label>
+                            <textarea name="contact_form_description"
+                                      rows="3"
+                                      class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
+                                      placeholder="İletişim formunun üstünde görünecek açıklama metni">{{ $settings['contact_form_description'] ?? '' }}</textarea>
+                            <p class="mt-1 text-xs text-gray-500">İletişim sayfasında formun üstünde görünür</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Mesaj Alıcı E-posta</label>
+                            <input type="email"
+                                   name="contact_mail_recipient"
+                                   value="{{ $settings['contact_mail_recipient'] ?? '' }}"
+                                   class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
+                                   placeholder="info@gmsgarage.com">
+                            <p class="mt-1 text-xs text-gray-500">Form mesajlarının gönderileceği e-posta adresi</p>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Google Maps Embed -->
                 <div class="border-t pt-6 mt-6">
                     <h3 class="text-lg font-bold text-gray-900 mb-4">
