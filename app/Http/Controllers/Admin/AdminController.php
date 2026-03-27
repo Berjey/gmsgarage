@@ -75,7 +75,7 @@ class AdminController extends Controller
 
             // Kullanıcı
             'total_users'  => User::count(),
-            'total_admins' => User::where('is_admin', true)->count(),
+            'total_admins' => User::where('role', 'admin')->count(),
 
             // Müşteri
             'total_customers'      => $customerStats->total ?? 0,

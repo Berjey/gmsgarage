@@ -62,11 +62,39 @@
         </div>
     </div>
 </div>
+<!-- Hızlı İşlemler -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+    <a href="{{ route('admin.vehicles.create') }}" class="flex items-center gap-3 bg-white rounded-xl p-4 border border-gray-200 shadow-sm hover:border-primary-300 hover:shadow-md transition-all group">
+        <div class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center group-hover:bg-primary-200 transition-colors">
+            <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+        </div>
+        <span class="text-sm font-semibold text-gray-700 group-hover:text-primary-600 transition-colors">Araç Ekle</span>
+    </a>
+    <a href="{{ route('admin.blog.create') }}" class="flex items-center gap-3 bg-white rounded-xl p-4 border border-gray-200 shadow-sm hover:border-primary-300 hover:shadow-md transition-all group">
+        <div class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center group-hover:bg-primary-200 transition-colors">
+            <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+        </div>
+        <span class="text-sm font-semibold text-gray-700 group-hover:text-primary-600 transition-colors">Blog Yaz</span>
+    </a>
+    <a href="{{ route('admin.contact-messages.index') }}" class="flex items-center gap-3 bg-white rounded-xl p-4 border border-gray-200 shadow-sm hover:border-primary-300 hover:shadow-md transition-all group">
+        <div class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center group-hover:bg-primary-200 transition-colors">
+            <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+        </div>
+        <span class="text-sm font-semibold text-gray-700 group-hover:text-primary-600 transition-colors">Mesajlar</span>
+    </a>
+    <a href="{{ route('admin.settings.index') }}" class="flex items-center gap-3 bg-white rounded-xl p-4 border border-gray-200 shadow-sm hover:border-primary-300 hover:shadow-md transition-all group">
+        <div class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center group-hover:bg-primary-200 transition-colors">
+            <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        </div>
+        <span class="text-sm font-semibold text-gray-700 group-hover:text-primary-600 transition-colors">Ayarlar</span>
+    </a>
+</div>
+
 <!-- Stats Grid - Clean & Minimal -->
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-    
+
     <!-- Total Vehicles -->
-    <div class="stat-card bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
+    <a href="{{ route('admin.vehicles.index') }}" class="stat-card bg-white rounded-xl p-5 border border-gray-200 shadow-sm cursor-pointer hover:border-primary-300">
         <div class="flex items-center justify-between">
             <div class="flex-1">
                 <p class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Toplam Araç</p>
@@ -78,10 +106,10 @@
                 </svg>
             </div>
         </div>
-    </div>
+    </a>
 
     <!-- Active Vehicles -->
-    <div class="stat-card bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
+    <a href="{{ route('admin.vehicles.index') }}" class="stat-card bg-white rounded-xl p-5 border border-gray-200 shadow-sm cursor-pointer hover:border-green-300">
         <div class="flex items-center justify-between">
             <div class="flex-1">
                 <p class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Aktif Araçlar</p>
@@ -93,10 +121,10 @@
                 </svg>
             </div>
         </div>
-    </div>
+    </a>
 
     <!-- Featured Vehicles -->
-    <div class="stat-card bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
+    <a href="{{ route('admin.vehicles.index') }}" class="stat-card bg-white rounded-xl p-5 border border-gray-200 shadow-sm cursor-pointer hover:border-primary-300">
         <div class="flex items-center justify-between">
             <div class="flex-1">
                 <p class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Öne Çıkan Araçlar</p>
@@ -108,10 +136,10 @@
                 </svg>
             </div>
         </div>
-    </div>
+    </a>
 
     <!-- Blog Posts -->
-    <div class="stat-card bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
+    <a href="{{ route('admin.blog.index') }}" class="stat-card bg-white rounded-xl p-5 border border-gray-200 shadow-sm cursor-pointer hover:border-primary-300">
         <div class="flex items-center justify-between">
             <div class="flex-1">
                 <p class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Blog Yazıları</p>
@@ -124,10 +152,10 @@
                 </svg>
             </div>
         </div>
-    </div>
+    </a>
 
     <!-- Total Views -->
-    <div class="stat-card bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
+    <a href="{{ route('admin.blog.index') }}" class="stat-card bg-white rounded-xl p-5 border border-gray-200 shadow-sm cursor-pointer hover:border-primary-300">
         <div class="flex items-center justify-between">
             <div class="flex-1">
                 <p class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Blog Görüntülenme</p>
@@ -141,10 +169,10 @@
                 </svg>
             </div>
         </div>
-    </div>
+    </a>
 
     <!-- Total Users -->
-    <div class="stat-card bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
+    <a href="{{ route('admin.users.index') }}" class="stat-card bg-white rounded-xl p-5 border border-gray-200 shadow-sm cursor-pointer hover:border-primary-300">
         <div class="flex items-center justify-between">
             <div class="flex-1">
                 <p class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Kullanıcılar</p>
@@ -157,10 +185,10 @@
                 </svg>
             </div>
         </div>
-    </div>
+    </a>
 
     <!-- Müşteri Portföyü (CRM) -->
-    <div class="stat-card bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
+    <a href="{{ route('admin.customers.index') }}" class="stat-card bg-white rounded-xl p-5 border border-gray-200 shadow-sm cursor-pointer hover:border-blue-300">
         <div class="flex items-center justify-between">
             <div class="flex-1">
                 <p class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Müşteri Portföyü</p>
@@ -173,18 +201,10 @@
                 </svg>
             </div>
         </div>
-        <div class="mt-4 pt-4 border-t border-gray-200">
-            <a href="{{ route('admin.customers.index') }}" class="text-sm font-semibold text-primary-600 hover:text-primary-700 flex items-center gap-2">
-                Tüm Müşterileri Görüntüle
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                </svg>
-            </a>
-        </div>
-    </div>
+    </a>
 
     <!-- Messages -->
-    <div class="stat-card bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
+    <a href="{{ route('admin.contact-messages.index') }}" class="stat-card bg-white rounded-xl p-5 border border-gray-200 shadow-sm cursor-pointer hover:border-primary-300">
         <div class="flex items-center justify-between">
             <div class="flex-1">
                 <p class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Okunmamış Mesajlar</p>
@@ -197,10 +217,10 @@
                 </svg>
             </div>
         </div>
-    </div>
+    </a>
 
     <!-- Evaluation Requests -->
-    <div class="stat-card bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
+    <a href="{{ route('admin.evaluation-requests.index') }}" class="stat-card bg-white rounded-xl p-5 border border-gray-200 shadow-sm cursor-pointer hover:border-primary-300">
         <div class="flex items-center justify-between">
             <div class="flex-1">
                 <p class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Değerleme Talepleri</p>
@@ -213,7 +233,7 @@
                 </svg>
             </div>
         </div>
-    </div>
+    </a>
 
 </div>
 
