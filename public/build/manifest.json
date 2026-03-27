@@ -1,0 +1,28 @@
+{
+  "resources/css/app.css": {
+    "file": "assets/app-C5klPKgM.css",
+    "src": "resources/css/app.css",
+    "isEntry": true
+  },
+  "resources/js/admin-confirm.js": {
+    "file": "assets/admin-confirm-D1BXTp4u.js",
+    "name": "admin-confirm",
+    "src": "resources/js/admin-confirm.js",
+    "isEntry": true
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-B1BTe4Ok.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true,
+    "css": [
+      "assets/app-C5klPKgM.css"
+    ]
+  },
+  "resources/js/legal-modal.js": {
+    "file": "assets/legal-modal-OYkMMFAH.js",
+    "name": "legal-modal",
+    "src": "resources/js/legal-modal.js",
+    "isEntry": true
+  }
+}
