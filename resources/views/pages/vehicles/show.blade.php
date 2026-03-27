@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title', $vehicle->title . ' - ' . ($settings['site_title'] ?? 'GMSGARAGE'))
-@section('description', Str::limit(strip_tags($vehicle->description ?? $vehicle->title), 160))
+@section('description', $vehicle->brand . ' ' . $vehicle->model . ' ' . $vehicle->year . ' - ' . number_format($vehicle->kilometer ?? 0, 0, ',', '.') . ' km - ' . $vehicle->formatted_price . ' - ' . ($vehicle->fuel_type ?? '') . ' ' . ($vehicle->transmission ?? '') . ' - GMSGARAGE Kağıthane')
 @section('keywords', implode(', ', array_filter([$vehicle->brand, $vehicle->model, $vehicle->year, $vehicle->fuel_type, $vehicle->transmission, 'ikinci el araç', 'oto galeri'])))
 @section('og_type', 'product')
 @section('og_url', route('vehicles.show', $vehicle->slug ?: $vehicle->id))
@@ -444,8 +444,38 @@
                 </div>
             </div>
             
-            <!-- Araç Özellikleri -->
-            <div class="bg-white dark:bg-[#252525] rounded-2xl shadow-xl dark:shadow-2xl p-8 mb-8 border border-gray-100 dark:border-[#333333] transition-colors duration-200">
+            <!-- Tab Navigation -->
+            <div class="bg-white dark:bg-[#252525] rounded-2xl shadow-xl dark:shadow-2xl border border-gray-100 dark:border-[#333333] mb-8 overflow-hidden transition-colors duration-200">
+                <div class="flex overflow-x-auto border-b border-gray-200 dark:border-[#333333] bg-gray-50 dark:bg-[#1e1e1e]">
+                    <button onclick="switchDetailTab('specs')" id="tab-btn-specs" class="detail-tab-btn active flex items-center gap-2 px-6 py-4 text-sm font-bold whitespace-nowrap border-b-3 transition-all">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                        Araç Özellikleri
+                    </button>
+                    @php
+                        $paintedParts = is_array($vehicle->painted_parts) ? $vehicle->painted_parts : [];
+                        $replacedParts = is_array($vehicle->replaced_parts) ? $vehicle->replaced_parts : [];
+                        $hasDamageData = count($paintedParts) > 0 || count($replacedParts) > 0 || $vehicle->tramer_status;
+                    @endphp
+                    @if($hasDamageData)
+                    <button onclick="switchDetailTab('expertise')" id="tab-btn-expertise" class="detail-tab-btn flex items-center gap-2 px-6 py-4 text-sm font-bold whitespace-nowrap border-b-3 transition-all">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                        Ekspertiz
+                    </button>
+                    @endif
+                    @if(!empty($featureGroups) || (!empty($vehicle->features) && count($vehicle->features) > 0))
+                    <button onclick="switchDetailTab('features')" id="tab-btn-features" class="detail-tab-btn flex items-center gap-2 px-6 py-4 text-sm font-bold whitespace-nowrap border-b-3 transition-all">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                        Donanımlar
+                    </button>
+                    @endif
+                    <button onclick="switchDetailTab('description')" id="tab-btn-description" class="detail-tab-btn flex items-center gap-2 px-6 py-4 text-sm font-bold whitespace-nowrap border-b-3 transition-all">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"/></svg>
+                        Açıklama
+                    </button>
+                </div>
+
+                <!-- Tab Content: Araç Özellikleri -->
+                <div id="tab-specs" class="detail-tab-content p-8">
                 <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Araç Özellikleri</h2>
                 {{--
                     SOL: Kimlik / Genel bilgiler (condition, marka, model, kasa, renk, kapı, koltuk)
@@ -638,67 +668,135 @@
                         @endif
                     </div>
                 </div>
-            </div>
+                </div>
 
-            {{-- ─── Boyalı / Değişen Parçalar ─────────────────────────────────── --}}
-            @php
-                $paintedParts   = is_array($vehicle->painted_parts)  ? $vehicle->painted_parts  : [];
-                $replacedParts  = is_array($vehicle->replaced_parts) ? $vehicle->replaced_parts : [];
-                $allParts       = [
-                    'Motor Kaputu','Ön Tampon','Arka Tampon','Arka Kaput','Tavan',
-                    'Sağ Ön Kapı','Sağ Arka Kapı','Sol Ön Kapı','Sol Arka Kapı',
-                    'Sağ Ön Çamurluk','Sağ Arka Çamurluk','Sol Ön Çamurluk','Sol Arka Çamurluk'
-                ];
-                $hasDamageData  = count($paintedParts) > 0 || count($replacedParts) > 0;
-            @endphp
-            @if($hasDamageData)
-            <div class="bg-white dark:bg-[#252525] rounded-2xl shadow-xl dark:shadow-2xl p-8 mb-8 border border-gray-100 dark:border-[#333333] transition-colors duration-200">
-                <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Boya & Değişen Parçalar</h2>
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                    @foreach($allParts as $part)
-                        @php
-                            $isPainted  = in_array($part, $paintedParts);
-                            $isReplaced = in_array($part, $replacedParts);
-                        @endphp
-                        <div class="flex flex-col items-center gap-1.5 p-3 rounded-xl border-2
-                            {{ $isReplaced ? 'border-red-200 bg-red-50 dark:bg-red-900/20 dark:border-red-800' :
-                               ($isPainted  ? 'border-yellow-200 bg-yellow-50 dark:bg-yellow-900/20 dark:border-yellow-800' :
-                                              'border-gray-100 bg-gray-50 dark:bg-[#252525] dark:border-[#333333]') }}">
-                            <span class="text-xs font-semibold text-gray-700 dark:text-gray-300 text-center">{{ $part }}</span>
-                            @if($isReplaced)
-                                <span class="text-xs font-bold text-red-600 dark:text-red-400">Değişmiş</span>
-                            @elseif($isPainted)
-                                <span class="text-xs font-bold text-yellow-600 dark:text-yellow-400">Boyalı</span>
+                <!-- Tab Content: Ekspertiz -->
+                @if($hasDamageData)
+                <div id="tab-expertise" class="detail-tab-content p-8 hidden">
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Ekspertiz Raporu</h2>
+
+                    @php
+                        $allParts = [
+                            'Motor Kaputu','Ön Tampon','Arka Tampon','Arka Kaput','Tavan',
+                            'Sağ Ön Kapı','Sağ Arka Kapı','Sol Ön Kapı','Sol Arka Kapı',
+                            'Sağ Ön Çamurluk','Sağ Arka Çamurluk','Sol Ön Çamurluk','Sol Arka Çamurluk'
+                        ];
+                        $svgPartMap = [
+                            'Motor Kaputu' => 'svg-motor_kaputu',
+                            'Ön Tampon' => 'svg-on_tampon',
+                            'Arka Tampon' => 'svg-arka_tampon',
+                            'Arka Kaput' => 'svg-arka_kaput',
+                            'Tavan' => 'svg-tavan',
+                            'Sağ Ön Kapı' => 'svg-sag_on_kapi',
+                            'Sağ Arka Kapı' => 'svg-sag_arka_kapi',
+                            'Sol Ön Kapı' => 'svg-sol_on_kapi',
+                            'Sol Arka Kapı' => 'svg-sol_arka_kapi',
+                            'Sağ Ön Çamurluk' => 'svg-sag_on_camurluk',
+                            'Sağ Arka Çamurluk' => 'svg-sag_arka_camurluk',
+                            'Sol Ön Çamurluk' => 'svg-sol_on_camurluk',
+                            'Sol Arka Çamurluk' => 'svg-sol_arka_camurluk',
+                        ];
+                    @endphp
+
+                    <!-- Tramer Bilgisi -->
+                    @if($vehicle->tramer_status)
+                    <div class="mb-6 p-4 rounded-xl border-2 {{ $vehicle->tramer_status === 'Yok' ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800' : ($vehicle->tramer_status === 'Var' ? 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800' : 'bg-gray-50 dark:bg-[#2a2a2a] border-gray-200 dark:border-[#333333]') }}">
+                        <div class="flex items-center gap-3">
+                            @if($vehicle->tramer_status === 'Yok')
+                                <svg class="w-6 h-6 text-green-600 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                                <span class="font-bold text-green-700 dark:text-green-400">Tramer Kaydı Yok</span>
+                            @elseif($vehicle->tramer_status === 'Var')
+                                <svg class="w-6 h-6 text-red-600 dark:text-red-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+                                <div>
+                                    <span class="font-bold text-red-700 dark:text-red-400">Tramer Kaydı Var</span>
+                                    @if($vehicle->tramer_amount)
+                                        <span class="ml-2 text-red-600 dark:text-red-400 font-semibold">{{ number_format($vehicle->tramer_amount, 0, ',', '.') }} ₺</span>
+                                    @endif
+                                </div>
                             @else
-                                <span class="text-xs text-green-600 dark:text-green-400">Orijinal</span>
+                                <span class="font-bold text-gray-600 dark:text-gray-300">Tramer: {{ $vehicle->tramer_status }}</span>
                             @endif
                         </div>
-                    @endforeach
-                </div>
-                <div class="mt-4 flex flex-wrap gap-3 text-xs">
-                    <span class="flex items-center gap-1.5 text-gray-500 dark:text-gray-400">
-                        <span class="w-3 h-3 rounded-full bg-green-400 inline-block"></span> Orijinal
-                    </span>
-                    <span class="flex items-center gap-1.5 text-gray-500 dark:text-gray-400">
-                        <span class="w-3 h-3 rounded-full bg-yellow-400 inline-block"></span> Boyalı
-                    </span>
-                    <span class="flex items-center gap-1.5 text-gray-500 dark:text-gray-400">
-                        <span class="w-3 h-3 rounded-full bg-red-400 inline-block"></span> Değişmiş
-                    </span>
-                </div>
-            </div>
-            @endif
+                    </div>
+                    @endif
 
-            <!-- Donanımlar -->
-            @if(!empty($featureGroups))
-                <div class="bg-white dark:bg-[#252525] rounded-2xl shadow-xl dark:shadow-2xl p-8 mb-8 border border-gray-100 dark:border-[#333333] transition-colors duration-200">
+                    <!-- SVG Diyagram + Grid yan yana -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <!-- Sol: SVG Araç Diyagramı -->
+                        <div class="flex flex-col items-center">
+                            <h3 class="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-4">Görsel Ekspertiz</h3>
+                            <div class="w-full max-w-sm mx-auto" id="expertiseDiagram">
+                                @include('admin.vehicles._car_diagram_svg')
+                            </div>
+                            <style>
+                                #expertiseDiagram .car-part { transition: fill 0.3s; }
+                                @foreach($allParts as $part)
+                                    @php
+                                        $svgId = $svgPartMap[$part] ?? '';
+                                        $isPainted = in_array($part, $paintedParts);
+                                        $isReplaced = in_array($part, $replacedParts);
+                                    @endphp
+                                    @if($svgId && $isReplaced)
+                                        #expertiseDiagram #{{ $svgId }} { fill: #ef4444 !important; }
+                                    @elseif($svgId && $isPainted)
+                                        #expertiseDiagram #{{ $svgId }} { fill: #eab308 !important; }
+                                    @elseif($svgId)
+                                        #expertiseDiagram #{{ $svgId }} { fill: #22c55e !important; opacity: 0.4; }
+                                    @endif
+                                @endforeach
+                            </style>
+                        </div>
+
+                        <!-- Sağ: Parça Grid -->
+                        <div>
+                            <h3 class="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-4">Parça Detayları</h3>
+                            <div class="grid grid-cols-2 gap-3">
+                                @foreach($allParts as $part)
+                                    @php
+                                        $isPainted = in_array($part, $paintedParts);
+                                        $isReplaced = in_array($part, $replacedParts);
+                                    @endphp
+                                    <div class="flex items-center gap-2 p-3 rounded-xl border-2
+                                        {{ $isReplaced ? 'border-red-200 bg-red-50 dark:bg-red-900/20 dark:border-red-800' :
+                                           ($isPainted ? 'border-yellow-200 bg-yellow-50 dark:bg-yellow-900/20 dark:border-yellow-800' :
+                                                         'border-gray-100 bg-gray-50 dark:bg-[#2a2a2a] dark:border-[#333333]') }}">
+                                        <span class="w-3 h-3 rounded-full flex-shrink-0 {{ $isReplaced ? 'bg-red-500' : ($isPainted ? 'bg-yellow-500' : 'bg-green-500') }}"></span>
+                                        <div>
+                                            <span class="text-xs font-semibold text-gray-700 dark:text-gray-300">{{ $part }}</span>
+                                            <span class="block text-xs {{ $isReplaced ? 'text-red-600 dark:text-red-400 font-bold' : ($isPainted ? 'text-yellow-600 dark:text-yellow-400 font-bold' : 'text-green-600 dark:text-green-400') }}">
+                                                {{ $isReplaced ? 'Değişmiş' : ($isPainted ? 'Boyalı' : 'Orijinal') }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Lejant -->
+                    <div class="mt-6 pt-4 border-t border-gray-200 dark:border-[#333333] flex flex-wrap gap-6 text-sm">
+                        <span class="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+                            <span class="w-4 h-4 rounded-full bg-green-500 inline-block"></span> Orijinal
+                        </span>
+                        <span class="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+                            <span class="w-4 h-4 rounded-full bg-yellow-500 inline-block"></span> Boyalı
+                        </span>
+                        <span class="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+                            <span class="w-4 h-4 rounded-full bg-red-500 inline-block"></span> Değişmiş
+                        </span>
+                    </div>
+                </div>
+                @endif
+
+                <!-- Tab Content: Donanımlar -->
+                @if(!empty($featureGroups))
+                <div id="tab-features" class="detail-tab-content p-8 hidden">
                     <div class="flex items-center justify-between mb-6">
                         <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Donanımlar</h2>
                         <span class="text-sm text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-[#2a2a2a] px-3 py-1 rounded-full">
                             {{ count($vehicle->features) }} özellik
                         </span>
                     </div>
-
                     <div class="space-y-6">
                         @foreach($featureGroups as $category => $features)
                             <div>
@@ -719,9 +817,8 @@
                         @endforeach
                     </div>
                 </div>
-            @elseif(is_array($vehicle->features) && count($vehicle->features) > 0)
-                {{-- Fallback: catalog sorgusu başarısız olursa düz liste --}}
-                <div class="bg-white dark:bg-[#252525] rounded-2xl shadow-xl dark:shadow-2xl p-8 mb-8 border border-gray-100 dark:border-[#333333] transition-colors duration-200">
+                @elseif(is_array($vehicle->features) && count($vehicle->features) > 0)
+                <div id="tab-features" class="detail-tab-content p-8 hidden">
                     <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Donanımlar</h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         @foreach($vehicle->features as $feature)
@@ -734,13 +831,14 @@
                         @endforeach
                     </div>
                 </div>
-            @endif
-            
-            <!-- Açıklama (En Altta) -->
-            <div class="bg-white dark:bg-[#252525] rounded-2xl shadow-xl dark:shadow-2xl border border-gray-100 dark:border-[#333333] p-8 transition-colors duration-200">
-                <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Açıklama</h2>
-                <div class="text-gray-700 dark:text-gray-300 leading-relaxed">
-                    {{ $vehicle->description ?? 'Açıklama bulunmamaktadır.' }}
+                @endif
+
+                <!-- Tab Content: Açıklama -->
+                <div id="tab-description" class="detail-tab-content p-8 hidden">
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Açıklama</h2>
+                    <div class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                        {{ $vehicle->description ?? 'Açıklama bulunmamaktadır.' }}
+                    </div>
                 </div>
             </div>
             
@@ -1007,5 +1105,42 @@
                 max-height: 90vh !important;
             }
         }
+        /* Detail Tab System */
+        .detail-tab-btn {
+            color: #6b7280;
+            border-bottom: 3px solid transparent;
+        }
+        .detail-tab-btn:hover {
+            color: #dc2626;
+            background: rgba(220, 38, 38, 0.05);
+        }
+        .detail-tab-btn.active {
+            color: #dc2626;
+            border-bottom-color: #dc2626;
+            background: rgba(220, 38, 38, 0.05);
+        }
+        .dark .detail-tab-btn {
+            color: #9ca3af;
+        }
+        .dark .detail-tab-btn:hover {
+            color: #f87171;
+            background: rgba(220, 38, 38, 0.1);
+        }
+        .dark .detail-tab-btn.active {
+            color: #f87171;
+            border-bottom-color: #f87171;
+            background: rgba(220, 38, 38, 0.1);
+        }
     </style>
+
+    <script>
+        function switchDetailTab(tabId) {
+            document.querySelectorAll('.detail-tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.detail-tab-btn').forEach(el => el.classList.remove('active'));
+            const content = document.getElementById('tab-' + tabId);
+            const btn = document.getElementById('tab-btn-' + tabId);
+            if (content) content.classList.remove('hidden');
+            if (btn) btn.classList.add('active');
+        }
+    </script>
 @endsection
