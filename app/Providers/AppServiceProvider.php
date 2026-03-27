@@ -23,15 +23,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Sadece layout view'larına $settings enjekte et.
-        // Tüm sayfalarda (* wildcard) değil yalnızca layout'larda tetiklenir;
-        // her alt view ayrıca sorgu/cache hit tetiklemez.
-        View::composer(['layouts.app', 'admin.app', 'admin.auth'], function ($view) {
-            $settings = Cache::remember('app.settings', 60, function () {
-                return Setting::pluck('value', 'key')->toArray();
-            });
-            $view->with('settings', $settings);
-        });
+        // Tüm view'larda $settings erişilebilir olsun (child view @section'larında da)
+        View::share('settings', Cache::remember('app.settings', 60, function () {
+            return Setting::pluck('value', 'key')->toArray();
+        }));
 
         // Tüm sayfalamada özel pagination view'ını kullan
         Paginator::defaultView('vendor.pagination.default');

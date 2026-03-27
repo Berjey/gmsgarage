@@ -17,8 +17,7 @@ class PageController extends Controller
 
     public function contact()
     {
-        $settings = Setting::pluck('value', 'key')->toArray();
-        return view('pages.contact', compact('settings'));
+        return view('pages.contact');
     }
 
     public function contactSubmit(Request $request)
