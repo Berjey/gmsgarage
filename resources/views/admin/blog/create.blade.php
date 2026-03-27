@@ -104,7 +104,7 @@
             <div class="ml-3">
                 <h3 class="text-sm font-bold text-red-800">Lütfen aşağıdaki hataları düzeltin:</h3>
                 <ul class="mt-2 text-sm text-red-700 list-disc list-inside space-y-1">
-                    @foreach ($errors->all() as $error)
+                    @foreach (array_unique($errors->all()) as $error)
                         <li>{{ $error }}</li>
                     @endforeach
                 </ul>
@@ -351,11 +351,18 @@
 
         <!-- Form Actions -->
         <div class="flex items-center justify-end gap-4 pb-8">
-            <a href="{{ route('admin.blog.index') }}" 
+            <a href="{{ route('admin.blog.index') }}"
                class="px-8 py-3 bg-white text-gray-700 font-bold rounded-xl border border-gray-200 hover:bg-gray-50 transition-all shadow-sm">
                 İptal
             </a>
-            <button type="submit" 
+            <button type="submit"
+                    onclick="document.querySelector('[name=is_published]').checked = false;"
+                    class="px-8 py-3 bg-gray-700 text-white font-bold rounded-xl hover:bg-gray-800 transition-all shadow-sm">
+                <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
+                Taslak Kaydet
+            </button>
+            <button type="submit"
+                    onclick="document.querySelector('[name=is_published]').checked = true;"
                     class="px-8 py-3 bg-primary-600 text-white font-bold rounded-xl hover:bg-primary-700 transition-all shadow-lg shadow-primary-500/25">
                 <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                 Yayınla
