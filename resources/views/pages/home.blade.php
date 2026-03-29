@@ -159,8 +159,26 @@
                     0 0 40px rgba(220, 38, 38, 0.15);
     }
 
+    /* ===== SEARCH INPUT IN DROPDOWN ===== */
+    .hero-dd-search {
+        position: sticky; top: 0; z-index: 1;
+        padding: 0.5rem;
+        background: #ffffff;
+        border-bottom: 1px solid #e5e7eb;
+    }
+    .dark .hero-dd-search { background: #252525; border-color: #444; }
+    .hero-dd-search input {
+        width: 100%; padding: 0.45rem 0.65rem;
+        border: 1.5px solid #e5e7eb; border-radius: 8px;
+        font-size: 0.85rem; outline: none;
+        background: #fff; color: #111;
+    }
+    .dark .hero-dd-search input { background: #333; color: #e5e7eb; border-color: #555; }
+    .hero-dd-search input:focus { border-color: #dc2626; }
+    .hero-custom-dropdown-option.dd-hidden { display: none !important; }
+
     /* ===== SHARED DROPDOWN OPTION STYLES - BÜTÜN DROPDOWN'LAR İÇİN ORTAK ===== */
-    
+
     /* Base option style - Araç Al & Araç Sat */
     .hero-custom-dropdown-option {
         display: flex;
@@ -829,6 +847,34 @@
     let selectedTransmissionId = null;
     let selectedVersionId = null;
 
+    // Genel: Dropdown panel'e search input enjekte et
+    function injectDropdownSearch(panel) {
+        if (!panel || panel.querySelector('.hero-dd-search')) return;
+        var opts = panel.querySelectorAll('.hero-custom-dropdown-option');
+        if (opts.length < 5) return;
+        var container = panel.querySelector('.brand-list') || panel;
+        var searchWrap = document.createElement('div');
+        searchWrap.className = 'hero-dd-search';
+        var searchInput = document.createElement('input');
+        searchInput.type = 'text';
+        searchInput.placeholder = 'Ara...';
+        searchInput.addEventListener('input', function() {
+            var q = this.value.toLowerCase();
+            panel.querySelectorAll('.hero-custom-dropdown-option').forEach(function(opt) {
+                opt.classList.toggle('dd-hidden', q && !opt.textContent.toLowerCase().includes(q));
+            });
+        });
+        searchInput.addEventListener('click', function(e) { e.stopPropagation(); });
+        searchInput.addEventListener('keydown', function(e) { e.stopPropagation(); });
+        searchWrap.appendChild(searchInput);
+        container.insertBefore(searchWrap, container.firstChild);
+    }
+    function focusDropdownSearch(panel) {
+        if (!panel) return;
+        var si = panel.querySelector('.hero-dd-search input');
+        if (si) { si.value = ''; si.dispatchEvent(new Event('input')); setTimeout(function(){ si.focus(); }, 50); }
+    }
+
     async function loadBrandsFromAPI() {
         if (brandsLoaded) return brandsData;
 
@@ -876,6 +922,28 @@
 
                 // Re-init dropdown event listeners for new options
                 initBrandDropdownOptions(brandDropdown);
+
+                // Search input ekle (markaların bulunduğu panel)
+                var bPanel = brandDropdown.querySelector('.hero-custom-dropdown-panel');
+                if (bPanel && !bPanel.querySelector('.hero-dd-search')) {
+                    var bList = bPanel.querySelector('.brand-list');
+                    var searchWrap = document.createElement('div');
+                    searchWrap.className = 'hero-dd-search';
+                    var searchInput = document.createElement('input');
+                    searchInput.type = 'text';
+                    searchInput.placeholder = 'Marka ara...';
+                    searchInput.addEventListener('input', function() {
+                        var q = this.value.toLowerCase();
+                        bPanel.querySelectorAll('.hero-custom-dropdown-option').forEach(function(opt) {
+                            opt.classList.toggle('dd-hidden', q && !opt.textContent.toLowerCase().includes(q));
+                        });
+                    });
+                    searchInput.addEventListener('click', function(e) { e.stopPropagation(); });
+                    searchInput.addEventListener('keydown', function(e) { e.stopPropagation(); });
+                    searchWrap.appendChild(searchInput);
+                    if (bList) bList.insertBefore(searchWrap, bList.firstChild);
+                    else bPanel.insertBefore(searchWrap, bPanel.firstChild);
+                }
             }
         } catch (error) {
             // silently handle
@@ -2293,6 +2361,10 @@
                 // Load brands if not loaded
                 if (!brandsLoaded) {
                     loadBrandsFromAPI();
+                } else {
+                    // Focus search input
+                    var si = panel.querySelector('.hero-dd-search input');
+                    if (si) { si.value = ''; si.dispatchEvent(new Event('input')); setTimeout(function(){ si.focus(); }, 50); }
                 }
 
                 // Disable other fields
@@ -2587,11 +2659,9 @@
                     trigger.classList.add('open');
                     dropdown.classList.add('dropdown-open');
                     disableOtherFields();
-                    // Focus first option
-                    const firstOption = panel.querySelector('.hero-custom-dropdown-option');
-                    if (firstOption) {
-                        firstOption.focus();
-                    }
+                    // Focus search input if exists
+                    var si = panel.querySelector('.hero-dd-search input');
+                    if (si) { si.value = ''; si.dispatchEvent(new Event('input')); setTimeout(function(){ si.focus(); }, 50); }
                 } else {
                     panel.classList.remove('open');
                     trigger.classList.remove('open');
@@ -2691,6 +2761,25 @@
                     selectedOption.classList.add('selected');
                 }
             }
+
+            // Search input ekle (5+ seçenek varsa)
+            if (options.length >= 5 && !panel.querySelector('.hero-dd-search')) {
+                var searchWrap = document.createElement('div');
+                searchWrap.className = 'hero-dd-search';
+                var searchInput = document.createElement('input');
+                searchInput.type = 'text';
+                searchInput.placeholder = 'Ara...';
+                searchInput.addEventListener('input', function() {
+                    var q = this.value.toLowerCase();
+                    panel.querySelectorAll('.hero-custom-dropdown-option').forEach(function(opt) {
+                        opt.classList.toggle('dd-hidden', q && !opt.textContent.toLowerCase().includes(q));
+                    });
+                });
+                searchInput.addEventListener('click', function(e) { e.stopPropagation(); });
+                searchInput.addEventListener('keydown', function(e) { e.stopPropagation(); });
+                searchWrap.appendChild(searchInput);
+                panel.insertBefore(searchWrap, panel.firstChild);
+            }
         });
         
         // Close dropdowns on outside click
@@ -2767,6 +2856,28 @@
         
         // No validation - allow native form submit always
         // Form will submit to action="{{ route('evaluation.index') }}" with whatever values are filled
+
+        // MutationObserver: Dropdown panel'ler açıldığında veya dolduğunda search enjekte et
+        var observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(m) {
+                if (m.type === 'attributes' && m.attributeName === 'class') {
+                    var el = m.target;
+                    if (el.classList.contains('hero-custom-dropdown-panel') && el.classList.contains('open')) {
+                        injectDropdownSearch(el);
+                        focusDropdownSearch(el);
+                    }
+                }
+                if (m.type === 'childList' && m.addedNodes.length > 0) {
+                    var panel = m.target.closest('.hero-custom-dropdown-panel');
+                    if (panel) injectDropdownSearch(panel);
+                }
+            });
+        });
+        document.querySelectorAll('.hero-custom-dropdown-panel').forEach(function(panel) {
+            observer.observe(panel, { attributes: true, attributeFilter: ['class'], childList: true, subtree: true });
+        });
+        // Yeni eklenen panel'leri de izle
+        observer.observe(document.body, { childList: true, subtree: true });
     });
 </script>
 @endpush

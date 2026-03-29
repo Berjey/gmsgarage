@@ -1086,13 +1086,16 @@ $(document).ready(function(){
         const list = document.getElementById('ddList-' + id);
         if (!btn || btn.disabled) return;
         const isOpen = list.classList.contains('open');
-        // Tüm açık cascade & adm-dd listelerini kapat
         document.querySelectorAll('.adm-dd-list.open').forEach(function(l) {
             l.classList.remove('open');
             const wrap = l.closest('.adm-dd');
             if (wrap) { const b = wrap.querySelector('.adm-dd-btn'); if (b) b.classList.remove('open'); }
         });
-        if (!isOpen) { list.classList.add('open'); btn.classList.add('open'); }
+        if (!isOpen) {
+            list.classList.add('open'); btn.classList.add('open');
+            var si = list.querySelector('.adm-dd-search input');
+            if (si) { si.value = ''; si.dispatchEvent(new Event('input')); setTimeout(function(){ si.focus(); }, 50); }
+        }
     };
 
     window.toggleStaticDD = function(id) {
@@ -1105,7 +1108,11 @@ $(document).ready(function(){
             const wrap = l.closest('.adm-dd');
             if (wrap) { const b = wrap.querySelector('.adm-dd-btn'); if (b) b.classList.remove('open'); }
         });
-        if (!isOpen) { list.classList.add('open'); btn.classList.add('open'); }
+        if (!isOpen) {
+            list.classList.add('open'); btn.classList.add('open');
+            var si = list.querySelector('.adm-dd-search input');
+            if (si) { si.value = ''; si.dispatchEvent(new Event('input')); setTimeout(function(){ si.focus(); }, 50); }
+        }
     };
 
     window.selectStaticDD = function(id, val, label) {
@@ -1152,6 +1159,24 @@ $(document).ready(function(){
             if (btn)   btn.disabled = true;
             if (label) { label.textContent = 'Bulunamadı'; label.style.color = '#9ca3af'; }
             return;
+        }
+        // Arama kutusu ekle (5+ seçenek varsa)
+        if (items.length >= 5) {
+            const searchWrap = document.createElement('div');
+            searchWrap.className = 'adm-dd-search';
+            const searchInput = document.createElement('input');
+            searchInput.type = 'text';
+            searchInput.placeholder = 'Ara...';
+            searchInput.addEventListener('input', function() {
+                const q = this.value.toLowerCase();
+                list.querySelectorAll('li').forEach(function(li) {
+                    li.classList.toggle('dd-hidden', q && !li.textContent.toLowerCase().includes(q));
+                });
+            });
+            searchInput.addEventListener('click', function(e) { e.stopPropagation(); });
+            searchInput.addEventListener('keydown', function(e) { e.stopPropagation(); });
+            searchWrap.appendChild(searchInput);
+            list.appendChild(searchWrap);
         }
         items.forEach(function(item) {
             const li = document.createElement('li');
@@ -1616,6 +1641,27 @@ $(document).ready(function(){
             }
         });
     })();
+
+    // Static dropdown'lara (blade-rendered) search input ekle
+    document.querySelectorAll('.adm-dd-list:not(.cascade-list)').forEach(function(list) {
+        var lis = list.querySelectorAll('li');
+        if (lis.length < 5) return;
+        var searchWrap = document.createElement('div');
+        searchWrap.className = 'adm-dd-search';
+        var searchInput = document.createElement('input');
+        searchInput.type = 'text';
+        searchInput.placeholder = 'Ara...';
+        searchInput.addEventListener('input', function() {
+            var q = this.value.toLowerCase();
+            list.querySelectorAll('li').forEach(function(li) {
+                li.classList.toggle('dd-hidden', q && !li.textContent.toLowerCase().includes(q));
+            });
+        });
+        searchInput.addEventListener('click', function(e) { e.stopPropagation(); });
+        searchInput.addEventListener('keydown', function(e) { e.stopPropagation(); });
+        list.insertBefore(searchWrap, list.firstChild);
+        searchWrap.appendChild(searchInput);
+    });
 });
 </script>
 @endpush

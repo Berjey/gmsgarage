@@ -187,6 +187,22 @@
         pointer-events: auto;
         transform: translateY(0) scale(1);
     }
+    .eval-dd-search {
+        position: sticky; top: 0; z-index: 1;
+        padding: 0.5rem;
+        background: #ffffff;
+        border-bottom: 1px solid #e5e7eb;
+    }
+    .dark .eval-dd-search { background: #1e1e1e; border-color: #333; }
+    .eval-dd-search input {
+        width: 100%; padding: 0.4rem 0.6rem;
+        border: 1.5px solid #e5e7eb; border-radius: 8px;
+        font-size: 0.8rem; outline: none;
+        background: #fff; color: #111;
+    }
+    .dark .eval-dd-search input { background: #2a2a2a; color: #e5e7eb; border-color: #444; }
+    .eval-dd-search input:focus { border-color: #dc2626; }
+    .eval-custom-dropdown-option.dd-hidden { display: none !important; }
 
     /* Custom Scrollbar - Light Mode */
     .eval-custom-dropdown-panel::-webkit-scrollbar {
@@ -1146,8 +1162,30 @@ function clearFieldError(inputEl, errorId) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+    // ===== SEARCH INJECT HELPER =====
+    function injectEvalSearch(panel) {
+        if (!panel || panel.querySelector('.eval-dd-search')) return;
+        var opts = panel.querySelectorAll('.eval-custom-dropdown-option');
+        if (opts.length < 5) return;
+        var searchWrap = document.createElement('div');
+        searchWrap.className = 'eval-dd-search';
+        var searchInput = document.createElement('input');
+        searchInput.type = 'text';
+        searchInput.placeholder = 'Ara...';
+        searchInput.addEventListener('input', function() {
+            var q = this.value.toLowerCase();
+            panel.querySelectorAll('.eval-custom-dropdown-option').forEach(function(opt) {
+                opt.classList.toggle('dd-hidden', q && !opt.textContent.toLowerCase().includes(q));
+            });
+        });
+        searchInput.addEventListener('click', function(e) { e.stopPropagation(); });
+        searchInput.addEventListener('keydown', function(e) { e.stopPropagation(); });
+        searchWrap.appendChild(searchInput);
+        panel.insertBefore(searchWrap, panel.firstChild);
+    }
+
     // ===== CUSTOM DROPDOWN GENEL DAVRANIŞLARI =====
-    
+
     // Initialize all custom dropdowns
     function initCustomDropdown(dropdown) {
         const trigger = dropdown.querySelector('.eval-custom-dropdown-trigger');
@@ -1172,6 +1210,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 dropdown.classList.toggle('dropdown-open');
                 panel.classList.toggle('open');
 
+                // Search input focus
+                if (panel.classList.contains('open')) {
+                    injectEvalSearch(panel);
+                    var si = panel.querySelector('.eval-dd-search input');
+                    if (si) { si.value = ''; si.dispatchEvent(new Event('input')); setTimeout(function(){ si.focus(); }, 50); }
+                }
             });
         }
     }

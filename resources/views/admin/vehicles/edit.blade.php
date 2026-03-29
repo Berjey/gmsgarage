@@ -1158,7 +1158,11 @@ window.toggleStaticDD = function(id) {
         const wrap = l.closest('.adm-dd');
         if (wrap) { const b = wrap.querySelector('.adm-dd-btn'); if (b) b.classList.remove('open'); }
     });
-    if (!isOpen) { list.classList.add('open'); btn.classList.add('open'); }
+    if (!isOpen) {
+        list.classList.add('open'); btn.classList.add('open');
+        var si = list.querySelector('.adm-dd-search input');
+        if (si) { si.value = ''; si.dispatchEvent(new Event('input')); setTimeout(function(){ si.focus(); }, 50); }
+    }
 };
 
 window.selectStaticDD = function(id, val, label) {
@@ -1356,6 +1360,28 @@ document.getElementById('vehicleForm').addEventListener('submit', function (e) {
         Swal.fire({ icon: 'warning', title: 'Eksik Alanlar', text: 'Lütfen zorunlu alanları doldurun.', confirmButtonColor: '#dc2626' });
         return false;
     }
+});
+
+// Static dropdown'lara search input ekle (5+ seçenek olanlar)
+document.querySelectorAll('.adm-dd-list').forEach(function(list) {
+    var lis = list.querySelectorAll('li');
+    if (lis.length < 5) return;
+    if (list.querySelector('.adm-dd-search')) return;
+    var searchWrap = document.createElement('div');
+    searchWrap.className = 'adm-dd-search';
+    var searchInput = document.createElement('input');
+    searchInput.type = 'text';
+    searchInput.placeholder = 'Ara...';
+    searchInput.addEventListener('input', function() {
+        var q = this.value.toLowerCase();
+        list.querySelectorAll('li').forEach(function(li) {
+            li.classList.toggle('dd-hidden', q && !li.textContent.toLowerCase().includes(q));
+        });
+    });
+    searchInput.addEventListener('click', function(e) { e.stopPropagation(); });
+    searchInput.addEventListener('keydown', function(e) { e.stopPropagation(); });
+    list.insertBefore(searchWrap, list.firstChild);
+    searchWrap.appendChild(searchInput);
 });
 </script>
 @endpush

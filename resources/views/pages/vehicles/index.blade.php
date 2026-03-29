@@ -161,6 +161,22 @@
         display: none;
         margin-top: 4px;
     }
+    .hero-dd-search {
+        position: sticky; top: 0; z-index: 1;
+        padding: 0.5rem;
+        background: white;
+        border-bottom: 1px solid #e5e7eb;
+    }
+    .dark .hero-dd-search { background: #1e1e1e; border-color: #333; }
+    .hero-dd-search input {
+        width: 100%; padding: 0.4rem 0.6rem;
+        border: 1.5px solid #e5e7eb; border-radius: 6px;
+        font-size: 0.8rem; outline: none;
+        background: white; color: #111;
+    }
+    .dark .hero-dd-search input { background: #2a2a2a; color: #e5e7eb; border-color: #444; }
+    .hero-dd-search input:focus { border-color: #dc2626; }
+    .hero-custom-dropdown-option.dd-hidden { display: none !important; }
     
     .dark .hero-custom-dropdown-panel {
         background: #252525;
@@ -1151,16 +1167,20 @@
                     dropdown.classList.add('dropdown-open');
                     panel.classList.add('open');
                     trigger.classList.add('open');
-                    
+
                     // Elevate parent accordion item
                     const accordionItem = dropdown.closest('.filter-accordion-item');
                     if (accordionItem) {
                         accordionItem.classList.add('dropdown-active');
                     }
-                    
+
                     // Force z-index update
                     panel.style.zIndex = '99999';
                     panel.style.position = 'absolute';
+
+                    // Focus search input
+                    var si = panel.querySelector('.hero-dd-search input');
+                    if (si) { si.value = ''; si.dispatchEvent(new Event('input')); setTimeout(function(){ si.focus(); }, 50); }
                 } else {
                     dropdown.classList.remove('dropdown-open');
                     panel.classList.remove('open');
@@ -1257,6 +1277,25 @@
                     trigger.setAttribute('data-value', nativeSelect.value);
                     selectedOption.classList.add('selected');
                 }
+            }
+
+            // Search input ekle (5+ seçenek varsa)
+            if (options.length >= 5 && !panel.querySelector('.hero-dd-search')) {
+                var searchWrap = document.createElement('div');
+                searchWrap.className = 'hero-dd-search';
+                var searchInput = document.createElement('input');
+                searchInput.type = 'text';
+                searchInput.placeholder = 'Ara...';
+                searchInput.addEventListener('input', function() {
+                    var q = this.value.toLowerCase();
+                    panel.querySelectorAll('.hero-custom-dropdown-option').forEach(function(opt) {
+                        opt.classList.toggle('dd-hidden', q && !opt.textContent.toLowerCase().includes(q));
+                    });
+                });
+                searchInput.addEventListener('click', function(e) { e.stopPropagation(); });
+                searchInput.addEventListener('keydown', function(e) { e.stopPropagation(); });
+                searchWrap.appendChild(searchInput);
+                panel.insertBefore(searchWrap, panel.firstChild);
             }
         });
         

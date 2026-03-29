@@ -136,14 +136,29 @@
             border-radius: 8px;
             box-shadow: 0 4px 16px rgba(0,0,0,0.08);
             z-index: 200; overflow: hidden;
+            max-height: 280px; overflow-y: auto;
         }
         .adm-dd-list.open { display: block; }
+        .adm-dd-search {
+            position: sticky; top: 0; z-index: 1;
+            padding: 0.5rem 0.65rem;
+            background: #fff;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .adm-dd-search input {
+            width: 100%; padding: 0.4rem 0.65rem;
+            border: 1.5px solid #e5e7eb; border-radius: 6px;
+            font-size: 0.8rem; outline: none;
+            transition: border-color 0.15s;
+        }
+        .adm-dd-search input:focus { border-color: #dc2626; }
         .adm-dd-list li {
             padding: 0.6rem 0.875rem;
             font-size: 0.875rem; font-weight: 500; color: #374151;
             cursor: pointer; list-style: none;
             transition: background 0.1s, color 0.1s;
         }
+        .adm-dd-list li.dd-hidden { display: none; }
         .adm-dd-list li:hover    { background: rgba(220,38,38,0.07); color: #dc2626; }
         .adm-dd-list li.selected { background: rgba(220,38,38,0.1);  color: #dc2626; font-weight: 600; }
     </style>
