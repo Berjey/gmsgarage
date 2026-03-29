@@ -344,8 +344,9 @@
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Kilometre <span class="text-red-500">*</span></label>
-                        <input type="number" name="kilometer" value="{{ old('kilometer', $vehicle->kilometer) }}" required placeholder="0"
-                               class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors">
+                        <input type="text" name="kilometer" id="editKilometerInput" value="{{ number_format((int)old('kilometer', $vehicle->kilometer), 0, '', '.') }}" required placeholder="0"
+                               class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
+                               inputmode="numeric">
                         <p class="mt-1 text-xs text-gray-500">Araç toplam kilometre değeri</p>
                     </div>
                 </div>
@@ -1144,6 +1145,21 @@ function updateEditFeatureCount() {
     const el = document.getElementById('editSelectedCount');
     if (el) el.textContent = count + ' özellik seçili';
 }
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// KILOMETRE FORMATLAMA
+// ═══════════════════════════════════════════════════════════════════════════════
+(function() {
+    var kmInput = document.getElementById('editKilometerInput');
+    if (kmInput) {
+        kmInput.addEventListener('input', function() {
+            var raw = this.value.replace(/[^\d]/g, '');
+            if (raw) {
+                this.value = parseInt(raw, 10).toLocaleString('tr-TR');
+            }
+        });
+    }
+})();
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // STATIC DROPDOWN FUNCTIONS

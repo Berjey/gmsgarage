@@ -93,6 +93,17 @@ class VehicleController extends Controller
         $requiredRule  = $isPublishing ? 'required' : 'nullable';
         $mainImageRule = $isPublishing ? 'required|image|max:5120' : 'nullable|image|max:5120';
 
+        // Kilometre, fiyat gibi alanlardan nokta/virgül temizle (150.000 -> 150000)
+        if ($request->has('kilometer')) {
+            $request->merge(['kilometer' => str_replace(['.', ',', ' '], '', $request->input('kilometer'))]);
+        }
+        if ($request->has('price')) {
+            $request->merge(['price' => str_replace(['.', ',', ' '], '', $request->input('price'))]);
+        }
+        if ($request->has('tramer_amount')) {
+            $request->merge(['tramer_amount' => str_replace(['.', ',', ' '], '', $request->input('tramer_amount'))]);
+        }
+
         $validated = $request->validate([
             // Temel Bilgiler - title her durumda zorunlu
             'title'     => 'required|string|max:255',
@@ -160,6 +171,8 @@ class VehicleController extends Controller
             'price.required'      => 'Fiyat zorunludur.',
             'kilometer.required'  => 'Kilometre zorunludur.',
             'main_image.required' => 'Ana görsel zorunludur.',
+            'kilometer.integer'   => 'Kilometre geçerli bir sayı olmalıdır.',
+            'price.numeric'       => 'Fiyat geçerli bir sayı olmalıdır.',
             'slug.alpha_dash'     => 'Slug yalnızca harf, rakam, tire ve alt çizgi içerebilir.',
             'condition.in'        => 'Araç durumu geçersiz.',
         ]);
@@ -237,6 +250,17 @@ class VehicleController extends Controller
     public function update(Request $request, $id)
     {
         $vehicle = Vehicle::findOrFail($id);
+
+        // Kilometre, fiyat gibi alanlardan nokta/virgül temizle (150.000 -> 150000)
+        if ($request->has('kilometer')) {
+            $request->merge(['kilometer' => str_replace(['.', ',', ' '], '', $request->input('kilometer'))]);
+        }
+        if ($request->has('price')) {
+            $request->merge(['price' => str_replace(['.', ',', ' '], '', $request->input('price'))]);
+        }
+        if ($request->has('tramer_amount')) {
+            $request->merge(['tramer_amount' => str_replace(['.', ',', ' '], '', $request->input('tramer_amount'))]);
+        }
 
         $validated = $request->validate([
             // Temel Bilgiler (Zorunlu)

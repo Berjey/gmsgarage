@@ -193,9 +193,9 @@
                             <div class="col-span-2">
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Marka <span class="text-red-500">*</span></label>
                                 <div class="adm-dd" id="ddWrap-brand">
-                                    <input type="hidden" name="brand" id="ddVal-brand">
+                                    <input type="hidden" name="brand" id="ddVal-brand" value="{{ old('brand') }}">
                                     <button type="button" class="adm-dd-btn" id="ddBtn-brand" onclick="toggleCascadeDD('brand')" disabled>
-                                        <span id="ddLabel-brand">Yükleniyor...</span>
+                                        <span id="ddLabel-brand">{{ old('brand') ?: 'Yükleniyor...' }}</span>
                                         <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                                     </button>
                                     <ul class="adm-dd-list cascade-list" id="ddList-brand"></ul>
@@ -219,9 +219,9 @@
                             <div class="col-span-2">
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Model / Seri <span class="text-red-500">*</span></label>
                                 <div class="adm-dd" id="ddWrap-model">
-                                    <input type="hidden" name="model" id="ddVal-model">
+                                    <input type="hidden" name="model" id="ddVal-model" value="{{ old('model') }}">
                                     <button type="button" class="adm-dd-btn" id="ddBtn-model" onclick="toggleCascadeDD('model')" disabled>
-                                        <span id="ddLabel-model">Önce marka ve yıl seçiniz</span>
+                                        <span id="ddLabel-model">{{ old('model') ?: 'Önce marka ve yıl seçiniz' }}</span>
                                         <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                                     </button>
                                     <ul class="adm-dd-list cascade-list" id="ddList-model"></ul>
@@ -385,8 +385,9 @@
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Kilometre <span class="text-red-500">*</span></label>
-                                <input type="number" name="kilometer" value="{{ old('kilometer', 0) }}" required placeholder="0"
-                                       class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors">
+                                <input type="text" name="kilometer" id="kilometerInput" value="{{ old('kilometer') ? number_format((int)old('kilometer'), 0, '', '.') : '0' }}" required placeholder="0"
+                                       class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
+                                       inputmode="numeric">
                                 <p class="mt-1 text-xs text-gray-500">Araç toplam kilometre değeri</p>
                             </div>
                         </div>
@@ -1276,6 +1277,14 @@ $(document).ready(function(){
                         resetCascadeFrom('year');
                         loadYears(); // Marka seçildiğinde o markaya ait yılları yükle
                     });
+                    // old() ile geri yükleme: marka seçiliyse otomatik seç
+                    var oldBrand = '{{ old("brand") }}';
+                    if (oldBrand) {
+                        var brandLis = document.querySelectorAll('#ddList-brand li');
+                        brandLis.forEach(function(li) {
+                            if (li.dataset.name === oldBrand) li.click();
+                        });
+                    }
                 } else {
                     const btn = document.getElementById('ddBtn-brand');
                     const lbl = document.getElementById('ddLabel-brand');
@@ -1470,6 +1479,19 @@ $(document).ready(function(){
         Swal.fire({title:'Görseli Kaldır?',text:'Bu görseli galeriden kaldırmak istediğinize emin misiniz?',icon:'question',showCancelButton:true,confirmButtonColor:'#dc2626',cancelButtonColor:'#6b7280',confirmButtonText:'Evet, Kaldır',cancelButtonText:'İptal'})
         .then(r=>{if(r.isConfirmed){galleryFiles.splice(i,1);renderGallery();}});
     };
+
+    // ── KİLOMETRE FORMATLAMA ──────────────────────────────────────────────────
+    (function() {
+        var kmInput = document.getElementById('kilometerInput');
+        if (kmInput) {
+            kmInput.addEventListener('input', function() {
+                var raw = this.value.replace(/[^\d]/g, '');
+                if (raw) {
+                    this.value = parseInt(raw, 10).toLocaleString('tr-TR');
+                }
+            });
+        }
+    })();
 
     // ── FORM SUBMIT ───────────────────────────────────────────────────────────
     $('.submit-btn').on('click', function() { $('#formAction').val($(this).data('action')); });
