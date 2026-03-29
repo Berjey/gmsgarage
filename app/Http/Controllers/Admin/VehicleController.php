@@ -93,15 +93,10 @@ class VehicleController extends Controller
         $requiredRule  = $isPublishing ? 'required' : 'nullable';
         $mainImageRule = $isPublishing ? 'required|image|max:5120' : 'nullable|image|max:5120';
 
-        // Kilometre, fiyat gibi alanlardan nokta/virgül temizle (150.000 -> 150000)
-        if ($request->has('kilometer')) {
-            $request->merge(['kilometer' => str_replace(['.', ',', ' '], '', $request->input('kilometer'))]);
-        }
-        if ($request->has('price')) {
-            $request->merge(['price' => str_replace(['.', ',', ' '], '', $request->input('price'))]);
-        }
-        if ($request->has('tramer_amount')) {
-            $request->merge(['tramer_amount' => str_replace(['.', ',', ' '], '', $request->input('tramer_amount'))]);
+        // Sayısal alanlardan nokta/virgül temizle (150.000 -> 150000), boşları null yap
+        foreach (['kilometer', 'price', 'tramer_amount', 'engine_size', 'horse_power', 'torque'] as $numField) {
+            $val = $request->input($numField);
+            $request->merge([$numField => ($val !== null && $val !== '') ? str_replace(['.', ',', ' '], '', $val) : null]);
         }
 
         $validated = $request->validate([
@@ -223,7 +218,11 @@ class VehicleController extends Controller
 
         $validated['images']      = $images;
         $validated['images_meta'] = Vehicle::buildImagesMeta($images, $validated['image'] ?? null);
-        // ─────────────────────────────────────────────────────────────────────
+
+        // Boş stringleri null'a çevir (MySQL decimal/integer sütunları için)
+        foreach ($validated as $key => $val) {
+            if ($val === '') $validated[$key] = null;
+        }
 
         Vehicle::create($validated);
 
@@ -251,15 +250,10 @@ class VehicleController extends Controller
     {
         $vehicle = Vehicle::findOrFail($id);
 
-        // Kilometre, fiyat gibi alanlardan nokta/virgül temizle (150.000 -> 150000)
-        if ($request->has('kilometer')) {
-            $request->merge(['kilometer' => str_replace(['.', ',', ' '], '', $request->input('kilometer'))]);
-        }
-        if ($request->has('price')) {
-            $request->merge(['price' => str_replace(['.', ',', ' '], '', $request->input('price'))]);
-        }
-        if ($request->has('tramer_amount')) {
-            $request->merge(['tramer_amount' => str_replace(['.', ',', ' '], '', $request->input('tramer_amount'))]);
+        // Sayısal alanlardan nokta/virgül temizle (150.000 -> 150000), boşları null yap
+        foreach (['kilometer', 'price', 'tramer_amount', 'engine_size', 'horse_power', 'torque'] as $numField) {
+            $val = $request->input($numField);
+            $request->merge([$numField => ($val !== null && $val !== '') ? str_replace(['.', ',', ' '], '', $val) : null]);
         }
 
         $validated = $request->validate([
@@ -439,6 +433,11 @@ class VehicleController extends Controller
 
         // Form-only alanları çıkar (fillable değil)
         unset($validated['remove_images'], $validated['set_main_image']);
+
+        // Boş stringleri null'a çevir (MySQL decimal/integer sütunları için)
+        foreach ($validated as $key => $val) {
+            if ($val === '') $validated[$key] = null;
+        }
 
         $vehicle->update($validated);
 
