@@ -292,9 +292,13 @@ class ArabamApiService
      * Wizard adım sırası: Yıl(10) → ModelGrubu(20) → Kasa(30) → Yakıt(40) → Şanzıman(50) → Versiyon(60)
      * Integer step numaraları kullanılır — string isimler bazı adımlarda yanlış veri döndürür.
      */
-    public function syncFullCascade(\Illuminate\Console\Command $output = null, bool $resumeOnly = false): array
+    public function syncFullCascade(\Illuminate\Console\Command $output = null, bool $resumeOnly = false, bool $deepResume = false, ?string $brandFilter = null): array
     {
-        $brands      = CarBrand::where('is_active', true)->orderBy('name')->get();
+        $query = CarBrand::where('is_active', true)->orderBy('name');
+        if ($brandFilter) {
+            $query->where('name', 'like', "%{$brandFilter}%");
+        }
+        $brands      = $query->get();
         $totalRows   = 0;
         $totalBrands = $brands->count();
         $processed   = 0;
@@ -308,7 +312,7 @@ class ArabamApiService
             $processed++;
             $brandArabamId = (int) $brand->arabam_id;
 
-            if ($resumeOnly && in_array($brandArabamId, $syncedBrandIds)) {
+            if ($resumeOnly && !$deepResume && in_array($brandArabamId, $syncedBrandIds)) {
                 $output && $output->line("[$processed/$totalBrands] {$brand->name} zaten senkronize, atlandı.");
                 continue;
             }
@@ -328,8 +332,25 @@ class ArabamApiService
                 continue;
             }
 
+            // Deep resume: DB'de bu marka için zaten var olan yılları bul
+            $existingYears = [];
+            if ($deepResume) {
+                $existingYears = ArabamVehicleConfig::where('brand_arabam_id', $brandArabamId)
+                    ->select('model_year')
+                    ->distinct()
+                    ->pluck('model_year')
+                    ->toArray();
+                $missingCount = count($years) - count($existingYears);
+                $output && $output->line("  -> API'de " . count($years) . " yıl, DB'de " . count($existingYears) . " yıl mevcut. Eksik: $missingCount");
+            }
+
             foreach ($years as $year) {
                 $yearVal = $year['Id']; // "2023", "2024" vb.
+
+                // Deep resume: zaten DB'de olan yılları atla
+                if ($deepResume && in_array((string) $yearVal, $existingYears)) {
+                    continue;
+                }
 
                 // ── Step 20: Model Grupları ──────────────────────────────
                 $modelGroups = $this->fetchStep([

@@ -12,6 +12,8 @@ class SyncArabamData extends Command
         {--models-only : Sadece modelleri senkronize et}
         {--full : Tüm cascade verisini (yıl/kasa/yakıt/şanzıman/versiyon) DB\'ye çek}
         {--resume : Sadece eksik markaları senkronize et (zaten var olanları atla)}
+        {--deep-resume : Eksik yılları tamamla (marka bazlı değil, yıl bazlı kontrol)}
+        {--brand= : Sadece belirli bir markayı senkronize et (marka adı, örn: BMW)}
         {--proxy= : HTTP proxy adresi (örn: http://ip:port veya socks5://ip:port)}
         {--proxy-list= : Virgülle ayrılmış proxy listesi (rotasyon için)}
         {--test-proxy : Proxy bağlantısını test et}';
@@ -48,14 +50,26 @@ class SyncArabamData extends Command
         $this->info('🚀 Arabam.com veri senkronizasyonu başlatılıyor...');
         $this->newLine();
 
-        if ($this->option('full') || $this->option('resume')) {
+        if ($this->option('full') || $this->option('resume') || $this->option('deep-resume')) {
             $resume = $this->option('resume');
-            $this->info($resume ? '🔄 RESUME: Eksik markalar senkronize ediliyor...' : '🔄 TAM CASCADE senkronizasyonu başlatılıyor...');
+            $deepResume = $this->option('deep-resume');
+            $brandFilter = $this->option('brand');
+
+            if ($deepResume) {
+                $this->info('🔄 DEEP RESUME: Eksik yıllar tamamlanıyor (yıl bazlı kontrol)...');
+            } elseif ($resume) {
+                $this->info('🔄 RESUME: Eksik markalar senkronize ediliyor...');
+            } else {
+                $this->info('🔄 TAM CASCADE senkronizasyonu başlatılıyor...');
+            }
+            if ($brandFilter) {
+                $this->info("🏷️  Sadece '{$brandFilter}' markası işlenecek.");
+            }
             $this->warn('  Bu işlem arabam.com\'daki TÜM yıl/kasa/yakıt/şanzıman/versiyon verilerini çeker.');
             $this->warn('  Süre: markaya göre değişir, saatler alabilir. Ctrl+C ile durdurabilirsiniz.');
             $this->newLine();
 
-            $result = $service->syncFullCascade($this, $resume);
+            $result = $service->syncFullCascade($this, $resume, $deepResume, $brandFilter);
 
             $this->newLine();
             $this->info("✅ Toplam {$result['rows']} satır, {$result['brands']} marka işlendi.");
